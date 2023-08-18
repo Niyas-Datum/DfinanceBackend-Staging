@@ -1,0 +1,14 @@
+/Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.AuthCore/bin/Debug/net7.0/Dfinance.AuthCore.deps.json
+/Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.AuthCore/bin/Debug/net7.0/Dfinance.AuthCore.dll
+/Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.AuthCore/bin/Debug/net7.0/Dfinance.AuthCore.pdb
+/Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.AuthCore/obj/Debug/net7.0/Dfinance.AuthCore.csproj.AssemblyReference.cache
+/Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.AuthCore/obj/Debug/net7.0/Dfinance.AuthCore.GeneratedMSBuildEditorConfig.editorconfig
+/Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.AuthCore/obj/Debug/net7.0/Dfinance.AuthCore.AssemblyInfoInputs.cache
+/Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.AuthCore/obj/Debug/net7.0/Dfinance.AuthCore.AssemblyInfo.cs
+/Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.AuthCore/obj/Debug/net7.0/Dfinance.AuthCore.csproj.CoreCompileInputs.cache
+/Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.AuthCore/obj/Debug/net7.0/Dfinance.AuthCore.dll
+/Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.AuthCore/obj/Debug/net7.0/refint/Dfinance.AuthCore.dll
+/Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.AuthCore/obj/Debug/net7.0/Dfinance.AuthCore.pdb
+/Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.AuthCore/obj/Debug/net7.0/ref/Dfinance.AuthCore.dll
+/Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.AuthCore/bin/Debug/net7.0/Dfinance.AuthCore.runtimeconfig.json
+/Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.AuthCore/obj/Debug/net7.0/Dfinance.AuthCore.genruntimeconfig.cache
