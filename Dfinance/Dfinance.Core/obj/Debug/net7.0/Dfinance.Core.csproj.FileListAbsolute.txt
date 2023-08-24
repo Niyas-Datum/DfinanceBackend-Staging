@@ -1,0 +1,14 @@
+/Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.Core/bin/Debug/net7.0/Dfinance.Core.deps.json
+/Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.Core/bin/Debug/net7.0/Dfinance.Core.dll
+/Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.Core/bin/Debug/net7.0/Dfinance.Core.pdb
+/Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.Core/obj/Debug/net7.0/Dfinance.Core.csproj.AssemblyReference.cache
+/Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.Core/obj/Debug/net7.0/Dfinance.Core.GeneratedMSBuildEditorConfig.editorconfig
+/Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.Core/obj/Debug/net7.0/Dfinance.Core.AssemblyInfoInputs.cache
+/Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.Core/obj/Debug/net7.0/Dfinance.Core.AssemblyInfo.cs
+/Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.Core/obj/Debug/net7.0/Dfinance.Core.csproj.CoreCompileInputs.cache
+/Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.Core/obj/Debug/net7.0/Dfinance.Core.dll
+/Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.Core/obj/Debug/net7.0/refint/Dfinance.Core.dll
+/Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.Core/obj/Debug/net7.0/Dfinance.Core.pdb
+/Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.Core/obj/Debug/net7.0/ref/Dfinance.Core.dll
+/Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.Core/bin/Debug/net7.0/Dfinance.Core.runtimeconfig.json
+/Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.Core/obj/Debug/net7.0/Dfinance.Core.genruntimeconfig.cache
