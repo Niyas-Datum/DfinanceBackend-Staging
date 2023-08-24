@@ -18,9 +18,9 @@ namespace Dfinance.AuthCore.Infrastructure
         public DbSet<CompanySchedule> CompanySchedules { get; set; }
         // --not-in-use  public DbSet<Licence> Licences { get; set; }
 
-        /*    public AuthCoreContext(DbContextOptions<AuthCoreContext> options) : base(options)
-           {
-           }*/
+        public AuthCoreContext(DbContextOptions<AuthCoreContext> options) : base(options)
+        {
+        }
         public AuthCoreContext()
         {
 
@@ -37,9 +37,9 @@ namespace Dfinance.AuthCore.Infrastructure
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             //optionsBuilder.UseSqlServer();
-            if (!optionsBuilder.IsConfigured)
+            // if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(@"Data Source=ip.datuminnovation.com.9600;Initial Catalog=DatumSystemMaster;User ID=sa;pwd=Datum123!");
+                optionsBuilder.UseSqlServer(@"Data Source=ip.datuminnovation.com,9600;TrustServerCertificate=true;Initial Catalog=DatumSystemMaster;User ID=sa;pwd=Datum123!");
             }
         }
     }
