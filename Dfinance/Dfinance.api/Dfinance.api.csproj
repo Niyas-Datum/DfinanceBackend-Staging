@@ -9,6 +9,7 @@
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'https' " />
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'http' " />
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.10" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
@@ -18,6 +19,7 @@
     <ProjectReference Include="..\Dfinance.Shared\Dfinance.Shared.csproj" />
     <ProjectReference Include="..\Dfinance.AuthApplication\Dfinance.AuthApplication.csproj" />
     <ProjectReference Include="..\Dfinance.AuthCore\Dfinance.AuthCore.csproj" />
+    <ProjectReference Include="..\Dfinance.Core\Dfinance.Core.csproj" />
   </ItemGroup>
 
 </Project>

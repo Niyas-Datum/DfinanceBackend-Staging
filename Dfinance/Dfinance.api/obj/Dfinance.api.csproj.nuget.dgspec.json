@@ -33,6 +33,9 @@
               "/Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.AuthCore/Dfinance.AuthCore.csproj": {
                 "projectPath": "/Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.AuthCore/Dfinance.AuthCore.csproj"
               },
+              "/Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.Core/Dfinance.Core.csproj": {
+                "projectPath": "/Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.Core/Dfinance.Core.csproj"
+              },
               "/Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.Shared/Dfinance.Shared.csproj": {
                 "projectPath": "/Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.Shared/Dfinance.Shared.csproj"
               }
@@ -49,6 +52,10 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "dependencies": {
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[7.0.10, )"
+            },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[7.0.2, )"
@@ -262,6 +269,10 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "dependencies": {
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[7.0.10, )"
+            },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
               "version": "[7.0.10, )"
@@ -333,6 +344,10 @@
               "version": "[7.0.0, )"
             },
             "Microsoft.Extensions.Configuration.Json": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
+            "Microsoft.Extensions.DependencyInjection": {
               "target": "Package",
               "version": "[7.0.0, )"
             }

@@ -26,12 +26,12 @@ public partial class MaEmployee
     public bool IsLocationRestrictedUser { get; set; }
     public int? PhotoId { get; set; }
     //FK
-    public int? CreateBranchId { get; set; }
+    public int? CreatedBranchId { get; set; }
     //FK
     public int? CreatedBy { get; set; }
     public DateTime CreatedOn { get; set; }
     //FK
-    public int? AccoutnId { get; set; }
+    public int? AccountId { get; set; }
     public string? ImagePath { get; set; }
     //---relationship---
     public virtual FiMaAccount? Account { get; set; }

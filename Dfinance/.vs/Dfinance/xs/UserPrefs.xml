@@ -1,24 +1,47 @@
-﻿<Properties>
-  <MultiItemStartupConfigurations />
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+﻿<Properties StartupConfiguration="{6193D4BE-1C27-45AE-91AA-41672D9E0BBD}|https">
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
-  <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
-  </MonoDevelop.Ide.DebuggingService.Breakpoints>
-  <MonoDevelop.Ide.Workbench ActiveDocument="Dfinance.Shared/Configuration/ConfigurationManager.cs">
+  <MonoDevelop.Ide.ItemProperties.Dfinance.api PreferredExecutionTarget="/System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app" />
+  <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Dfinance.AuthApplication/Services/AuthService.cs">
     <Files>
-      <File FileName="Dfinance.Shared/Configuration/ConfigurationManager.cs" Line="12" Column="23" />
+      <File FileName="Dfinance.Shared/Configuration/ConfigurationManager.cs" Line="12" Column="15" />
+      <File FileName="Dfinance.api/Program.cs" Line="16" Column="1" />
+      <File FileName="Dfinance.api/appsettings.json" Line="22" Column="22" />
+      <File FileName="Dfinance.AuthApplication/Services/CompanyService.cs" Line="14" Column="1" />
+      <File FileName="Dfinance.AuthCore/Infrastructure/AuthCoreContext.cs" Line="31" Column="60" />
+      <File FileName="Dfinance.AuthCore/Domain/Company.cs" />
+      <File FileName="Dfinance.AuthApplication/Middlewares/JwtMiddleware.cs" Line="25" Column="1" />
+      <File FileName="Dfinance.AuthApplication/Services/AuthService.cs" Line="36" Column="1" />
+      <File FileName="Dfinance.api/Controllers/v1/Authenticate/AuthController.cs" Line="24" Column="1" />
+      <File FileName="Dfinance.Core/Infrastructure/DFCoreContext.cs" Line="28" Column="43" />
+      <File FileName="Dfinance.Core/Infrastructure/Configurations/MaEmployeeConfigurationcs" Line="20" Column="87" />
+      <File FileName="Dfinance.Core/Domain/MaEmployee.cs" Line="34" Column="24" />
+      <File FileName="Dfinance.AuthApplication/Authorization/IJwtSecret.cs" Line="17" Column="23" />
+      <File FileName="Dfinance.AuthApplication/Services/ICompanyService.cs" Line="7" Column="23" />
+      <File FileName="Dfinance.AuthApplication/Dto/AuthResponseDto.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="Dfinance" expanded="True">
-            <Node name="Dfinance.Shared" expanded="True">
-              <Node name="Configuration" expanded="True" />
+            <Node name="Dfinance.AuthApplication" expanded="True">
+              <Node name="Authorization" expanded="True" />
+              <Node name="Dto" expanded="True" />
+              <Node name="Middlewares" expanded="True" />
+              <Node name="Services" expanded="True">
+                <Node name="AuthService.cs" selected="True" />
+              </Node>
             </Node>
           </Node>
         </State>
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore>
+      <Breakpoint file="/Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.AuthApplication/Middlewares/JwtMiddleware.cs" relfile="Dfinance.AuthApplication/Middlewares/JwtMiddleware.cs" line="18" column="1" />
+      <Breakpoint file="/Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.AuthApplication/Services/AuthService.cs" relfile="Dfinance.AuthApplication/Services/AuthService.cs" line="32" column="1" />
+    </BreakpointStore>
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
 </Properties>
