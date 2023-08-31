@@ -77,3 +77,4 @@
 /Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.api/bin/Debug/net7.0/Dfinance.AuthCore.pdb
 /Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.api/bin/Debug/net7.0/Dfinance.Core.dll
 /Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.api/bin/Debug/net7.0/Dfinance.Core.pdb
+/Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.api/bin/Debug/net7.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll

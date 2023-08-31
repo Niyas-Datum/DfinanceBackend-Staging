@@ -20,7 +20,7 @@ public class JwtSecret : IJwtSecret
     public JwtSecret(IOptions<AppSettings> appsettings)
     {
         _appSettings = appsettings.Value;
-        if (string.IsNullOrEmpty(_appSettings.Secret))
+        if (string.IsNullOrEmpty(_appSettings.JwtSettings.Secret))
 
             throw new Exception("JWT Secret key not configured");
     }
@@ -28,7 +28,7 @@ public class JwtSecret : IJwtSecret
     public string GenerateJwtToken(MaEmployee user)
     {
         var tokenhandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(_appSettings.Secret!);
+        var key = Encoding.ASCII.GetBytes(_appSettings.JwtSettings.Secret!);
         var tokendescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(new[] { new Claim("id", user.Id.ToString()) }),
@@ -45,7 +45,7 @@ public class JwtSecret : IJwtSecret
         if (token == null)
             return null;
         var tokenhandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(_appSettings.Secret!);
+        var key = Encoding.ASCII.GetBytes(_appSettings.JwtSettings.Secret!);
         try
         {
             tokenhandler.ValidateToken(token, new TokenValidationParameters

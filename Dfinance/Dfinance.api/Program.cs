@@ -1,35 +1,51 @@
-using Dfinance.AuthAppllication.Services;
-using Dfinance.AuthCore.Infrastructure;
-using Microsoft.Extensions.Configuration;
-using Microsoft.EntityFrameworkCore;
+
+using Dfinance.Shared.Configuration;
+using Dfinance.AuthAppllication.Authorization;
+using Dfinance.AuthAppllication.Services.Interface;
+using Dfinance.AuthAppllication.Middlewares;
+using Dfinance.api.Installers.ext;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<AuthCoreContext>(options =>
-    options.UseSqlServer(connectionString));
+var services = builder.Services;
+var configuration = builder.Configuration;
 
-// Add services to the container.
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<ICompanyService, CompanyService>();
-
-
+services.InstallerServiceInAssembly(configuration);
 
 var app = builder.Build();
+
+// swagger 
+var swaggerOptions = new SwaggerOptions();
+builder.Configuration.GetSection(nameof(swaggerOptions)).Bind(swaggerOptions);
+app.UseSwagger(options => { options.RouteTemplate = swaggerOptions.JsonRoute; });
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint(swaggerOptions.UiEndPoint, swaggerOptions.Description);
+});
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseDeveloperExceptionPage();
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+
+// global cors policy
+//app.UseHttpsRedirection();
+
+app.UseCors(x => x
+    .AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader());
 
 app.UseAuthorization();
+
+//Middleware - authentication checking - every request
+app.UseMiddleware<JwtMiddleware>();
+
 
 app.MapControllers();
 

@@ -8,6 +8,7 @@
     ".NETCoreApp,Version=v7.0": {
       "Dfinance.Core/1.0.0": {
         "dependencies": {
+          "Microsoft.EntityFrameworkCore": "7.0.10",
           "Microsoft.EntityFrameworkCore.SqlServer": "7.0.10",
           "Microsoft.EntityFrameworkCore.Tools": "7.0.10"
         },

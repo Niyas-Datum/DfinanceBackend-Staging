@@ -46,6 +46,25 @@
           }
         }
       },
+      "Microsoft.AspNetCore.Authentication.JwtBearer/7.0.10": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.IdentityModel.Protocols.OpenIdConnect": "6.15.1"
+        },
+        "compile": {
+          "lib/net7.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net7.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll": {
+            "related": ".xml"
+          }
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
+      },
       "Microsoft.AspNetCore.Http/2.2.2": {
         "type": "package",
         "dependencies": {
@@ -1404,6 +1423,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v7.0",
         "dependencies": {
+          "Microsoft.EntityFrameworkCore": "7.0.10",
           "Microsoft.EntityFrameworkCore.SqlServer": "7.0.10"
         },
         "compile": {
@@ -1418,7 +1438,8 @@
         "framework": ".NETCoreApp,Version=v7.0",
         "dependencies": {
           "Microsoft.Extensions.Configuration": "7.0.0",
-          "Microsoft.Extensions.Configuration.Json": "7.0.0"
+          "Microsoft.Extensions.Configuration.Json": "7.0.0",
+          "Microsoft.Extensions.DependencyInjection": "7.0.0"
         },
         "compile": {
           "bin/placeholder/Dfinance.Shared.dll": {}
@@ -1466,6 +1487,21 @@
         "azureicon.png",
         "lib/netstandard2.0/Azure.Identity.dll",
         "lib/netstandard2.0/Azure.Identity.xml"
+      ]
+    },
+    "Microsoft.AspNetCore.Authentication.JwtBearer/7.0.10": {
+      "sha512": "8/GWtq034kzrDapCHYbAnnJXIYAJzFcJoXP5OtlbjIWBQBLxEbstRv3N4DJAvlcGUXxy0DmmNVDiSlFAY8HpWw==",
+      "type": "package",
+      "path": "microsoft.aspnetcore.authentication.jwtbearer/7.0.10",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/net7.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll",
+        "lib/net7.0/Microsoft.AspNetCore.Authentication.JwtBearer.xml",
+        "microsoft.aspnetcore.authentication.jwtbearer.7.0.10.nupkg.sha512",
+        "microsoft.aspnetcore.authentication.jwtbearer.nuspec"
       ]
     },
     "Microsoft.AspNetCore.Http/2.2.2": {
@@ -4235,7 +4271,9 @@
     "net7.0": [
       "Dfinance.AuthApplication >= 1.0.0",
       "Dfinance.AuthCore >= 1.0.0",
+      "Dfinance.Core >= 1.0.0",
       "Dfinance.Shared >= 1.0.0",
+      "Microsoft.AspNetCore.Authentication.JwtBearer >= 7.0.10",
       "Microsoft.AspNetCore.OpenApi >= 7.0.2",
       "Microsoft.EntityFrameworkCore >= 7.0.10",
       "Swashbuckle.AspNetCore >= 6.4.0"
@@ -4273,6 +4311,9 @@
             "/Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.AuthCore/Dfinance.AuthCore.csproj": {
               "projectPath": "/Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.AuthCore/Dfinance.AuthCore.csproj"
             },
+            "/Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.Core/Dfinance.Core.csproj": {
+              "projectPath": "/Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.Core/Dfinance.Core.csproj"
+            },
             "/Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.Shared/Dfinance.Shared.csproj": {
               "projectPath": "/Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.Shared/Dfinance.Shared.csproj"
             }
@@ -4289,6 +4330,10 @@
       "net7.0": {
         "targetAlias": "net7.0",
         "dependencies": {
+          "Microsoft.AspNetCore.Authentication.JwtBearer": {
+            "target": "Package",
+            "version": "[7.0.10, )"
+          },
           "Microsoft.AspNetCore.OpenApi": {
             "target": "Package",
             "version": "[7.0.2, )"
