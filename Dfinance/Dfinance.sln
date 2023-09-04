@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dfinance.api", "Dfinance.ap
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dfinance.Core", "Dfinance.Core\Dfinance.Core.csproj", "{779F606A-9240-4A24-BA5C-7EAEF56D5ED7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dfinance.Application", "Dfinance.Application\Dfinance.Application.csproj", "{F8106925-622C-4848-9345-1B63E1C4B13F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,5 +48,9 @@ Global
 		{779F606A-9240-4A24-BA5C-7EAEF56D5ED7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{779F606A-9240-4A24-BA5C-7EAEF56D5ED7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{779F606A-9240-4A24-BA5C-7EAEF56D5ED7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8106925-622C-4848-9345-1B63E1C4B13F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8106925-622C-4848-9345-1B63E1C4B13F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8106925-622C-4848-9345-1B63E1C4B13F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8106925-622C-4848-9345-1B63E1C4B13F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
