@@ -3,7 +3,7 @@ using Dfinance.Core.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Dfinance.AuthCore.Infrastructure.Configurations
+namespace Dfinance.Core.Infrastructure.Configurations
 {
     /**
    # Created On: sun 27 Aug 2023

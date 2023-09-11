@@ -4,6 +4,7 @@ using Dfinance.Core.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dfinance.Core.Migrations
 {
     [DbContext(typeof(DFCoreContext))]
-    partial class DFCoreContextModelSnapshot : ModelSnapshot
+    [Migration("20230911103937_Macompany_Department_ReDepartment")]
+    partial class Macompany_Department_ReDepartment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
