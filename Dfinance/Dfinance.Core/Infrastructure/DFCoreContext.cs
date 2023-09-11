@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Dfinance.Core.Domain;
-using Dfinance.AuthCore.Infrastructure.Configurations;
+using Dfinance.Core.Infrastructure.Configurations;
 
 namespace Dfinance.Core.Infrastructure;
 
@@ -18,7 +18,12 @@ public partial class DFCoreContext : DbContext
     }
 
     public DbSet<MaEmployee> MaEmployees { get; set; }
+    public DbSet<MaCompany> MaBranches { get; set; }
+
     public DbSet<FiMaAccount> FiMaAccounts { get; set; }
+    public DbSet<MaDepartment> MaDepartments { get; set; }
+    public DbSet<ReDepartmentType> ReDepartmentTypes { get; set; }
+
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
       =>   optionsBuilder.UseSqlServer(@"Data Source=ip.datuminnovation.com,9600;TrustServerCertificate=true;Initial Catalog=DatumSystemMain;User ID=sa;pwd=Datum123!");
@@ -26,5 +31,9 @@ public partial class DFCoreContext : DbContext
     protected override void OnModelCreating(ModelBuilder mb)
     {
         mb.ApplyConfiguration(new MaEmployeeConfiguration());
+        mb.ApplyConfiguration(new MaCompanyConfiguration());
+        mb.ApplyConfiguration(new MaDepartmentConfiguration());
+
+
     }
-    }
+}

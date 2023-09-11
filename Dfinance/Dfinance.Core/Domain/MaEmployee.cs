@@ -33,8 +33,16 @@ public partial class MaEmployee
     //FK
     public int? AccountId { get; set; }
     public string? ImagePath { get; set; }
-    //---relationship---
+    //---relationship ma Account one =>---
     public virtual FiMaAccount? Account { get; set; }
+
+
+    // relationship with ma company  one  to many 
+    public virtual ICollection<MaCompany>? MaCompanyContactPeople { get; set; }
+
+    //relationship with ma-company  one to many 
+    public virtual ICollection<MaCompany> MaCompanyCreatedByConnection { get; set; } = new List<MaCompany>();
+
 
 
 }
