@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Dfinance.Core.Domain;
 using Dfinance.Core.Infrastructure.Configurations;
-using Dfinance.Core.views;
 
 namespace Dfinance.Core.Infrastructure;
 
@@ -25,7 +24,6 @@ public partial class DFCoreContext : DbContext
     public DbSet<MaDepartment> MaDepartments { get; set; }
     public DbSet<ReDepartmentType> ReDepartmentTypes { get; set; }
 
-    public DbSet<SpMacompanyFillallbranch> SpMacompanyFillallbranch { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
       =>   optionsBuilder.UseSqlServer(@"Data Source=ip.datuminnovation.com,9600;TrustServerCertificate=true;Initial Catalog=DatumSystemMain;User ID=sa;pwd=Datum123!");
@@ -36,8 +34,6 @@ public partial class DFCoreContext : DbContext
         mb.ApplyConfiguration(new MaCompanyConfiguration());
         mb.ApplyConfiguration(new MaDepartmentConfiguration());
 
-        //views
-        mb.Entity<SpMacompanyFillallbranch>().HasNoKey().ToView(null);
 
     }
 }
