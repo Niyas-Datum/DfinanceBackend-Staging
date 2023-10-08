@@ -3462,19 +3462,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Niyas\\.nuget\\packages\\": {}
+    "C:\\Users\\Dell\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Niyas\\Source\\Repos\\Niyas-Datum\\DFinance_Backend\\Dfinance\\Dfinance.Core\\Dfinance.Core.csproj",
+      "projectUniqueName": "C:\\Users\\Dell\\Source\\Repos\\Niyas-Datum\\DFinance_Backend\\Dfinance\\Dfinance.Core\\Dfinance.Core.csproj",
       "projectName": "Dfinance.Core",
-      "projectPath": "C:\\Users\\Niyas\\Source\\Repos\\Niyas-Datum\\DFinance_Backend\\Dfinance\\Dfinance.Core\\Dfinance.Core.csproj",
-      "packagesPath": "C:\\Users\\Niyas\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Niyas\\Source\\Repos\\Niyas-Datum\\DFinance_Backend\\Dfinance\\Dfinance.Core\\obj\\",
+      "projectPath": "C:\\Users\\Dell\\Source\\Repos\\Niyas-Datum\\DFinance_Backend\\Dfinance\\Dfinance.Core\\Dfinance.Core.csproj",
+      "packagesPath": "C:\\Users\\Dell\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Dell\\Source\\Repos\\Niyas-Datum\\DFinance_Backend\\Dfinance\\Dfinance.Core\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Niyas\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Dell\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [

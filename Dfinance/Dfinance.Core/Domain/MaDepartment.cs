@@ -23,15 +23,17 @@ namespace Dfinance.Core.Domain
 
         public byte ActiveFlag { get; set; }
 
-        public virtual MaCompany Branch { get; set; }
-        public virtual MaEmployee MaEmployee { get; set; }
-        public virtual ReDepartmentType DepartmentType { get; set; }
+        //get all employee datail in this department 
+        public virtual ICollection<MaEmployeeDetail>? MaEmployeeDetails { get; set; } = new List<MaEmployeeDetail>();
+
+
+        public virtual MaCompany? Branch { get; set; }
+        public virtual ReDepartmentType? DepartmentType { get; set; }
 
 
         public MaDepartment()
         {
             Branch = null!;
-            MaEmployee = null!;
             DepartmentType = null!;
 
         }

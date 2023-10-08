@@ -1,3 +1,5 @@
+using Dfinance.Core.Domain.Roles;
+
 namespace Dfinance.Core.Domain;
 
 
@@ -33,6 +35,22 @@ public partial class MaEmployee
     //FK
     public int? AccountId { get; set; }
     public string? ImagePath { get; set; }
+
+
+    /// <summary>
+    /// newly configure 
+    /// currently using
+    /// </summary>
+
+    public virtual MaCompany CreatedBranchCompany { get; set; }
+
+    //employee branch details
+    public virtual ICollection<MaEmployeeDetail> EmployeeBranchDetails { get; set; } = new List<MaEmployeeDetail>();
+    //used for who created emplyee branch details
+    public virtual ICollection<MaEmployeeDetail> EmployeeBranchDetCreatedUserList { get; set; } = new List<MaEmployeeDetail>();
+
+
+    /// end use
     //---relationship ma Account one =>---
     public virtual FiMaAccount? Account { get; set; }
 

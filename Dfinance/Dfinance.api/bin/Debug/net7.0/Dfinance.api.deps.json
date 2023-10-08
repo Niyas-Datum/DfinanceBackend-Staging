@@ -8,6 +8,7 @@
     ".NETCoreApp,Version=v7.0": {
       "Dfinance.api/1.0.0": {
         "dependencies": {
+          "Dfinance.Application": "1.0.0",
           "Dfinance.AuthApplication": "1.0.0",
           "Dfinance.AuthCore": "1.0.0",
           "Dfinance.Core": "1.0.0",
@@ -158,22 +159,22 @@
           "runtimes/win-arm/native/Microsoft.Data.SqlClient.SNI.dll": {
             "rid": "win-arm",
             "assetType": "native",
-            "fileVersion": "0.0.0.0"
+            "fileVersion": "5.0.1.0"
           },
           "runtimes/win-arm64/native/Microsoft.Data.SqlClient.SNI.dll": {
             "rid": "win-arm64",
             "assetType": "native",
-            "fileVersion": "0.0.0.0"
+            "fileVersion": "5.0.1.0"
           },
           "runtimes/win-x64/native/Microsoft.Data.SqlClient.SNI.dll": {
             "rid": "win-x64",
             "assetType": "native",
-            "fileVersion": "0.0.0.0"
+            "fileVersion": "5.0.1.0"
           },
           "runtimes/win-x86/native/Microsoft.Data.SqlClient.SNI.dll": {
             "rid": "win-x86",
             "assetType": "native",
-            "fileVersion": "0.0.0.0"
+            "fileVersion": "5.0.1.0"
           }
         }
       },
@@ -697,6 +698,17 @@
             "assemblyVersion": "5.0.0.0",
             "fileVersion": "5.0.20.51904"
           }
+        }
+      },
+      "Dfinance.Application/1.0.0": {
+        "dependencies": {
+          "Dfinance.AuthApplication": "1.0.0",
+          "Dfinance.AuthCore": "1.0.0",
+          "Dfinance.Core": "1.0.0",
+          "Dfinance.Shared": "1.0.0"
+        },
+        "runtime": {
+          "Dfinance.Application.dll": {}
         }
       },
       "Dfinance.AuthApplication/1.0.0": {
@@ -1311,6 +1323,11 @@
       "sha512": "sha512-c1ho9WU9ZxMZawML+ssPKZfdnrg/OjR3pe0m9v8230z3acqphwvPJqzAkH54xRYm5ntZHGG1EPP3sux9H3qSPg==",
       "path": "system.windows.extensions/5.0.0",
       "hashPath": "system.windows.extensions.5.0.0.nupkg.sha512"
+    },
+    "Dfinance.Application/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
     },
     "Dfinance.AuthApplication/1.0.0": {
       "type": "project",
