@@ -8,8 +8,9 @@ namespace Dfinance.AuthAppllication.Services.Interface;
 public interface IAuthService
 {
     CommonResponse Authenticate(AuthenticateRequestDto model);
-    MaEmployee GetUserById(int? id);
+    AuthResponseDto GetUserById(int? id);
     int? GetId();
     string GetUserName();
+    int? GetBranchId();
 
 }

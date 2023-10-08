@@ -26,3 +26,17 @@ C:\Users\Niyas\Source\Repos\Niyas-Datum\DFinance_Backend\Dfinance\Dfinance.Core\
 C:\Users\Niyas\Source\Repos\Niyas-Datum\DFinance_Backend\Dfinance\Dfinance.Core\obj\Debug\net7.0\Dfinance.Core.pdb
 C:\Users\Niyas\Source\Repos\Niyas-Datum\DFinance_Backend\Dfinance\Dfinance.Core\obj\Debug\net7.0\Dfinance.Core.genruntimeconfig.cache
 C:\Users\Niyas\Source\Repos\Niyas-Datum\DFinance_Backend\Dfinance\Dfinance.Core\obj\Debug\net7.0\ref\Dfinance.Core.dll
+C:\Users\Dell\Source\Repos\Niyas-Datum\DFinance_Backend\Dfinance\Dfinance.Core\bin\Debug\net7.0\Dfinance.Core.deps.json
+C:\Users\Dell\Source\Repos\Niyas-Datum\DFinance_Backend\Dfinance\Dfinance.Core\bin\Debug\net7.0\Dfinance.Core.runtimeconfig.json
+C:\Users\Dell\Source\Repos\Niyas-Datum\DFinance_Backend\Dfinance\Dfinance.Core\bin\Debug\net7.0\Dfinance.Core.dll
+C:\Users\Dell\Source\Repos\Niyas-Datum\DFinance_Backend\Dfinance\Dfinance.Core\bin\Debug\net7.0\Dfinance.Core.pdb
+C:\Users\Dell\Source\Repos\Niyas-Datum\DFinance_Backend\Dfinance\Dfinance.Core\obj\Debug\net7.0\Dfinance.Core.csproj.AssemblyReference.cache
+C:\Users\Dell\Source\Repos\Niyas-Datum\DFinance_Backend\Dfinance\Dfinance.Core\obj\Debug\net7.0\Dfinance.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Dell\Source\Repos\Niyas-Datum\DFinance_Backend\Dfinance\Dfinance.Core\obj\Debug\net7.0\Dfinance.Core.AssemblyInfoInputs.cache
+C:\Users\Dell\Source\Repos\Niyas-Datum\DFinance_Backend\Dfinance\Dfinance.Core\obj\Debug\net7.0\Dfinance.Core.AssemblyInfo.cs
+C:\Users\Dell\Source\Repos\Niyas-Datum\DFinance_Backend\Dfinance\Dfinance.Core\obj\Debug\net7.0\Dfinance.Core.csproj.CoreCompileInputs.cache
+C:\Users\Dell\Source\Repos\Niyas-Datum\DFinance_Backend\Dfinance\Dfinance.Core\obj\Debug\net7.0\Dfinance.Core.dll
+C:\Users\Dell\Source\Repos\Niyas-Datum\DFinance_Backend\Dfinance\Dfinance.Core\obj\Debug\net7.0\refint\Dfinance.Core.dll
+C:\Users\Dell\Source\Repos\Niyas-Datum\DFinance_Backend\Dfinance\Dfinance.Core\obj\Debug\net7.0\Dfinance.Core.pdb
+C:\Users\Dell\Source\Repos\Niyas-Datum\DFinance_Backend\Dfinance\Dfinance.Core\obj\Debug\net7.0\Dfinance.Core.genruntimeconfig.cache
+C:\Users\Dell\Source\Repos\Niyas-Datum\DFinance_Backend\Dfinance\Dfinance.Core\obj\Debug\net7.0\ref\Dfinance.Core.dll

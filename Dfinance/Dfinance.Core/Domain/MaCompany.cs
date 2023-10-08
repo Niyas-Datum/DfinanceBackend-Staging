@@ -86,12 +86,16 @@ namespace Dfinance.Core.Domain
         //contact person FK
         public   virtual MaEmployee? ContactPerson { get; set; }
 
+        public virtual ICollection<MaEmployee> CreatedBranchEmployees { get; set; }
+
         public virtual ICollection<MaCompany>? InBranchCompany { get; set; } = new List<MaCompany>();
 
         public virtual MaEmployee? CreatedByConnect { get; set; }
 
         public virtual ICollection<MaDepartment>? MaDepartments { get; set; } = new List<MaDepartment>();
 
+        //rel: branch to empoyee details - 
+        public virtual ICollection<MaEmployeeDetail>? CompanyEmployeeDetails { get; set; }
 
     }
 }

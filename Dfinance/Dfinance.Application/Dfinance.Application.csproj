@@ -6,4 +6,11 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Dfinance.AuthApplication\Dfinance.AuthApplication.csproj" />
+    <ProjectReference Include="..\Dfinance.AuthCore\Dfinance.AuthCore.csproj" />
+    <ProjectReference Include="..\Dfinance.Core\Dfinance.Core.csproj" />
+    <ProjectReference Include="..\Dfinance.Shared\Dfinance.Shared.csproj" />
+  </ItemGroup>
+
 </Project>

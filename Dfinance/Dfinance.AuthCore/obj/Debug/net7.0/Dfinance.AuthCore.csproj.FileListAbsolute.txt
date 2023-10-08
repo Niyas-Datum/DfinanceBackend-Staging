@@ -12,3 +12,17 @@
 /Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.AuthCore/obj/Debug/net7.0/ref/Dfinance.AuthCore.dll
 /Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.AuthCore/bin/Debug/net7.0/Dfinance.AuthCore.runtimeconfig.json
 /Users/nyshamariyam/Documents/Datum_Innovation_project/DFinance_Backend/Dfinance/Dfinance.AuthCore/obj/Debug/net7.0/Dfinance.AuthCore.genruntimeconfig.cache
+C:\Users\Dell\Source\Repos\Niyas-Datum\DFinance_Backend\Dfinance\Dfinance.AuthCore\bin\Debug\net7.0\Dfinance.AuthCore.deps.json
+C:\Users\Dell\Source\Repos\Niyas-Datum\DFinance_Backend\Dfinance\Dfinance.AuthCore\bin\Debug\net7.0\Dfinance.AuthCore.runtimeconfig.json
+C:\Users\Dell\Source\Repos\Niyas-Datum\DFinance_Backend\Dfinance\Dfinance.AuthCore\bin\Debug\net7.0\Dfinance.AuthCore.dll
+C:\Users\Dell\Source\Repos\Niyas-Datum\DFinance_Backend\Dfinance\Dfinance.AuthCore\bin\Debug\net7.0\Dfinance.AuthCore.pdb
+C:\Users\Dell\Source\Repos\Niyas-Datum\DFinance_Backend\Dfinance\Dfinance.AuthCore\obj\Debug\net7.0\Dfinance.AuthCore.csproj.AssemblyReference.cache
+C:\Users\Dell\Source\Repos\Niyas-Datum\DFinance_Backend\Dfinance\Dfinance.AuthCore\obj\Debug\net7.0\Dfinance.AuthCore.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Dell\Source\Repos\Niyas-Datum\DFinance_Backend\Dfinance\Dfinance.AuthCore\obj\Debug\net7.0\Dfinance.AuthCore.AssemblyInfoInputs.cache
+C:\Users\Dell\Source\Repos\Niyas-Datum\DFinance_Backend\Dfinance\Dfinance.AuthCore\obj\Debug\net7.0\Dfinance.AuthCore.AssemblyInfo.cs
+C:\Users\Dell\Source\Repos\Niyas-Datum\DFinance_Backend\Dfinance\Dfinance.AuthCore\obj\Debug\net7.0\Dfinance.AuthCore.csproj.CoreCompileInputs.cache
+C:\Users\Dell\Source\Repos\Niyas-Datum\DFinance_Backend\Dfinance\Dfinance.AuthCore\obj\Debug\net7.0\Dfinance.AuthCore.dll
+C:\Users\Dell\Source\Repos\Niyas-Datum\DFinance_Backend\Dfinance\Dfinance.AuthCore\obj\Debug\net7.0\refint\Dfinance.AuthCore.dll
+C:\Users\Dell\Source\Repos\Niyas-Datum\DFinance_Backend\Dfinance\Dfinance.AuthCore\obj\Debug\net7.0\Dfinance.AuthCore.pdb
+C:\Users\Dell\Source\Repos\Niyas-Datum\DFinance_Backend\Dfinance\Dfinance.AuthCore\obj\Debug\net7.0\Dfinance.AuthCore.genruntimeconfig.cache
+C:\Users\Dell\Source\Repos\Niyas-Datum\DFinance_Backend\Dfinance\Dfinance.AuthCore\obj\Debug\net7.0\ref\Dfinance.AuthCore.dll

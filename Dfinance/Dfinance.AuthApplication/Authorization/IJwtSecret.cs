@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Dfinance.AuthAppllication.Dto;
 using Dfinance.Core.Domain;
 using Dfinance.Shared.Configuration;
 using Microsoft.Extensions.Options;
@@ -10,7 +11,7 @@ namespace Dfinance.AuthAppllication.Authorization;
 
 public interface IJwtSecret
 {
-    public string GenerateJwtToken(MaEmployee user);
+    public string GenerateJwtToken(AuthResponseDto user);
     public int? ValidateJwtToken(string? token);
 }
 
@@ -25,7 +26,7 @@ public class JwtSecret : IJwtSecret
             throw new Exception("JWT Secret key not configured");
     }
 
-    public string GenerateJwtToken(MaEmployee user)
+    public string GenerateJwtToken(AuthResponseDto user)
     {
         var tokenhandler = new JwtSecurityTokenHandler();
         var key = Encoding.ASCII.GetBytes(_appSettings.JwtSettings.Secret!);
