@@ -4,12 +4,9 @@ namespace Dfinance.AuthAppllication.Dto;
 
 public class AuthResponseDto
 {
-    public AuthResponseDto()
-    {
-        
-    }
+   
     public int Id { get; set; }
-    public string? Username { get; set; } 
+    public string? Username { get; set; }
     public string? Password { get; set; }
 
 
@@ -21,7 +18,7 @@ public class AuthResponseDto
     public decimal? NumericFormat { get; set; }
     public UserRoleDto? UserRole { get; set; }
     public UserDepartmentDto? UserDepartment { get; set; }
-    public string?  HOCompanyName { get; set; }
+    public string? HOCompanyName { get; set; }
     public string? CentralTaxNo { get; set; }
     public string? SalesTaxNo { get; set; }
 
@@ -38,6 +35,10 @@ public class AuthResponseDto
         this.Token = token;
 
 
+    }
+
+    public AuthResponseDto()
+    {
     }
 }
 
@@ -81,7 +82,7 @@ public partial class EmployeeBranchDetDto
     public string? RoleName { get; set; }
     public int? DepartmentId { get; set; }
     public DepartmentDto? DepartmentDto { get; set; }
-    public IList<MaUserRightsDto> MaUserRightsViewDto { get; set; }    
+    public IList<MaUserRightsDto> MaUserRightsViewDto { get; set; }
 
 }
 public partial class DepartmentDto
@@ -112,7 +113,7 @@ public partial class CompanyDto
 {
     public int? Id { get; set; }
     public string? Name { get; set; }
-   
+
 
 }
 public partial class UserRoleDto
