@@ -1,5 +1,6 @@
 namespace Dfinance.api.Authorization;
 
+using Dfinance.AuthAppllication.Dto;
 using Dfinance.Core.Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -15,7 +16,7 @@ public class AuthorizeAttribute : Attribute, IAuthorizationFilter
             return;
 
         // authorization
-        var user = (MaEmployee?)context.HttpContext.Items["User"];
+        var user = (AuthResponseDto?)context.HttpContext.Items["User"];
         if (user == null)
         {
             // not logged in or role not authorized

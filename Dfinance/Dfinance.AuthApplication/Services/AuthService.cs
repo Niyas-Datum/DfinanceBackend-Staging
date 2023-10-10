@@ -50,8 +50,20 @@ public class AuthService : IAuthService
                                                 MaUserRightsViewDto = x.MaUserPagePermisions.Select(x=>
                                                 new MaUserRightsDto()
                                                 {
+                                                    UserDetailsId=x.UserDetailsId,
                                                     PageMenuId = x.PageMenuId,
                                                     IsApprove = x.IsApprove,
+                                                    IsView=x.IsView,
+                                                    IsCreate=x.IsCreate,
+                                                    IsDelete=x.IsDelete,
+                                                    IsEdit=x.IsEdit,
+                                                    IsCancel=x.IsCancel,
+                                                    IsEditApproved=x.IsEditApproved,
+                                                    IsEmail=x.IsEmail,
+                                                    IsPrint=x.IsPrint,
+                                                    IsHigherApprove=x.IsHigherApprove,
+                                                    FrequentlyUsed=x.FrequentlyUsed,
+
                                                 } ).ToList()
 
                                             }).FirstOrDefault(),
