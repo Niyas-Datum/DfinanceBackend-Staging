@@ -1,5 +1,3 @@
-using Dfinance.Core.Domain.Roles;
-
 namespace Dfinance.Core.Domain;
 
 
@@ -22,7 +20,7 @@ public partial class MaEmployee
     public int? DesignationId { get; set; }
     public bool Active { get; set; }
     public int EmployeeType { get; set; }
-    public string UserName { get; set; } = null!;
+    public string Username { get; set; } = null!;
     public string Password { get; set; } = null!;
     public string GmailId { get; set; } = null!;
     public bool IsLocationRestrictedUser { get; set; }
@@ -42,7 +40,7 @@ public partial class MaEmployee
     /// currently using
     /// </summary>
 
-    public virtual MaCompany CreatedBranchCompany { get; set; }
+    
 
     //employee branch details
     public virtual ICollection<MaEmployeeDetail> EmployeeBranchDetails { get; set; } = new List<MaEmployeeDetail>();
@@ -54,13 +52,19 @@ public partial class MaEmployee
     //---relationship ma Account one =>---
     public virtual FiMaAccount? Account { get; set; }
 
-
+    public virtual MaCompany CreatedBranchCompany { get; set; }
     // relationship with ma company  one  to many 
     public virtual ICollection<MaCompany>? MaCompanyContactPeople { get; set; }
 
     //relationship with ma-company  one to many 
     public virtual ICollection<MaCompany> MaCompanyCreatedByConnection { get; set; } = new List<MaCompany>();
 
+    //relationship with CostCategory
+    public virtual ICollection<CostCategory> CostCategoryCreatedBy { get; set; }=new List<CostCategory>();
+    
+    //relationship with MaArea
+    public virtual ICollection<MaArea> AreaCreatedBy { get; set; }
+    public ICollection<LogInfo> LogInfos { get; set; }
 
 
 }

@@ -37,8 +37,10 @@ public partial class FiMaAccount
     public bool? ValueOfGoods { get; set; }
     public string? AlternateName { get; set; }
 
+    //Relationships
+   // public  ICollection<CostCentre>? CostCentreClientAccount { get; set; } = new List<CostCentre>();
 
-
+   // public  ICollection<CostCentre>? CostCentreSupplierAccount { get; set; } = new List<CostCentre>();
 
 
 }

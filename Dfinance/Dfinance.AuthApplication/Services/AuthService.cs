@@ -2,12 +2,11 @@ using Dfinance.Application.Services.Interface;
 using Dfinance.AuthAppllication.Authorization;
 using Dfinance.AuthAppllication.Dto;
 using Dfinance.AuthAppllication.Services.Interface;
-using Dfinance.AuthCore.Infrastructure;
-using Dfinance.Core.Domain;
 using Dfinance.Core.Infrastructure;
+using Dfinance.Core.Views.PagePermission;
 using Dfinance.Shared.Domain;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
+using System.Data;
 
 namespace Dfinance.AuthAppllication.Services;
 
@@ -17,114 +16,106 @@ public class AuthService : IAuthService
     private static AuthResponseDto? _User = null!;
     private readonly IEncryptService _encryptService;
     private readonly IJwtSecret _jwtsecret;
-    public AuthService(IJwtSecret jwtSecret, DFCoreContext dFCoreContext,IEncryptService encryptService)
+
+    public AuthService(IJwtSecret jwtSecret, DFCoreContext dFCoreContext, IEncryptService encryptService)
     {
         _jwtsecret = jwtSecret;
         _dfCoreContext = dFCoreContext;
         _encryptService = encryptService;
     }
+
     public CommonResponse Authenticate(AuthenticateRequestDto model)
     {
         try
         {
-            _User = _dfCoreContext.MaEmployees
-                .Include(x=> x.CreatedBranchCompany)
-                .Include("EmployeeBranchDetails.MaRole")
-                .Include("EmployeeBranchDetails.MaUserPagePermisions")
+            List<UserPageListView> loginMenu = null;
+            var Passwordtemp = _encryptService.Encrypt(model.Password);
+            // GET LOGININFO
+            int mod = 10;
 
-                .Include(x=> x.EmployeeBranchDetails)
+            var userData = _dfCoreContext.UserInfo.FromSqlRaw($"EXEC spAuthendication  @Mode='{mod}', @BranchID='{model.Branch.Id}', @Username='{model.Username}', @Password='{Passwordtemp}'").AsEnumerable().FirstOrDefault();
 
-                .ThenInclude(x =>  x.Department).ThenInclude(x => x.DepartmentType )
-                .Select(x=> new AuthResponseDto()
+            // Get Menu only if authentication is successful
+            if (userData != null)
+            {
+                string criteria = "FillMenuWeb";
+                string Language = "English";
+                loginMenu = _dfCoreContext.UserPageListView.FromSqlRaw($"EXEC MenuSP @Criteria='{criteria}',@Language='{Language}',@EmployeeID='{94}',@BranchID='{model.Branch.Id}'").ToList();
+
+                var data = GetTree(loginMenu, null);
+
+                var Token = _jwtsecret.GenerateJwtToken(userData);
+
+
+                var authResponse = new AuthResponseDto
                 {
-                    Id = x.Id,
-                    Username = x.UserName,
-                    Password = x.Password,
-                    
-                    EmployeeBranchDetDto = x.EmployeeBranchDetails.Where(x=>x.BranchId== model.BranchId)
-                                            .Select(x=> new EmployeeBranchDetDto
-                                            {
-                                                DepartmentName  = x.Department.DepartmentType.Department.Trim(),
-                                                DepartmentId = x.DepartmentId,
-                                                RoleName = x.MaRole.Role,
-                                                MaUserRightsViewDto = x.MaUserPagePermisions.Select(x=>
-                                                new MaUserRightsDto()
-                                                {
-                                                    UserDetailsId=x.UserDetailsId,
-                                                    PageMenuId = x.PageMenuId,
-                                                    IsApprove = x.IsApprove,
-                                                    IsView=x.IsView,
-                                                    IsCreate=x.IsCreate,
-                                                    IsDelete=x.IsDelete,
-                                                    IsEdit=x.IsEdit,
-                                                    IsCancel=x.IsCancel,
-                                                    IsEditApproved=x.IsEditApproved,
-                                                    IsEmail=x.IsEmail,
-                                                    IsPrint=x.IsPrint,
-                                                    IsHigherApprove=x.IsHigherApprove,
-                                                    FrequentlyUsed=x.FrequentlyUsed,
-
-                                                } ).ToList()
-
-                                            }).FirstOrDefault(),
-                    //UserRightsDto= x.EmployeeBranchDetails.Where(x => x.BranchId == model.BranchId)
-                    //                .Select(x=> new MaUserRightsDto()
-                    //                {
-                    //                    PageMenuId = x.MaUserPagePermisions.Select(x=> new )
-                    //                }).FirstOrDefault(),
-
-                  //  DepartmentName = x.EmployeeBranchDetails.,
-                    CompanyDet = new CompanyDto { Id = model.CompanyId, Name= model.CompanyName },
-                    BranchDet = new BranchDto { Id = x.CreatedBranchId, Name = x.CreatedBranchCompany.Company,
-                                               ArabicName = x.CreatedBranchCompany.ArabicName,
-                                                EmailAddress = x.CreatedBranchCompany.EmailAddress,
-                                                HOCompanyArName = x.CreatedBranchCompany.HocompanyName,
-                                                HOCompanyName = x.CreatedBranchCompany.HocompanyNameArabic,
-                                                 MobileNumber = x.MobileNumber},
-                   // FinYearEndDate = x.CreatedBranchCompany.
-                   SalesTaxNo = x.CreatedBranchCompany.SalesTaxNo,
-                   CentralTaxNo = x.CreatedBranchCompany.CentralSalesTaxNo,
-                }).FirstOrDefault(u => u.Username == model.Username);
-
-        if(_User == null)
-        return CommonResponse.Error("User Account not found");
-
-            string encryptedInputPassword = _encryptService.Encrypt(model.Password);
-            if (_User.Password != encryptedInputPassword)
-                return CommonResponse.Error("Invalid password");
-
-        //var user = _users.SingleOrDefault(x => x.UserName == model.Username && x.Password == model.Password);
-      
-            _User.Token = _jwtsecret.GenerateJwtToken(_User);
-
-            return CommonResponse.Ok(_User);
-        }catch(Exception ex) {
+                    Users = userData,
+                    UserPageListView = data,
+                    Token = Token,
+                };
+                //Log.Information("Authentication successful. AuthResponse: {@AuthResponse}", authResponse);
+                return CommonResponse.Ok(authResponse);
+            }
+            else
+            {
+                // Authentication failed
+                return CommonResponse.Error();
+            }
+        }
+        catch
+        {
+            // Log the exception details
+           // Log.Error("An error occurred during authentication.");
             return CommonResponse.Error();
         }
     }
 
-    public AuthResponseDto GetUserById(int? id)
+
+    public List<treeview> GetTree(List<UserPageListView> list, int? parent)
     {
-        if (_User == null) return null!;
-        if (_User.Id == id) return _User;
+        return list.Where(x => x.ParentID == parent).Select(x => new treeview
+        {
+            ID = x.ID,
+            MenuText = x.MenuText,
+            MenuValue = x.MenuValue,
+            Url = x.Url,
+            ParentID = x.ParentID ?? 0, // Use 0 if ParentID is null
+            IsPage = x.IsPage,
+            VoucherID = x.VoucherID,
+            ShortcutKey = x.ShortcutKey,
+            ToolTipText = x.ToolTipText,
+            IsView = x.IsView,
+            IsCreate = x.IsCreate,
+            IsCancel = x.IsCancel,
+            IsApprove = x.IsApprove,
+            IsEditApproved = x.IsEditApproved,
+            IsHigherApprove = x.IsHigherApprove,
+            IsPrint = x.IsPrint,
+            IsEMail = x.IsEMail,
 
-        return null!;
-
+            Submenu = GetTree(list, x.ID)
+        }).ToList();
     }
-
     public int? GetId()
     {
-        return _User.Id;
+        return _User.Users.EmployeeID;
     }
 
     public string GetUserName()
     {
-        return _User.Username;
+        return _User.Users.FirstName;
     }
+
     public int? GetBranchId()
     {
-        return _User?.BranchDet?.Id;
+        return _User.Users.BranchId;
     }
-  
 
+    public int? GetUserById(int? id)
+    {
+        return _User.Users.EmployeeID;
+    }
+
+    
 }
+

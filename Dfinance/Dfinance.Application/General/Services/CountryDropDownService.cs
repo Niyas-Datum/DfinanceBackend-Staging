@@ -18,11 +18,9 @@ namespace Dfinance.Application.General.Services
         public CommonResponse FillCountry()
         {
             try
-            {
-                // Execute the stored procedure
-                var data = _dFCoreContext.SpCountryDropDown.FromSqlRaw("Exec DropDownListSP @Criteria = 'FillMaMisc',@StrParam='Country'").ToList();
-                // Extract Id and Value from the result of the stored procedure
-                var macountry = data.Select(item => new SpCountryDropDown
+            {               
+                var data = _dFCoreContext.SpFillMaMisc.FromSqlRaw("Exec DropDownListSP @Criteria = 'FillMaMisc',@StrParam='Country'").ToList();              
+                var macountry = data.Select(item => new SpFillMaMisc
                 {
                     ID = item.ID,
                     Value = item.Value

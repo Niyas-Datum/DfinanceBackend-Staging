@@ -5,7 +5,9 @@ using Dfinance.Core.Domain;
 using Dfinance.Core.Infrastructure;
 using Dfinance.Core.Views.General;
 using Dfinance.Shared.Domain;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace Dfinance.Application.General.Services
 {
@@ -23,15 +25,7 @@ namespace Dfinance.Application.General.Services
             
             var data = _context.SpFillDesignationMaster.FromSqlRaw("Exec spMaDesignations @Criteria = 'FillDesignationMaster'").ToList();
 
-           
-            var maDesignation= data.Select(item => new SpDesignationMasterG
-            {
-                ID = item.ID,
-                Name = item.Name
-            }).ToList();
-
-            
-            return CommonResponse.Ok(maDesignation);
+            return CommonResponse.Ok(data);
         }
         public CommonResponse GetAllDesignationById(int Id)
         {
@@ -39,17 +33,8 @@ namespace Dfinance.Application.General.Services
                 {
                     string criteria = "FillDesignationWithID";
                     var result = _context.SpDesignationMasterByIdG.FromSqlRaw($"EXEC spMaDesignations @Criteria='{criteria}',@ID='{Id}'").ToList();
-                var res = result.Select(i => new SpDesignationMasterByIdG
-                {
-                    ID = i.ID,
-                    Name = i.Name,
-                    Company = i.Company,
-                    CreatedBranchID = i.CreatedBranchID,
-                    CreatedBy = i.CreatedBy,
-                    CreatedOn = i.CreatedOn,
-                    ActiveFlag = i.ActiveFlag,
-                 }).ToList();
-            return CommonResponse.Ok(res);
+               
+            return CommonResponse.Ok(result);
                 }
          catch (Exception ex)
           {
@@ -60,22 +45,23 @@ public CommonResponse AddDesignations(MaDesignationsDto designationsdto)
         {
             try
             {
-                designationsdto.CreatedBy = _authService.GetId().Value;
-                designationsdto.CreatedBranchID = _authService.GetBranchId().Value;
-                MaDesignation madesignations = new MaDesignation
-                {
-                    Name = designationsdto.Name,
-                    CreatedBy = designationsdto.CreatedBy,
-                    CreatedBranchId = designationsdto.CreatedBranchID,
-                    CreatedOn = designationsdto.CreatedOn,
-                };
+                int CreatedBy = _authService.GetId().Value;
+                int CreatedBranchId = _authService.GetBranchId().Value;
+                DateTime CreatedOn = DateTime.Now;
+                
                 string criteria = "InsertMaDesignations";
-                var result = _context.spMaDesignationsC.FromSqlRaw($"EXEC spMaDesignations @Criteria='{criteria}',@Name='{madesignations.Name}',@CreatedBy='{madesignations.CreatedBy}',@CreatedBranchID='{madesignations.CreatedBranchId}',@CreatedOn='{madesignations.CreatedOn}'").ToList();
-                var NewId = result.Select(i => new spMaDesignationsC
+
+                SqlParameter newIdUserRight = new SqlParameter("@NewID", SqlDbType.Int)
                 {
-                    NewID = i.NewID
-                }).ToList();
-                return CommonResponse.Created(NewId);
+                    Direction = ParameterDirection.Output
+                };
+                //var result = _context.Database.ExecuteSqlRaw($"EXEC spMaDesignations @Criteria='{criteria}',@Name='{designationsdto.Name}',@CreatedBy='{CreatedBy}',@CreatedBranchID='{CreatedBranchId}',@CreatedOn='{CreatedOn}',@NewID='{newIdUserRight}' OUTPUT");
+                var result = _context.Database.ExecuteSqlRaw("EXEC spMaDesignations " +
+         "@Criteria={0}, @Name={1}, @CreatedBy={2}, @CreatedBranchID={3}, @CreatedOn={4}, @NewID={5} OUTPUT",
+         criteria, designationsdto.Name, CreatedBy, CreatedBranchId, CreatedOn, newIdUserRight);
+
+                int NewIdUserRighnt = (int)newIdUserRight.Value;
+                return CommonResponse.Created(NewIdUserRighnt);
             }
             catch (Exception ex)
             {
@@ -86,21 +72,16 @@ public CommonResponse AddDesignations(MaDesignationsDto designationsdto)
         {
             try
             {
-                designationsdto.CreatedBy = _authService.GetId().Value;
-                designationsdto.CreatedBranchID= _authService.GetBranchId().Value;
+                int CreatedBy = _authService.GetId().Value;
+                int CreatedBranchId = _authService.GetBranchId().Value;
+                DateTime CreatedOn = DateTime.Now;
                 if (Id == 0)
                     return CommonResponse.Error("Designation Not Found");
                 else
                 {
-                    MaDesignation madesignations = new MaDesignation
-                    {
-                        Name = designationsdto.Name,
-                        CreatedBy = designationsdto.CreatedBy,
-                        CreatedBranchId = designationsdto.CreatedBranchID,
-                        CreatedOn = designationsdto.CreatedOn,
-                    };
+                   
                     string criteria = "UpdateMaDesignations";
-                    var result = _context.spMaDesignationsC.FromSqlRaw($"EXEC spMaDesignations @Criteria='{criteria}',@ID='{Id}', @Name='{madesignations.Name}',@CreatedBy='{madesignations.CreatedBy}',@CreatedBranchID='{madesignations.CreatedBranchId}',@CreatedOn='{madesignations.CreatedOn}'").ToList();
+                    var result = _context.Database.ExecuteSqlRaw($"EXEC spMaDesignations @Criteria='{criteria}',@ID='{Id}', @Name='{designationsdto.Name}',@CreatedBy='{CreatedBy}',@CreatedBranchID='{CreatedBranchId}',@CreatedOn='{CreatedOn}'");
                     return CommonResponse.Ok(result);
 
                 }
@@ -117,7 +98,7 @@ public CommonResponse AddDesignations(MaDesignationsDto designationsdto)
                 {
                     int Mode = 3;
                     string msg = "Designation is Suspended";
-                    var result = _context.spMaDesignationsC.FromSqlRaw($"EXEC spMaDesignations @Mode='{Mode}',@ID='{Id}'").ToList();
+                    var result = _context.Database.ExecuteSqlRaw($"EXEC spMaDesignations @Mode='{Mode}',@ID='{Id}'");
                     return CommonResponse.Ok(msg);
                 }
                 catch (Exception ex)

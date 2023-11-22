@@ -1,7 +1,5 @@
 
 using Dfinance.Shared.Configuration;
-using Dfinance.AuthAppllication.Authorization;
-using Dfinance.AuthAppllication.Services.Interface;
 using Dfinance.AuthAppllication.Middlewares;
 using Dfinance.api.Installers.ext;
 
@@ -13,6 +11,10 @@ var configuration = builder.Configuration;
 services.InstallerServiceInAssembly(configuration);
 
 var app = builder.Build();
+// Logfile
+//Log.Logger = new LoggerConfiguration()
+//    .WriteTo.File("D:\\UserFiles\\UPAS\\CommonWorkingProject(Upas)\\Dfinance\\Dfinance.AuthApplication\\LogFile\\logfile.txt")
+//    .CreateLogger();
 
 // swagger 
 var swaggerOptions = new SwaggerOptions();

@@ -4,8 +4,11 @@ using Dfinance.AuthAppllication.Services.Interface;
 using Dfinance.Core.Domain;
 using Dfinance.Core.Infrastructure;
 using Dfinance.Core.Views;
+using Dfinance.Core.Views.General;
 using Dfinance.Shared.Domain;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace Dfinance.Application.Services.General
 {
@@ -18,7 +21,7 @@ namespace Dfinance.Application.Services.General
             _context = context;
             _authService = authService;
         }
-
+        //***********************DropDown***********************
         public CommonResponse FillDepartmentTypes()
         {
             var data = _context.SpReDepartmentTypeFillAllDepartment.FromSqlRaw("Exec DropDownListSP @Criteria = 'fillDepartmentTypes'").ToList();
@@ -33,25 +36,47 @@ namespace Dfinance.Application.Services.General
             return CommonResponse.Ok(maDepartments);
         }
 
+
+        //**********************FillById********************************************************
+        public CommonResponse FillDepartmentTypesById(int Id)
+        {
+            try
+            {
+                int mod = 9;
+                var data = _context.spDepartmentTypesGetById
+                    .FromSqlRaw($"Exec spDepartmentTypes @Mode='{mod}', @ID='{Id}'")
+                    .ToList();
+                
+                return CommonResponse.Ok(data);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while fetching user by ID", ex);
+            }
+        }
+
+        //************************AddDepartment****************************************************
         public CommonResponse AddDepartmentTypes(DepartmentTypeDto departmentTypeDto)
         {
             try
             {
-                departmentTypeDto.CreatedBy = _authService.GetId().Value;
-                ReDepartmentType departmenttype = new ReDepartmentType
-                {
-                    Department = departmentTypeDto.Department,
-                    CreatedBy = departmentTypeDto.CreatedBy,
-                    CreatedBranchId = 1,
-                    CreatedOn = departmentTypeDto.CreatedOn,
-                };
+                int CreatedBy = _authService.GetId().Value;
+                int CreatedBranchId = _authService.GetBranchId().Value;
+                DateTime CreatedOn = DateTime.Now;
+
                 string criteria = "InsertReDepartmentTypes";
-                var result = _context.spDepartmentTypesC.FromSqlRaw($"EXEC spDepartmentTypes @Criteria='{criteria}',@Department='{departmenttype.Department}',@CreatedBy='{departmenttype.CreatedBy}',@BranchID='{1}',@CreatedOn='{departmenttype.CreatedOn}'").ToList();
-                var NewId = result.Select(i => new spDepartmentTypesC
+
+                SqlParameter newIdUserRight = new SqlParameter("@NewID", SqlDbType.Int)
                 {
-                    NewID = i.NewID
-                }).ToList();
-                return CommonResponse.Created(NewId);
+                    Direction = ParameterDirection.Output
+                };
+
+                _context.Database.ExecuteSqlRaw("EXEC spDepartmentTypes  @Criteria ={0},@Department={1},@CreatedBy={2},@BranchID={3},@CreatedOn={4},@NewID={5} OUTPUT",
+                                                criteria, departmentTypeDto.Department, CreatedBy, CreatedBranchId, CreatedOn, newIdUserRight);
+
+                int newIdValue = (int)newIdUserRight.Value;
+
+                return CommonResponse.Created(newIdValue);
             }
             catch (Exception ex)
             {
@@ -59,28 +84,24 @@ namespace Dfinance.Application.Services.General
             }
         }
 
+        //*****************************UpdateDepartment****************************************************
         public CommonResponse UpdateDepartmentTypes(DepartmentTypeDto departmentTypeDto,int Id)
         {
             try
             {
 
 
-                departmentTypeDto.CreatedBy = _authService.GetId().Value;
+                int CreatedBy = _authService.GetId().Value;
+                int CreatedBranchId = _authService.GetBranchId().Value;
+                DateTime CreatedOn = DateTime.Now;
                 if (Id == 0)
                     return CommonResponse.Error("Branch Not Found");
 
                 else
                 {
-                    ReDepartmentType departmenttype = new ReDepartmentType
-                    {
-                        Department = departmentTypeDto.Department,
-                        CreatedBy = departmentTypeDto.CreatedBy,
-                        CreatedBranchId = 1,
-                        CreatedOn = departmentTypeDto.CreatedOn,
-
-                    };
+                    
                     string criteria = "UpdateReDepartmentTypes";
-                    var result = _context.spDepartmentTypesC.FromSqlRaw($"EXEC spDepartmentTypes @Criteria='{criteria}',@ID='{Id}', @Department='{departmenttype.Department}',@CreatedBy='{departmenttype.CreatedBy}',@BranchID='{1}',@CreatedOn='{departmenttype.CreatedOn}'").ToList();
+                    var result = _context.Database.ExecuteSqlRaw($"EXEC spDepartmentTypes @Criteria='{criteria}',@ID='{Id}', @Department='{departmentTypeDto.Department}',@CreatedBy='{CreatedBy}',@BranchID='{CreatedBranchId}',@CreatedOn='{CreatedOn}'");
                 return CommonResponse.Ok(result);
                 }
             }
@@ -89,7 +110,7 @@ namespace Dfinance.Application.Services.General
                 return CommonResponse.Error(ex);
             }
         }
-
+        //**************************Delete*****************************
         public CommonResponse DeleteDepartmentTypes(int Id)
         {
             try

@@ -33,7 +33,7 @@ namespace Dfinance.Core.Infrastructure.Configurations
             * @use: connect Depratment type
             * @connection: one to many 
             * **/
-            builder.HasOne(k=> k.DepartmentType).WithMany(p=> p.MaDepartments)
+            builder.HasOne(k => k.DepartmentType).WithMany(p => p.MaDepartments)
                 .HasForeignKey(k => k.DepartmentTypeId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_MaDepartments_MaDepartments");

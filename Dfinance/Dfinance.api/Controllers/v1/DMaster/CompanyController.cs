@@ -21,6 +21,7 @@ public class CompanyController : BaseController
     }
 
     [HttpGet(ApiRoutes.Company.GetAll)]
+    [AllowAnonymous]
     public async Task<IActionResult> GetALl()
     {
         try
