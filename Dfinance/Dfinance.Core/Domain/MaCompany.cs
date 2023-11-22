@@ -44,7 +44,7 @@ namespace Dfinance.Core.Domain
         public DateTime CreatedOn { get; set; }
 
         public byte ActiveFlag { get; set; }
-        
+
         //FK
         public int? BranchCompanyId { get; set; }
 
@@ -84,7 +84,7 @@ namespace Dfinance.Core.Domain
         public virtual MaCompany? BranchCompany { get; set; }
 
         //contact person FK
-        public   virtual MaEmployee? ContactPerson { get; set; }
+        public virtual MaEmployee? ContactPerson { get; set; }
 
         public virtual ICollection<MaEmployee> CreatedBranchEmployees { get; set; }
 
@@ -96,6 +96,12 @@ namespace Dfinance.Core.Domain
 
         //rel: branch to empoyee details - 
         public virtual ICollection<MaEmployeeDetail>? CompanyEmployeeDetails { get; set; }
+
+        //relationship with CostCategory
+        public virtual ICollection<CostCategory>? BranchCostCategory { get; set; }
+
+        //relationship with MaArea
+        public virtual ICollection<MaArea>? BranchIdArea { get; set; }
 
     }
 }

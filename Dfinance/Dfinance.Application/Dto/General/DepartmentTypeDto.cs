@@ -9,8 +9,7 @@ namespace Dfinance.Application.Dto
     public class DepartmentTypeDto
     {
         public String Department {  get; set; }
-        public int CreatedBy {  get; set; }
-        public DateTime CreatedOn {  get; set; }
-        public int CreatedBranchID {  get; set; }
+      
+       
     }
 }

@@ -7,8 +7,7 @@ namespace Dfinance.Application.Dto
     {
         public MaCompanyDto()
         {
-            ActiveFlag = 1;
-            CreatedOn=DateTime.Now;
+            ActiveFlag = 1;           
         }
         [Required(ErrorMessage = "Name is mandatory!!")]        
         public string Company { get; set; }
@@ -29,14 +28,13 @@ namespace Dfinance.Application.Dto
         [Required(ErrorMessage = "Country is Mandatory!!")]        
         public string Country { get; set; }
        
-        public string? Pobox { get; set; }       
-        public int CreatedBy { get; set; }     
+        public string? Pobox { get; set; }                   
         public string? TelephoneNo { get; set; }      
         public string? MobileNo { get; set; }        
         public string? EmailAddress { get; set; }        
         public string? FaxNo { get; set; }      
-        public string? Remarks { get; set; }        
-        public int? BranchCompanyId { get; set; }        
+        public string? Remarks { get; set; }     
+               
         public string? SalesTaxNo { get; set; }       
         public string? CentralSalesTaxNo { get; set; }        
         public string? UniqueId { get; set; }
@@ -50,10 +48,7 @@ namespace Dfinance.Application.Dto
         public string? BulidingNo { get; set; }        
         public string? District { get; set; }       
         public string? Province { get; set; }       
-        public string? CountryCode { get; set; }
-
-        [DataType(DataType.DateTime)]
-        public DateTime CreatedOn { get; set; }
+        public string? CountryCode { get; set; }        
        public byte ActiveFlag { get; set; }
     }
 }

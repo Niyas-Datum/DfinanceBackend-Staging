@@ -46,6 +46,7 @@ namespace Dfinance.Shared.Routes.v1
             public const string Main = $"{Base}/dept";
 
             public const string GetAll = $"{Main}/FillAllDepartment";
+            public const string FillDepartmentTypesById= $"{Main}/FillDepartmentTypesById";
 
             public const string AddDepartmentTypes = $"{Main}/add";
 
@@ -54,13 +55,16 @@ namespace Dfinance.Shared.Routes.v1
             public const string DeleteDepartmentTypes = $"{Main}/delete/{{Id}}";
 
         }
-        public static class Employee
+        public static class User
         {
-            public const string Main = $"{Base}/Emp";
-
-            public const string AddEmployee = $"{Main}/add";
-
-            public const string GetAll = $"{Main}/DropDown";
+            public const string Main = $"{Base}/user";
+            public const string GetAllUser = $"{Main}/DropDown";
+            public const string GetUserById = $"{Main}/GetAllUserById";
+            public const string AddUser = $"{Main}/add";
+            public const string UpdateUser = $"{Main}/update/{{Id}}";
+            public const string DeleteUserRight = $"{Main}/deleteuserright/{{Id}}";
+            public const string DeleteBranchDetails = $"{Main}/deletebranchdetails/{{Id}}";
+            public const string DeleteUser = $"{Main}/deleteuser/{{Id}}";
         }
         public static class Designation
         {
@@ -90,6 +94,71 @@ namespace Dfinance.Shared.Routes.v1
 
             public const string FillCostCategoryById = $"{Main}/GetById";
 
+        }
+        public static class CostCentre
+        {
+            public const string Main = $"{Base}/CostCentre";
+
+            public const string SaveCostCentre = $"{Main}/Save";
+
+            public const string FillCostCentre = $"{Main}/Get";
+
+            public const string FillCostCentreById = $"{Main}/GetById";
+
+            public const string UpdateCostCentre = $"{Main}/Update/{{Id}}";
+
+            public const string DeleteCostCentre = $"{Main}/Delete";
+        }
+
+        public static class CostCategoryDropDown
+        {
+            public const string Main = $"{Base}/CostCategoryDropDown";
+
+            public const string GetAll = $"{Main}/Get";
+        }
+
+        public static class CostCentreDropDown
+        {
+            public const string Main = $"{Base}/CostCentreDropDown";
+
+            public const string GetAll = $"{Main}/Get";
+        }
+
+        public static class StatusDropDown
+        {
+            public const string Main = $"{Base}/StatusDropDown";
+
+            public const string GetAll = $"{Main}/Get";
+        }
+
+        public static class Category
+        {
+            public const string Main = $"{Base}/Category";
+
+            public const string SaveCategory = $"{Main}/Save";
+
+            public const string UpdateCategory = $"{Main}/Update";
+
+            public const string DeleteCategory = $"{Main}/Delete";
+
+            public const string GetCategory = $"{Main}/Get";
+
+            public const string GetCategoryById = $"{Main}/GetById";
+        }
+
+        public static class  AreaMaster
+        {
+            public const string Main = $"{Base}/AreaMaster";
+
+            public const string SaveAreaMaster = $"{Main}/Save";
+
+            public const string UpdateAreaMaster = $"{Main}/Update";
+
+            public const string DeleteAreaMaster = $"{Main}/Delete";
+
+            public const string GetAreaMaster = $"{Main}/Get";
+            
+            public const string GetAreaMasterById = $"{Main}/GetById";
         }
     }
 }

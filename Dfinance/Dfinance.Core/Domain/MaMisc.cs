@@ -10,7 +10,7 @@ namespace Dfinance.Core.Domain
 {
     public partial class MaMisc
     {
-        
+        [Key]
         public int Id { get; set; }
         public string Value { get; set; }
         public string Description { get; set; }

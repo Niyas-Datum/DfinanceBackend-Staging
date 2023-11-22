@@ -14,8 +14,9 @@ namespace Dfinance.Core.Infrastructure.Configurations
         public void Configure(EntityTypeBuilder<MaEmployee> builder)
         {
             builder.HasKey(e => e.Id).HasName("PK_Employees");
-            builder.HasIndex(e => e.UserName, "IX_MaEmployees").IsUnique();
+            builder.HasIndex(e => e.Username, "IX_MaEmployees").IsUnique();
             builder.Property(e => e.Id).HasColumnName("ID");
+            builder.Property(e => e.Username).HasColumnName("UserName");
             builder.Property(e => e.AccountId).HasColumnName("AccountID");
             builder.Property(e => e.CreatedBranchId).HasColumnName("CreatedBranchID");
 
@@ -25,7 +26,9 @@ namespace Dfinance.Core.Infrastructure.Configurations
             builder.HasMany(x => x.EmployeeBranchDetails).WithOne(x => x.Employee)
                 .HasForeignKey(x => x.EmployeeId);
 
-                //.HasConstraintName("FK_MaCompanies_MaEmployees1");
+            //.HasConstraintName("FK_MaCompanies_MaEmployees1");
+            builder.Ignore(e => e.LogInfos);
         }
+       
     }
 }

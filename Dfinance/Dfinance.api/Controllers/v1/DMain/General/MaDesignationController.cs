@@ -37,7 +37,7 @@ namespace Dfinance.api.Controllers.v1.DMain.General
             }
         }
         [HttpGet(ApiRoutes.Designation.GetAllDesignationById)]
-        public IActionResult GetAllBranchByID(int Id)
+        public IActionResult GetAllDesignationById(int Id)
         {
             try
             {

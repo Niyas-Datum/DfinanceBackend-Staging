@@ -20,5 +20,6 @@ namespace Dfinance.Shared.Domain
         public static CommonResponse Ok(object resource = null) { return new CommonResponse(200, resource); }
         public static CommonResponse Created(object resource) { return new CommonResponse(201, resource); }
         public static CommonResponse Error(object resource = null) { return new CommonResponse(500, resource); }
+        public static CommonResponse NotFound(object resource = null) { return new CommonResponse(404,resource); }
     }
 }
