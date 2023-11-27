@@ -29,11 +29,11 @@ namespace Dfinance.Application.Services.General
             _encryptService = encryptService;
 
         }
-        public CommonResponse FillUser()
+        public CommonResponse UserDropDown()
         {
             try
             {
-                var data = _context.SpFillEmployees.FromSqlRaw("Exec DropDownListSP @Criteria='FillEmployees'").ToList();
+                var data = _context.SpDropDownCommon.FromSqlRaw("Exec DropDownListSP @Criteria='FillEmployees'").ToList();
 
                 return CommonResponse.Ok(data);
             }
@@ -42,9 +42,24 @@ namespace Dfinance.Application.Services.General
                 return CommonResponse.Error(ex);
             }
         }
-        //888888888888888888888888888*UserGetByID*8888888888888888888888888888888888888888888888888888888888888888
+        //888888888888888888888888888*UserGet*8888888888888888888888888888888888888888888888888888888888888888
+        public CommonResponse FillUser()
+        {
+            try
+            {
+                int BranchId = _authService.GetBranchId().Value;
+                string criteria = "FillEmployeeMaster";
+                var data = _context.SpUser.FromSqlRaw($"Exec spNewEmployees @Criteria='{criteria}',@BranchID='{BranchId}'").ToList();
 
-        public CommonResponse GetUserById(int Id)
+                return CommonResponse.Ok(data);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while fetching user", ex);
+            }
+        }
+        //888888888888888888888888888*UserGetById*8888888888888888888888888888888888888888888888888888888888888888
+        public CommonResponse FillUserById(int Id)
         {
             try
             {
@@ -68,7 +83,7 @@ namespace Dfinance.Application.Services.General
 
 
         //888888888888888888888888888*Add*8888888888888888888888888888888888888888888888888888888888888888
-        public CommonResponse AddUser(UserDto userDto)
+        public CommonResponse SaveUser(UserDto userDto)
         {
             try
             {
@@ -84,7 +99,7 @@ namespace Dfinance.Application.Services.General
                     Direction = ParameterDirection.Output
                 };
                 _context.Database.ExecuteSqlRaw("EXEC spNewEmployees @Criteria={0}, @FirstName={1},@MiddleName={2},@LastName={3},@Address={4},@EmailID={5},@OfficeNumber={6},@MobileNumber={7},@DesignationID={8},@Active={9},@EmployeeType={10},@UserName={11},@Password={12},@GmailID={13},@IsLocationRestrictedUser={14},@PhotoID={15},@CreatedBranchId={16},@AccountID={17},@ImagePath={18},@NewID={19} OUTPUT", criteria,
-                userDto.FirstName, userDto.MiddleName, userDto.LastName, userDto.Address, userDto.EmailId, userDto.OfficeNumber, userDto.MobileNumber, userDto.DesignationId, userDto.Active, userDto.EmployeeType, userDto.Username, userDto.Password, userDto.GmailId, userDto.IsLocationRestrictedUser, userDto.PhotoId, CreatedBranchId, userDto.AccountId, userDto.ImagePath, newIdparam);
+                userDto.FirstName, userDto.MiddleName, userDto.LastName, userDto.Address, userDto.EmailId, userDto.OfficeNumber, userDto.MobileNumber, userDto.DesignationId, userDto.Active, userDto.EmployeeType, userDto.Username, Passwordtemp, userDto.GmailId, userDto.IsLocationRestrictedUser, userDto.PhotoId, CreatedBranchId, userDto.AccountId, userDto.ImagePath, newIdparam);
 
                 int NewIdUser = (int)newIdparam.Value;
                 //********************************************************************
@@ -315,104 +330,6 @@ namespace Dfinance.Application.Services.General
     }
 }
 
-
-
-
-         //public CommonResponse UpdateUser(UserDto userDto, int Id)
-         //{
-         //    try
-         //    {
-         //        // Find the user by their ID, including related entities.
-         //        var user = _context.MaEmployees
-         //            .Include(e => e.EmployeeBranchDetails)
-         //            .ThenInclude(d => d.MaUserPagePermisions)
-         //            .FirstOrDefault(e => e.Id == Id);
-
-//        if (user == null)
-//        {
-//            return CommonResponse.Error("User not found");
-//        }
-
-
-
-
-
-//        user.FirstName = userDto.FirstName;
-//        user.MiddleName = userDto.MiddleName;
-//        user.LastName = userDto.LastName;
-//        user.Address = userDto.Address;
-//        user.EmailId = userDto.EmailId;
-//        user.ResidenceNumber = userDto.ResidenceNumber;
-//        user.OfficeNumber = userDto.OfficeNumber;
-//        user.MobileNumber = userDto.MobileNumber;
-//        user.DesignationId = userDto.DesignationId;
-//        user.Active = userDto.Active;
-//        user.EmployeeType = userDto.EmployeeType;
-//        user.UserName = userDto.Username;
-//        user.CreatedOn = userDto.CreatedOn;
-
-//        var Passwordtemp = _encryptService.Encrypt(userDto.Password);
-//        user.Password = Passwordtemp;
-
-//        user.GmailId = userDto.GmailId;
-//        user.IsLocationRestrictedUser = userDto.IsLocationRestrictedUser;
-//        user.PhotoId = userDto.PhotoId;
-//        user.CreatedBranchId = _authService.GetBranchId().Value;
-//        user.AccountId = userDto.AccountId;
-//        user.ImagePath = userDto.ImagePath;
-
-
-
-//        // Update or add user branch details and page permissions from the DTO.
-//        foreach (var data in userDto.userbranchdetailsDto)
-//        {
-
-
-
-//             MaEmployeeDetail   userDetails = new MaEmployeeDetail
-//                {
-//                    //EmployeeId = Id,
-//                    BranchId = data.BranchId,
-//                    DepartmentId = data.DepartmentId,
-//                    SupervisorId = data.SupervisorId,
-//                    CreatedOn = data.CreatedOn,
-//                    MaRoleId = data.MaRoleId,
-//                    MaUserPagePermisions = new List<MaUserRight>()
-//                };
-
-
-
-
-//            //********************************************************************
-//            MaUserRight maUserRight = new MaUserRight
-//            {
-//                UserDetailsId = userDto.UserDetailsId,
-//                PageMenuId = userDto.PageMenuId,
-//                IsView = userDto.IsView,
-//                IsCreate = userDto.IsCreate,
-//                IsEdit = userDto.IsEdit,
-//                IsCancel = userDto.IsCancel,
-//                IsDelete = userDto.IsDelete,
-//                IsApprove = userDto.IsApprove,
-//                IsEditApproved = userDto.IsEditApproved,
-//                IsHigherApprove = userDto.IsHigherApprove,
-//                IsPrint = userDto.IsPrint,
-//                IsEmail = userDto.IsEMail,
-//                FrequentlyUsed = userDto.FrequentlyUsed,
-//            };
-//            string criteria2 = "UpdateMaUserRights";
-
-
-//            _context.Database.ExecuteSqlRaw("EXEC spNewEmployees @Criteria={0},@UserDetailsID={1},@PageMenuID={2},@IsView={3},@IsCreate={4},@IsEdit={5},@IsCancel={6},@IsDelete={7},@IsApprove={8},@IsEditApproved={9},@IsHigherApprove={10},@IsPrint={11},@IsEmail={12},@FrequentlyUsed={13}",
-//                criteria2, maUserRight.UserDetailsId, maUserRight.PageMenuId, maUserRight.IsView, maUserRight.IsCreate, maUserRight.IsEdit, maUserRight.IsCancel, maUserRight.IsDelete, maUserRight.IsApprove, maUserRight.IsEditApproved, maUserRight.IsHigherApprove, maUserRight.IsPrint, maUserRight.IsEmail, maUserRight.FrequentlyUsed);
-
-//            return CommonResponse.Created("Successfully Updated");
-//        }
-//    }
-//    catch (Exception ex)
-//    {
-//        throw new Exception("An error occurred while adding user and details", ex);
-//    }
 
 
 

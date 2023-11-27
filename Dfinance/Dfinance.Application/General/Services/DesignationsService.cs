@@ -11,23 +11,23 @@ using System.Data;
 
 namespace Dfinance.Application.General.Services
 {
-    public class MaDesignationsService : IMaDesignationsService
+    public class DesignationsService : IDesignationsService
     {
         private readonly DFCoreContext _context;
         private readonly IAuthService _authService;
-        public MaDesignationsService(DFCoreContext context, IAuthService authService)
+        public DesignationsService(DFCoreContext context, IAuthService authService)
         {
             _context = context;
             _authService = authService;
         }
-        public CommonResponse GetAllDesignation()
+        public CommonResponse FillAllDesignation()
         {
             
             var data = _context.SpFillDesignationMaster.FromSqlRaw("Exec spMaDesignations @Criteria = 'FillDesignationMaster'").ToList();
 
             return CommonResponse.Ok(data);
         }
-        public CommonResponse GetAllDesignationById(int Id)
+        public CommonResponse FillDesignationById(int Id)
         {
                 try
                 {
@@ -41,7 +41,7 @@ namespace Dfinance.Application.General.Services
              return CommonResponse.Error(ex);
            }
 }
-public CommonResponse AddDesignations(MaDesignationsDto designationsdto)
+public CommonResponse SaveDesignations(DesignationsDto designationsdto)
         {
             try
             {
@@ -68,7 +68,7 @@ public CommonResponse AddDesignations(MaDesignationsDto designationsdto)
                 return CommonResponse.Error(ex.Message);
             }
         }
-        public CommonResponse UpdateDesignation(MaDesignationsDto designationsdto, int Id)
+        public CommonResponse UpdateDesignation(DesignationsDto designationsdto, int Id)
         {
             try
             {

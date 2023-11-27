@@ -1,13 +1,11 @@
 ﻿using Dfinance.Core.Infrastructure;
 using Dfinance.Shared.Domain;
-using Dfinance.Core.Domain;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using Dfinance.Application.General.Services.Interface;
 using Dfinance.Core.Views;
 using Dfinance.AuthAppllication.Services.Interface;
 using Dfinance.Application.Dto;
-using Dfinance.Core.Views.General;
 using Microsoft.Data.SqlClient;
 using Dfinance.Application.Dto.Common;
 
@@ -18,48 +16,26 @@ namespace Dfinance.Application.General.Services
         private readonly DFCoreContext _context;
         private readonly IAuthService _authService;
        
+       
         public BranchService(DFCoreContext context, IAuthService authService)
         {
             _context = context;
-            _authService = authService;
-         
+            _authService = authService;         
         }
-        //GetBranches for Login
-        public CommonResponse GetBranches()
+
+        /******Fill all branch dropdown******/
+
+        public CommonResponse GetBranchesDropDown()
         {
-            try
-            {
-                var companies = _context.MaBranches
-                    .Select(c => new DropdownDto
-                    {
-                        Id = c.Id,
-                        Value = c.Company,
-
-                    })
-                    .ToList();
-
-                return CommonResponse.Ok(companies);
-            }
-            catch (Exception ex)
-            {
-                return CommonResponse.Error(ex.Message);
-            }
-        }
-
-        //Fill all branch dropdown
-        public CommonResponse Fillallbranch()
-        {         
-            var data = _context.SpMacompanyFillallbranch.FromSqlRaw("Exec DropDownListSP @Criteria = 'fillallbranch'").ToList();
-
-            var maBranches = data.Select(item => new SpMacompanyFillallbranch
-            {
-                Id = item.Id,
-                Name = item.Name
-            }).ToList();
+            
+            var data = _context.SpMacompanyFillallbranch.FromSqlRaw("Exec DropDownListSP @Criteria = 'fillallbranch'").ToList();           
            
-            return CommonResponse.Ok(maBranches);
+            return CommonResponse.Ok(data);
         }
-        public CommonResponse SaveBranch(MaCompanyDto companyDto)
+      
+        /**************************  SAVE  *************************/
+
+        public CommonResponse SaveBranch(BranchDto branchDto)
         {
             try
             {
@@ -78,40 +54,40 @@ namespace Dfinance.Application.General.Services
                     "@District={28},@Province={29},@CountryCode={30},@ActiveFlag={31},@NewID={32} OUTPUT",
                     criteria,
                     BranchCompanyId,
-                    companyDto.Company,
-                    companyDto.ContactPersonId,
-                    companyDto.Nature,
-                    companyDto.AddressLineOne,
-                    companyDto.AddressLineTwo,
-                    companyDto.City,
-                    companyDto.Country,
-                    companyDto.Pobox,
-                    companyDto.TelephoneNo,
-                    companyDto.MobileNo,
-                    companyDto.EmailAddress,
-                    companyDto.FaxNo,
-                    companyDto.Remarks,
+                    branchDto.CompanyName,
+                    branchDto.ContactPerson.Id,
+                    branchDto.BranchType.Key,
+                    branchDto.AddressLineOne,
+                    branchDto.AddressLineTwo,
+                    branchDto.City,
+                    branchDto.Country.Value,
+                    branchDto.PObox,
+                    branchDto.Telephone,
+                    branchDto.Mobile,
+                    branchDto.EmailAddress,
+                    branchDto.FaxNo,
+                    branchDto.Remarks,
                     CreatedBy,
                     BranchCompanyId,
-                    companyDto.SalesTaxNo,
-                    companyDto.CentralSalesTaxNo,
-                    companyDto.UniqueId,
-                    companyDto.Reference,
-                    companyDto.BankCode,
-                    companyDto.Dl1,
-                    companyDto.Dl2,
-                    companyDto.ArabicName,
-                    companyDto.HocompanyName,
-                    companyDto.HocompanyNameArabic,
-                    companyDto.BulidingNo,
-                    companyDto.District,
-                    companyDto.Province,
-                    companyDto.CountryCode,
-                    companyDto.ActiveFlag,
+                    branchDto.VATNo,
+                    branchDto.CentralSalesTaxNo,
+                    branchDto.UniqueId,
+                    branchDto.Reference,
+                    branchDto.BankCode,
+                    branchDto.Dl1,
+                    branchDto.Dl2,
+                    branchDto.ArabicName,
+                    branchDto.HocompanyName,
+                    branchDto.HocompanyNameArabic,
+                    branchDto.BuildingNo,
+                    branchDto.District,
+                    branchDto.Province,
+                    branchDto.CountryCode,
+                    branchDto.Active,
                     newIdParam);
 
                 var NewId = newIdParam.Value;
-                return CommonResponse.Created("Branch "+companyDto.Company + " is Created Successfully");
+                return CommonResponse.Created("Branch "+branchDto.CompanyName + " is Created Successfully");
             }
             catch (Exception ex)
             {
@@ -119,7 +95,8 @@ namespace Dfinance.Application.General.Services
             }
         }
 
-        public CommonResponse UpdateBranch(MaCompanyDto companyDto, int Id)
+        /*************************  UPDATE  ************************/
+        public CommonResponse UpdateBranch(BranchDto branchDto, int Id)
         {
             try
             {
@@ -129,7 +106,7 @@ namespace Dfinance.Application.General.Services
                 else
                 {
                     string criteria = "UpdateMaCompanies";
-                    var result = _context.Database.ExecuteSqlRaw($"EXEC spCompany @ID='{Id}',@Criteria='{criteria}',@Company='{companyDto.Company}',@ContactPersonID='{companyDto.ContactPersonId}',@Nature='{companyDto.Nature}',@AddressLineOne='{companyDto.AddressLineOne}',@AddressLineTwo='{companyDto.AddressLineTwo}',@City='{companyDto.City}',@Country='{companyDto.Country}',@POBox='{companyDto.Pobox}',@TelephoneNo='{companyDto.TelephoneNo}',@MobileNo='{companyDto.MobileNo}',@EmailAddress='{companyDto.EmailAddress}',@FaxNo='{companyDto.FaxNo}',@Remarks='{companyDto.Remarks}',@CreatedBy='{CreatedBy}',@SalesTaxNo='{companyDto.SalesTaxNo}',@CentralSalesTaxNo='{companyDto.CentralSalesTaxNo}',@UniqueID='{companyDto.UniqueId}',@Reference='{companyDto.Reference}',@BankCode='{companyDto.BankCode}',@DL1='{companyDto.Dl1}',@DL2='{companyDto.Dl2}',@ArabicName='{companyDto.ArabicName}',@HOCompanyName='{companyDto.HocompanyName}',@HOCompanyNameArabic='{companyDto.HocompanyNameArabic}',@BulidingNo='{companyDto.BulidingNo}',@District='{companyDto.District}',@Province='{companyDto.Province}',@CountryCode='{companyDto.CountryCode}',@CreatedOn='{DateTime.Now}',@ActiveFlag='{companyDto.ActiveFlag}'");
+                    var result = _context.Database.ExecuteSqlRaw($"EXEC spCompany @ID='{Id}',@Criteria='{criteria}',@Company='{branchDto.CompanyName}',@ContactPersonID='{branchDto.ContactPerson.Id}',@Nature='{branchDto.BranchType.Key}',@AddressLineOne='{branchDto.AddressLineOne}',@AddressLineTwo='{branchDto.AddressLineTwo}',@City='{branchDto.City}',@Country='{branchDto.Country.Value}',@POBox='{branchDto.PObox}',@TelephoneNo='{branchDto.Telephone}',@MobileNo='{branchDto.Mobile}',@EmailAddress='{branchDto.EmailAddress}',@FaxNo='{branchDto.FaxNo}',@Remarks='{branchDto.Remarks}',@CreatedBy='{CreatedBy}',@SalesTaxNo='{branchDto.VATNo}',@CentralSalesTaxNo='{branchDto.CentralSalesTaxNo}',@UniqueID='{branchDto.UniqueId}',@Reference='{branchDto.Reference}',@BankCode='{branchDto.BankCode}',@DL1='{branchDto.Dl1}',@DL2='{branchDto.Dl2}',@ArabicName='{branchDto.ArabicName}',@HOCompanyName='{branchDto.HocompanyName}',@HOCompanyNameArabic='{branchDto.HocompanyNameArabic}',@BulidingNo='{branchDto.BuildingNo}',@District='{branchDto.District}',@Province='{branchDto.Province}',@CountryCode='{branchDto.CountryCode}',@CreatedOn='{DateTime.Now}',@ActiveFlag='{branchDto.Active}'");
                     return CommonResponse.Ok("Branch Updated Successfully");
                 }
             }
@@ -138,6 +115,9 @@ namespace Dfinance.Application.General.Services
                 return CommonResponse.Error(ex);
             }
         }
+
+
+        /*******************************   DELETE   *************************/
         public CommonResponse DeleteBranch(int Id)
         {
             try
@@ -172,7 +152,9 @@ namespace Dfinance.Application.General.Services
                 return CommonResponse.Error(ex);
             }
         }
-        public CommonResponse GetAllBranch()
+
+        /*****************  Fill All Branch Details   *********************/
+        public CommonResponse FillAllBranch()
         {
             try
             {
@@ -187,7 +169,8 @@ namespace Dfinance.Application.General.Services
             }
         }
 
-        public CommonResponse GetBranchByID(int Id)
+        /*************************  Fill Branch by ID   ****************************/
+        public CommonResponse FillBranchByID(int Id)
         {
             try
             {

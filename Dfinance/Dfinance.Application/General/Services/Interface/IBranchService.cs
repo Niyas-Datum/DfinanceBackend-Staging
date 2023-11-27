@@ -5,13 +5,14 @@ namespace Dfinance.Application.General.Services.Interface
 {
     public interface IBranchService
     {
-       // CommonResponse GetBranches();
-        CommonResponse Fillallbranch();
-        CommonResponse SaveBranch(MaCompanyDto companyDto);
-        CommonResponse UpdateBranch(MaCompanyDto companyDto,int Id);
+        CommonResponse GetBranchesDropDown();      
+        CommonResponse SaveBranch(BranchDto companyDto);
+        CommonResponse UpdateBranch(BranchDto companyDto,int Id);
         CommonResponse DeleteBranch(int Id);
-        CommonResponse GetAllBranch();
-        CommonResponse GetBranchByID(int Id);
+        CommonResponse FillAllBranch();
+        CommonResponse FillBranchByID(int Id);
+     
+
 
     }
 }

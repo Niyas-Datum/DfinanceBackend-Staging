@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace Dfinance.Application.General.Services.Interface
 {
-    public interface IMaDesignationsService
+    public interface IDesignationsService
     {
-        CommonResponse GetAllDesignation();
-        CommonResponse GetAllDesignationById(int Id);
-        CommonResponse AddDesignations(MaDesignationsDto designationsdto);
-        CommonResponse UpdateDesignation(MaDesignationsDto designationsdto,int Id);
+        CommonResponse FillAllDesignation();
+        CommonResponse FillDesignationById(int Id);
+        CommonResponse SaveDesignations(DesignationsDto designationsdto);
+        CommonResponse UpdateDesignation(DesignationsDto designationsdto,int Id);
         CommonResponse DeleteDesignation(int Id);
     }
 }

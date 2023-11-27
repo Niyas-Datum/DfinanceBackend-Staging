@@ -14,15 +14,15 @@ namespace Dfinance.Shared.Routes.v1
         }
         public static class Company
         {
-            public const string Main = $"{Base}/cmp";
+            public const string Main = $"{Base}/Company";
 
-            public const string GetAll = $"{Main}/all";
+            public const string GetAll = $"{Main}/CmpLogin";
         }
         public static class Branch
         {
             public const string Main = $"{Base}/branch";
 
-            public const string GetAllBranch = $"{Main}/all";
+            public const string GetBranchDropDown = $"{Main}/DropDown";
 
             public const string FillAllBranch = $"{Main}/FillAllBranch";
 
@@ -32,7 +32,7 @@ namespace Dfinance.Shared.Routes.v1
 
             public const string Delete = $"{Main}/delete/{{Id}}";
 
-            public const string GetAllById = $"{Main}/GetAllById/{{Id}}";
+            public const string FillBranchById = $"{Main}/FillBranchById/{{Id}}";
         }
         public static class Country
         {
@@ -40,15 +40,24 @@ namespace Dfinance.Shared.Routes.v1
 
             public const string GetAll = $"{Main}/DropDown";
         }
-       
-        public static class DepartmentType
-        {
-            public const string Main = $"{Base}/dept";
+        public static class Department
+        { 
 
-            public const string GetAll = $"{Main}/FillAllDepartment";
+          public const string Main = $"{Base}/dept";
+            public const string DropDown = $"{Main}/DropDownDepartemnt";
+            public const string FillAllDepartment = $"{Main}/FillAllDepartment";
+
+        public const string FillDepartmentById = $"{Main}/FillDepartmentById";
+         }
+            public static class DepartmentType
+        {
+            public const string Main = $"{Base}/depttyp";
+
+            public const string FillAll = $"{Main}/FillAllDepartmentTypes";
+
             public const string FillDepartmentTypesById= $"{Main}/FillDepartmentTypesById";
 
-            public const string AddDepartmentTypes = $"{Main}/add";
+            public const string SaveDepartmentTypes = $"{Main}/Save";
 
             public const string UpdateDepartmentTypes = $"{Main}/update/{{Id}}";
 
@@ -58,27 +67,35 @@ namespace Dfinance.Shared.Routes.v1
         public static class User
         {
             public const string Main = $"{Base}/user";
-            public const string GetAllUser = $"{Main}/DropDown";
-            public const string GetUserById = $"{Main}/GetAllUserById";
-            public const string AddUser = $"{Main}/add";
+
+            public const string UserDropDown = $"{Main}/UserDropDown";
+            public const string FillUser= $"{Main}/FillUser";
+
+            public const string FillUserById = $"{Main}/FillUserById";
+
+            public const string SaveUser = $"{Main}/Save";
+
             public const string UpdateUser = $"{Main}/update/{{Id}}";
+
             public const string DeleteUserRight = $"{Main}/deleteuserright/{{Id}}";
+
             public const string DeleteBranchDetails = $"{Main}/deletebranchdetails/{{Id}}";
+
             public const string DeleteUser = $"{Main}/deleteuser/{{Id}}";
         }
         public static class Designation
         {
-            public const string Main = $"{Base}/dept";
+            public const string Main = $"{Base}/Desg";
 
-            public const string GetAllDesignation = $"{Main}/FillAllDesignation";
+            public const string FillAllDesignation = $"{Main}/FillAllDesignation";
 
-            public const string GetAllDesignationById = $"{Main}/GetAllDesignationById";
+            public const string FillDesignationById = $"{Main}/FillDesignationById";
 
-            public const string AddDesignation = $"{Main}/add";
+            public const string SaveDesignation = $"{Main}/Save";
 
-            public const string UpdateDesignation = $"{Main}/update/{{Id}}";
+            public const string UpdateDesignation = $"{Main}/Update/{{Id}}";
 
-            public const string DeleteDesignation = $"{Main}/delete/{{Id}}";
+            public const string DeleteDesignation = $"{Main}/Delete/{{Id}}";
         }
         public static class CostCategory
         {
@@ -86,13 +103,15 @@ namespace Dfinance.Shared.Routes.v1
 
             public const string SaveCostCategory = $"{Main}/Save";
 
-            public const string UpdateCostCategory = $"{Main}/update/{{Id}}";
+            public const string UpdateCostCategory = $"{Main}/Update/{{Id}}";
 
             public const string DeleteCostCategory= $"{Main}/Delete/{{Id}}";
 
-            public const string FillCostCategory = $"{Main}/Get";
+            public const string FillCostCategory = $"{Main}/Fill";
 
-            public const string FillCostCategoryById = $"{Main}/GetById";
+            public const string FillCostCategoryById = $"{Main}/FillById";
+
+            public const string DropDown = $"{Base}/DropDown";
 
         }
         public static class CostCentre
@@ -101,29 +120,21 @@ namespace Dfinance.Shared.Routes.v1
 
             public const string SaveCostCentre = $"{Main}/Save";
 
-            public const string FillCostCentre = $"{Main}/Get";
+            public const string FillCostCentre = $"{Main}/Fill";
 
-            public const string FillCostCentreById = $"{Main}/GetById";
+            public const string FillCostCentreById = $"{Main}/FillById";
 
             public const string UpdateCostCentre = $"{Main}/Update/{{Id}}";
 
             public const string DeleteCostCentre = $"{Main}/Delete";
+
+            public const string DropDown = $"{Base}/DropDown";
+
+            public const string FillPopUp = $"{Main}/ClientPopUp";
+
         }
 
-        public static class CostCategoryDropDown
-        {
-            public const string Main = $"{Base}/CostCategoryDropDown";
-
-            public const string GetAll = $"{Main}/Get";
-        }
-
-        public static class CostCentreDropDown
-        {
-            public const string Main = $"{Base}/CostCentreDropDown";
-
-            public const string GetAll = $"{Main}/Get";
-        }
-
+     
         public static class StatusDropDown
         {
             public const string Main = $"{Base}/StatusDropDown";
@@ -141,9 +152,9 @@ namespace Dfinance.Shared.Routes.v1
 
             public const string DeleteCategory = $"{Main}/Delete";
 
-            public const string GetCategory = $"{Main}/Get";
+            public const string FillCategory = $"{Main}/Fill";
 
-            public const string GetCategoryById = $"{Main}/GetById";
+            public const string FillCategoryById = $"{Main}/FillById";
         }
 
         public static class  AreaMaster
@@ -156,9 +167,9 @@ namespace Dfinance.Shared.Routes.v1
 
             public const string DeleteAreaMaster = $"{Main}/Delete";
 
-            public const string GetAreaMaster = $"{Main}/Get";
+            public const string FillAreaMaster = $"{Main}/Fill";
             
-            public const string GetAreaMasterById = $"{Main}/GetById";
+            public const string FillAreaMasterById = $"{Main}/FillById";
         }
     }
 }

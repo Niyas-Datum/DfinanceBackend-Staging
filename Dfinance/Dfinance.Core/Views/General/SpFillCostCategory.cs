@@ -15,4 +15,10 @@ namespace Dfinance.Core.Views.General
         public bool AllocateNonRevenue { get; set; }
         public bool Active { get; set; }
     }
+    public class SpFillCostCategoryG
+    {
+        public int ID { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+    }
 }

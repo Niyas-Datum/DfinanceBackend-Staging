@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dfinance.Application.General.Services.Interface
+namespace Dfinance.Application.Services.Interface.General
 {
     public interface ICostCentreService
     {
@@ -19,5 +19,11 @@ namespace Dfinance.Application.General.Services.Interface
         CommonResponse UpdateCostCentre(CostCentreDto costCentreDto, int Id);
 
         CommonResponse DeleteCostCentre(int Id);
+
+        CommonResponse FillCostCentreDropDown();
+
+        CommonResponse FillPopUp(string Description);
+
+        //CommonResponse FillConsultancy()
     }
 }

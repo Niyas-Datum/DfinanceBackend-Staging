@@ -2,6 +2,7 @@ using Dfinance.Application.Services.Interface;
 using Dfinance.AuthAppllication.Authorization;
 using Dfinance.AuthAppllication.Dto;
 using Dfinance.AuthAppllication.Services.Interface;
+using Dfinance.AuthCore.Infrastructure;
 using Dfinance.Core.Infrastructure;
 using Dfinance.Core.Views.PagePermission;
 using Dfinance.Shared.Domain;
@@ -16,12 +17,17 @@ public class AuthService : IAuthService
     private static AuthResponseDto? _User = null!;
     private readonly IEncryptService _encryptService;
     private readonly IJwtSecret _jwtsecret;
+    private readonly AuthCoreContext _authCoreContext;
+  
 
-    public AuthService(IJwtSecret jwtSecret, DFCoreContext dFCoreContext, IEncryptService encryptService)
+
+    public AuthService(IJwtSecret jwtSecret, DFCoreContext dFCoreContext, IEncryptService encryptService, AuthCoreContext authCoreContext)
     {
         _jwtsecret = jwtSecret;
         _dfCoreContext = dFCoreContext;
         _encryptService = encryptService;
+        _authCoreContext = authCoreContext;
+       
     }
 
     public CommonResponse Authenticate(AuthenticateRequestDto model)
@@ -47,14 +53,14 @@ public class AuthService : IAuthService
                 var Token = _jwtsecret.GenerateJwtToken(userData);
 
 
-                var authResponse = new AuthResponseDto
+                _User = new AuthResponseDto
                 {
                     Users = userData,
                     UserPageListView = data,
                     Token = Token,
                 };
                 //Log.Information("Authentication successful. AuthResponse: {@AuthResponse}", authResponse);
-                return CommonResponse.Ok(authResponse);
+                return CommonResponse.Ok(_User);
             }
             else
             {
@@ -111,11 +117,25 @@ public class AuthService : IAuthService
         return _User.Users.BranchId;
     }
 
-    public int? GetUserById(int? id)
+    public AuthResponseDto GetUserById(int? id)
     {
-        return _User.Users.EmployeeID;
+        if (_User == null) return null!;
+        if (_User.Users.EmployeeID == id) return _User;
+
+        return null!;
+
     }
 
-    
-}
+    public string SetCon(DropdownLoginDto company)
+    {
+        var companyInfo = _authCoreContext.Companies.FirstOrDefault(c => c.Id == company.Id);
 
+            if (companyInfo == null)
+        {
+            return null;
+            }
+         var con = $"Data Source={companyInfo.ServerName};TrustServerCertificate=true;Initial Catalog={companyInfo.DatabaseName};User ID=sa;Password=Datum123!";
+   
+            return con ;
+        }
+    }

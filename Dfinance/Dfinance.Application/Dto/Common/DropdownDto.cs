@@ -12,4 +12,15 @@ namespace Dfinance.Application.Dto.Common
         public string?  Value { get; set; } 
 
     }
+    public class DropDownDtoName
+    {
+        public int Id { get; set; }
+        public string? Name { get; set; }
+    }
+
+    public class  DropDownDtoNature
+    {
+        public string Key {  get; set; }
+        public string Value { get; set; }
+    }
 }

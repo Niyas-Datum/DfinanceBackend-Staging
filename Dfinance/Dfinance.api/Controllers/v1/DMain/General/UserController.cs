@@ -19,12 +19,13 @@ namespace Dfinance.api.Controllers.v1.DMain
         {
             _userService = userService;
         }
-        [HttpGet(ApiRoutes.User.GetAllUser)]
-        public IActionResult FillUser()
+		
+        [HttpGet(ApiRoutes.User.UserDropDown)]
+        public IActionResult UserDropDown()
         {
             try
             {
-                var user = _userService.FillUser();
+                var user = _userService.UserDropDown();
                 return Ok(user);
             }
             catch (Exception ex)
@@ -32,12 +33,12 @@ namespace Dfinance.api.Controllers.v1.DMain
                 return BadRequest(ex.Message);
             }
         }
-        [HttpGet(ApiRoutes.User.GetUserById)]
-        public IActionResult GetAllUserByID(int Id)
+        [HttpGet(ApiRoutes.User.FillUser)]
+        public IActionResult GetAllUser()
         {
             try
             {
-                var result = _userService.GetUserById(Id);
+                var result = _userService.FillUser();
                 return Ok(result);
             }
             catch (Exception ex)
@@ -45,12 +46,25 @@ namespace Dfinance.api.Controllers.v1.DMain
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost(ApiRoutes.User.AddUser)]
-        public IActionResult AddUser(UserDto employeeDetailsDto)
+        [HttpGet(ApiRoutes.User.FillUserById)]
+        public IActionResult GetAllUserByID([FromQuery] int Id)
         {
             try
             {
-                object result = _userService.AddUser(employeeDetailsDto);
+                var result = _userService.FillUserById(Id);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost(ApiRoutes.User.SaveUser)]
+        public IActionResult SaveUser([FromBody] UserDto employeeDetailsDto)
+        {
+            try
+            {
+                object result = _userService.SaveUser(employeeDetailsDto);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -60,7 +74,7 @@ namespace Dfinance.api.Controllers.v1.DMain
             }
         }
         [HttpPatch(ApiRoutes.User.UpdateUser)]
-        public IActionResult UpdateUser(UserDto employeeDetailsDto, int Id)
+        public IActionResult UpdateUser([FromBody]UserDto employeeDetailsDto, int Id)
         {
             try
             {

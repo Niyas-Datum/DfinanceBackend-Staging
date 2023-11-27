@@ -5,9 +5,10 @@ namespace Dfinance.Application.Services.Interface.IGeneral
 {
     public interface IUserService
     {
+        CommonResponse UserDropDown();
         CommonResponse FillUser();
-        CommonResponse GetUserById(int Id);
-        CommonResponse AddUser(UserDto maEmployeeDetailsDto);
+        CommonResponse FillUserById(int Id);
+        CommonResponse SaveUser(UserDto maEmployeeDetailsDto);
         CommonResponse UpdateUser(UserDto maEmployeeDetailsDto ,int Id);
         CommonResponse DeleteUserRight(int Id);
         CommonResponse DeleteBranchdetails(int Id);

@@ -28,4 +28,10 @@ namespace Dfinance.Core.Views.Inventory
         public DateTime? EndDate { get; set; }
         public decimal? Discount { get; set; }
     }
+    public class SpFillCategoryG
+    {
+        public int Id { get; set; }
+        public string Description { get; set; }
+        public string Code { get; set; }
+    }
 }

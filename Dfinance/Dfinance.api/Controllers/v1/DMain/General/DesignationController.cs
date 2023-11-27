@@ -13,21 +13,21 @@ namespace Dfinance.api.Controllers.v1.DMain.General
     [ApiController]
     [Authorize]
     [Route("[controller]")]
-    public class MaDesignationController : BaseController
+    public class DesignationController : BaseController
     {
-        private readonly IMaDesignationsService _maDesignationsService;
-        public MaDesignationController(IMaDesignationsService maDesignationsService)
+        private readonly IDesignationsService _maDesignationsService;
+        public DesignationController(IDesignationsService maDesignationsService)
         {
             _maDesignationsService = maDesignationsService;
            
         }
-        [HttpGet(ApiRoutes.Designation.GetAllDesignation)]
+        [HttpGet(ApiRoutes.Designation.FillAllDesignation)]
 
         public IActionResult GetAllDesignation()
         {
             try
             {
-                var data = _maDesignationsService.GetAllDesignation();
+                var data = _maDesignationsService.FillAllDesignation();
 
                 return Ok(data);
             }
@@ -36,12 +36,12 @@ namespace Dfinance.api.Controllers.v1.DMain.General
                 return BadRequest(ex.Message);
             }
         }
-        [HttpGet(ApiRoutes.Designation.GetAllDesignationById)]
+        [HttpGet(ApiRoutes.Designation.FillDesignationById)]
         public IActionResult GetAllDesignationById(int Id)
         {
             try
             {
-                var result = _maDesignationsService.GetAllDesignationById(Id);
+                var result = _maDesignationsService.FillDesignationById(Id);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -50,12 +50,12 @@ namespace Dfinance.api.Controllers.v1.DMain.General
             }
         }
     
-    [HttpPost(ApiRoutes.Designation.AddDesignation)]
-        public ActionResult AddDesignation(MaDesignationsDto designationsdto)
+    [HttpPost(ApiRoutes.Designation.SaveDesignation)]
+        public ActionResult AddDesignation([FromBody] DesignationsDto designationsdto)
         {
             try
             {
-                var data = _maDesignationsService.AddDesignations(designationsdto);
+                var data = _maDesignationsService.SaveDesignations(designationsdto);
                 return Ok(data);
             }
             catch (Exception ex)
@@ -64,7 +64,7 @@ namespace Dfinance.api.Controllers.v1.DMain.General
             }
         }
         [HttpPatch(ApiRoutes.Designation.UpdateDesignation)]
-        public IActionResult UpdateDepartmentTypes(MaDesignationsDto designationsdto, int Id)
+        public IActionResult UpdateDepartmentTypes([FromBody] DesignationsDto designationsdto, int Id)
         {
             try
             {
@@ -77,7 +77,7 @@ namespace Dfinance.api.Controllers.v1.DMain.General
             }
         }
         [HttpDelete(ApiRoutes.Designation.DeleteDesignation)]
-        public IActionResult DeleteDesignation(int Id)
+        public IActionResult DeleteDesignation( int Id)
         {
             try
             {

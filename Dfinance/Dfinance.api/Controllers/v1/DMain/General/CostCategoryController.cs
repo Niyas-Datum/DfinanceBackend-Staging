@@ -88,5 +88,19 @@ namespace Dfinance.api.Controllers.v1.DMain.General
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet(ApiRoutes.CostCategory.DropDown)]
+        public IActionResult FillCostCategoryDropDown()
+        {
+            try
+            {
+                var categories = _costCategory.FillCostCategory();
+                return Ok(categories);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

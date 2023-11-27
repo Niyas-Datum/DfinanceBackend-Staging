@@ -82,4 +82,14 @@ namespace Dfinance.Core.Views.General
         public int EmployeeID { get; set; }
         public int LocationID { get; set; }
     }
+    public class SpUser
+    {
+        public int ID { get; set; }
+        public string? FullName { get; set; }
+        public string? UserName { get; set; }
+        public string? ImagePath { get; set; }
+        public bool? Active { get; set; }
+
+
+    }
 }
