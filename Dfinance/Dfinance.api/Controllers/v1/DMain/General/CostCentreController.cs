@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Dfinance.Shared.Routes.v1;
 using Dfinance.Application.Dto.General;
+using Dfinance.Application.Services.Interface.General;
 
 namespace Dfinance.api.Controllers.v1.DMain.General
 {
@@ -48,7 +49,7 @@ namespace Dfinance.api.Controllers.v1.DMain.General
         }
 
         [HttpPost(ApiRoutes.CostCentre.SaveCostCentre)]
-        public IActionResult SaveCostCentre(CostCentreDto costCentreDto)
+        public IActionResult SaveCostCentre([FromBody] CostCentreDto costCentreDto)
         {
             try
             {
@@ -62,7 +63,7 @@ namespace Dfinance.api.Controllers.v1.DMain.General
         }
 
         [HttpPatch(ApiRoutes.CostCentre.UpdateCostCentre)]
-        public IActionResult UpdateCostCentre(CostCentreDto costCentreDto,int Id)
+        public IActionResult UpdateCostCentre([FromBody] CostCentreDto costCentreDto,int Id)
         {
             try
             {
@@ -84,6 +85,33 @@ namespace Dfinance.api.Controllers.v1.DMain.General
                 return Ok(result);
             }
             catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet(ApiRoutes.CostCentre.DropDown)]
+        public IActionResult FillCostCentreDropDown()
+        {
+            try
+            {
+                var result = _costCentreService.FillCostCentreDropDown();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet(ApiRoutes.CostCentre.FillPopUp)]
+        public IActionResult FillPopUp(string Description)
+        {
+            try
+            {
+                var result = _costCentreService.FillPopUp(Description);
+                return Ok(result);
+            }
+            catch( Exception ex)
             {
                 return BadRequest(ex.Message);
             }

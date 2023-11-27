@@ -1,9 +1,8 @@
 ﻿namespace Dfinance.Application.Dto.General
 {
-    public  class MaDesignationsDto
+    public  class DesignationsDto
     {
          public string Name { get; set; }
-        
 
     }
 }

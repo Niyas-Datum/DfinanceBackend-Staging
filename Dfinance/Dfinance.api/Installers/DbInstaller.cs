@@ -12,9 +12,9 @@ public class DbInstaller : IInstaller
         service.AddDbContext<AuthCoreContext>(options =>
         options.UseSqlServer(connectionString));
 
-        var connectionString2 = configuration.GetConnectionString("MaindbConnection");
+       // var connectionString2 = configuration.GetConnectionString("MaindbConnection");
         service.AddDbContext<DFCoreContext>(options =>
-        options.UseSqlServer(connectionString2));
+        options.UseSqlServer());
 
     }
 }

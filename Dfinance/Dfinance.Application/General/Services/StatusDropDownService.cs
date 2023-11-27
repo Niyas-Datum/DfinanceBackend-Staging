@@ -24,7 +24,7 @@ namespace Dfinance.Application.General.Services
             {
                 string Criteria = "FillMaMisc";
                 string StrParam = "ProjectStatus";
-                var data = _contxt.SpFillMaMisc.FromSqlRaw($"Exec DropDownListSP @Criteria ='{Criteria}',@StrParam='{StrParam}'").ToList();               
+                var data = _contxt.SpDropDownCommon1.FromSqlRaw($"Exec DropDownListSP @Criteria ='{Criteria}',@StrParam='{StrParam}'").ToList();               
                 return CommonResponse.Ok(data);
             }
             catch(Exception ex)

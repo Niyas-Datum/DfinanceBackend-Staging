@@ -60,8 +60,8 @@ namespace Dfinance.api.Controllers.v1.DMain.Inventory
             }
         }
 
-        [HttpGet(ApiRoutes.AreaMaster.GetAreaMaster)]
-        public IActionResult GetAreaMaster() 
+        [HttpGet(ApiRoutes.AreaMaster.FillAreaMaster)]
+        public IActionResult FillAreaMaster() 
         {
             try
             {
@@ -74,8 +74,8 @@ namespace Dfinance.api.Controllers.v1.DMain.Inventory
             }
         }
 
-        [HttpGet(ApiRoutes.AreaMaster.GetAreaMasterById)]
-        public IActionResult GetAreaMasterById(int id)
+        [HttpGet(ApiRoutes.AreaMaster.FillAreaMasterById)]
+        public IActionResult FillAreaMasterById(int id)
         {
             try
             {

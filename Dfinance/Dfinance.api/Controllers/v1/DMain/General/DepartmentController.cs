@@ -20,7 +20,48 @@ namespace Dfinance.api.Controllers.v1.DMain
         {
             _departmentService = departmentService;
         }
-        [HttpGet(ApiRoutes.DepartmentType.GetAll)]
+        [HttpGet(ApiRoutes.Department.DropDown)]
+        public IActionResult DepartmentDropdown()
+        {
+            try
+            {
+                var data = _departmentService.DepartmentDropdown();
+
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet(ApiRoutes.Department.FillAllDepartment)]
+        public IActionResult FillDepartment()
+        {
+            try
+            {
+                var data = _departmentService.FillDepartment();
+
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet(ApiRoutes.Department.FillDepartmentById)]
+        public IActionResult FillDepartmentById(int Id)
+        {
+            try
+            {
+                var result = _departmentService.FillDepartmentById(Id);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet(ApiRoutes.DepartmentType.FillAll)]
         public IActionResult FillDepartmentTypes()
         {
             try
@@ -47,13 +88,13 @@ namespace Dfinance.api.Controllers.v1.DMain
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost(ApiRoutes.DepartmentType.AddDepartmentTypes)]
+        [HttpPost(ApiRoutes.DepartmentType.SaveDepartmentTypes)]
   
-        public IActionResult AddDepartmentTypes(DepartmentTypeDto DepartmentDto)
+        public IActionResult SaveDepartmentTypes([FromBody] DepartmentTypeDto DepartmentDto)
         {
             try
             {
-                object result = _departmentService.AddDepartmentTypes(DepartmentDto);
+                object result = _departmentService.SaveDepartmentTypes(DepartmentDto);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -63,7 +104,7 @@ namespace Dfinance.api.Controllers.v1.DMain
             }
         }
         [HttpPatch(ApiRoutes.DepartmentType.UpdateDepartmentTypes)]
-        public IActionResult UpdateDepartmentTypes(DepartmentTypeDto DepartmentTypeDto,int Id)
+        public IActionResult UpdateDepartmentTypes([FromBody] DepartmentTypeDto DepartmentTypeDto,int Id)
         {
             try
             {
@@ -77,7 +118,7 @@ namespace Dfinance.api.Controllers.v1.DMain
             }
         }
         [HttpDelete(ApiRoutes.DepartmentType.DeleteDepartmentTypes)]
-        public IActionResult DeleteBranch(int Id)
+        public IActionResult DeleteDepartmentTypes( int Id)
         {
             try
             {

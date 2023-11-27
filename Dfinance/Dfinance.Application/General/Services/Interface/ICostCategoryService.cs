@@ -11,5 +11,6 @@ namespace Dfinance.Application.General.Services.Interface
         CommonResponse DeleteCostCategory(int Id);
         CommonResponse FillCostCategory();
         CommonResponse FillCostCategoryById(int Id);
+        CommonResponse FillCostCategoryDropDown();
     }
 }

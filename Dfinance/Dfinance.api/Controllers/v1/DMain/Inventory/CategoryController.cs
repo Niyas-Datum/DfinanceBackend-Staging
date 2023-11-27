@@ -62,7 +62,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Inventory
             }
         }
 
-        [HttpGet(ApiRoutes.Category.GetCategory)]
+        [HttpGet(ApiRoutes.Category.FillCategory)]
         public IActionResult FillCategory()
         {
             try
@@ -76,7 +76,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Inventory
             }
         }
 
-        [HttpGet(ApiRoutes.Category.GetCategoryById)]
+        [HttpGet(ApiRoutes.Category.FillCategoryById)]
         public IActionResult FillCategoryById(int Id)
         {
             try

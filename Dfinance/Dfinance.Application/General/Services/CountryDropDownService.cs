@@ -1,5 +1,6 @@
 ﻿using Dfinance.Application.General.Services.Interface;
 using Dfinance.Core.Infrastructure;
+using Dfinance.Core.Views;
 using Dfinance.Core.Views.General;
 using Dfinance.Shared.Domain;
 using Microsoft.EntityFrameworkCore;
@@ -19,14 +20,10 @@ namespace Dfinance.Application.General.Services
         {
             try
             {               
-                var data = _dFCoreContext.SpFillMaMisc.FromSqlRaw("Exec DropDownListSP @Criteria = 'FillMaMisc',@StrParam='Country'").ToList();              
-                var macountry = data.Select(item => new SpFillMaMisc
-                {
-                    ID = item.ID,
-                    Value = item.Value
-                }).ToList();
+                var data = _dFCoreContext.SpDropDownCommon1.FromSqlRaw("Exec DropDownListSP @Criteria = 'FillMaMisc',@StrParam='Country'").ToList();
                 
-                return CommonResponse.Ok(macountry);
+                
+                return CommonResponse.Ok(data);
             }
             catch (Exception ex)
             {

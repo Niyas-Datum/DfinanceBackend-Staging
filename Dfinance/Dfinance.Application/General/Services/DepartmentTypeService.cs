@@ -21,23 +21,66 @@ namespace Dfinance.Application.Services.General
             _context = context;
             _authService = authService;
         }
-        //***********************DropDown***********************
-        public CommonResponse FillDepartmentTypes()
+        /*******************Department***********************************/
+        //***********************DropDownDepartment***********************
+        public CommonResponse DepartmentDropdown()
         {
             var data = _context.SpReDepartmentTypeFillAllDepartment.FromSqlRaw("Exec DropDownListSP @Criteria = 'fillDepartmentTypes'").ToList();
 
-            
-            var maDepartments = data.Select(item => new SpReDepartmentTypeFillAllDepartment
+            return CommonResponse.Ok(data);
+        }
+        //**********************Fill********************************************************
+       public  CommonResponse FillDepartment()
+        {
+            try
             {
-                Id = item.Id,
-                Name = item.Name
-            }).ToList();
+                string criteria = "FillDepartmentMaster";
+                var data = _context.spMaDepartmentsFillAllDepartment
+                   .FromSqlRaw($"Exec spMaDepartments @Criteria='{criteria}'")
+                   .ToList();
 
-            return CommonResponse.Ok(maDepartments);
+                return CommonResponse.Ok(data);    
+            }
+            catch (Exception ex)
+            {
+                return CommonResponse.Error(ex);
+
+            }
+        }
+        public CommonResponse FillDepartmentById(int Id)
+        {
+            try
+            {
+                string Criteria = "FillDepartmentWithID";
+                var data = _context.spMaDepartmentsFillDepartmentById.FromSqlRaw($"Exec spMaDepartments @Criteria='{Criteria}', @ID='{Id}'")
+                        .ToList();
+                return CommonResponse.Ok(data);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while fetching Department by ID", ex);
+            }
         }
 
+    //****************************************************************************
+    //**********************FillDepartmentTypesById********************************************************
+    public CommonResponse FillDepartmentTypes()
+        {
+            try
+            {
+                int company = _authService.GetBranchId().Value;
+                int mod = 10;
+                var data = _context.spDepartmentTypesFillAllDepartmentTypes
+                    .FromSqlRaw($"Exec spDepartmentTypes @Mode='{mod}', @CompanyID='{company}'")
+                    .ToList();
 
-        //**********************FillById********************************************************
+                return CommonResponse.Ok(data);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while fetching Departementtype by ID", ex);
+            }
+        }
         public CommonResponse FillDepartmentTypesById(int Id)
         {
             try
@@ -51,12 +94,12 @@ namespace Dfinance.Application.Services.General
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while fetching user by ID", ex);
+                throw new Exception("An error occurred while fetching Departementtype by ID", ex);
             }
         }
-
-        //************************AddDepartment****************************************************
-        public CommonResponse AddDepartmentTypes(DepartmentTypeDto departmentTypeDto)
+        
+        //************************AddDepartmentType****************************************************
+        public CommonResponse SaveDepartmentTypes(DepartmentTypeDto departmentTypeDto)
         {
             try
             {
@@ -125,5 +168,8 @@ namespace Dfinance.Application.Services.General
                 return CommonResponse.Error(ex);
             }
         }
+
+        
+        
     }
 }

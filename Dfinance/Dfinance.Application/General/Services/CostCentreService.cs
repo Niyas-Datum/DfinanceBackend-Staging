@@ -9,6 +9,8 @@ using Dfinance.Application.General.Services.Interface;
 using Dfinance.AuthAppllication.Services.Interface;
 using Microsoft.Data.SqlClient;
 using System.Data;
+using Dfinance.Application.Services.Interface.General;
+
 
 namespace Dfinance.Application.General.Services
 {
@@ -71,12 +73,12 @@ namespace Dfinance.Application.General.Services
                     costCentreDto.Code,
                     costCentreDto.Name,
                     costCentreDto.Active,
-                    costCentreDto.Nature,
+                    costCentreDto.Nature.Key,
                     null,
                     costCentreDto.SerialNo,
                     costCentreDto.RegNo,
                     costCentreDto.Consultancy,
-                    costCentreDto.Status,
+                    costCentreDto.Status.Value,
                     costCentreDto.Remarks,
                     costCentreDto.Rate,
                     costCentreDto.StartDate,
@@ -91,8 +93,8 @@ namespace Dfinance.Application.General.Services
                     costCentreDto.Foreman,
                     costCentreDto.Site,
                     costCentreDto.IsGroup,
-                    costCentreDto.Category,
-                    costCentreDto.CreateUnder,
+                    costCentreDto.Category.Id,
+                    costCentreDto.CreateUnder.Id,
                     CreatedOn,
                     CreatedBy,
                     CreatedBranchId,
@@ -118,7 +120,7 @@ namespace Dfinance.Application.General.Services
                 int CreatedBranchId = _authService.GetBranchId().Value;
                 DateTime CreatedOn = DateTime.Now;
                 string criteria = "Update";
-                var result = _context.Database.ExecuteSqlRaw($"EXEC CostCentreSP @Criteria='{criteria}',@ID='{Id}',@Code='{costCentreDto.Code}',@Description='{costCentreDto.Name}',@InActive='{costCentreDto.Active}',@PType='{costCentreDto.Nature}',@Type='{null}',@SerialNo='{costCentreDto.SerialNo}',@RegNo='{costCentreDto.RegNo}',@SupplierID='{costCentreDto.Consultancy}',@Status='{costCentreDto.Status}',@Remarks='{costCentreDto.Remarks}',@Rate='{costCentreDto.Rate}',@SDate='{costCentreDto.StartDate}',@Make='{costCentreDto.Make}',@MYear='{costCentreDto.MakeYear}',@EDate='{costCentreDto.EndDate}',@ContractValue='{costCentreDto.ContractValue}',@InvoicedAmt='{costCentreDto.InvoiceValue}',@ClientID='{costCentreDto.Client}',@StaffID='{costCentreDto.Engineer}',@IsPaid='{null}',@StaffID1='{costCentreDto.Foreman}',@Site='{costCentreDto.Site}',@IsGroup='{costCentreDto.IsGroup}',@CostCategoryID='{costCentreDto.Category}',@ParentID='{costCentreDto.CreateUnder}',@CreatedOn='{CreatedOn}',@CreatedBy='{CreatedBy}',@CreatedBranchID='{CreatedBranchId}'");
+                var result = _context.Database.ExecuteSqlRaw($"EXEC CostCentreSP @Criteria='{criteria}',@ID='{Id}',@Code='{costCentreDto.Code}',@Description='{costCentreDto.Name}',@InActive='{costCentreDto.Active}',@PType='{costCentreDto.Nature}',@Type='{null}',@SerialNo='{costCentreDto.SerialNo}',@RegNo='{costCentreDto.RegNo}',@SupplierID='{costCentreDto.Consultancy}',@Status='{costCentreDto.Status.Value}',@Remarks='{costCentreDto.Remarks}',@Rate='{costCentreDto.Rate}',@SDate='{costCentreDto.StartDate}',@Make='{costCentreDto.Make}',@MYear='{costCentreDto.MakeYear}',@EDate='{costCentreDto.EndDate}',@ContractValue='{costCentreDto.ContractValue}',@InvoicedAmt='{costCentreDto.InvoiceValue}',@ClientID='{costCentreDto.Client}',@StaffID='{costCentreDto.Engineer}',@IsPaid='{null}',@StaffID1='{costCentreDto.Foreman}',@Site='{costCentreDto.Site}',@IsGroup='{costCentreDto.IsGroup}',@CostCategoryID='{costCentreDto.Category.Id}',@ParentID='{costCentreDto.CreateUnder.Id}',@CreatedOn='{CreatedOn}',@CreatedBy='{CreatedBy}',@CreatedBranchID='{CreatedBranchId}'");
                 return CommonResponse.Ok("CostCentre Updated Successfully");
             }
             catch (Exception ex)
@@ -155,5 +157,47 @@ namespace Dfinance.Application.General.Services
                 return CommonResponse.Error(ex);
             }
         }
+
+        /************  CostCentre DropDown   ************/
+            public CommonResponse FillCostCentreDropDown()
+            {
+                try
+                {
+                    string criteria = "FillCostCenterGroup";
+                    var data = _context.SpDropDownCommon.FromSqlRaw($"EXEC DropDownListSP @Criteria='{criteria}'").ToList();
+                    return CommonResponse.Ok(data);
+                }
+                catch (Exception ex)
+                {
+                    return CommonResponse.Error(ex);
+                }
+            }
+
+        /**************** For Client Pop Up *********************/
+        public CommonResponse FillPopUp(string Description)
+        {
+            try
+            {
+                int Branch = _authService.GetBranchId().Value;
+                var result = (from A in _context.FiMaAccounts
+                                       join AC in _context.FiMaAccountCategory on A.AccountCategory equals AC.Id
+                                       join BA in _context.FiMaBranchAccounts on A.Id equals BA.AccountId
+                                       where AC.Description == Description && BA.BranchId == Branch
+                                       select new FillPopupView
+                                       {
+                                           ID = A.Id,
+                                           Name = A.Name,
+                                           Code = A.Alias
+                                       }).ToList();                               
+
+                return CommonResponse.Ok(result);
+            }
+            catch(Exception ex)
+            {
+                return CommonResponse.Error(ex);
+            }
+        }
+       
+
+        }
     }
-}

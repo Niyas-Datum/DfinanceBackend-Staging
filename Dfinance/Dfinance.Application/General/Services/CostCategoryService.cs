@@ -119,5 +119,18 @@ namespace Dfinance.Application.General.Services
                 return CommonResponse.Error(ex);
             }
         }
+        public CommonResponse FillCostCategoryDropDown()
+        {
+            try
+            {
+                string criteria = "FillCostCategory";
+                var data = _context.SpDropDownCommon.FromSqlRaw($"EXEC DropDownListSP @Criteria='{criteria}'").ToList();
+                return CommonResponse.Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return CommonResponse.Error(ex);
+            }
+        }
     }
 }

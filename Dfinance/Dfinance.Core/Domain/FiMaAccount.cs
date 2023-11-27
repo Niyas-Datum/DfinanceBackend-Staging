@@ -10,7 +10,7 @@ public partial class FiMaAccount
     public int Id { get; set; }
     public DateTime Date { get; set; }
     public string Name { get; set; } = null!;
-    public int Alias { get; set; }
+    public string Alias { get; set; }
     public string? Narration { get; set; }
     public int? AccountTypeId { get; set; }
     public bool? IsBillWise { get; set; }

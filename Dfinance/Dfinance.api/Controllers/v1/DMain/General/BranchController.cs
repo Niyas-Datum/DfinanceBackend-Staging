@@ -17,47 +17,26 @@ namespace Dfinance.api.Controllers.v1.DMain.General
         {
                 _branchService = branchService;
         }
-        //[HttpGet(ApiRoutes.Branch.GetAllBranch)]
-        //[AllowAnonymous]
-        //public async Task<IActionResult> GetALl()
-        //{
-
-
-
-
-
-        //    try
-        //    {
-
-        //        return Ok(_branchService.GetBranches());
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(new { message = ex });
-        //    }
-        //}
-        //dropdown Branch
-        [HttpGet(ApiRoutes.Branch.FillAllBranch)]
-
-        public IActionResult Fillallbranch()
+        [HttpGet(ApiRoutes.Branch.GetBranchDropDown)]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetBranchDropDown()
         {
             try
             {
-                var data = _branchService.Fillallbranch();
 
-                return Ok(data);
+                return Ok(_branchService.GetBranchesDropDown());
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new { message = ex });
             }
         }
         [HttpPost(ApiRoutes.Branch.SaveBranch)]
-        public IActionResult SaveBranch(MaCompanyDto companyDto)
+        public IActionResult SaveBranch([FromBody] BranchDto branch)
         {
             try
             {                
-                object result = _branchService.SaveBranch(companyDto);
+                var result = _branchService.SaveBranch(branch);
                 return Ok(result);
 
             }
@@ -68,11 +47,11 @@ namespace Dfinance.api.Controllers.v1.DMain.General
             }
         }
         [HttpPatch(ApiRoutes.Branch.UpdateBranch)]      
-        public IActionResult UpdateBranch(MaCompanyDto companyDto,int Id)
+        public IActionResult UpdateBranch([FromBody]  BranchDto branch,int Id)
         {
             try
             {
-                object result = _branchService.UpdateBranch(companyDto, Id);
+                var result = _branchService.UpdateBranch(branch, Id);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -95,12 +74,12 @@ namespace Dfinance.api.Controllers.v1.DMain.General
             }
         }
 
-        [HttpGet(ApiRoutes.Branch.GetAllBranch)]
-        public IActionResult GetAllBranches()
+      [HttpGet(ApiRoutes.Branch.FillAllBranch)]
+        public IActionResult FillAllBranch()
         {
             try
             {
-                var result = _branchService.GetAllBranch();
+                var result = _branchService.FillAllBranch();
                 return Ok(result);
             }
             catch (Exception ex)
@@ -109,12 +88,12 @@ namespace Dfinance.api.Controllers.v1.DMain.General
             }
         }
 
-        [HttpGet(ApiRoutes.Branch.GetAllById)]
-        public IActionResult GetAllBranchByID(int Id)
+        [HttpGet(ApiRoutes.Branch.FillBranchById)]
+        public IActionResult FillBranchByID(int Id)
         {
             try
             {
-                var result=_branchService.GetBranchByID(Id);
+                var result=_branchService.FillBranchByID(Id);
                 return Ok(result);
             }
             catch (Exception ex)

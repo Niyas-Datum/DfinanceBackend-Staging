@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace Dfinance.Core.Views.General
 {
-    public  class SpFillAllBranchByIdG
+    public class SpFillAllBranchByIdG
     {
         public int ID { get; set; }
-        public string Company {  get; set; }
+        public string Company { get; set; }
         public string Nature { get; set; }
-        public int? ContactPersonID {  get; set; }
-        public string? AddressLineOne {  get; set; }
-        public string? AddressLineTwo { get; set;}
-        public string? City {  get; set; }
+        public int? ContactPersonID { get; set; }
+        public string? AddressLineOne { get; set; }
+        public string? AddressLineTwo { get; set; }
+        public string? City { get; set; }
         public string Country { get; set; }
         public string? POBox { get; set; }
         public string? TelephoneNo { get; set; }
@@ -24,8 +24,8 @@ namespace Dfinance.Core.Views.General
         public string? Remarks { get; set; }
         public int CreatedBy { get; set; }
         public DateTime CreatedOn { get; set; }
-        public byte ActiveFlag { get; set; } 
-       
+        public byte ActiveFlag { get; set; }
+
         public string? SalesTaxNo { get; set; }
         public string? CentralSalesTaxNo { get; set; }
         public string? UniqueID { get; set; }
@@ -41,5 +41,12 @@ namespace Dfinance.Core.Views.General
         public string? District { get; set; }
         public string? Province { get; set; }
         public string? CountryCode { get; set; }
+    }
+
+    public class SpFillAllBranchG
+    {
+        public int Id { get; set; }
+        public string Company { get; set; }
+        public string Nature { get; set; }
     }
 }
