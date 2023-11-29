@@ -15,4 +15,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Dfinance.Shared\Dfinance.Shared.csproj" />
+  </ItemGroup>
+
 </Project>
