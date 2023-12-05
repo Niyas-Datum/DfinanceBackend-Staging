@@ -32,11 +32,14 @@ public class AuthController : BaseController
     }
 
     [HttpGet("setcon")]
-    public async Task Setcon( [FromQuery] DropdownLoginDto model)
+    public async Task<IActionResult> Setcon( [FromQuery] DropdownLoginDto model)
     {
        
         var constng = _authservice.SetCon(model);
+        if(constng == null) return BadRequest();
         _connectionServices.Setcon(constng);
+
+        return Ok();
    
     }
 

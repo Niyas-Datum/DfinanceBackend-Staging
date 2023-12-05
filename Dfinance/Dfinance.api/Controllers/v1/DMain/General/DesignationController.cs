@@ -2,9 +2,7 @@
 using Dfinance.api.Framework;
 using Dfinance.Application.Dto;
 using Dfinance.Application.Dto.General;
-using Dfinance.Application.General.Services;
-using Dfinance.Application.General.Services.Interface;
-using Dfinance.Application.Services.Interface.IGeneral;
+using Dfinance.Application.Services.General.Interface;
 using Dfinance.Shared.Routes.v1;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,7 +10,7 @@ namespace Dfinance.api.Controllers.v1.DMain.General
 {
     [ApiController]
     [Authorize]
-    [Route("[controller]")]
+   
     public class DesignationController : BaseController
     {
         private readonly IDesignationsService _maDesignationsService;

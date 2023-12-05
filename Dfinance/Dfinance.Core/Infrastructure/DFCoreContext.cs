@@ -8,10 +8,9 @@ using Dfinance.Core.Infrastructure.Configurations.Employee;
 using Dfinance.Core.Infrastructure.Configurations.Roles;
 using Dfinance.Core.Views.Inventory;
 using Dfinance.Core.Views.PagePermission;
-using Dfinance.Shared.Configuration;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using Dfinance.Shared.Configuration.Service;
 using Dfinance.Core.Views.Common;
+using Dfinance.Shared.Configuration.Service;
+using Dfinance.Core.Views.Finance;
 
 namespace Dfinance.Core.Infrastructure;
 
@@ -54,12 +53,23 @@ public partial class DFCoreContext : DbContext
     public DbSet<MaArea> MaArea { get; set; }
     public DbSet<FiMaAccountCategory> FiMaAccountCategory { get; set; }
     public DbSet<FiMaBranchAccounts> FiMaBranchAccounts { get; set; }
+    public DbSet<CategoryType> CategoryType { get; set; }
+	//Fin=>Currency
+	 public DbSet<Currency> Currency { get; set; }
+    public DbSet<CurrencyCode> CurrencyCode { get; set; }
 
 
     //view init
-    public DbSet<FillPopupView> FillClientView { get; set; }
-    public DbSet<DropDownViewValue> SpDropDownCommon1 { get; set; }
-    public DbSet<DropDownViewName> SpDropDownCommon { get; set; }
+
+    // read- id, code name
+    public DbSet<ReadView> ReadView { get; set; }
+    // read- id, code description
+    public DbSet<ReadViewDesc> ReadViewDesc { get; set; } 
+
+    public DbSet<SpFillCategoryTypeById> SpFillCategoryTypeById { get; set; }
+    public DbSet<NextCodeView> NextCodeView { get; set; }    
+    public DbSet<DropDownViewValue> DropDownViewValue { get; set; }
+    public DbSet<DropDownViewName> DropDownViewName { get; set; }
     public DbSet<SpFillAreaMasterByIdG> SpFillAreaMasterByIdG { get; set; }
     public DbSet<SpFillAreaMasterG> SpFillAreaMasterG { get; set; }
     public DbSet<SpFillCategoryByIdG> SpFillCategoryByIdG { get; set; }
@@ -85,6 +95,11 @@ public partial class DFCoreContext : DbContext
     public DbSet<SpUser> SpUser { get; set; }
     
     public DbSet<UserPageListView> UserPageListView { get; set; }
+	//Currency 
+    public DbSet<FillcurrencyCode> FillcurrencyCode { get; set; }
+    public DbSet<FillCurrencyCodeById> FillCurrencyCodeById { get; set; }
+    public DbSet<FillCurrency> FillCurrency { get; set; }
+    public DbSet<FillCurrencyById> FillCurrencyById { get; set; }
 	
 	
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -107,8 +122,13 @@ public partial class DFCoreContext : DbContext
         mb.ApplyConfiguration(new LogInfoConfiguration());
         mb.ApplyConfiguration(new FiMaAccountCategoryConfiguration());
         mb.ApplyConfiguration(new FiMaBranchAccountsConfiguration());
+        mb.ApplyConfiguration(new CategoryConfiguration());
+        mb.ApplyConfiguration(new CategoryTypeConfiguration());
+		//currency 
+		 mb.ApplyConfiguration(new CurrencyConfigurations());
 
         //views configuring
+        mb.Entity<CurrencyCode>().HasNoKey().ToView(null);
         mb.Entity<UserPageListView>().HasNoKey().ToView(null);
         mb.Entity<UserInfo>().HasNoKey().ToView(null);
         mb.Entity<SpUser>().HasNoKey().ToView(null);
@@ -131,5 +151,19 @@ public partial class DFCoreContext : DbContext
         mb.Entity<SpFillCategoryByIdG>().HasNoKey().ToView(null);
         mb.Entity<SpFillAreaMasterG>().HasNoKey().ToView(null);
         mb.Entity<SpFillAreaMasterByIdG>().HasNoKey().ToView(null);
+        mb.Entity<NextCodeView>().HasNoKey().ToView(null);
+        mb.Entity<SpFillCategoryTypeById>().HasNoKey().ToView(null);
+
+        //read data : id, code name
+        mb.Entity<ReadView>().HasNoKey().ToView(null);
+        //read data : id, code description
+        mb.Entity<ReadViewDesc>().HasNoKey().ToView(null);
+		
+		//Currency 
+		mb.Entity<FillcurrencyCode>().HasNoKey().ToView(null);
+        mb.Entity<FillCurrencyCodeById>().HasNoKey().ToView(null);
+        mb.Entity<FillCurrency>().HasNoKey().ToView(null);
+        mb.Entity<FillCurrencyById>().HasNoKey().ToView(null);
+
     }
 }

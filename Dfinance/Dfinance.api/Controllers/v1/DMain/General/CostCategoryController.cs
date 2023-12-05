@@ -1,14 +1,14 @@
 ﻿using Dfinance.api.Authorization;
 using Dfinance.api.Framework;
 using Dfinance.Application.Dto.General;
-using Dfinance.Application.General.Services.Interface;
+using Dfinance.Application.Services.General.Interface;
 using Dfinance.Shared.Routes.v1;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dfinance.api.Controllers.v1.DMain.General
 {
-    [Route("api/[controller]")]
+    
     [ApiController]
     [Authorize]
     public class CostCategoryController : BaseController
@@ -94,7 +94,7 @@ namespace Dfinance.api.Controllers.v1.DMain.General
         {
             try
             {
-                var categories = _costCategory.FillCostCategory();
+                var categories = _costCategory.FillCostCategoryDropDown();
                 return Ok(categories);
             }
             catch (Exception ex)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Dfinance.Application.Dto.Common;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -15,8 +16,9 @@ namespace Dfinance.Application.Dto.Inventory
         [Required(ErrorMessage = "Category Code is mandatory!!")]
         public string CategoryCode { get; set; }//code
 
+        
         [Required(ErrorMessage = "Category Type is mandatory!!")]
-        public int? CategoryType { get; set; }//TypeofWoodId in database
+        public PopUpDto CategoryType { get; set; }//TypeofWoodId in database
 
         [StringLength(1)]        
         public string? Category { get; set; }

@@ -2,7 +2,7 @@
 using Dfinance.api.Framework;
 using Dfinance.Application.Dto;
 using Dfinance.Application.Dto.General;
-using Dfinance.Application.Services.Interface.IGeneral;
+using Dfinance.Application.Services.General.Interface;
 using Dfinance.Shared.Routes.v1;
 using Microsoft.AspNetCore.Mvc;
 using static Dfinance.Shared.Routes.v1.ApiRoutes;
@@ -11,7 +11,7 @@ namespace Dfinance.api.Controllers.v1.DMain
 {
     [ApiController]
     [Authorize]
-    [Route("[controller]")]
+   
     public class UserController : BaseController
     {
         private IUserService _userService;
@@ -64,6 +64,10 @@ namespace Dfinance.api.Controllers.v1.DMain
         {
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
                 object result = _userService.SaveUser(employeeDetailsDto);
                 return Ok(result);
             }
@@ -78,6 +82,10 @@ namespace Dfinance.api.Controllers.v1.DMain
         {
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
                 object result = _userService.UpdateUser(employeeDetailsDto, Id);
                 return Ok(result);
             }

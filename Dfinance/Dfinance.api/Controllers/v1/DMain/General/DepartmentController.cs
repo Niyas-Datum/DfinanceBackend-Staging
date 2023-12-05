@@ -3,8 +3,8 @@ using Dfinance.api.Framework;
 using Dfinance.Application.Dto;
 using Dfinance.Application.Services;
 using Dfinance.Application.Services.General;
+using Dfinance.Application.Services.General.Interface;
 using Dfinance.Application.Services.Interface;
-using Dfinance.Application.Services.Interface.IGeneral;
 using Dfinance.Shared.Routes.v1;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,7 +12,7 @@ namespace Dfinance.api.Controllers.v1.DMain
 {
     [ApiController]
     [Authorize]
-    [Route("[controller]")]
+    //[Route("[controller]")]
     public class DepartmentController : BaseController
     {
         private readonly IDepartmentTypeService _departmentService;
@@ -94,7 +94,11 @@ namespace Dfinance.api.Controllers.v1.DMain
         {
             try
             {
-                object result = _departmentService.SaveDepartmentTypes(DepartmentDto);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+              var result = _departmentService.SaveDepartmentTypes(DepartmentDto);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -108,8 +112,12 @@ namespace Dfinance.api.Controllers.v1.DMain
         {
             try
             {
-                object result =
-                    _departmentService.UpdateDepartmentTypes(DepartmentTypeDto, Id);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+              var result = _departmentService.UpdateDepartmentTypes(DepartmentTypeDto, Id);
+
                 return Ok(result);
             }
             catch (Exception ex)

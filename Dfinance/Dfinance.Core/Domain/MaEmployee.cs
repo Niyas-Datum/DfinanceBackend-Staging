@@ -65,6 +65,7 @@ public partial class MaEmployee
     //relationship with MaArea
     public virtual ICollection<MaArea> AreaCreatedBy { get; set; }
     public ICollection<LogInfo> LogInfos { get; set; }
-
+    //relationship with currency
+    public virtual ICollection<Currency> Currencies { get; set; }
 
 }

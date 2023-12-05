@@ -131,7 +131,7 @@ public class AuthService : IAuthService
         var companyInfo = _authCoreContext.Companies.FirstOrDefault(c => c.Id == company.Id);
 
             if (companyInfo == null)
-        {
+             {
             return null;
             }
          var con = $"Data Source={companyInfo.ServerName};TrustServerCertificate=true;Initial Catalog={companyInfo.DatabaseName};User ID=sa;Password=Datum123!";

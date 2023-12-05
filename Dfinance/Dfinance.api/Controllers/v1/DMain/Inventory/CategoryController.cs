@@ -1,15 +1,12 @@
 ﻿using Dfinance.api.Authorization;
 using Dfinance.api.Framework;
-using Dfinance.Application.Inventory.Services.Interface;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Dfinance.Shared.Routes.v1;
-using Dfinance.Application.Dto;
 using Dfinance.Application.Dto.Inventory;
+using Dfinance.Application.Services.Inventory.Interface;
 
 namespace Dfinance.api.Controllers.v1.DMain.Inventory
 {
-    [Route("[controller]")]
     [ApiController]
     [Authorize]
     public class CategoryController : BaseController

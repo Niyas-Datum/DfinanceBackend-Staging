@@ -1,13 +1,13 @@
 ﻿using Dfinance.api.Authorization;
 using Dfinance.api.Framework;
 using Dfinance.Application.Dto.Inventory;
-using Dfinance.Application.Inventory.Services.Interface;
+using Dfinance.Application.Services.Inventory.Interface;
 using Dfinance.Shared.Routes.v1;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dfinance.api.Controllers.v1.DMain.Inventory
 {
-    [Route("[controller]")]
+    
     [ApiController]
     [Authorize]
     public class AreaMasterController : BaseController
@@ -19,7 +19,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Inventory
         }
 
         [HttpPost(ApiRoutes.AreaMaster.SaveAreaMaster)]
-        public IActionResult SaveAreaMaster(MaAreaDto maAreaDto)
+        public IActionResult SaveAreaMaster([FromQuery]MaAreaDto maAreaDto)
         {
             try
             {

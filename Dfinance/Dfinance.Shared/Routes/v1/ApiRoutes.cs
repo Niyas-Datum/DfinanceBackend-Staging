@@ -111,7 +111,7 @@ namespace Dfinance.Shared.Routes.v1
 
             public const string FillCostCategoryById = $"{Main}/FillById";
 
-            public const string DropDown = $"{Base}/DropDown";
+            public const string DropDown = $"{Main}/DropDown";
 
         }
         public static class CostCentre
@@ -170,6 +170,49 @@ namespace Dfinance.Shared.Routes.v1
             public const string FillAreaMaster = $"{Main}/Fill";
             
             public const string FillAreaMasterById = $"{Main}/FillById";
+        }
+
+        public static class CategoryType
+        {
+            public const string Main = $"{Base}/CategoryType";            
+
+            public const string GetNextCode = $"{Main}/GetNextCode";
+
+            public const string FillCategoryType = $"{Main}/Fill";
+
+            public const string FillCategoryTypeById = $"{Main}/FillById";
+
+            public const string SaveCategoryType = $"{Main}/Save";
+
+            public const string UpdateCategoryType = $"{Main}/Update";
+
+            public const string DeleteCategoryType = $"{Main}/Delete";
+			public const string GetCatType = $"{Main}/getcattype";
+            
+        }
+			 public static class Currency
+        {
+            public const string Main = $"{Base}/Currency";
+
+            public const string SaveCurrencycode = $"{Main}/Savecc";
+
+            public const string UpdateCurrencycode = $"{Main}/Updatecc";
+
+            public const string DeleteCurrencycode = $"{Main}/Deletecc";
+
+            public const string FillAllCurrencycode = $"{Main}/Fillcc";
+
+            public const string FillCurrencycodeById = $"{Main}/FillByIdcc";
+
+            public const string SaveCurrency = $"{Main}/Save";
+
+            public const string UpdateCurrency = $"{Main}/Update";
+
+            public const string DeleteCurrency = $"{Main}/Delete";
+
+            public const string FillAllCurrency = $"{Main}/Fillc";
+
+            public const string FillCurrencyById = $"{Main}/FillById";
         }
     }
 }

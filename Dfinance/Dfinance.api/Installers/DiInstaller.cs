@@ -1,17 +1,16 @@
 using Dfinance.AuthAppllication.Services;
 using Dfinance.AuthAppllication.Services.Interface;
-using Dfinance.Application.General.Services;
-using Dfinance.Application.General.Services.Interface;
 using Dfinance.Application.Services.General;
-using Dfinance.Application.Services.Interface.IGeneral;
 using Dfinance.Application.Services.Interface;
 using Dfinance.Application.Services;
-using Dfinance.Application.Inventory.Services.Interface;
-using Dfinance.Application.Inventory.Services;
 using Dfinance.AuthApplication.Services.Interface;
 using Dfinance.AuthApplication.Services;
 using Dfinance.Shared.Configuration.Service;
-using Dfinance.Application.Services.Interface.General;
+using Dfinance.Application.Services.General.Interface;
+using Dfinance.Application.Services.Inventory.Interface;
+using Dfinance.Application.Services.Inventory;
+using Dfinance.Application.Services.Finance.Interface;
+using Dfinance.Application.Services.Finance;
 
 namespace Dfinance.api.Installers;
 
@@ -45,6 +44,8 @@ public class DiInstaller : IInstaller
         
 
         service.AddScoped<ICategoryService, CategoryService>();
+        service.AddScoped<ICategoryTypeService, CategoryTypeService>();
+		service.AddScoped<ICurrencyService, CurrencyService>();
 
         service.AddScoped<IAreaMasterService, AreaMasterService>();
         service.AddSingleton<IConnectionServices, ConnectionServices>();

@@ -1,6 +1,6 @@
 ﻿using Dfinance.api.Authorization;
 using Dfinance.api.Framework;
-using Dfinance.Application.General.Services.Interface;
+using Dfinance.Application.Services.General.Interface;
 using Dfinance.Shared.Domain;
 using Dfinance.Shared.Routes.v1;
 using Microsoft.AspNetCore.Http;
@@ -9,7 +9,7 @@ using System;
 
 namespace Dfinance.api.Controllers.v1.DMain.Miscellaneous
 {
-    [Route("[controller]")]
+    
     [ApiController]
     [Authorize]
     public class CountryDropDownController : BaseController

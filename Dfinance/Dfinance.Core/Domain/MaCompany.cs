@@ -102,6 +102,7 @@ namespace Dfinance.Core.Domain
 
         //relationship with MaArea
         public virtual ICollection<MaArea>? BranchIdArea { get; set; }
-
+        //relationship with currency
+        public virtual ICollection<Currency> Currencies { get; set; }
     }
 }

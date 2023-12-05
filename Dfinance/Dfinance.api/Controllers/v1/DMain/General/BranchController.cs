@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Dfinance.Application.General.Services.Interface;
 using Dfinance.api.Authorization;
 using Dfinance.Shared.Routes.v1;
 using Dfinance.Application.Dto;
 using Dfinance.api.Framework;
+using Dfinance.Application.Services.General.Interface;
 
 namespace Dfinance.api.Controllers.v1.DMain.General
 {
-    [Route("api/[controller]")]
+    
     [ApiController]
     [Authorize]
     public class BranchController : BaseController

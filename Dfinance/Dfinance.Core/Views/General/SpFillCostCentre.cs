@@ -52,10 +52,5 @@ namespace Dfinance.Core.Views.General
         public string Description { get; set; }
     }
 
-    public class FillPopupView
-    {
-        public int ID { get; set; }
-        public string Name {  get; set; }
-        public string Code {  set; get; }
-    }
+    
 }
