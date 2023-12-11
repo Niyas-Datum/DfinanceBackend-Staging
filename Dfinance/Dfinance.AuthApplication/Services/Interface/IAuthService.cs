@@ -9,6 +9,8 @@ public interface IAuthService
 {
     CommonResponse Authenticate(AuthenticateRequestDto model);
     AuthResponseDto GetUserById(int? id);
+
+    bool UserPermCheck(int pageid, int method);
     int? GetId();
     string GetUserName();
     int? GetBranchId();

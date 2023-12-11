@@ -138,4 +138,37 @@ public class AuthService : IAuthService
    
             return con ;
         }
+
+    /// <summary>
+    /// @use:  check every request user have permission 
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="pageid"></param>
+    /// <param name="branchid"></param>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    ///[1: view, 2.create, 3.Edit, 4.Cancel, 5.Delete, 6.approve,7.editapprove, 8.higherapprove,9: print
+    
+    public bool UserPermCheck(int pageid, int method )
+    {
+         var Userdetid  = _dfCoreContext.MaEmployeeBranchDet.Where(x=> x.EmployeeId == _User.Users.EmployeeID && x.BranchId == _User.Users.BranchId ).Select(x=> x.Id).FirstOrDefault();
+        var UserPermission = _dfCoreContext.UserRolePermission
+                                .Where(x=>x.UserDetailsId == Userdetid
+                                && x.PageMenuId == pageid).FirstOrDefault();
+        if (UserPermission == null) return false;
+        switch (method)
+        {
+            case 1:{ return UserPermission.IsView ? true : false;}
+            case 2:{return UserPermission.IsCreate ? true : false;}
+            case 3:{return UserPermission.IsEdit ? true : false;}
+            case 4:{return UserPermission.IsCancel ? true : false;}
+            case 5:{return UserPermission.IsDelete ? true : false;}
+            case 6: { return UserPermission.IsApprove ? true : false; }
+            case 7: { return UserPermission.IsEditApproved ? true : false; }
+            case 8: { return UserPermission.IsHigherApprove ? true : false; }
+            case 9: { return UserPermission.IsPrint ? true : false; }
+            default: { return false; }
+        
+        }
     }
+}

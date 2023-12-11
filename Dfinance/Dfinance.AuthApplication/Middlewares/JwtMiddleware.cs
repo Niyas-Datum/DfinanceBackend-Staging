@@ -1,4 +1,5 @@
 using Dfinance.AuthAppllication.Authorization;
+using Dfinance.AuthAppllication.Services;
 using Dfinance.AuthAppllication.Services.Interface;
 using Microsoft.AspNetCore.Http;
 
@@ -15,14 +16,31 @@ public class JwtMiddleware
 
     public async Task Invoke(HttpContext context, IAuthService authservice, IJwtSecret jwtSecret)
     {
-        var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
-        var userId = jwtSecret.ValidateJwtToken(token);
-        if (userId != null)
+        try
         {
-            // attach user to context on successful jwt validation
-            context.Items["User"] = authservice.GetUserById(userId);
-        }
+            var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+            var userId = jwtSecret.ValidateJwtToken(token);
+            var QueryData = context.Request.Query.ToList();
+            var currentpageid = context.Request.Query["pageid"].ToString();
+            var currentpermission = context.Request.Query["pagemethod"].ToString();
 
+            if (token != null && currentpageid != "" && currentpermission != "")
+            {
+                context.Items["Permission"] = authservice.UserPermCheck(Convert.ToInt32(currentpageid), Convert.ToInt32(currentpermission));
+            }
+            else
+            {
+                context.Items["Permission"] = true;
+            }
+            if (userId != null)
+            {
+                // attach user to context on successful jwt validation
+                context.Items["User"] = authservice.GetUserById(userId);
+            }
+        }catch (Exception ex)
+        {
+
+        }
         await _next(context);
 
     }
