@@ -1439,6 +1439,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v7.0",
         "dependencies": {
+          "Dfinance.Shared": "1.0.0",
           "Microsoft.EntityFrameworkCore": "7.0.10",
           "Microsoft.EntityFrameworkCore.SqlServer": "7.0.10"
         },
@@ -4302,19 +4303,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Dell\\.nuget\\packages\\": {}
+    "C:\\Users\\Niyas\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Dell\\Source\\Repos\\Niyas-Datum\\DFinance_Backend\\Dfinance\\Dfinance.api\\Dfinance.api.csproj",
+      "projectUniqueName": "C:\\Users\\Niyas\\Desktop\\DFinance_Backend\\Dfinance\\Dfinance.api\\Dfinance.api.csproj",
       "projectName": "Dfinance.api",
-      "projectPath": "C:\\Users\\Dell\\Source\\Repos\\Niyas-Datum\\DFinance_Backend\\Dfinance\\Dfinance.api\\Dfinance.api.csproj",
-      "packagesPath": "C:\\Users\\Dell\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Dell\\Source\\Repos\\Niyas-Datum\\DFinance_Backend\\Dfinance\\Dfinance.api\\obj\\",
+      "projectPath": "C:\\Users\\Niyas\\Desktop\\DFinance_Backend\\Dfinance\\Dfinance.api\\Dfinance.api.csproj",
+      "packagesPath": "C:\\Users\\Niyas\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Niyas\\Desktop\\DFinance_Backend\\Dfinance\\Dfinance.api\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Dell\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Niyas\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -4328,20 +4329,20 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "C:\\Users\\Dell\\Source\\Repos\\Niyas-Datum\\DFinance_Backend\\Dfinance\\Dfinance.Application\\Dfinance.Application.csproj": {
-              "projectPath": "C:\\Users\\Dell\\Source\\Repos\\Niyas-Datum\\DFinance_Backend\\Dfinance\\Dfinance.Application\\Dfinance.Application.csproj"
+            "C:\\Users\\Niyas\\Desktop\\DFinance_Backend\\Dfinance\\Dfinance.Application\\Dfinance.Application.csproj": {
+              "projectPath": "C:\\Users\\Niyas\\Desktop\\DFinance_Backend\\Dfinance\\Dfinance.Application\\Dfinance.Application.csproj"
             },
-            "C:\\Users\\Dell\\Source\\Repos\\Niyas-Datum\\DFinance_Backend\\Dfinance\\Dfinance.AuthApplication\\Dfinance.AuthApplication.csproj": {
-              "projectPath": "C:\\Users\\Dell\\Source\\Repos\\Niyas-Datum\\DFinance_Backend\\Dfinance\\Dfinance.AuthApplication\\Dfinance.AuthApplication.csproj"
+            "C:\\Users\\Niyas\\Desktop\\DFinance_Backend\\Dfinance\\Dfinance.AuthApplication\\Dfinance.AuthApplication.csproj": {
+              "projectPath": "C:\\Users\\Niyas\\Desktop\\DFinance_Backend\\Dfinance\\Dfinance.AuthApplication\\Dfinance.AuthApplication.csproj"
             },
-            "C:\\Users\\Dell\\Source\\Repos\\Niyas-Datum\\DFinance_Backend\\Dfinance\\Dfinance.AuthCore\\Dfinance.AuthCore.csproj": {
-              "projectPath": "C:\\Users\\Dell\\Source\\Repos\\Niyas-Datum\\DFinance_Backend\\Dfinance\\Dfinance.AuthCore\\Dfinance.AuthCore.csproj"
+            "C:\\Users\\Niyas\\Desktop\\DFinance_Backend\\Dfinance\\Dfinance.AuthCore\\Dfinance.AuthCore.csproj": {
+              "projectPath": "C:\\Users\\Niyas\\Desktop\\DFinance_Backend\\Dfinance\\Dfinance.AuthCore\\Dfinance.AuthCore.csproj"
             },
-            "C:\\Users\\Dell\\Source\\Repos\\Niyas-Datum\\DFinance_Backend\\Dfinance\\Dfinance.Core\\Dfinance.Core.csproj": {
-              "projectPath": "C:\\Users\\Dell\\Source\\Repos\\Niyas-Datum\\DFinance_Backend\\Dfinance\\Dfinance.Core\\Dfinance.Core.csproj"
+            "C:\\Users\\Niyas\\Desktop\\DFinance_Backend\\Dfinance\\Dfinance.Core\\Dfinance.Core.csproj": {
+              "projectPath": "C:\\Users\\Niyas\\Desktop\\DFinance_Backend\\Dfinance\\Dfinance.Core\\Dfinance.Core.csproj"
             },
-            "C:\\Users\\Dell\\Source\\Repos\\Niyas-Datum\\DFinance_Backend\\Dfinance\\Dfinance.Shared\\Dfinance.Shared.csproj": {
-              "projectPath": "C:\\Users\\Dell\\Source\\Repos\\Niyas-Datum\\DFinance_Backend\\Dfinance\\Dfinance.Shared\\Dfinance.Shared.csproj"
+            "C:\\Users\\Niyas\\Desktop\\DFinance_Backend\\Dfinance\\Dfinance.Shared\\Dfinance.Shared.csproj": {
+              "projectPath": "C:\\Users\\Niyas\\Desktop\\DFinance_Backend\\Dfinance\\Dfinance.Shared\\Dfinance.Shared.csproj"
             }
           }
         }
@@ -4392,7 +4393,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.402\\RuntimeIdentifierGraph.json"
       }
     }
   }

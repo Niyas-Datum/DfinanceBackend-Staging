@@ -10,7 +10,7 @@ namespace Dfinance.Shared.Configuration.Service
     public interface IConnectionServices
     {
 
-        public void Setcon(string con);
+        public bool Setcon(string con);
 
         public string getcon();
        
@@ -18,9 +18,10 @@ namespace Dfinance.Shared.Configuration.Service
     public class ConnectionServices : IConnectionServices
     {
         public string connecionSTR;
-        public void Setcon(string con)
+        public bool Setcon(string con)
         {
             connecionSTR = con;
+            return true;
         }
         public string getcon()
         {

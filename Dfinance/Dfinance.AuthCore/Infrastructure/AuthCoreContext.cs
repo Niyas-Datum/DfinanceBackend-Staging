@@ -36,11 +36,11 @@ namespace Dfinance.AuthCore.Infrastructure
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            //optionsBuilder.UseSqlServer();
-            // if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlServer(@"Data Source=ip.datuminnovation.com,9600;TrustServerCertificate=true;Initial Catalog=DatumSystemMaster;User ID=sa;pwd=Datum123!");
-            }
+            optionsBuilder.UseSqlServer();
+            //// if (!optionsBuilder.IsConfigured)
+            //{
+            //    optionsBuilder.UseSqlServer(@"Data Source=ip.datuminnovation.com,9600;TrustServerCertificate=true;Initial Catalog=DatumSystemMaster;User ID=sa;pwd=Datum123!");
+            //}
         }
     }
 }

@@ -42,6 +42,9 @@ public partial class DFCoreContext : DbContext
     public DbSet<MaCompany> MaBranches { get; set; }
 
     public DbSet<FiMaAccount> FiMaAccounts { get; set; }
+    public DbSet<FiMaSubGroup> FiMaSubGroups { get; set; }
+    public DbSet<FiMaAccountGroup> FiMaAccountGroup { get; set; }
+	
     public DbSet<MaDepartment> MaDepartments { get; set; }
     public DbSet<ReDepartmentType> ReDepartmentTypes { get; set; }
     public DbSet<MaMisc> MaMisc { get; set; }
@@ -65,6 +68,8 @@ public partial class DFCoreContext : DbContext
     public DbSet<ReadView> ReadView { get; set; }
     // read- id, code description
     public DbSet<ReadViewDesc> ReadViewDesc { get; set; } 
+    //nextCodeView id,descripition
+    public DbSet<DropDownViewDesc> DropDownViewDesc { get; set; }
 
     public DbSet<SpFillCategoryTypeById> SpFillCategoryTypeById { get; set; }
     public DbSet<NextCodeView> NextCodeView { get; set; }    
@@ -100,8 +105,15 @@ public partial class DFCoreContext : DbContext
     public DbSet<FillCurrencyCodeById> FillCurrencyCodeById { get; set; }
     public DbSet<FillCurrency> FillCurrency { get; set; }
     public DbSet<FillCurrencyById> FillCurrencyById { get; set; }
+    //FiMaAccounts
+    public DbSet<ChartofAccView> ChartofAccView { get; set; }
+    public DbSet<FillLedgers> FillLedgers { get; set; }
+    public DbSet<ChartofAccViewById> ChartofAccViewById { get; set; }
+    public DbSet<AccountCodeView> AccountCodeView { get; set; }
 	
 	
+    //MaNumbering
+    public DbSet<MaNumbering> MaNumbering { get; set; }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     //  => optionsBuilder.UseSqlServer(@"Data Source=ip.datuminnovation.com,9600;TrustServerCertificate=true;Initial Catalog=DatumSystemMain;User ID=sa;pwd=Datum123!");
    // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -120,10 +132,14 @@ public partial class DFCoreContext : DbContext
         mb.ApplyConfiguration(new MaUserRightConfiguration());
         mb.ApplyConfiguration(new MaPageMenuConfiguration());
         mb.ApplyConfiguration(new LogInfoConfiguration());
+        mb.ApplyConfiguration(new FiMaAccountConfiguration());
+        mb.ApplyConfiguration(new FiMaSubGroupConfiguration());
+        mb.ApplyConfiguration(new FiMaAccountGroupConfiguration());
         mb.ApplyConfiguration(new FiMaAccountCategoryConfiguration());
         mb.ApplyConfiguration(new FiMaBranchAccountsConfiguration());
         mb.ApplyConfiguration(new CategoryConfiguration());
         mb.ApplyConfiguration(new CategoryTypeConfiguration());
+        mb.ApplyConfiguration(new FiMaVouchersConfiguration());
 		//currency 
 		 mb.ApplyConfiguration(new CurrencyConfigurations());
 
@@ -158,12 +174,16 @@ public partial class DFCoreContext : DbContext
         mb.Entity<ReadView>().HasNoKey().ToView(null);
         //read data : id, code description
         mb.Entity<ReadViewDesc>().HasNoKey().ToView(null);
-		
+        mb.Entity<DropDownViewDesc>().HasNoKey().ToView(null);
 		//Currency 
 		mb.Entity<FillcurrencyCode>().HasNoKey().ToView(null);
         mb.Entity<FillCurrencyCodeById>().HasNoKey().ToView(null);
         mb.Entity<FillCurrency>().HasNoKey().ToView(null);
         mb.Entity<FillCurrencyById>().HasNoKey().ToView(null);
+        mb.Entity<ChartofAccView>().HasNoKey().ToView(null);
+        mb.Entity<FillLedgers>().HasNoKey().ToView(null);
+        mb.Entity<AccountCodeView>().HasNoKey().ToView(null);
+        mb.Entity<ChartofAccViewById>().HasNoKey().ToView(null);
 
     }
 }

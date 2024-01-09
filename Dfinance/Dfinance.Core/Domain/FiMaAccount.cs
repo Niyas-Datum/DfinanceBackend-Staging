@@ -22,7 +22,7 @@ public partial class FiMaAccount
     public int? Parent { get; set; }
     public bool IsGroup { get; set; }
     public int? Level { get; set; }
-    public int FinalAccount { get; set; }
+    public bool FinalAccount { get; set; }
     public int? SortField { get; set; }
     public int AccountGroup { get; set; }
     public int? SubGroup { get; set; }
@@ -40,7 +40,15 @@ public partial class FiMaAccount
     //Relationships
    // public  ICollection<CostCentre>? CostCentreClientAccount { get; set; } = new List<CostCentre>();
 
-   // public  ICollection<CostCentre>? CostCentreSupplierAccount { get; set; } = new List<CostCentre>();
+    // public  ICollection<CostCentre>? CostCentreSupplierAccount { get; set; } = new List<CostCentre>();
+    //selfReference
+    public virtual FiMaAccountCategory AccountCategoryNavigation { get; set; }
+    public virtual FiMaAccount ParentNavigation { get; set; }
+    public virtual ICollection<FiMaAccount> InverseParentNavigation { get; set; }
 
+    public virtual ICollection<Voucher>? FiMaVoucherCashAccounts { get; set; }
+    public virtual ICollection<Voucher>? FiMaBankAcount {  get; set; }
+    public virtual ICollection<Voucher>? FiMaCardAccount {  get; set; }
+    public virtual ICollection<Voucher>? FiMaPostAccount { get; set; }
 
 }

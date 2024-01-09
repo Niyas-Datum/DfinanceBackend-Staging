@@ -18,36 +18,32 @@ public class DiInstaller : IInstaller
 {
     public void InstallService(IServiceCollection service, IConfiguration configuration)
     {
+		//Master DB 
+		service.AddScoped<ICompanyService, CompanyService>();
         //authentication 
         service.AddScoped<IAuthService, AuthService>();
-
-        service.AddScoped<ICompanyService, CompanyService>();
-
-        service.AddScoped<IBranchService, BranchService>();
-
-        service.AddScoped<ICountryDropDownService,CountryDropDownService>();
-
         service.AddScoped<IEncryptService, EncryptService>();
+        service.AddScoped<IDecryptService, DecryptService>();
+        service.AddSingleton<IConnectionServices, ConnectionServices>();
 
-        service.AddScoped<IDecryptService,DecryptService>();    
-
+        //GENERAL
+        service.AddScoped<IBranchService, BranchService>();
+       
         service.AddScoped<IDepartmentTypeService, DepartmentTypeService>();
-
         service.AddScoped<IUserService, UserService>();
-
         service.AddScoped<IDesignationsService, DesignationsService>();
-
         service.AddScoped<ICostCategoryService, CostCategoryService>();
-
         service.AddScoped<ICostCentreService, CostCentreService>();
+        //MAMISC 
         service.AddScoped<IStatusDropDownService, StatusDropDownService>();
-        
+        service.AddScoped<ICountryDropDownService, CountryDropDownService>();
 
         service.AddScoped<ICategoryService, CategoryService>();
         service.AddScoped<ICategoryTypeService, CategoryTypeService>();
-		service.AddScoped<ICurrencyService, CurrencyService>();
-
         service.AddScoped<IAreaMasterService, AreaMasterService>();
-        service.AddSingleton<IConnectionServices, ConnectionServices>();
+
+        //FINANCE
+        service.AddScoped<ICurrencyService, CurrencyService>();
+        service.AddScoped<IChartOfAccountsService, ChartOfAccountsService>();
     }
 }

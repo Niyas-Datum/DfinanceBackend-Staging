@@ -19,4 +19,11 @@
     <ProjectReference Include="..\Dfinance.Shared\Dfinance.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Domain\Account\" />
+    <Folder Include="Domain\Items\" />
+    <Folder Include="Domain\General\" />
+    <Folder Include="Domain\Vouchers\" />
+  </ItemGroup>
+
 </Project>
