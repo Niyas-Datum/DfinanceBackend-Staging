@@ -34,13 +34,46 @@ public class AuthController : BaseController
     [HttpGet("setcon")]
     public async Task<IActionResult> Setcon( [FromQuery] DropdownLoginDto model)
     {
-       
-        var constng = _authservice.SetCon(model);
-        if(constng == null) return BadRequest();
-        _connectionServices.Setcon(constng);
+        try
+        {
 
-        return Ok();
+
+            var constng = _authservice.SetCon(model);
+            if (constng == null) return BadRequest();
+            if(_connectionServices.Setcon(constng))
+            return Ok("Connection successfull");
+            else return BadRequest();
+        }catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
    
     }
 
-}
+    [HttpGet("autologin")]
+    public async Task<IActionResult> AutoConnect()
+    {
+        DropdownLoginDto dropdownLoginDto = new DropdownLoginDto() { Id=46, Value=""};
+        var constng =  _authservice.SetCon(dropdownLoginDto);
+        if (constng == null) return BadRequest();
+       if( _connectionServices.Setcon(constng))
+        {
+            AuthenticateRequestDto authenticateRequestDto = new AuthenticateRequestDto()
+            {
+                Username = "user",
+                Password = "user",
+                Branch = new DropdownLoginDto() { Id = 1 }
+            };
+            var data =  _authservice.Authenticate(authenticateRequestDto);
+            return Response(data);
+
+        }
+        else
+        {
+            return BadRequest();
+        }
+
+
+    }
+
+    }

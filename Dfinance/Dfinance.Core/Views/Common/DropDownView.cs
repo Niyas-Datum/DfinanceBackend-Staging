@@ -18,4 +18,9 @@ namespace Dfinance.Core.Views.Common
         public int ID { get; set; }
         public string? Value { get; set; }
     }
+    public class DropDownViewDesc
+    {
+        public int Id { get; set; }
+        public string Description { get; set; }
+    }
 }

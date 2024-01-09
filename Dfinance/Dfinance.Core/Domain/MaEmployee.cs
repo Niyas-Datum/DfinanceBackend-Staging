@@ -68,4 +68,5 @@ public partial class MaEmployee
     //relationship with currency
     public virtual ICollection<Currency> Currencies { get; set; }
 
+    public virtual ICollection<Voucher>? FiMaVouchers { get; set; }
 }

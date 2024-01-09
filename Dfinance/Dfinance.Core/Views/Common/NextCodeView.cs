@@ -10,4 +10,9 @@ namespace Dfinance.Core.Views.Common
     {
         public long Code {  get; set; }
     }
+    public class AccountCodeView 
+    {
+        public string AccountCode { get; set; }
+    }
+
 }
