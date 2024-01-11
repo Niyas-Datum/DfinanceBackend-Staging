@@ -43,6 +43,7 @@ public class DiInstaller : IInstaller
         service.AddScoped<IAreaMasterService, AreaMasterService>();
 
         //FINANCE
+	    service.AddScoped<IFinanceYearService,FinanceYearService>();
         service.AddScoped<ICurrencyService, CurrencyService>();
         service.AddScoped<IChartOfAccountsService, ChartOfAccountsService>();
     }

@@ -61,6 +61,7 @@ public partial class DFCoreContext : DbContext
 	 public DbSet<Currency> Currency { get; set; }
     public DbSet<CurrencyCode> CurrencyCode { get; set; }
 
+    public DbSet<TblMaFinYear> TblMaFinYear { get; set; }
 
     //view init
 
@@ -105,6 +106,9 @@ public partial class DFCoreContext : DbContext
     public DbSet<FillCurrencyCodeById> FillCurrencyCodeById { get; set; }
     public DbSet<FillCurrency> FillCurrency { get; set; }
     public DbSet<FillCurrencyById> FillCurrencyById { get; set; }
+    //FinanceYear
+    public DbSet<FinanceYearView> FinanceYearView { get; set; }
+    public DbSet<FinanceYearViewByID> FinanceYearViewByID { get; set; }
     //FiMaAccounts
     public DbSet<ChartofAccView> ChartofAccView { get; set; }
     public DbSet<FillLedgers> FillLedgers { get; set; }
@@ -142,7 +146,8 @@ public partial class DFCoreContext : DbContext
         mb.ApplyConfiguration(new FiMaVouchersConfiguration());
 		//currency 
 		 mb.ApplyConfiguration(new CurrencyConfigurations());
-
+        //Financeyear
+        mb.ApplyConfiguration(new TblMaFinYearConfigurations());
         //views configuring
         mb.Entity<CurrencyCode>().HasNoKey().ToView(null);
         mb.Entity<UserPageListView>().HasNoKey().ToView(null);
@@ -180,6 +185,9 @@ public partial class DFCoreContext : DbContext
         mb.Entity<FillCurrencyCodeById>().HasNoKey().ToView(null);
         mb.Entity<FillCurrency>().HasNoKey().ToView(null);
         mb.Entity<FillCurrencyById>().HasNoKey().ToView(null);
+        //FinanceYear
+        mb.Entity<FinanceYearView>().HasNoKey().ToView(null);
+        mb.Entity<FinanceYearViewByID>().HasNoKey().ToView(null);
         mb.Entity<ChartofAccView>().HasNoKey().ToView(null);
         mb.Entity<FillLedgers>().HasNoKey().ToView(null);
         mb.Entity<AccountCodeView>().HasNoKey().ToView(null);

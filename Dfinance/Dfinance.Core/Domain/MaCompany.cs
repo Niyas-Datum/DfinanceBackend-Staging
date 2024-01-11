@@ -104,6 +104,10 @@ namespace Dfinance.Core.Domain
         public virtual ICollection<MaArea>? BranchIdArea { get; set; }
         //relationship with currency
         public virtual ICollection<Currency> Currencies { get; set; }
+        //relationship with tblfinyear
+        public ICollection<TblMaFinYear> TblMaFinYears { get; set; }
+
+        //relation with FiMaVoucher
         public virtual ICollection<Voucher>? FiMaVouchers { get; set; }
     }
 }
