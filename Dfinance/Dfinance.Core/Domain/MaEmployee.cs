@@ -68,5 +68,8 @@ public partial class MaEmployee
     //relationship with currency
     public virtual ICollection<Currency> Currencies { get; set; }
 
+    //RELATIONSHIP WITH FINANCIAL YEAR
+    public ICollection<TblMaFinYear> TblMaFinYears { get; set; }
+
     public virtual ICollection<Voucher>? FiMaVouchers { get; set; }
 }

@@ -20,8 +20,8 @@ namespace Dfinance.Shared.Routes.v1
             public const string Main = $"{Base}/coa";
             public const string SaveAccount = $"{Main}/saveacc";
             public const string UpdateAccount = $"{Main}/upacc";
-            public const string Accountlist= $"{Main}/getaccs";
-            public const string AccountsById = $"{Main}/getaccid";
+            public const string Accountlist= $"{Main}/getall";
+            public const string AccountsById = $"{Main}/getbyid";
             public const string SubGroup = $"{Main}/accsubgrps";
             public const string AccountGroup = $"{Main}/accgrps";
             public const string AccountCategory = $"{Main}/acccat";
@@ -29,5 +29,19 @@ namespace Dfinance.Shared.Routes.v1
 
         }
 
+        public static class FinanceYear
+        {
+            public const string Main = $"{Base}/year";
+
+            public const string SaveFinanceYear = $"{Main}/save";
+
+            public const string UpdateFinanceYear = $"{Main}/Update";
+
+            public const string DeleteFinanceYear = $"{Main}/Delete";
+
+            public const string FillAllFinanceYear = $"{Main}/getall";
+
+            public const string FillAllFinanceYearById = $"{Main}/getbyid";
+        }
     }
 }
