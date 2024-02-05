@@ -215,5 +215,10 @@ namespace Dfinance.Shared.Routes.v1
             public const string FillCurrencyById = $"{Main}/FillById";
         }
 
+        public static class Password
+        {
+            public const string Main = $"{Base}/pwd";
+            public const string GetPassword = $"{Main}/varify";
+        }
     }
 }

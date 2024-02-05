@@ -122,6 +122,8 @@ public partial class DFCoreContext : DbContext
 
     //MaNumbering
     public DbSet<MaNumbering> MaNumbering { get; set; }
+    //password 
+    public DbSet<PasswordCheckResult> PasswordCheckResult { get; set; }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     //  => optionsBuilder.UseSqlServer(@"Data Source=ip.datuminnovation.com,9600;TrustServerCertificate=true;Initial Catalog=DatumSystemMain;User ID=sa;pwd=Datum123!");
    // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -200,5 +202,7 @@ public partial class DFCoreContext : DbContext
         mb.Entity<FillVoucherView>().HasNoKey().ToView(null);
 
         mb.Entity<NameView>().HasNoKey().ToView(null);
+        //Password
+        mb.Entity<PasswordCheckResult>().HasNoKey().ToView(null);
     }
 }
