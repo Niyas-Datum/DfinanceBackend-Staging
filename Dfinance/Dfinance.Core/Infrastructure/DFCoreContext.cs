@@ -57,8 +57,11 @@ public partial class DFCoreContext : DbContext
     public DbSet<FiMaAccountCategory> FiMaAccountCategory { get; set; }
     public DbSet<FiMaBranchAccounts> FiMaBranchAccounts { get; set; }
     public DbSet<CategoryType> CategoryType { get; set; }
-	//Fin=>Currency
-	 public DbSet<Currency> Currency { get; set; }
+    //MaSettings
+    public DbSet<MaSettings> MaSettings { get; set; }
+   
+    //Fin=>Currency
+    public DbSet<Currency> Currency { get; set; }
     public DbSet<CurrencyCode> CurrencyCode { get; set; }
 
     public DbSet<TblMaFinYear> TblMaFinYear { get; set; }
@@ -124,6 +127,9 @@ public partial class DFCoreContext : DbContext
     public DbSet<MaNumbering> MaNumbering { get; set; }
     //password 
     public DbSet<PasswordCheckResult> PasswordCheckResult { get; set; }
+    //SettingView 
+    public DbSet<FillSettingById> FillSettingById { get; set; }
+    public DbSet<FillSetting> FillSetting { get; set; }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     //  => optionsBuilder.UseSqlServer(@"Data Source=ip.datuminnovation.com,9600;TrustServerCertificate=true;Initial Catalog=DatumSystemMain;User ID=sa;pwd=Datum123!");
    // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

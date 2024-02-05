@@ -34,6 +34,7 @@ public class DiInstaller : IInstaller
         service.AddScoped<IDesignationsService, DesignationsService>();
         service.AddScoped<ICostCategoryService, CostCategoryService>();
         service.AddScoped<ICostCentreService, CostCentreService>();
+        service.AddScoped<ISettingsService, SettingsService>();
         //MAMISC 
         service.AddScoped<IStatusDropDownService, StatusDropDownService>();
         service.AddScoped<ICountryDropDownService, CountryDropDownService>();
@@ -47,5 +48,7 @@ public class DiInstaller : IInstaller
         service.AddScoped<ICurrencyService, CurrencyService>();
         service.AddScoped<IChartOfAccountsService, ChartOfAccountsService>();
         service.AddScoped<IVoucherService, VoucherService>();
+        //PASSWORD
+        service.AddScoped<IPasswordService, PasswordService>();
     }
 }
