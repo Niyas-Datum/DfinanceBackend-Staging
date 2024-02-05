@@ -28,7 +28,52 @@ namespace Dfinance.Shared.Routes.v1
             public const string DeleteAccount = $"{Main}/delacc";
 
         }
+        public static class Currency
+        {
+            public const string Main = $"{Base}/Currency";
 
+            public const string SaveCurrencycode = $"{Main}/Savecc";
+
+            public const string UpdateCurrencycode = $"{Main}/Updatecc";
+
+            public const string DeleteCurrencycode = $"{Main}/Deletecc";
+
+            public const string FillAllCurrencycode = $"{Main}/Fillcc";
+
+            public const string FillCurrencycodeById = $"{Main}/FillByIdcc";
+
+            public const string SaveCurrency = $"{Main}/Save";
+
+            public const string UpdateCurrency = $"{Main}/Update";
+
+            public const string DeleteCurrency = $"{Main}/Delete";
+
+            public const string FillAllCurrency = $"{Main}/Fillc";
+
+            public const string FillCurrencyById = $"{Main}/FillById";
+        }
+        public static class Voucher
+        {
+            public const string Main = $"{Base}/vchr";
+
+            public const string FillVouchers = $"{Main}/getall";
+
+         //   public const string SaveVouchers = $"{Main}/save";
+
+            public const string UpdateVouchers = $"{Main}/update";
+
+           // public const string DeleteVouchers = $"{Main}/delete";
+
+            public const string FillPrimaryVoucherName = $"{Main}/getnamebyid";
+
+            public const string SaveVoucherNumbering = $"{Main}/savenumbering";
+
+            public const string UpdateVoucherNumbering = $"{Main}/updatenumbering";
+
+            public const string DeleteVoucherNumbering = $"{Main}/delnumbering";
+
+
+        }
         public static class FinanceYear
         {
             public const string Main = $"{Base}/year";

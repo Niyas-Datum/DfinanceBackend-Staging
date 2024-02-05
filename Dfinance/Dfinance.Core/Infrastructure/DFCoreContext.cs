@@ -115,7 +115,11 @@ public partial class DFCoreContext : DbContext
     public DbSet<ChartofAccViewById> ChartofAccViewById { get; set; }
     public DbSet<AccountCodeView> AccountCodeView { get; set; }
 	
-	
+    //Vouchers
+    public DbSet<FillVoucherView> FillVoucherView { get; set; }
+    public DbSet<Voucher> FiMaVouchers {  get; set; }
+    public DbSet<NameView> NameView {  get; set; }  //  retun only name
+
     //MaNumbering
     public DbSet<MaNumbering> MaNumbering { get; set; }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -192,6 +196,9 @@ public partial class DFCoreContext : DbContext
         mb.Entity<FillLedgers>().HasNoKey().ToView(null);
         mb.Entity<AccountCodeView>().HasNoKey().ToView(null);
         mb.Entity<ChartofAccViewById>().HasNoKey().ToView(null);
+ //Voucher
+        mb.Entity<FillVoucherView>().HasNoKey().ToView(null);
 
+        mb.Entity<NameView>().HasNoKey().ToView(null);
     }
 }
