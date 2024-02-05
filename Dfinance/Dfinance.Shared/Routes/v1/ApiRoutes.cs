@@ -214,7 +214,23 @@ namespace Dfinance.Shared.Routes.v1
 
             public const string FillCurrencyById = $"{Main}/FillById";
         }
+        public static class MaSettings
+        {
+            public const string Main = $"{Base}/sett";
 
+            public const string FillMaster = $"{Main}/getall";
+
+            public const string FillByID = $"{Main}/getbyid";
+
+            public const string SaveSettings = $"{Main}/save";
+
+            public const string UpdateSettings = $"{Main}/update";
+
+            public const string DeleteSettings = $"{Main}/delete";
+
+            public const string KeyValue = $"{Main}/KeyValue";
+
+        }
         public static class Password
         {
             public const string Main = $"{Base}/pwd";
