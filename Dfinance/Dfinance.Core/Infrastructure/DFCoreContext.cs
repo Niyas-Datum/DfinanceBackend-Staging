@@ -63,7 +63,9 @@ public partial class DFCoreContext : DbContext
     //Fin=>Currency
     public DbSet<Currency> Currency { get; set; }
     public DbSet<CurrencyCode> CurrencyCode { get; set; }
-
+   //Fin=>AccountsList
+   public DbSet<FiAccountsList> FiAccountsList { get; set; }
+    public DbSet<FiMaAccountsList> FiMaAccountsLists { get; set; }
     public DbSet<TblMaFinYear> TblMaFinYear { get; set; }
 
     //view init
@@ -117,6 +119,10 @@ public partial class DFCoreContext : DbContext
     public DbSet<FillLedgers> FillLedgers { get; set; }
     public DbSet<ChartofAccViewById> ChartofAccViewById { get; set; }
     public DbSet<AccountCodeView> AccountCodeView { get; set; }
+	//AccountList
+	
+    public DbSet<FillAccountList> FillAccountList { get; set; }
+    public DbSet<ReadViewAlias> ReadViewAlias { get; set; }
 	
     //Vouchers
     public DbSet<FillVoucherView> FillVoucherView { get; set; }
@@ -156,11 +162,15 @@ public partial class DFCoreContext : DbContext
         mb.ApplyConfiguration(new CategoryConfiguration());
         mb.ApplyConfiguration(new CategoryTypeConfiguration());
         mb.ApplyConfiguration(new FiMaVouchersConfiguration());
+        //settings
+        mb.ApplyConfiguration(new MaSettingsConfiguration());
 		//currency 
 		 mb.ApplyConfiguration(new CurrencyConfigurations());
         //Financeyear
         mb.ApplyConfiguration(new TblMaFinYearConfigurations());
-        //views configuring
+    //AccountList
+        mb.ApplyConfiguration(new FiAccountsListConfiguration());
+        mb.ApplyConfiguration(new FiMaAccountsListConfiguration());
         mb.Entity<CurrencyCode>().HasNoKey().ToView(null);
         mb.Entity<UserPageListView>().HasNoKey().ToView(null);
         mb.Entity<UserInfo>().HasNoKey().ToView(null);
@@ -204,11 +214,14 @@ public partial class DFCoreContext : DbContext
         mb.Entity<FillLedgers>().HasNoKey().ToView(null);
         mb.Entity<AccountCodeView>().HasNoKey().ToView(null);
         mb.Entity<ChartofAccViewById>().HasNoKey().ToView(null);
- //Voucher
+        //Voucher
         mb.Entity<FillVoucherView>().HasNoKey().ToView(null);
 
         mb.Entity<NameView>().HasNoKey().ToView(null);
+        mb.Entity<FillSettingById>().HasNoKey().ToView(null);
+        mb.Entity<FillSetting>().HasNoKey().ToView(null);
         //Password
         mb.Entity<PasswordCheckResult>().HasNoKey().ToView(null);
+        mb.Entity<FillAccountList>().HasNoKey().ToView(null);
     }
 }

@@ -1,14 +1,13 @@
 ﻿using Dfinance.Application.Dto;
+using Dfinance.Application.Dto.General;
 using Dfinance.Application.Services.General.Interface;
 using Dfinance.AuthAppllication.Services.Interface;
-using Dfinance.Core.Domain;
 using Dfinance.Core.Infrastructure;
-using Dfinance.Core.Views;
-using Dfinance.Core.Views.General;
 using Dfinance.Shared.Domain;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
+using static Dfinance.Shared.Routes.v1.ApiRoutes;
 
 namespace Dfinance.Application.Services.General
 {
@@ -104,68 +103,13 @@ namespace Dfinance.Application.Services.General
                 return CommonResponse.Error(ex.Message);
             }
         }
-        
-        //************************AddDepartmentType****************************************************
-        public CommonResponse SaveDepartmentTypes(DepartmentTypeDto departmentTypeDto)
-        {
-            try
-            {
-                int CreatedBy = _authService.GetId().Value;
-                int CreatedBranchId = _authService.GetBranchId().Value;
-                DateTime CreatedOn = DateTime.Now;
 
-                string criteria = "InsertReDepartmentTypes";
+   
 
-                SqlParameter newId = new SqlParameter("@NewID", SqlDbType.Int)
-                {
-                    Direction = ParameterDirection.Output
-                };
-
-                _context.Database.ExecuteSqlRaw("EXEC spDepartmentTypes  @Criteria ={0},@Department={1},@CreatedBy={2},@BranchID={3},@CreatedOn={4},@NewID={5} OUTPUT",
-                                                criteria, departmentTypeDto.Department, CreatedBy, CreatedBranchId, CreatedOn, newId);
-
-                int newIdValue = (int)newId.Value;
-
-                return CommonResponse.Created(newIdValue);
-            }
-            catch (Exception ex)
-            {
-                return CommonResponse.Error(ex.Message);
-            }
-        }
+      
 
         //*****************************UpdateDepartment****************************************************
-        public CommonResponse UpdateDepartmentTypes(DepartmentTypeDto departmentTypeDto,int Id)
-        {
-            try
-            {
-                var dept = _context.ReDepartmentTypes.Where(i => i.Id == Id).
-                    Select(i => i.Id).
-                    SingleOrDefault();
-                if(dept==null)
-                {
-                    return CommonResponse.NotFound("Department Not Found");
-                }
-
-                int CreatedBy = _authService.GetId().Value;
-                int CreatedBranchId = _authService.GetBranchId().Value;
-                DateTime CreatedOn = DateTime.Now;
-                if (Id == 0)
-                    return CommonResponse.Error("Branch Not Found");
-
-                else
-                {
-                    
-                    string criteria = "UpdateReDepartmentTypes";
-                    var result = _context.Database.ExecuteSqlRaw($"EXEC spDepartmentTypes @Criteria='{criteria}',@ID='{Id}', @Department='{departmentTypeDto.Department}',@CreatedBy='{CreatedBy}',@BranchID='{CreatedBranchId}',@CreatedOn='{CreatedOn}'");
-                return CommonResponse.Ok(result);
-                }
-            }
-            catch (Exception ex)
-            {
-                return CommonResponse.Error(ex);
-            }
-        }
+       
         //**************************Delete*****************************
         public CommonResponse DeleteDepartmentTypes(int Id)
         {
@@ -192,7 +136,176 @@ namespace Dfinance.Application.Services.General
             }
         }
 
-        
-        
+
+        public CommonResponse AddDepartment(DepartmentTypeDto departmentDto)
+        {
+            try
+            {
+                
+                // Department exist or not
+                var departmentExists = _context.ReDepartmentTypes.Any(i => i.Department == departmentDto.Department);
+                if (departmentExists)
+                {
+                    return CommonResponse.Error("Department already exists");
+                }
+
+                if (departmentDto.Id == 0)
+                {
+                    if (departmentDto.DepId == 0)
+                    {
+                        var newId = SaveDepartmentTypes(departmentDto.Department);
+                        if (newId > 0)
+                        {
+                            foreach (var branchId in departmentDto.Branch.Select(b => b.Id))
+                            {
+                                var result = SaveDepartment(newId, branchId);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+
+                    var updatedeptype = UpationDepartmentTypes(departmentDto.Department, departmentDto.Id);
+                    foreach (var branchId in departmentDto.Branch.Select(b => b.Id))
+                    {
+                        var updatedept = UpdationDepartment(departmentDto.DepId, branchId, departmentDto.Id);
+                    }
+
+                    return CommonResponse.Ok(departmentDto);
+
+                    
+                }
+                
+                return CommonResponse.Ok("Inserted Sucessfully");
+            
+             
+            }
+            catch (Exception ex)
+            {
+                return CommonResponse.Error(ex.Message);
+            }
+        }
+ //**********************************************************************************************************************************
+        private int SaveDepartment(int DepId, int compid)
+        {
+            try
+            {
+                int createdBy = _authService.GetId().Value;
+                int createdBranchId = _authService.GetBranchId().Value;
+                DateTime createdOn = DateTime.Now;
+
+                string criteria = "InsertMaDepartments";
+
+                SqlParameter newId = new SqlParameter("@NewID", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.Output
+                };
+
+                _context.Database.ExecuteSqlRaw("EXEC spMaDepartments @Criteria={0},@DepartmentTypeID={1},@CreatedBy={2},@CompanyID={3},@CreatedOn={4},@NewID={5} OUTPUT",
+                                                criteria, DepId, createdBy, compid, createdOn, newId);
+
+                int newdepId = (int)newId.Value;
+
+                return newdepId;
+            }
+
+
+
+            catch (Exception ex)
+            {
+                return 0;
+            }
+        }
+
+        private int SaveDepartmentTypes(string departmentName)
+        {
+            try
+            {
+                int createdBy = _authService.GetId().Value;
+                int createdBranchId = _authService.GetBranchId().Value;
+                DateTime createdOn = DateTime.Now;
+
+
+
+                string criteria = "InsertReDepartmentTypes";
+
+                SqlParameter newId = new SqlParameter("@NewID", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.Output
+                };
+
+                _context.Database.ExecuteSqlRaw("EXEC spDepartmentTypes @Criteria={0},@Department={1},@CreatedBy={2},@BranchID={3},@CreatedOn={4},@NewID={5} OUTPUT",
+                                                criteria, departmentName, createdBy, createdBranchId, createdOn, newId);
+
+                int newIdValue = (int)newId.Value;
+
+                return newIdValue;
+            }
+
+
+            catch (Exception ex)
+            {
+                return 0;
+            }
+        }
+
+        //*****************************UpdateDepartment****************************************************
+        private int UpdationDepartment(int DepId, int compid, int Id)
+        {
+            try
+            {
+                var dept = _context.MaDepartments.Find(Id);
+                if (dept == null)
+                {
+
+                    return 0;
+                }
+                int createdBy = _authService.GetId().Value;
+                int createdBranchId = _authService.GetBranchId().Value;
+                DateTime createdOn = DateTime.Now;
+
+                string criteria = "UpdateMaDepartments";
+                var result = _context.Database.ExecuteSqlRaw("EXEC spMaDepartments @Criteria={0},@DepartmentTypeID={1},@CreatedBy={2},@CompanyID={3},@CreatedOn={4},@ID={5}",
+                                                 criteria, DepId, createdBy, compid, createdOn, Id);
+
+                return result;
+
+
+
+            }
+            catch (Exception ex)
+            {
+                return 0;
+            }
+        }
+     //**********************************************************************************************************************************
+        private int UpationDepartmentTypes(string departmentName, int Id)
+        {
+            try
+            {
+                var dept = _context.ReDepartmentTypes.Find(Id);
+                if (dept == null)
+                {
+
+                    return 0;
+                }
+
+                int createdBy = _authService.GetId().Value;
+                int createdBranchId = _authService.GetBranchId().Value;
+                DateTime createdOn = DateTime.Now;
+
+
+                string criteria = "UpdateReDepartmentTypes";
+                var result = _context.Database.ExecuteSqlRaw($"EXEC spDepartmentTypes @Criteria='{criteria}',@ID='{Id}', @Department='{departmentName}',@CreatedBy='{createdBy}',@BranchID='{createdBranchId}',@CreatedOn='{createdOn}'");
+                return result;
+
+
+            }
+            catch (Exception ex)
+            {
+                return 0;
+            }
+        }
     }
 }

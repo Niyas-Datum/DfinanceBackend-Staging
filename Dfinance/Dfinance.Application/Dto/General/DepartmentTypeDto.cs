@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Dfinance.Application.Dto
 {
     public class DepartmentTypeDto
     {
+        public int Id { get; set; } = 0;
+        public int DepId { get; set; }
         [Required(ErrorMessage = "Department is mandatory!!")]
-        public String Department {  get; set; }
-      
-       
+        public string Department {  get; set; }
+        public List<BranchDropdownDto> Branch { get; set; } = null!;
+
+
     }
 }

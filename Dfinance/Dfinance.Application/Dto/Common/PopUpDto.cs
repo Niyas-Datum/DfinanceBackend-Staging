@@ -13,4 +13,11 @@ namespace Dfinance.Application.Dto.Common
         public string? Code {  get; set; }
         public string? Description { get; set; }
     }
+    public class AccountNamePopUpDto
+    {
+        public string? Alias {  get; set; }
+        public string? Name { get; set; }
+        public int ID { get; set; }
+    }
+    
 }

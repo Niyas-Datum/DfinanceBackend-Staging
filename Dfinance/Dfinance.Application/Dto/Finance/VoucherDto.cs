@@ -13,23 +13,31 @@ namespace Dfinance.Application.Dto.Finance
         public int Id { get; set; }
         public string Name { get; set; }
         public string Alias { get; set; }
-        public int PrimaryVoucherName { get; set; }
+        public int PrimaryVoucherId { get; set; }
         public string Type { get; set; }
+
+        [Required(ErrorMessage = "Active is required")]
         public bool Active { get; set; }
+
+        [Required(ErrorMessage = "Code is required")]
         public string? Code { get; set; }
         public byte? DevCode { get; set; }
-        public int? DocumentTypeName { get; set; }
+        public int? DocumentTypeId { get; set; }
         public int? Numbering { get; set; }
         public bool? FinanceUpdate { get; set; }
         public bool? RateUpdate { get; set; }
         public int? RowType { get; set; }
+        [Required(ErrorMessage = "ApprovalRequired is required")]
         public bool? ApprovalRequired { get; set; }
+        [Required(ErrorMessage = "WorkflowDays is required")]
         public int? WorkflowDays { get; set; }
+        [Required(ErrorMessage = "ApprovalDays is required")]
         public int? ApprovalDays { get; set; }
         public bool? InventoryUpdate { get; set; }
         public byte? ModuleType { get; set; }
+        [Required(ErrorMessage = "ReportPath is required")]
         public string? ReportPath { get; set; }
-        public string? Nature { get; set;}
+        public string? Nature { get; set; }
     }
 
     public class NumberingDto
@@ -44,7 +52,7 @@ namespace Dfinance.Application.Dto.Finance
         public int? MaximumDegits { get; set; }
     }
 
-   
-   
-      
+
+
+
 }

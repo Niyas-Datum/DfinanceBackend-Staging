@@ -50,5 +50,8 @@ public class DiInstaller : IInstaller
         service.AddScoped<IVoucherService, VoucherService>();
         //PASSWORD
         service.AddScoped<IPasswordService, PasswordService>();
+		
+		//AccountList
+		 service.AddScoped<IAccountList, AccountListService>();
     }
 }

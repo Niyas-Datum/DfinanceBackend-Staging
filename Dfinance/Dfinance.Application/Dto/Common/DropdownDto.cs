@@ -23,4 +23,10 @@ namespace Dfinance.Application.Dto.Common
         public string Key {  get; set; }
         public string Value { get; set; }
     }
+    public class DropDownDesc
+    {
+        public int? Id { get; set; }
+        public string? Description { get; set; }
+    }
+
 }
