@@ -116,8 +116,8 @@ namespace Dfinance.Application.Services.Finance
 
                     if (voucherToUpdate != null)
                     {
-                        _context.Database.ExecuteSqlRaw($"Exec FiMaVoucherSp @Criteria='{criteria}',@ID='{voucherDto.Id}',@Name='{voucherDto.Name}',@Alias='{voucherDto.Alias}',@PrimaryVoucherID='{voucherDto.PrimaryVoucherName}'," +
-                            $"@Type='{voucherDto.Type}',@Active='{voucherDto.Active}',@Code='{voucherDto.Code}',@DevCode='{voucherDto.DevCode}',@DocumentType='{voucherDto.DocumentTypeName}'," +
+                        _context.Database.ExecuteSqlRaw($"Exec FiMaVoucherSp @Criteria='{criteria}',@ID='{voucherDto.Id}',@Name='{voucherDto.Name}',@Alias='{voucherDto.Alias}',@PrimaryVoucherID='{voucherDto.PrimaryVoucherId}'," +
+                            $"@Type='{voucherDto.Type}',@Active='{voucherDto.Active}',@Code='{voucherDto.Code}',@DevCode='{voucherDto.DevCode}',@DocumentType='{voucherDto.DocumentTypeId}'," +
                             $"@Numbering='{voucherDto.Numbering}',@FinanceUpdate='{voucherDto.FinanceUpdate}',@RateUpdate='{voucherDto.RateUpdate}',@RowType='{voucherDto.RowType}',@ApprovalRequired='{voucherDto.ApprovalRequired}'," +
                             $"@WorkflowDays='{voucherDto.WorkflowDays}',@ApprovalDays='{voucherDto.ApprovalDays}',@Nature='{voucherDto.Nature}',@ModuleType='{voucherDto.ModuleType}',@ReportPath='{voucherDto.ReportPath}'");
                     }
@@ -167,10 +167,10 @@ namespace Dfinance.Application.Services.Finance
             try
             {
                 string msg = null;
-                var desig = _context.FiMaVouchers.Where(i => i.Id == PrimaryVoucherId).
+                var desig = _context.FiMaVouchers.Where(i => i.PrimaryVoucherId == PrimaryVoucherId).
                     Select(i => i.Id).
                     SingleOrDefault();
-                if (desig == null)
+                if (desig == 0)
                 {
                     msg = "Voucher Not Found";
                     return CommonResponse.NotFound(msg);
@@ -227,7 +227,7 @@ namespace Dfinance.Application.Services.Finance
             {
                 var nData = _context.MaNumbering.Where(x=>x.Id == Id).FirstOrDefault();
                 if (nData == null) 
-                    return CommonResponse.NotFound();
+                    return CommonResponse.NotFound("Id not found!");
                 else
                 {
                     nData.StartingNumber = numberingDto.StartingNumber;
@@ -251,9 +251,17 @@ namespace Dfinance.Application.Services.Finance
         {
             try
             {
-                var delete = _context.MaNumbering.Where(x => x.Id == Id).FirstOrDefault();
-                if (delete == null) 
-                    return CommonResponse.NotFound();
+                var isInUse = _context.FiMaVouchers.Any(f => f.Numbering == Id);
+
+                if (isInUse)
+                {
+                    return CommonResponse.Error("Cannot delete because it is referenced in Vouchers.");
+                }
+                var delete = _context.MaNumbering.FirstOrDefault(x => x.Id == Id);
+                if (delete == null)
+                {
+                    return CommonResponse.NotFound("Id not found!");
+                }
                 else
                 {
                     _context.Remove(delete);

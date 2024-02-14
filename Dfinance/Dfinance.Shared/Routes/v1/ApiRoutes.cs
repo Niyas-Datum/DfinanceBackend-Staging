@@ -46,21 +46,8 @@ namespace Dfinance.Shared.Routes.v1
           public const string Main = $"{Base}/dept";
             public const string DropDown = $"{Main}/DropDownDepartemnt";
             public const string FillAllDepartment = $"{Main}/FillAllDepartment";
-
-        public const string FillDepartmentById = $"{Main}/FillDepartmentById";
-         }
-            public static class DepartmentType
-        {
-            public const string Main = $"{Base}/depttyp";
-
-            public const string FillAll = $"{Main}/FillAllDepartmentTypes";
-
-            public const string FillDepartmentTypesById= $"{Main}/FillDepartmentTypesById";
-
+            public const string FillDepartmentById = $"{Main}/FillDepartmentById";
             public const string SaveDepartmentTypes = $"{Main}/Save";
-
-            public const string UpdateDepartmentTypes = $"{Main}/update/{{Id}}";
-
             public const string DeleteDepartmentTypes = $"{Main}/delete/{{Id}}";
 
         }

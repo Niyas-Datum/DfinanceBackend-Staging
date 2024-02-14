@@ -9,10 +9,9 @@ namespace Dfinance.Application.Services.General.Interface
         CommonResponse FillDepartment();
         CommonResponse FillDepartmentById(int Id);
         //*********************departemntType*****************************************
-        CommonResponse FillDepartmentTypes();
-        CommonResponse FillDepartmentTypesById(int Id);
-        CommonResponse SaveDepartmentTypes(DepartmentTypeDto departmentTypeDto);
-        CommonResponse UpdateDepartmentTypes(DepartmentTypeDto departmentTypeDto, int Id);
+        //CommonResponse FillDepartmentTypes();
+        //CommonResponse FillDepartmentTypesById(int Id);
+        CommonResponse AddDepartment(DepartmentTypeDto departmentDto);
         CommonResponse DeleteDepartmentTypes(int Id);
 
     }

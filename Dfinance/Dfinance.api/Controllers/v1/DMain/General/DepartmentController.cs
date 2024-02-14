@@ -1,10 +1,7 @@
 ﻿using Dfinance.api.Authorization;
 using Dfinance.api.Framework;
 using Dfinance.Application.Dto;
-using Dfinance.Application.Services;
-using Dfinance.Application.Services.General;
 using Dfinance.Application.Services.General.Interface;
-using Dfinance.Application.Services.Interface;
 using Dfinance.Shared.Routes.v1;
 using Microsoft.AspNetCore.Mvc;
 
@@ -61,36 +58,10 @@ namespace Dfinance.api.Controllers.v1.DMain
                 return BadRequest(ex.Message);
             }
         }
-        [HttpGet(ApiRoutes.DepartmentType.FillAll)]
-        public IActionResult FillDepartmentTypes()
-        {
-            try
-            {
-                var data = _departmentService.FillDepartmentTypes();
-
-                return Ok(data);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-        [HttpGet(ApiRoutes.DepartmentType.FillDepartmentTypesById)]
-        public IActionResult FillDepartmentTypesById(int Id)
-        {
-            try
-            {
-                var result = _departmentService.FillDepartmentTypesById(Id);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-        [HttpPost(ApiRoutes.DepartmentType.SaveDepartmentTypes)]
+       
+        [HttpPost(ApiRoutes.Department.SaveDepartmentTypes)]
   
-        public IActionResult SaveDepartmentTypes([FromBody] DepartmentTypeDto DepartmentDto)
+        public IActionResult AddDepartment([FromBody] DepartmentTypeDto DepartmentDto)
         {
             try
             {
@@ -98,7 +69,7 @@ namespace Dfinance.api.Controllers.v1.DMain
                 {
                     return BadRequest(ModelState);
                 }
-              var result = _departmentService.SaveDepartmentTypes(DepartmentDto);
+              var result = _departmentService.AddDepartment(DepartmentDto);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -107,25 +78,8 @@ namespace Dfinance.api.Controllers.v1.DMain
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPatch(ApiRoutes.DepartmentType.UpdateDepartmentTypes)]
-        public IActionResult UpdateDepartmentTypes([FromBody] DepartmentTypeDto DepartmentTypeDto,int Id)
-        {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-              var result = _departmentService.UpdateDepartmentTypes(DepartmentTypeDto, Id);
-
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);  
-            }
-        }
-        [HttpDelete(ApiRoutes.DepartmentType.DeleteDepartmentTypes)]
+        
+        [HttpDelete(ApiRoutes.Department.DeleteDepartmentTypes)]
         public IActionResult DeleteDepartmentTypes( int Id)
         {
             try
