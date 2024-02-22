@@ -1,7 +1,7 @@
-﻿using Dfinance.Application.Dto.Common;
+﻿using Dfinance.DataModels.Dto.Common;
 using System.ComponentModel.DataAnnotations;
 
-namespace Dfinance.Application.Dto.General
+namespace Dfinance.DataModels.General
 {
     public class CostCentreDto
     {

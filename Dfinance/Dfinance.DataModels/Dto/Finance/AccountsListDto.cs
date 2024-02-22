@@ -1,6 +1,7 @@
-﻿using Dfinance.Application.Dto.Common;
+﻿
+using Dfinance.DataModels.Dto.Common;
 
-namespace Dfinance.Application.Dto.Finance
+namespace Dfinance.DataModels.Dto.Finance
 {
     public class AccountsListDto
     {

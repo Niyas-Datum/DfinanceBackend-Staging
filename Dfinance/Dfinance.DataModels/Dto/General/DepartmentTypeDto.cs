@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Dfinance.Application.Dto
+namespace Dfinance.DataModels.Dto
 {
     public class DepartmentTypeDto
     {

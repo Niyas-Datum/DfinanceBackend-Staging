@@ -1,5 +1,4 @@
-﻿using Dfinance.Application.Dto.General;
-using Dfinance.Core.Domain;
+﻿using Dfinance.Core.Domain;
 using Dfinance.Core.Infrastructure;
 using Dfinance.Core.Views.General;
 using Dfinance.Shared.Domain;
@@ -9,6 +8,7 @@ using Microsoft.Data.SqlClient;
 using System.Data;
 using Dfinance.Application.Services.General.Interface;
 using Dfinance.Core.Views.Common;
+using Dfinance.DataModels.General;
 
 namespace Dfinance.Application.Services.General
 {

@@ -3,7 +3,7 @@ using Dfinance.api.Framework;
 
 using Microsoft.AspNetCore.Mvc;
 using Dfinance.Shared.Routes.v1;
-using Dfinance.Application.Dto.General;
+using Dfinance.DataModels.General;
 using Dfinance.Application.Services.General.Interface;
 
 namespace Dfinance.api.Controllers.v1.DMain.General

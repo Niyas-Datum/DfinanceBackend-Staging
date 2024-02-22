@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 
 
-namespace Dfinance.Application.Dto.Inventory
+namespace Dfinance.DataModels.Dto.Inventory
 {
     public class CategoryTypeDto
     {

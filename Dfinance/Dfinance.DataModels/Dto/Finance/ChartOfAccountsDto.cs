@@ -1,13 +1,12 @@
-﻿using Dfinance.Application.Dto.Common;
-using Dfinance.Core.Views.Common;
+﻿using Dfinance.DataModels.Dto.Common;
 using System.ComponentModel.DataAnnotations;
 
-namespace Dfinance.Application.Dto.Finance
+namespace Dfinance.DataModels.Dto.Finance
 {
     public class ChartOfAccountsDto
     {
         [Required(ErrorMessage = "Group is mandatory!!")]
-        public DropDownDtoName Group { get; set; }//DropDown 
+        public DropDownDtoName? Group { get; set; }//DropDown 
         [Required(ErrorMessage = "SubGroup is mandatory!!")]
         public DropDownDtoName? SubGroup { get; set; }//DropDown
         public DropDownDtoName? AccountCategory { get; set; }//DropDown

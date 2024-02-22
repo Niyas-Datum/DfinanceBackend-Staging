@@ -1,4 +1,4 @@
-﻿namespace Dfinance.Application.Dto
+﻿namespace Dfinance.DataModels.Dto
 {
     public class BranchDropdownDto
     {

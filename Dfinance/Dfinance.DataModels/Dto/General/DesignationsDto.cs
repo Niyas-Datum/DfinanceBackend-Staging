@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Dfinance.Application.Dto.General
+namespace Dfinance.DataModels.Dto.General
 {
     public  class DesignationsDto
     {

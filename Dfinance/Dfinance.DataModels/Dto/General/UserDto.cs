@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
-
-public class UserDto
+namespace Dfinance.DataModels.Dto.General
 {
-    [Required(ErrorMessage = "First Name is required")]
-    [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "First Name should not contain special characters")]
-    public string FirstName { get; set; }
+    public class UserDto
+    {
+        [Required(ErrorMessage = "First Name is required")]
+        [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "First Name should not contain special characters")]
+        public string FirstName { get; set; }
 
     [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Middle Name should not contain special characters")]
     public string MiddleName { get; set; }
@@ -80,4 +81,5 @@ public class MapagemenuDto
     public bool? IsEmail { get; set; }
     public bool? FrequentlyUsed { get; set; }
   
+    }
 }

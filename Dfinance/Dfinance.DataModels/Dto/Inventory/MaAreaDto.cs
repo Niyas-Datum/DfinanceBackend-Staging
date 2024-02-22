@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dfinance.Application.Dto.Inventory
+namespace Dfinance.DataModels.Dto.Inventory
 {
     public class MaAreaDto
     {
