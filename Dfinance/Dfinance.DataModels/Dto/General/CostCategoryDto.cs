@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dfinance.Application.Dto.General
+namespace Dfinance.DataModels.Dto.General
 {
     public class CostCategoryDto
     {

@@ -3,9 +3,9 @@ using Dfinance.Shared.Domain;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using Dfinance.AuthAppllication.Services.Interface;
-using Dfinance.Application.Dto;
 using Microsoft.Data.SqlClient;
 using Dfinance.Application.Services.General.Interface;
+using Dfinance.DataModels.Dto;
 
 namespace Dfinance.Application.Services.General
 {

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dfinance.Application.Dto.Finance
+namespace Dfinance.DataModels.Dto.Finance
 {
     public class CurrencyCodeDto
     {

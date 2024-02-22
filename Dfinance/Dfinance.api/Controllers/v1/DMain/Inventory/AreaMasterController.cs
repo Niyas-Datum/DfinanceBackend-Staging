@@ -1,7 +1,7 @@
 ﻿using Dfinance.api.Authorization;
 using Dfinance.api.Framework;
-using Dfinance.Application.Dto.Inventory;
 using Dfinance.Application.Services.Inventory.Interface;
+using Dfinance.DataModels.Dto.Inventory;
 using Dfinance.Shared.Routes.v1;
 using Microsoft.AspNetCore.Mvc;
 
@@ -80,6 +80,19 @@ namespace Dfinance.api.Controllers.v1.DMain.Inventory
             try
             {
                 var res = _service.FillAreaMasterById(id);
+                return Ok(res);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+        [HttpGet(ApiRoutes.AreaMaster.PopUp)]
+        public IActionResult PopUp()
+        {
+            try
+            {
+                var res = _service.PopArea();
                 return Ok(res);
             }
             catch

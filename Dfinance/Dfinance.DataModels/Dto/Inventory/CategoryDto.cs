@@ -1,4 +1,4 @@
-﻿using Dfinance.Application.Dto.Common;
+﻿using Dfinance.DataModels.Dto.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dfinance.Application.Dto.Inventory
+namespace Dfinance.DataModels.Dto.Inventory
 {
     public class CategoryDto
     {

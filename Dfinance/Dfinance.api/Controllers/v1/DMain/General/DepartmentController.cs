@@ -1,7 +1,7 @@
 ﻿using Dfinance.api.Authorization;
 using Dfinance.api.Framework;
-using Dfinance.Application.Dto;
 using Dfinance.Application.Services.General.Interface;
+using Dfinance.DataModels.Dto;
 using Dfinance.Shared.Routes.v1;
 using Microsoft.AspNetCore.Mvc;
 

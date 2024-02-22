@@ -1,4 +1,4 @@
-﻿using Dfinance.Application.Dto.Inventory;
+﻿using Dfinance.DataModels.Dto.Inventory;
 using Dfinance.Shared.Domain;
 using System;
 using System.Collections.Generic;

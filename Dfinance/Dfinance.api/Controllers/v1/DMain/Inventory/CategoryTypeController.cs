@@ -2,9 +2,9 @@
 using Dfinance.api.Framework;
 using Microsoft.AspNetCore.Mvc;
 using Dfinance.Shared.Routes.v1;
-using Dfinance.Application.Dto.Inventory;
 using Dfinance.Application.Services.Inventory.Interface;
 using Dfinance.Application.Services.Inventory;
+using Dfinance.DataModels.Dto.Inventory;
 
 namespace Dfinance.api.Controllers.v1.DMain.Inventory
 {

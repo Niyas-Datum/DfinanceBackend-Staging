@@ -1,8 +1,8 @@
-﻿using Dfinance.Application.Dto.Common;
+﻿using Dfinance.DataModels.Dto.Common;
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Dfinance.Application.Dto
+namespace Dfinance.DataModels.Dto
 {
     public class BranchDto
     {

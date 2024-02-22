@@ -1,9 +1,9 @@
-﻿using Dfinance.Application.Dto.Inventory;
-using Dfinance.Application.Services.Inventory.Interface;
+﻿using Dfinance.Application.Services.Inventory.Interface;
 using Dfinance.AuthAppllication.Services.Interface;
 using Dfinance.Core.Domain;
 using Dfinance.Core.Infrastructure;
 using Dfinance.Core.Views.Inventory;
+using Dfinance.DataModels.Dto.Inventory;
 using Dfinance.Shared.Domain;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -26,7 +26,22 @@ namespace Dfinance.Application.Services.Inventory
             _context = context;
             _authService = authService;
         }
-
+        /// <summary>
+        /// Fill Popup Area(from customer&Suppliyer)
+        /// </summary>
+        /// <returns></returns>
+        public CommonResponse PopArea()
+        {
+            try
+            {
+                var result = _context.MaArea.Where(x =>  x.Active == true).Select(x => new { ID = x.Id, Code = x.Code, Value = x.Name }).ToList();
+                return CommonResponse.Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return CommonResponse.Error(ex);
+            }
+        }
         /************* Fill all Area  *******************/
         public CommonResponse FillAreaMaster()
         {

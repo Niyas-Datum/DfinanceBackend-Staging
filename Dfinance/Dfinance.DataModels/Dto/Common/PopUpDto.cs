@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dfinance.Application.Dto.Common
+namespace Dfinance.DataModels.Dto.Common
 {
     public class PopUpDto
     {

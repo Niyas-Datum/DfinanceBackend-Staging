@@ -1,4 +1,4 @@
-﻿using Dfinance.Application.Dto;
+﻿using Dfinance.DataModels.Dto;
 using Dfinance.Shared.Domain;
 
 namespace Dfinance.Application.Services.General.Interface

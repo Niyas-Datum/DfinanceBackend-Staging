@@ -2,7 +2,7 @@
 
 using System.ComponentModel.DataAnnotations;
 
-namespace Dfinance.Application.Dto.Finance
+namespace Dfinance.DataModels.Dto.Finance
 {
     public class CurrencyDto
     {
