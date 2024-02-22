@@ -3,25 +3,30 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dfinance.AuthCore", "Dfinance.AuthCore\Dfinance.AuthCore.csproj", "{238F5C24-E37F-44C4-83B4-38FBC0B90ECB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dfinance.AuthCore", "Dfinance.AuthCore\Dfinance.AuthCore.csproj", "{238F5C24-E37F-44C4-83B4-38FBC0B90ECB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dfinance.Shared", "Dfinance.Shared\Dfinance.Shared.csproj", "{BEE4CFC2-CC60-47E5-9C4E-A59E2F557902}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dfinance.Shared", "Dfinance.Shared\Dfinance.Shared.csproj", "{BEE4CFC2-CC60-47E5-9C4E-A59E2F557902}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dfinance.AuthApplication", "Dfinance.AuthApplication\Dfinance.AuthApplication.csproj", "{6E12EA7E-8205-4189-982B-337019FE91B2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dfinance.AuthApplication", "Dfinance.AuthApplication\Dfinance.AuthApplication.csproj", "{6E12EA7E-8205-4189-982B-337019FE91B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dfinance.api", "Dfinance.api\Dfinance.api.csproj", "{6193D4BE-1C27-45AE-91AA-41672D9E0BBD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dfinance.api", "Dfinance.api\Dfinance.api.csproj", "{6193D4BE-1C27-45AE-91AA-41672D9E0BBD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dfinance.Core", "Dfinance.Core\Dfinance.Core.csproj", "{779F606A-9240-4A24-BA5C-7EAEF56D5ED7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dfinance.Core", "Dfinance.Core\Dfinance.Core.csproj", "{779F606A-9240-4A24-BA5C-7EAEF56D5ED7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dfinance.Application", "Dfinance.Application\Dfinance.Application.csproj", "{F8106925-622C-4848-9345-1B63E1C4B13F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dfinance.Application", "Dfinance.Application\Dfinance.Application.csproj", "{F8106925-622C-4848-9345-1B63E1C4B13F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dfinance.Stakeholder", "Dfinance.Stakeholder\Dfinance.Stakeholder.csproj", "{2C6F2DB8-686C-4ED3-98F3-D2D48C491C8D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dfinance.DataModels", "Dfinance.DataModels\Dfinance.DataModels.csproj", "{7C435833-2ACD-4C19-A590-D08F944156A9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dfinance.ChartOfAccount", "Dfinance.ChartOfAccount\Dfinance.ChartOfAccount.csproj", "{776964A4-4D8F-4A25-A2AD-09E4A7D30A08}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dfinance.HR", "Dfinance.HR\Dfinance.HR.csproj", "{582B3316-B0E5-402F-9E38-6399CB41DC2C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{238F5C24-E37F-44C4-83B4-38FBC0B90ECB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -32,10 +37,6 @@ Global
 		{BEE4CFC2-CC60-47E5-9C4E-A59E2F557902}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BEE4CFC2-CC60-47E5-9C4E-A59E2F557902}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BEE4CFC2-CC60-47E5-9C4E-A59E2F557902}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9144271E-E15B-4FEB-AB57-51ADE960333F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9144271E-E15B-4FEB-AB57-51ADE960333F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9144271E-E15B-4FEB-AB57-51ADE960333F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9144271E-E15B-4FEB-AB57-51ADE960333F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6E12EA7E-8205-4189-982B-337019FE91B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6E12EA7E-8205-4189-982B-337019FE91B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E12EA7E-8205-4189-982B-337019FE91B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -52,5 +53,27 @@ Global
 		{F8106925-622C-4848-9345-1B63E1C4B13F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F8106925-622C-4848-9345-1B63E1C4B13F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F8106925-622C-4848-9345-1B63E1C4B13F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C6F2DB8-686C-4ED3-98F3-D2D48C491C8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C6F2DB8-686C-4ED3-98F3-D2D48C491C8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C6F2DB8-686C-4ED3-98F3-D2D48C491C8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C6F2DB8-686C-4ED3-98F3-D2D48C491C8D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C435833-2ACD-4C19-A590-D08F944156A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C435833-2ACD-4C19-A590-D08F944156A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C435833-2ACD-4C19-A590-D08F944156A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C435833-2ACD-4C19-A590-D08F944156A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{776964A4-4D8F-4A25-A2AD-09E4A7D30A08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{776964A4-4D8F-4A25-A2AD-09E4A7D30A08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{776964A4-4D8F-4A25-A2AD-09E4A7D30A08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{776964A4-4D8F-4A25-A2AD-09E4A7D30A08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{582B3316-B0E5-402F-9E38-6399CB41DC2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{582B3316-B0E5-402F-9E38-6399CB41DC2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{582B3316-B0E5-402F-9E38-6399CB41DC2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{582B3316-B0E5-402F-9E38-6399CB41DC2C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5328C6E0-6F8B-46C6-BCE4-16225259867F}
 	EndGlobalSection
 EndGlobal

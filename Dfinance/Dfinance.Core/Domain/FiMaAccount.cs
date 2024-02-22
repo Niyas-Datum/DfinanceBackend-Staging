@@ -51,4 +51,6 @@ public partial class FiMaAccount
     public virtual ICollection<Voucher>? FiMaCardAccount {  get; set; }
     public virtual ICollection<Voucher>? FiMaPostAccount { get; set; }
 
+    public Parties Parties { get; set; }
+
 }

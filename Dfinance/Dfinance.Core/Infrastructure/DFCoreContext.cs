@@ -57,6 +57,8 @@ public partial class DFCoreContext : DbContext
     public DbSet<FiMaAccountCategory> FiMaAccountCategory { get; set; }
     public DbSet<FiMaBranchAccounts> FiMaBranchAccounts { get; set; }
     public DbSet<CategoryType> CategoryType { get; set; }
+    //General(Perties(C&S)
+    public DbSet<Parties> Parties { get; set; } 
     //MaSettings
     public DbSet<MaSettings> MaSettings { get; set; }
    
@@ -67,6 +69,11 @@ public partial class DFCoreContext : DbContext
    public DbSet<FiAccountsList> FiAccountsList { get; set; }
     public DbSet<FiMaAccountsList> FiMaAccountsLists { get; set; }
     public DbSet<TblMaFinYear> TblMaFinYear { get; set; }
+    public DbSet<MaCustomerDetails> MaCustomerDetails { get; set; }
+    public DbSet<MaCustomerCategories> MaCustomerCategories { get; set; }
+    public DbSet<DeliveryDetails>DeliveryDetails { get; set; }
+    public DbSet<MaPriceCategory> MaPriceCategory { get; set; }
+    
 
     //view init
 
@@ -136,6 +143,8 @@ public partial class DFCoreContext : DbContext
     //SettingView 
     public DbSet<FillSettingById> FillSettingById { get; set; }
     public DbSet<FillSetting> FillSetting { get; set; }
+    //fillcustomeritem=>Customer&supplier
+    public DbSet<FillCustomeritem> FillCustomeritem { get;set; }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     //  => optionsBuilder.UseSqlServer(@"Data Source=ip.datuminnovation.com,9600;TrustServerCertificate=true;Initial Catalog=DatumSystemMain;User ID=sa;pwd=Datum123!");
    // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -223,5 +232,10 @@ public partial class DFCoreContext : DbContext
         //Password
         mb.Entity<PasswordCheckResult>().HasNoKey().ToView(null);
         mb.Entity<FillAccountList>().HasNoKey().ToView(null);
+		//Customer Supplier
+			  mb.ApplyConfiguration(new PartiesConfiguration());
+             mb.ApplyConfiguration(new MaCustomerCategoresConfiguration());
+             mb.ApplyConfiguration(new MaCustomerDetailsConfiguration());
+            mb.ApplyConfiguration(new DeliveryDetailsConfiguration());
     }
 }
