@@ -9,8 +9,14 @@ using Dfinance.Shared.Configuration.Service;
 using Dfinance.Application.Services.General.Interface;
 using Dfinance.Application.Services.Inventory.Interface;
 using Dfinance.Application.Services.Inventory;
+using Dfinance.Stakeholder.Services.Interface;
+using Dfinance.Stakeholder.Services;
+using Dfinance.ChartOfAccount.Services.Finance.Interface;
+using Dfinance.ChartOfAccount.Services.Finance;
 using Dfinance.Application.Services.Finance.Interface;
 using Dfinance.Application.Services.Finance;
+using Dfiance.Hr.Employees.Interface;
+using Dfiance.Hr.Employees;
 
 namespace Dfinance.api.Installers;
 
@@ -46,6 +52,7 @@ public class DiInstaller : IInstaller
         //FINANCE
 	    service.AddScoped<IFinanceYearService,FinanceYearService>();
         service.AddScoped<ICurrencyService, CurrencyService>();
+
         service.AddScoped<IChartOfAccountsService, ChartOfAccountsService>();
         service.AddScoped<IVoucherService, VoucherService>();
         //PASSWORD
@@ -53,5 +60,14 @@ public class DiInstaller : IInstaller
 		
 		//AccountList
 		 service.AddScoped<IAccountList, AccountListService>();
+
+        //Customer supplier
+        service.AddScoped<ICustomerSupplierService, CustomerSupplierService>();
+        service.AddScoped<ICustomerService, CustomerService>();
+        service.AddScoped<ICsDeliveryService, CsDeliveryService>();
+        //HR
+
+        service.AddScoped<IHrEmployeeService, HrEmployeeService>();
+
     }
 }

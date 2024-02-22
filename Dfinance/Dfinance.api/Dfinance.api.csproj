@@ -17,10 +17,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Dfinance.Application\Dfinance.Application.csproj" />
+    <ProjectReference Include="..\Dfinance.HR\Dfinance.HR.csproj" />
     <ProjectReference Include="..\Dfinance.Shared\Dfinance.Shared.csproj" />
     <ProjectReference Include="..\Dfinance.AuthApplication\Dfinance.AuthApplication.csproj" />
     <ProjectReference Include="..\Dfinance.AuthCore\Dfinance.AuthCore.csproj" />
     <ProjectReference Include="..\Dfinance.Core\Dfinance.Core.csproj" />
+    <ProjectReference Include="..\Dfinance.Stakeholder\Dfinance.Stakeholder.csproj" />
   </ItemGroup>
 
 </Project>

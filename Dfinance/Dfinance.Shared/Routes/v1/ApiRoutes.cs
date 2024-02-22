@@ -157,6 +157,7 @@ namespace Dfinance.Shared.Routes.v1
             public const string FillAreaMaster = $"{Main}/Fill";
             
             public const string FillAreaMasterById = $"{Main}/FillById";
+            public const string PopUp = $"{Main}/poparea";
         }
 
         public static class CategoryType
@@ -222,6 +223,29 @@ namespace Dfinance.Shared.Routes.v1
         {
             public const string Main = $"{Base}/pwd";
             public const string GetPassword = $"{Main}/varify";
+        }
+        public static class Parties
+        {
+            public const string Main = $"{Base}/cussupp";
+            public const string SaveCustmsupp = $"{Main}/save";
+            public const string GetCode = $"{Main}/getcode";
+            public const string GetCategory = $"{Main}/getcat";
+            
+            public const string GetType = $"{Main}/gettype";
+            public const string update = $"{Main}/update";
+           
+        }
+        public static class CustomerDetails
+        {
+            public const string Main = $"{Base}/cust";
+            public const string GetPriceCategory = $"{Main}/getpricecatg";
+            public const string CustomerCategories = $"{Main}/getcategory";
+            public const string GetCommodity = $"{Main}/getcomdity";
+        }
+        public static class HR
+        {
+            public const string Main = $"{Base}/Hr";
+            public const string Salesman = $"{Main}/getsalesman";
         }
     }
 }

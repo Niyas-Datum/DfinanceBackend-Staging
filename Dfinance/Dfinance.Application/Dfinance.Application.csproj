@@ -10,7 +10,12 @@
     <ProjectReference Include="..\Dfinance.AuthApplication\Dfinance.AuthApplication.csproj" />
     <ProjectReference Include="..\Dfinance.AuthCore\Dfinance.AuthCore.csproj" />
     <ProjectReference Include="..\Dfinance.Core\Dfinance.Core.csproj" />
+    <ProjectReference Include="..\Dfinance.DataModels\Dfinance.DataModels.csproj" />
     <ProjectReference Include="..\Dfinance.Shared\Dfinance.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Dto\" />
   </ItemGroup>
 
 </Project>
