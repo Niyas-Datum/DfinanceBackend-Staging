@@ -107,6 +107,14 @@ namespace Dfinance.Core.Domain
         //relationship with tblfinyear
         public ICollection<TblMaFinYear> TblMaFinYears { get; set; }
 
+     //relationship with ItemUnits
+        public ICollection<ItemUnits> ItemUnit {  get; set; }
+
+        //relationship with BranchItems
+        public ICollection<BranchItems> BranchItems { get; set; }
+
+        //relationship with PriceCategory
+        public ICollection<MaPriceCategory> PriceCategories { get; set; }
         //relation with FiMaVoucher
         public virtual ICollection<Voucher>? FiMaVouchers { get; set; }
     }
