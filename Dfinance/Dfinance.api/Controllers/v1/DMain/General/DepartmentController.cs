@@ -9,7 +9,6 @@ namespace Dfinance.api.Controllers.v1.DMain
 {
     [ApiController]
     [Authorize]
-    //[Route("[controller]")]
     public class DepartmentController : BaseController
     {
         private readonly IDepartmentTypeService _departmentService;
@@ -58,9 +57,9 @@ namespace Dfinance.api.Controllers.v1.DMain
                 return BadRequest(ex.Message);
             }
         }
-       
+
         [HttpPost(ApiRoutes.Department.SaveDepartmentTypes)]
-  
+
         public IActionResult AddDepartment([FromBody] DepartmentTypeDto DepartmentDto)
         {
             try
@@ -69,18 +68,36 @@ namespace Dfinance.api.Controllers.v1.DMain
                 {
                     return BadRequest(ModelState);
                 }
-              var result = _departmentService.AddDepartment(DepartmentDto);
+                var result = _departmentService.AddDepartment(DepartmentDto);
                 return Ok(result);
             }
             catch (Exception ex)
             {
-              
+
                 return BadRequest(ex.Message);
             }
         }
-        
+        [HttpPatch(ApiRoutes.Department.UpdateDepartmentType)]
+
+        public IActionResult UpdateDepartment([FromBody] DepartmentTypeDto DepartmentDto)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+                var result = _departmentService.AddDepartment(DepartmentDto);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+        }
         [HttpDelete(ApiRoutes.Department.DeleteDepartmentTypes)]
-        public IActionResult DeleteDepartmentTypes( int Id)
+        public IActionResult DeleteDepartmentTypes(int Id)
         {
             try
             {
@@ -92,5 +109,8 @@ namespace Dfinance.api.Controllers.v1.DMain
                 return BadRequest(ex.Message);
             }
         }
+
+       
+
     }
 }

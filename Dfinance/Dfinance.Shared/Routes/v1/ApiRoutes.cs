@@ -48,6 +48,7 @@ namespace Dfinance.Shared.Routes.v1
             public const string FillAllDepartment = $"{Main}/FillAllDepartment";
             public const string FillDepartmentById = $"{Main}/FillDepartmentById";
             public const string SaveDepartmentTypes = $"{Main}/Save";
+            public const string UpdateDepartmentType = $"{Main}/Update";
             public const string DeleteDepartmentTypes = $"{Main}/delete/{{Id}}";
 
         }
