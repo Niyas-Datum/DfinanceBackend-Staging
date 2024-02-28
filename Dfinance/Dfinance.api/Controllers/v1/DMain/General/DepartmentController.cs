@@ -9,7 +9,6 @@ namespace Dfinance.api.Controllers.v1.DMain
 {
     [ApiController]
     [Authorize]
-    //[Route("[controller]")]
     public class DepartmentController : BaseController
     {
         private readonly IDepartmentTypeService _departmentService;
@@ -78,7 +77,7 @@ namespace Dfinance.api.Controllers.v1.DMain
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPatch(ApiRoutes.Department.SaveDepartmentTypes)]
+        [HttpPatch(ApiRoutes.Department.UpdateDepartmentType)]
 
         public IActionResult UpdateDepartment([FromBody] DepartmentTypeDto DepartmentDto)
         {
@@ -111,19 +110,7 @@ namespace Dfinance.api.Controllers.v1.DMain
             }
         }
 
-        //[HttpDelete(ApiRoutes.Department.DeleteUpdate)]
-        //public IActionResult DeleteUpdate(int Id)
-        //{
-        //    try
-        //    {
-        //        var result = _departmentService.DeleteUpdate(Id);
-        //        return Ok(result);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
+       
 
     }
 }

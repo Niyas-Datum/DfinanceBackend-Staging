@@ -19,13 +19,20 @@ namespace Dfinance.Application.Services.General
             _authService = authService;
         }
         /*******************Department***********************************/
-        //***********************DropDownDepartment***********************
+      /// <summary>
+      /// Department DropDown
+      /// </summary>
+      /// <returns></returns>
         public CommonResponse DepartmentDropdown()
         {
             var data = _context.SpReDepartmentTypeFillAllDepartment.FromSqlRaw("Exec DropDownListSP @Criteria = 'fillDepartmentTypes'").ToList();
 
             return CommonResponse.Ok(data);
         }
+        /// <summary>
+        /// Fill Departmenttype in Side Bar
+        /// </summary>
+        /// <returns>ID & Name</returns>
         //**********************Fill********************************************************
         public CommonResponse FillDepartment()
         {
@@ -41,9 +48,14 @@ namespace Dfinance.Application.Services.General
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while fetching Departementtype by ID", ex);
+                return CommonResponse.Error(""); ;
             }
         }
+        /// <summary>
+        /// Fill Departmenttype with Id
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns>Id,DepartmentId,CompanyId,CreatedBy,Createdon,Activeflag</returns>
         public CommonResponse FillDepartmentById(int Id)
         {
             try
@@ -56,16 +68,17 @@ namespace Dfinance.Application.Services.General
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while fetching Department by ID", ex);
+                return CommonResponse.Error("");
             }
         }
-
-      
-
-
-        //*****************************UpdateDepartment****************************************************
+     
 
         //**************************Delete*****************************
+        /// <summary>
+        /// Delete from ReDepartmenttype & MaDepartments 
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns></returns>
         public CommonResponse DeleteDepartmentTypes(int Id)
         {
             try
@@ -89,22 +102,12 @@ namespace Dfinance.Application.Services.General
             {
                 return CommonResponse.Error("Cannot delete because it is referenced in department.");
             }
-        } //**************************Delete From MaDepartment *****************************
-        public CommonResponse DeleteUpdate(int Id)
-        {
-            try
-            {
-                int Mode = 21;
-                var result = _context.Database.ExecuteSqlRaw($"EXEC spMaDepartments @Mode='{Mode}',@ID='{Id}'");
-                return CommonResponse.Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return CommonResponse.Error("Cannot delete because it is referenced.");
-            }
         }
-
-
+        /// <summary>
+        /// Save DepartmentType
+        /// </summary>
+        /// <param name="departmentDto"></param>
+        /// <returns></returns>
         public CommonResponse AddDepartment(DepartmentTypeDto departmentDto)
         {
             try
@@ -129,7 +132,7 @@ namespace Dfinance.Application.Services.General
                         }
 
                     }
-                   
+
                     return CommonResponse.Created(new { msg = "Department " + departmentDto.Department + " Created Successfully", data = 0 });
                 }
 
@@ -160,9 +163,9 @@ namespace Dfinance.Application.Services.General
                             // Remove all other departments except the updated one
                             allDepartments.Remove(existingDept);
                         }
-                        
+
                     }
-                  
+
                     _context.MaDepartments.RemoveRange(allDepartments);
                     _context.SaveChanges();
                     return CommonResponse.Ok(new { msg = "Department " + departmentDto.Department + " Update Successfully", data = 0 });
@@ -176,7 +179,12 @@ namespace Dfinance.Application.Services.General
         }
 
 
-        //**********************************************************************************************************************************
+        /// <summary>
+        /// Save MaDepartment table details
+        /// </summary>
+        /// <param name="DepId"></param>
+        /// <param name="compid"></param>
+        /// <returns></returns>
         private int SaveDepartment(int DepId, int compid)
         {
             try
@@ -207,7 +215,11 @@ namespace Dfinance.Application.Services.General
                 return 0;
             }
         }
-
+        /// <summary>
+        /// Save Redepartmenttype table details
+        /// </summary>
+        /// <param name="departmentName"></param>
+        /// <returns></returns>
         private int SaveDepartmentTypes(string departmentName)
         {
             try
@@ -240,7 +252,12 @@ namespace Dfinance.Application.Services.General
             }
         }
 
-        //**********************************************************************UpdateDepartment************************************************************
+     /// <summary>
+     /// Edit MaDepartment table details
+     /// </summary>
+     /// <param name="DepId"></param>
+     /// <param name="compid"></param>
+     /// <returns></returns>
         private int UpdationDepartment(int DepId, int compid)
         {
             try
@@ -271,7 +288,12 @@ namespace Dfinance.Application.Services.General
                 return 0;
             }
         }
-        //*********************************************************************************************************************************************************************
+       /// <summary>
+       /// update Redepartmenttype table 
+       /// </summary>
+       /// <param name="departmentName"></param>
+       /// <param name="Id"></param>
+       /// <returns></returns>
         private int UpationDepartmentTypes(string departmentName, int Id)
         {
             try
