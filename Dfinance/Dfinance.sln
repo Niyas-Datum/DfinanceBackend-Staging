@@ -23,8 +23,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dfinance.ChartOfAccount", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dfinance.HR", "Dfinance.HR\Dfinance.HR.csproj", "{582B3316-B0E5-402F-9E38-6399CB41DC2C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dfinance.Item", "Dfinance.Item\Dfinance.Item.csproj", "{DF4D8A85-7F3B-4043-8F38-589BE7EEF0A6}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,10 +69,6 @@ Global
 		{582B3316-B0E5-402F-9E38-6399CB41DC2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{582B3316-B0E5-402F-9E38-6399CB41DC2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{582B3316-B0E5-402F-9E38-6399CB41DC2C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DF4D8A85-7F3B-4043-8F38-589BE7EEF0A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DF4D8A85-7F3B-4043-8F38-589BE7EEF0A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DF4D8A85-7F3B-4043-8F38-589BE7EEF0A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DF4D8A85-7F3B-4043-8F38-589BE7EEF0A6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

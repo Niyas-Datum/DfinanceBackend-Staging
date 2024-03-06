@@ -18,10 +18,4 @@ namespace Dfinance.Core.Views.Inventory
         public byte ActiveFlag { get; set; }
         public decimal? AvgStockQuantity {  get; set; }
     }
-
-    public class NextCodeCat
-    {
-        public long Code { get; set; }
-    }
-
 }

@@ -11,7 +11,7 @@ namespace Dfinance.Core.Infrastructure.Configurations
             builder.ToTable("Commodity");
             builder.Property(e => e.Id).HasColumnName("ID");
             builder.Property(e => e.CreatedBranchId).HasColumnName("CreatedBranchID");
-            builder.Property(e => e.CategoryTypeId).HasColumnName("TypeofWoodID");
+            builder.Property(e => e.TypeofWoodId).HasColumnName("TypeofWoodID");
             builder.Property(e => e.CategoryCode).HasColumnName("Code");
             builder.Property(e => e.Category).HasColumnName("Category");
         }

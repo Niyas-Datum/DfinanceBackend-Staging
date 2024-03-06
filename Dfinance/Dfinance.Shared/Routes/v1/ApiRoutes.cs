@@ -248,57 +248,5 @@ namespace Dfinance.Shared.Routes.v1
             public const string Main = $"{Base}/Hr";
             public const string Salesman = $"{Main}/getsalesman";
         }
-
-        public static class ItemMaster
-        {
-            public const string Main = $"{Base}/ItemMaster";
-
-            public const string FillItem = $"{Main}/FillItem";
-
-            // public const string FillItemById = $"{Main}/FillItemById";
-
-            public const string GetNextCode = $"{Main}/NxtItemCode";
-
-            //public const string FillQuality = $"{Main}/Fillqlty";
-
-            public const string ParentPopup = $"{Main}/FillParent";
-
-            public const string SaveItem = $"{Main}/additem";
-
-            public const string UpdateItem = $"{Main}/updateitem";
-
-            public const string DeletItem = $"{Main}/deleteitem";
-
-            public const string Barcode = $"{Main}/GenBarcode";
-
-            public const string TaxDropdown = $"{Main}/TaxDropdown";
-
-        }
-        public static class ItemUnits
-        {
-            public const string Main = $"{Base}/ItemUnits";
-
-            public const string FillItemUnits = $"{Main}/FillItemUnits";
-
-            public const string SaveItemUnit = $"{Main}/additemunit";
-
-            public const string UpdateItemUnit = $"{Main}/updateitemunit";
-
-            public const string DeletItemUnit = $"{Main}/deleteitemunit";
-        }
-
-        public static class UnitMaster
-        {
-            public const string Main = $"{Base}/UnitMaster";
-
-            public const string UnitPopup = $"{Main}/FillUnit";
-        }
-
-        public static class TaxType
-        {
-            public const string Main = $"{Base}/TaxType";
-
-            public const string TaxTypeDropDown = $"{Main}/FillTaxType";
-        }
     }
 }

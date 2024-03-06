@@ -23,8 +23,5 @@ namespace Dfinance.Core.Domain
 
         public bool? Active { get; set; }
         public virtual ICollection<Parties> Parties { get; set; } = new List<Parties>();
-        public virtual MaCompany? CreatedBranch { get; set; }//relationship with MaCompany
-        public virtual MaEmployee? CreatedEmployee { get; set; }//relationship with MaEmployee
-        public ICollection<ItemMultiRate> MultiRate { get; set; }
     }
 }

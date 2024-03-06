@@ -17,8 +17,6 @@ using Dfinance.Application.Services.Finance.Interface;
 using Dfinance.Application.Services.Finance;
 using Dfiance.Hr.Employees.Interface;
 using Dfiance.Hr.Employees;
-using Dfinance.Item.Services.Inventory; 
-using Dfinance.Item.Services.Inventory.Interface;
 
 namespace Dfinance.api.Installers;
 
@@ -70,15 +68,6 @@ public class DiInstaller : IInstaller
         //HR
 
         service.AddScoped<IHrEmployeeService, HrEmployeeService>();
-
-        //Item
-        service.AddScoped<IItemMasterService, ItemMasterService>();
-
-        service.AddScoped<IItemUnitsService, ItemUnitsService>();
-
-       // service.AddScoped<IUnitMasterService, UnitMasterService>();
-
-       // service.AddScoped<ITaxTypeService, TaxTypeService>();
 
     }
 }

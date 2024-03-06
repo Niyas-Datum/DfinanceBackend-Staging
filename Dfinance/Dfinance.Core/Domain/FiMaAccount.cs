@@ -38,7 +38,7 @@ public partial class FiMaAccount
     public string? AlternateName { get; set; }
 
     //Relationships
-   public  ICollection<CostCentre>? CostCentreAccount { get; set; } = new List<CostCentre>();
+   // public  ICollection<CostCentre>? CostCentreClientAccount { get; set; } = new List<CostCentre>();
 
     // public  ICollection<CostCentre>? CostCentreSupplierAccount { get; set; } = new List<CostCentre>();
     //selfReference
@@ -52,7 +52,5 @@ public partial class FiMaAccount
     public virtual ICollection<Voucher>? FiMaPostAccount { get; set; }
 
     public Parties Parties { get; set; }
-	   //relationship with itemmaster
-    public ICollection<ItemMaster> Items { get; set; }
 
 }
