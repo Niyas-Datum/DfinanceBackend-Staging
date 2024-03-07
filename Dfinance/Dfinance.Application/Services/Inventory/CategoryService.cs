@@ -41,7 +41,7 @@ namespace Dfinance.Application.Services.Inventory
         {
             try
             {
-                var id = _context.Commodity.Where(i => i.Id == Id).
+                var id = _context.Category.Where(i => i.Id == Id).
                   Select(i => i.Id).
                   SingleOrDefault();
                 if (id == null)
@@ -106,7 +106,7 @@ namespace Dfinance.Application.Services.Inventory
         {
             try
             {
-                var id = _context.Commodity.Where(i => i.Id == Id).
+                var id = _context.Category.Where(i => i.Id == Id).
                   Select(i => i.Id).
                   SingleOrDefault();
                 if (id == null)
@@ -133,7 +133,7 @@ namespace Dfinance.Application.Services.Inventory
             try
             {                
                 string msg = null;
-                var name = _context.Commodity.Where(i => i.Id == Id).
+                var name = _context.Category.Where(i => i.Id == Id).
                    Select(i => i.Description).
                    SingleOrDefault();
                 if (name == null)

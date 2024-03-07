@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Dfinance.Core.Domain
 {
@@ -11,8 +6,8 @@ namespace Dfinance.Core.Domain
     {
         public int Id { get; set; }
         public string Description { get; set; }    
-        public string CategoryCode { get; set; }
-        public int? TypeofWoodId { get; set; }
+        public string CategoryCode { get; set; }//Code
+        public int? CategoryTypeId { get; set; }//TypeofWoodId
 
         [StringLength(1)]
         public string? Category {  get; set; }
@@ -31,6 +26,8 @@ namespace Dfinance.Core.Domain
         public DateTime? EndDate { get; set; }
         public decimal? Discount { get; set; }
 
+        //relationships
+        public ICollection<ItemMaster> Items { get; set; }
         
 
 

@@ -34,4 +34,13 @@ namespace Dfinance.Core.Views.Inventory
         public string Description { get; set; }
         public string Code { get; set; }
     }
+
+    public class CategoryPopupView
+    {
+        public int ID { get; set; }
+        public string Code { get; set; }
+        public string? Category {  get; set; }
+        public string? CategoryType {  get; set; }
+    }
+
 }

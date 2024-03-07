@@ -32,6 +32,12 @@ public partial class DFCoreContext : DbContext
         con = _connectionServices.getcon();
     }
 
+    public DbSet<ItemMultiRate> ItemMultiRate { get; set; }   
+    public DbSet<BranchItems> BranchItems { get; set; }
+    public DbSet<TaxType> TaxType { get; set; }
+    public DbSet<UnitMaster> UnitMaster { get; set; }
+    public DbSet<ItemUnits> ItemUnits { get; set; }
+    public DbSet<ItemMaster> ItemMaster { get; set; }
     public DbSet<MaEmployee> MaEmployees { get; set; }
     public DbSet<MaEmployeeDetail> MaEmployeeBranchDet { get; set; }
     public DbSet<MaRoles> UserRoles { get; set; }
@@ -52,7 +58,7 @@ public partial class DFCoreContext : DbContext
     public DbSet<MaDesignation> MaDesignations { get; set; }
     public DbSet<CostCategory> CostCategory { get; set; }
     public DbSet<CostCentre> CostCentre { get; set; }
-    public DbSet<Categories> Commodity { get; set; }
+    public DbSet<Categories> Category { get; set; }
     public DbSet<MaArea> MaArea { get; set; }
     public DbSet<FiMaAccountCategory> FiMaAccountCategory { get; set; }
     public DbSet<FiMaBranchAccounts> FiMaBranchAccounts { get; set; }
@@ -82,6 +88,12 @@ public partial class DFCoreContext : DbContext
     // read- id, code description
     public DbSet<ReadViewDesc> ReadViewDesc { get; set; } 
     //nextCodeView id,descripition
+  //read category id,code,category,categorytype
+    public DbSet<CategoryPopupView> CategoryPopupView { get; set; }
+
+    //nextcode in cat type
+    
+    public DbSet<NextCodeCat> NextCodeCat { get; set; }
     public DbSet<DropDownViewDesc> DropDownViewDesc { get; set; }
 
     public DbSet<SpFillCategoryTypeById> SpFillCategoryTypeById { get; set; }
@@ -118,6 +130,15 @@ public partial class DFCoreContext : DbContext
     public DbSet<FillCurrencyCodeById> FillCurrencyCodeById { get; set; }
     public DbSet<FillCurrency> FillCurrency { get; set; }
     public DbSet<FillCurrencyById> FillCurrencyById { get; set; }
+ //-------------ItemMaster  ------------------------------------------ 
+    
+    public DbSet<SpFillItemMasterById> SpFillItemMasterById { get; set; }
+    public DbSet<SpFillItemMaster> SpFillItemMaster { get; set; }
+    public DbSet<ItemNextCode> ItemNextCode { get; set; }
+    public DbSet<ParentItemPoupView> ParentItemPoupView { get; set; }
+    public DbSet<BarcodeView> BarcodeView { get; set; }
+    public DbSet<ItemHistoryView> ItemHistoryView { get; set; }
+    public DbSet<CurrentStockView> CurrentStockView { get; set; }
     //FinanceYear
     public DbSet<FinanceYearView> FinanceYearView { get; set; }
     public DbSet<FinanceYearViewByID> FinanceYearViewByID { get; set; }
@@ -142,6 +163,12 @@ public partial class DFCoreContext : DbContext
     public DbSet<PasswordCheckResult> PasswordCheckResult { get; set; }
     //SettingView 
     public DbSet<FillSettingById> FillSettingById { get; set; }
+  //----------------ItemUnits------------------------------------------------     
+    public DbSet<FillItemUnitsView> FillItemUnitsView { get; set; }
+
+    //--------------UnitMaster----------------------------------------
+    public DbSet<UnitPopupView> UnitPopupView { get; set; }
+    //------------------------------------------------------------------
     public DbSet<FillSetting> FillSetting { get; set; }
     //fillcustomeritem=>Customer&supplier
     public DbSet<FillCustomeritem> FillCustomeritem { get;set; }
@@ -153,6 +180,13 @@ public partial class DFCoreContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder mb)
     {
+        mb.ApplyConfiguration(new UnitMasterConfiguration());
+        mb.ApplyConfiguration(new TaxTypeConfiguration());
+        mb.ApplyConfiguration(new ItemMultiRateConfiguration());
+        mb.ApplyConfiguration(new PriceCategoryConfiguration());
+        mb.ApplyConfiguration(new BranchItemsConfiguration());
+        mb.ApplyConfiguration(new ItemUnitsConfiguration());
+        mb.ApplyConfiguration(new ItemMasterConfiguration());
         mb.ApplyConfiguration(new MaEmployeeConfiguration());
         mb.ApplyConfiguration(new MaCompanyConfiguration());
         mb.ApplyConfiguration(new MaDepartmentConfiguration());
@@ -205,7 +239,29 @@ public partial class DFCoreContext : DbContext
         mb.Entity<SpFillAreaMasterByIdG>().HasNoKey().ToView(null);
         mb.Entity<NextCodeView>().HasNoKey().ToView(null);
         mb.Entity<SpFillCategoryTypeById>().HasNoKey().ToView(null);
+        mb.Entity<NextCodeCat>().HasNoKey().ToView(null);
 
+        /*-----------------ItemMaster--------------------*/
+
+        mb.Entity<SpFillItemMasterById>().HasNoKey().ToView(null);
+        mb.Entity<SpFillItemMaster>().HasNoKey().ToView(null);
+        mb.Entity<ItemNextCode>().HasNoKey().ToView(null);
+        mb.Entity<ParentItemPoupView>().HasNoKey().ToView(null);
+        mb.Entity<BarcodeView>().HasNoKey().ToView(null);
+        mb.Entity<ItemHistoryView>().HasNoKey().ToView(null);
+        mb.Entity<CurrentStockView>().HasNoKey().ToView(null);
+
+        //----------------ItemUnits-------------------------
+        mb.Entity<FillItemUnitsView>().HasNoKey().ToView(null);
+
+
+        /*-----------------common------------------------------*/
+        //dropdown data:id,value
+        mb.Entity<DropDownViewValue>().HasNoKey().ToView(null);
+        //dropdown data:id,description
+        mb.Entity<DropDownViewDesc>().HasNoKey().ToView(null);
+        //dropdown data:id,name
+        mb.Entity<DropDownViewName>().HasNoKey().ToView(null);
         //read data : id, code name
         mb.Entity<ReadView>().HasNoKey().ToView(null);
         //read data : id, code description

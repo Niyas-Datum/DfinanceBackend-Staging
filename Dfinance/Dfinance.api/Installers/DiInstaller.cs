@@ -17,6 +17,8 @@ using Dfinance.Application.Services.Finance.Interface;
 using Dfinance.Application.Services.Finance;
 using Dfiance.Hr.Employees.Interface;
 using Dfiance.Hr.Employees;
+using Dfinance.Item.Services.Inventory; 
+using Dfinance.Item.Services.Inventory.Interface;
 
 namespace Dfinance.api.Installers;
 
@@ -41,10 +43,11 @@ public class DiInstaller : IInstaller
         service.AddScoped<ICostCategoryService, CostCategoryService>();
         service.AddScoped<ICostCentreService, CostCentreService>();
         service.AddScoped<ISettingsService, SettingsService>();
-        //MAMISC 
-        service.AddScoped<IStatusDropDownService, StatusDropDownService>();
-        service.AddScoped<ICountryDropDownService, CountryDropDownService>();
 
+        //MAMISC        
+        service.AddScoped<IMiscellaneousService, MiscellaneousService>();
+
+        //Inventory
         service.AddScoped<ICategoryService, CategoryService>();
         service.AddScoped<ICategoryTypeService, CategoryTypeService>();
         service.AddScoped<IAreaMasterService, AreaMasterService>();
@@ -68,6 +71,15 @@ public class DiInstaller : IInstaller
         //HR
 
         service.AddScoped<IHrEmployeeService, HrEmployeeService>();
+
+        //Item
+        service.AddScoped<IItemMasterService, ItemMasterService>();
+
+        service.AddScoped<IItemUnitsService, ItemUnitsService>();
+
+       // service.AddScoped<IUnitMasterService, UnitMasterService>();
+
+       // service.AddScoped<ITaxTypeService, TaxTypeService>();
 
     }
 }

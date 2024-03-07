@@ -67,7 +67,7 @@ namespace Dfinance.Application.Services.Inventory
             try
              {            
                 string criteria = "GetNextCode";
-                var code = _context.NextCodeView.FromSqlRaw($"Exec spTypeofWood @Criteria ='{criteria}'")
+                var code = _context.NextCodeCat.FromSqlRaw($"Exec spTypeofWood @Criteria ='{criteria}'")
                     .AsEnumerable()
                     .Select(x => x.Code)
                     .FirstOrDefault();
