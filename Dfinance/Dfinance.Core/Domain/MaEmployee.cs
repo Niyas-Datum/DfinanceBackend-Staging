@@ -72,4 +72,6 @@ public partial class MaEmployee
     public ICollection<TblMaFinYear> TblMaFinYears { get; set; }
 
     public virtual ICollection<Voucher>? FiMaVouchers { get; set; }
+    //relationship with PriceCategory
+    public virtual ICollection<MaPriceCategory> PriceCategories { get; set; }
 }
