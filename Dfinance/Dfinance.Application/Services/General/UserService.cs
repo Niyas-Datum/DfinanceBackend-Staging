@@ -8,6 +8,7 @@ using Dfinance.Core.Infrastructure;
 using Dfinance.Core.Views;
 using Dfinance.Core.Views.General;
 using Dfinance.DataModels.Dto.General;
+using Dfinance.Shared.Deserialize;
 using Dfinance.Shared.Domain;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -23,12 +24,13 @@ namespace Dfinance.Application.Services.General
         private readonly IAuthService _authService;
         private readonly IEncryptService _encryptService;
         private readonly IDecryptService _decryptService;
-        public UserService(DFCoreContext context, IAuthService authService, IEncryptService encryptService)
+        private readonly DataRederToObj _rederToObj;
+        public UserService(DFCoreContext context, IAuthService authService, IEncryptService encryptService, DataRederToObj rederToObj)
         {
             _context = context;
             _authService = authService;
             _encryptService = encryptService;
-
+            _rederToObj = rederToObj;
         }
         public CommonResponse UserDropDown()
         {
@@ -59,30 +61,101 @@ namespace Dfinance.Application.Services.General
                return CommonResponse.Error(ex);
             }
         }
+        /// <summary>
+        /// Fill  Role DropDown
+        /// </summary>
+        /// <param name="RoleId"></param>
+        /// <returns></returns>
+        public CommonResponse GetRole()
+        {
+            try
+            {
+                int CreatedBranchId = _authService.GetBranchId().Value;
+                string criteria = "FillRoles";
+                var data = _context.GetRole.FromSqlRaw($"Exec DropDownListSP @Criteria='{criteria}',@IntParam='{CreatedBranchId}'").ToList();
+
+
+                return CommonResponse.Ok(data);
+
+
+            }
+            catch (Exception ex)
+            {
+                return CommonResponse.Error(ex);
+            }
+        }
+        /// <summary>
+        /// Fill User Role
+        /// </summary>
+        /// <param name="RoleId"></param>
+        /// <returns></returns>
+        public CommonResponse FillRole(int RoleId)
+        {
+            try
+            {
+
+                string criteria = "FillUserRights";
+                var data = _context.RoleRightsModel.FromSqlRaw($"Exec spNewEmployees @Criteria='{criteria}',@RoleID='{RoleId}'").ToList();
+
+
+                return CommonResponse.Ok(data);
+
+
+            }
+            catch (Exception ex)
+            {
+                return CommonResponse.Error(ex);
+            }
+        }
+
+
         //888888888888888888888888888*UserGetById*8888888888888888888888888888888888888888888888888888888888888888
         public CommonResponse FillUserById(int Id)
         {
             try
             {
-                var ur = _context.MaEmployees.Where(x => x.Id == Id).Select(x => x.Id).SingleOrDefault();
-                if (ur == null)
-                {                   
-                    return CommonResponse.NotFound("User Not Found");
-                }
                 string criteria = "FillUsers";
-                var data = _context.SpUserGById.FromSqlRaw($"Exec spNewEmployees @Criteria='{criteria}',@ID='{Id}'").ToList();
+                SpUserGById fillUserResponse = new SpUserGById();
 
-                if (data.Count > 0)
+                _context.Database.GetDbConnection().Open();
+
+                using (var dbCommand = _context.Database.GetDbConnection().CreateCommand())
                 {
-                    SpUserGById userDetails = data[0];
-                    return CommonResponse.Ok(userDetails);
+                    dbCommand.CommandText = $"Exec spNewEmployees @Criteria='{criteria}',@ID='{Id}'";
+
+                    using (var reader = dbCommand.ExecuteReader())
+                    {
+                        // User Details
+                        fillUserResponse.UserDetails = _rederToObj.Deserialize<FillUserSpView>(reader).FirstOrDefault();
+
+                        // Branch Details
+                        reader.NextResult();
+                        fillUserResponse.BranchDetails = _rederToObj.Deserialize<UserBranchDetails>(reader);
+
+                        // User Rights
+                        reader.NextResult();
+                        fillUserResponse.UserRights = _rederToObj.Deserialize<UserRights>(reader);
+
+                        // Location Restrictions
+                        reader.NextResult();
+                        fillUserResponse.LocationRestrictions = _rederToObj.Deserialize<LocationRestriction>(reader);
+                    }
+                }
+
+                if (fillUserResponse.UserDetails != null)
+                {
+                    return CommonResponse.Ok(fillUserResponse);
                 }
 
                 return CommonResponse.NotFound("User not found");
             }
             catch (Exception ex)
             {
-               return CommonResponse.Error(ex);
+                return CommonResponse.Error(ex);
+            }
+            finally
+            {
+                _context.Database.CloseConnection();
             }
         }
 
@@ -117,7 +190,7 @@ namespace Dfinance.Application.Services.General
                     {
                         if (isMainBranchSet)
                         {
-                           return CommonResponse.Error("Only one IsMainBranch is allowed per user.");
+                            return CommonResponse.Error("Only one IsMainBranch is allowed per user.");
                         }
                         isMainBranchSet = true;
                     }
@@ -294,7 +367,7 @@ namespace Dfinance.Application.Services.General
             try
             {
                 string msg = null;
-                var userrig=_context.UserRolePermission.Where(x=>x.Id == Id).Select(x=>x.Id).SingleOrDefault();
+                var userrig = _context.UserRolePermission.Where(x => x.Id == Id).Select(x => x.Id).SingleOrDefault();
                 if (userrig == null)
                 {
                     msg = "UserRight Not Found";
@@ -302,7 +375,7 @@ namespace Dfinance.Application.Services.General
                 }
 
                 string criteria = "DeleteMaUserRights";
-                  msg = "userRight is Delete";
+                msg = "userRight is Delete";
                 var result = _context.Database.ExecuteSqlRawAsync($"EXEC spNewEmployees @Criteria='{criteria}',@ID='{Id}'");
                 return CommonResponse.Ok(msg);
             }
