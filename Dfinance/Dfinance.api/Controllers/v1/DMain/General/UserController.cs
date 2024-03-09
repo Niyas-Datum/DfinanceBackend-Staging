@@ -58,6 +58,32 @@ namespace Dfinance.api.Controllers.v1.DMain
                 return BadRequest(ex.Message);
             }
         }
+        [HttpGet(ApiRoutes.User.FillRole)]
+        public IActionResult FillRole([FromQuery] int RoleId)
+        {
+            try
+            {
+                var result = _userService.FillRole(RoleId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet(ApiRoutes.User.GetRole)]
+        public IActionResult GetRole()
+        {
+            try
+            {
+                var result = _userService.GetRole();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         [HttpPost(ApiRoutes.User.SaveUser)]
         public IActionResult SaveUser([FromBody] UserDto employeeDetailsDto)
         {

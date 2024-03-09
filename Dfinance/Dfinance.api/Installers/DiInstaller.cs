@@ -19,6 +19,7 @@ using Dfiance.Hr.Employees.Interface;
 using Dfiance.Hr.Employees;
 using Dfinance.Item.Services.Inventory; 
 using Dfinance.Item.Services.Inventory.Interface;
+using Dfinance.Shared.Deserialize;
 
 namespace Dfinance.api.Installers;
 
@@ -33,6 +34,7 @@ public class DiInstaller : IInstaller
         service.AddScoped<IEncryptService, EncryptService>();
         service.AddScoped<IDecryptService, DecryptService>();
         service.AddSingleton<IConnectionServices, ConnectionServices>();
+        service.AddScoped<DataRederToObj>();
 
         //GENERAL
         service.AddScoped<IBranchService, BranchService>();

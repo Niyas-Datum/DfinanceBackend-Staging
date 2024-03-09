@@ -74,6 +74,8 @@ namespace Dfinance.Shared.Routes.v1
             public const string DeleteBranchDetails = $"{Main}/deletebranchdetails/{{Id}}";
 
             public const string DeleteUser = $"{Main}/deleteuser/{{Id}}";
+            public const string FillRole = $"{Main}/fillrole";
+            public const string GetRole = $"{Main}/getrole";
         }
         public static class Designation
         {
