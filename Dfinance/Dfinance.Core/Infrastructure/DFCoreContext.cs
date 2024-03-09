@@ -123,7 +123,8 @@ public partial class DFCoreContext : DbContext
     public DbSet<spMaDepartmentsFillAllDepartment> spMaDepartmentsFillAllDepartment { get; set; }
     public DbSet<UserInfo> UserInfo { get; set; }
     public DbSet<SpUser> SpUser { get; set; }
-    
+    public DbSet<RoleRightsModel> RoleRightsModel { get; set; }
+    public DbSet<GetRole> GetRole { get; set; }
     public DbSet<UserPageListView> UserPageListView { get; set; }
 	//Currency 
     public DbSet<FillcurrencyCode> FillcurrencyCode { get; set; }
@@ -218,7 +219,7 @@ public partial class DFCoreContext : DbContext
         mb.Entity<UserPageListView>().HasNoKey().ToView(null);
         mb.Entity<UserInfo>().HasNoKey().ToView(null);
         mb.Entity<SpUser>().HasNoKey().ToView(null);
-        
+        mb.Entity<RoleRightsModel>().HasNoKey().ToView(null);
             mb.Entity<spDepartmentTypesFillAllDepartmentTypes>().HasNoKey().ToView(null);
         mb.Entity<spMaDepartmentsFillDepartmentById>().HasNoKey().ToView(null);
         mb.Entity<spMaDepartmentsFillAllDepartment>().HasNoKey().ToView(null);
