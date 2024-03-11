@@ -82,6 +82,7 @@ public class DiInstaller : IInstaller
        // service.AddScoped<IUnitMasterService, UnitMasterService>();
 
        // service.AddScoped<ITaxTypeService, TaxTypeService>();
-
+  //WareHouse
+        service.AddScoped<IWarehouseService,WarehouseService>();
     }
 }

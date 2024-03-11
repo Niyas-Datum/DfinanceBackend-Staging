@@ -25,6 +25,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dfinance.HR", "Dfinance.HR\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dfinance.Item", "Dfinance.Item\Dfinance.Item.csproj", "{DF4D8A85-7F3B-4043-8F38-589BE7EEF0A6}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dfinance.WareHouse", "Dfinance.WareHouse\Dfinance.WareHouse.csproj", "{D47679C2-7D80-4CAC-90DA-93F74E9A5A47}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +77,10 @@ Global
 		{DF4D8A85-7F3B-4043-8F38-589BE7EEF0A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DF4D8A85-7F3B-4043-8F38-589BE7EEF0A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DF4D8A85-7F3B-4043-8F38-589BE7EEF0A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D47679C2-7D80-4CAC-90DA-93F74E9A5A47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D47679C2-7D80-4CAC-90DA-93F74E9A5A47}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D47679C2-7D80-4CAC-90DA-93F74E9A5A47}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D47679C2-7D80-4CAC-90DA-93F74E9A5A47}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
