@@ -87,7 +87,12 @@ public class DiInstaller : IInstaller
 
        // service.AddScoped<ITaxTypeService, TaxTypeService>();
 
+  //WareHouse
+        service.AddScoped<IWarehouseService,WarehouseService>();
+
+
        //TransAdditinaals
        service.AddScoped<ITransactionAdditionalsService, TransactionAdditionalsService>();
+
     }
 }
