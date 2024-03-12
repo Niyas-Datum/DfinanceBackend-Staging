@@ -19,7 +19,11 @@ using Dfiance.Hr.Employees.Interface;
 using Dfiance.Hr.Employees;
 using Dfinance.Item.Services.Inventory; 
 using Dfinance.Item.Services.Inventory.Interface;
+
+using Dfinance.Application;
+
 using Dfinance.Shared.Deserialize;
+
 
 namespace Dfinance.api.Installers;
 
@@ -82,7 +86,13 @@ public class DiInstaller : IInstaller
        // service.AddScoped<IUnitMasterService, UnitMasterService>();
 
        // service.AddScoped<ITaxTypeService, TaxTypeService>();
+
   //WareHouse
         service.AddScoped<IWarehouseService,WarehouseService>();
+
+
+       //TransAdditinaals
+       service.AddScoped<ITransactionAdditionalsService, TransactionAdditionalsService>();
+
     }
 }
