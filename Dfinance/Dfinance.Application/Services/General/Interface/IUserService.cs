@@ -8,6 +8,8 @@ namespace Dfinance.Application.Services.General.Interface
         CommonResponse UserDropDown();
         CommonResponse FillUser();
         CommonResponse FillUserById(int Id);
+        CommonResponse FillRole(int RoleId);
+        CommonResponse GetRole();
         CommonResponse SaveUser(UserDto maEmployeeDetailsDto);
         CommonResponse UpdateUser(UserDto maEmployeeDetailsDto, int Id);
         CommonResponse DeleteUserRight(int Id);
