@@ -23,8 +23,6 @@ using Dfinance.Item.Services.Inventory.Interface;
 using Dfinance.Application;
 
 using Dfinance.Shared.Deserialize;
-using Dfinance.Warehouse.Services.Interface;
-using Dfinance.Warehouse.Services;
 
 
 namespace Dfinance.api.Installers;
