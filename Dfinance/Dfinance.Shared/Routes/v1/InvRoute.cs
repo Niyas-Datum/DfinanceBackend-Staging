@@ -1,12 +1,3 @@
-
-﻿namespace Dfinance.Shared.Routes.v1
-
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Dfinance.Shared.Routes
 
 {
@@ -29,9 +20,7 @@ namespace Dfinance.Shared.Routes
         }
 
 
-        public const string Version = "v1";
-
-        public const string Base = $"{Root}/{Version}";
+        
         public class TransactionAdditionals
         {
             public const string Main = $"{Base}/trnadd";
