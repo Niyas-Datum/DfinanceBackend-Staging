@@ -79,9 +79,16 @@ public partial class DFCoreContext : DbContext
     public DbSet<MaCustomerCategories> MaCustomerCategories { get; set; }
     public DbSet<DeliveryDetails>DeliveryDetails { get; set; }
     public DbSet<MaPriceCategory> MaPriceCategory { get; set; }
+
+    //Inv=>Warehouse
+    public DbSet<Locations> Locations { get; set; }
+    public DbSet<LocationTypes> LocationTypes { get; set; }
+    public DbSet<LocationBranchList> LocationBranchList { get; set; }
+
     //TransactionAddtionals
     public DbSet<FiTransactionAdditionals> FiTransactionAdditionals { get; set; }
     
+
 
     //view init
 
@@ -176,8 +183,16 @@ public partial class DFCoreContext : DbContext
     //fillcustomeritem=>Customer&supplier
     public DbSet<FillCustomeritem> FillCustomeritem { get;set; }
 
+ 
+    //Fillwarehouse=>Warehousemaster
+    public DbSet<WareHouseView> WareHouseView { get; set; }
+    //public DbSet<WarehouseBranchView> WarehouseBranchView { get; set; }
+    public DbSet<Warehousebranchfill> Warehousebranchfill { get; set; }
+
+
     //FitransactionAdditonals
     public DbSet<SpGetTransactionAdditionals> SpGetTransactionAdditionals { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     //  => optionsBuilder.UseSqlServer(@"Data Source=ip.datuminnovation.com,9600;TrustServerCertificate=true;Initial Catalog=DatumSystemMain;User ID=sa;pwd=Datum123!");
    // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -220,10 +235,20 @@ public partial class DFCoreContext : DbContext
     //AccountList
         mb.ApplyConfiguration(new FiAccountsListConfiguration());
         mb.ApplyConfiguration(new FiMaAccountsListConfiguration());
+
+ //Warehouse
+        mb.ApplyConfiguration(new LocationsConfiguration());
+        mb.ApplyConfiguration(new LocationTypesConfiguration());
+        mb.ApplyConfiguration(new LocationBranchListConfiguration());
+        //warehouse
+        mb.Entity<Warehousebranchfill>().HasNoKey().ToView(null);
+ mb.Entity<WareHouseView>().HasNoKey().ToView(null);
+
         //TransactionAddition
         mb.ApplyConfiguration(new FiTransactionAdditionalConfiguration());
 
         //View
+
         mb.Entity<CurrencyCode>().HasNoKey().ToView(null);
         mb.Entity<UserPageListView>().HasNoKey().ToView(null);
         mb.Entity<UserInfo>().HasNoKey().ToView(null);
