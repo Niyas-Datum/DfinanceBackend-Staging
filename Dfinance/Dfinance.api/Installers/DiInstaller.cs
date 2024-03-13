@@ -1,30 +1,27 @@
+using Dfiance.Hr.Employees;
+using Dfiance.Hr.Employees.Interface;
+using Dfinance.Application;
+using Dfinance.Application.Services;
+using Dfinance.Application.Services.Finance;
+using Dfinance.Application.Services.Finance.Interface;
+using Dfinance.Application.Services.General;
+using Dfinance.Application.Services.General.Interface;
+using Dfinance.Application.Services.Interface;
+using Dfinance.Application.Services.Inventory;
+using Dfinance.Application.Services.Inventory.Interface;
+using Dfinance.AuthApplication.Services;
+using Dfinance.AuthApplication.Services.Interface;
 using Dfinance.AuthAppllication.Services;
 using Dfinance.AuthAppllication.Services.Interface;
-using Dfinance.Application.Services.General;
-using Dfinance.Application.Services.Interface;
-using Dfinance.Application.Services;
-using Dfinance.AuthApplication.Services.Interface;
-using Dfinance.AuthApplication.Services;
-using Dfinance.Shared.Configuration.Service;
-using Dfinance.Application.Services.General.Interface;
-using Dfinance.Application.Services.Inventory.Interface;
-using Dfinance.Application.Services.Inventory;
-using Dfinance.Stakeholder.Services.Interface;
-using Dfinance.Stakeholder.Services;
-using Dfinance.ChartOfAccount.Services.Finance.Interface;
 using Dfinance.ChartOfAccount.Services.Finance;
-using Dfinance.Application.Services.Finance.Interface;
-using Dfinance.Application.Services.Finance;
-using Dfiance.Hr.Employees.Interface;
-using Dfiance.Hr.Employees;
-using Dfinance.Item.Services.Inventory; 
+using Dfinance.ChartOfAccount.Services.Finance.Interface;
+using Dfinance.Item.Services.Inventory;
 using Dfinance.Item.Services.Inventory.Interface;
-
-using Dfinance.Application;
-
+using Dfinance.Shared.Configuration.Service;
 using Dfinance.Shared.Deserialize;
-using Dfinance.Warehouse.Services.Interface;
-using Dfinance.Warehouse.Services;
+using Dfinance.Stakeholder.Services;
+using Dfinance.Stakeholder.Services.Interface;
+
 
 
 namespace Dfinance.api.Installers;
@@ -33,8 +30,8 @@ public class DiInstaller : IInstaller
 {
     public void InstallService(IServiceCollection service, IConfiguration configuration)
     {
-		//Master DB 
-		service.AddScoped<ICompanyService, CompanyService>();
+        //Master DB 
+        service.AddScoped<ICompanyService, CompanyService>();
         //authentication 
         service.AddScoped<IAuthService, AuthService>();
         service.AddScoped<IEncryptService, EncryptService>();
@@ -44,7 +41,7 @@ public class DiInstaller : IInstaller
 
         //GENERAL
         service.AddScoped<IBranchService, BranchService>();
-       
+
         service.AddScoped<IDepartmentTypeService, DepartmentTypeService>();
         service.AddScoped<IUserService, UserService>();
         service.AddScoped<IDesignationsService, DesignationsService>();
@@ -61,16 +58,16 @@ public class DiInstaller : IInstaller
         service.AddScoped<IAreaMasterService, AreaMasterService>();
 
         //FINANCE
-	    service.AddScoped<IFinanceYearService,FinanceYearService>();
+        service.AddScoped<IFinanceYearService, FinanceYearService>();
         service.AddScoped<ICurrencyService, CurrencyService>();
 
         service.AddScoped<IChartOfAccountsService, ChartOfAccountsService>();
         service.AddScoped<IVoucherService, VoucherService>();
         //PASSWORD
         service.AddScoped<IPasswordService, PasswordService>();
-		
-		//AccountList
-		 service.AddScoped<IAccountList, AccountListService>();
+
+        //AccountList
+        service.AddScoped<IAccountList, AccountListService>();
 
         //Customer supplier
         service.AddScoped<ICustomerSupplierService, CustomerSupplierService>();
@@ -85,16 +82,12 @@ public class DiInstaller : IInstaller
 
         service.AddScoped<IItemUnitsService, ItemUnitsService>();
 
-       // service.AddScoped<IUnitMasterService, UnitMasterService>();
+        // service.AddScoped<IUnitMasterService, UnitMasterService>();
 
-       // service.AddScoped<ITaxTypeService, TaxTypeService>();
+        // service.AddScoped<ITaxTypeService, TaxTypeService>();
 
-  //WareHouse
+        service.AddScoped<ITransactionAdditionalsService, TransactionAdditionalsService>();
+
         service.AddScoped<IWarehouseService,WarehouseService>();
 
-
-       //TransAdditinaals
-       service.AddScoped<ITransactionAdditionalsService, TransactionAdditionalsService>();
-
-    }
 }
