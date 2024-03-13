@@ -16,6 +16,30 @@ namespace Dfinance.api.Controllers.v1.DMain
         {
             _departmentService = departmentService;
         }
+        [HttpGet(ApiRoutes.Department.DeptPopup)]
+
+        public IActionResult DeptPopup()
+        {
+            try
+            {
+
+                var result = _departmentService.DeptPopup();
+
+                return Ok(result);
+
+            }
+
+            catch (Exception ex)
+
+            {
+
+                return BadRequest(ex.Message);
+
+            }
+
+        }
+
+
         [HttpGet(ApiRoutes.Department.DropDown)]
         public IActionResult DepartmentDropdown()
         {

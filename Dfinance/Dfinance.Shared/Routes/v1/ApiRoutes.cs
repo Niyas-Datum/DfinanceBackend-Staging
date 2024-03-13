@@ -54,7 +54,7 @@ namespace Dfinance.Shared.Routes.v1
             public const string SaveDepartmentTypes = $"{Main}/Save";
             public const string UpdateDepartmentType = $"{Main}/Update";
             public const string DeleteDepartmentTypes = $"{Main}/delete/{{Id}}";
-
+            public const string DeptPopup= $"{Main}/deptpopup";
         }
         public static class User
         {
