@@ -21,6 +21,8 @@ using Dfinance.Shared.Configuration.Service;
 using Dfinance.Shared.Deserialize;
 using Dfinance.Stakeholder.Services;
 using Dfinance.Stakeholder.Services.Interface;
+using Dfinance.Warehouse.Services;
+using Dfinance.Warehouse.Services.Interface;
 
 
 
@@ -88,6 +90,7 @@ public class DiInstaller : IInstaller
 
         service.AddScoped<ITransactionAdditionalsService, TransactionAdditionalsService>();
 
-        service.AddScoped<IWarehouseService,WarehouseService>();
+        service.AddScoped<IWarehouseService, WarehouseService>();
 
+    }
 }
