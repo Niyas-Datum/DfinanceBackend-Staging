@@ -1,18 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Dfinance.Shared.Routes
+
 {
     public static class InvRoute
     {
         public const string Root = "api";
 
         public const string Version = "v1";
-
         public const string Base = $"{Root}/{Version}";
+        public static class WareHouse
+        {
+            public const string Main = $"{Base}/warehouse";
+            public const string DropdownLocationTypes = $"{Main}/dropdown";
+            public const string GetAll = $"{Main}/get";
+            public const string GetById = $"{Main}/getbyid";
+            public const string GetBWFill = $"{Main}/getBW";
+            public const string Save = $"{Main}/Save";
+            public const string Update = $"{Main}/Update";
+            public const string Delete = $"{Main}/delete";
+        }
+
+
+        
         public class TransactionAdditionals
         {
             public const string Main = $"{Base}/trnadd";
@@ -22,5 +30,6 @@ namespace Dfinance.Shared.Routes
             public const string GetByTransactionId = $"{Main}/getByTrnId";
         }
         
+
     }
 }

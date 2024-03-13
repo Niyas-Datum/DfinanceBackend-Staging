@@ -23,6 +23,7 @@ using Dfinance.Stakeholder.Services;
 using Dfinance.Stakeholder.Services.Interface;
 
 
+
 namespace Dfinance.api.Installers;
 
 public class DiInstaller : IInstaller
@@ -85,7 +86,8 @@ public class DiInstaller : IInstaller
 
         // service.AddScoped<ITaxTypeService, TaxTypeService>();
 
-        //TransAdditinaals
         service.AddScoped<ITransactionAdditionalsService, TransactionAdditionalsService>();
-    }
+
+        service.AddScoped<IWarehouseService,WarehouseService>();
+
 }
