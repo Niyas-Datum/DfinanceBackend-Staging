@@ -87,7 +87,7 @@ public partial class DFCoreContext : DbContext
 
     //TransactionAddtionals
     public DbSet<FiTransactionAdditionals> FiTransactionAdditionals { get; set; }
-    
+    public DbSet<FiTransaction> FiTransaction{ get; set; }
 
 
     //view init
@@ -246,7 +246,7 @@ public partial class DFCoreContext : DbContext
 
         //TransactionAddition
         mb.ApplyConfiguration(new FiTransactionAdditionalConfiguration());
-
+        mb.ApplyConfiguration(new FiTransactionConfiguration());
         //View
 
         mb.Entity<CurrencyCode>().HasNoKey().ToView(null);
