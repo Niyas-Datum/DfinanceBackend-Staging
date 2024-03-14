@@ -19,10 +19,47 @@ namespace Dfinance.Application.Services.General
             _authService = authService;
         }
         /*******************Department***********************************/
-      /// <summary>
-      /// Department DropDown
-      /// </summary>
-      /// <returns></returns>
+        /// <summary>
+        /// DepartmentPopUp in UserBranchDetails
+        /// </summary>
+        /// <returns></returns>
+        public CommonResponse DeptPopup()
+
+        {
+
+            int branchId = _authService.GetBranchId().Value;
+
+            var dept = _context.MaDepartments.Where(md => md.CompanyId == branchId)
+
+                .Join(_context.ReDepartmentTypes, md => md.DepartmentTypeId,
+
+                rd => rd.Id,
+
+                (md, rd) => new
+
+                {
+
+                    Id = md.Id,
+
+                    deptName = rd.Department
+
+                }).Select(x => new
+
+                {
+
+                    id = x.Id,
+
+                    name = x.deptName
+
+                }).ToList();
+
+            return CommonResponse.Ok(dept);
+
+        }
+        /// <summary>
+        /// Department DropDown
+        /// </summary>
+        /// <returns></returns>
         public CommonResponse DepartmentDropdown()
         {
             var data = _context.SpReDepartmentTypeFillAllDepartment.FromSqlRaw("Exec DropDownListSP @Criteria = 'fillDepartmentTypes'").ToList();

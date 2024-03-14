@@ -74,4 +74,7 @@ public partial class MaEmployee
     public virtual ICollection<Voucher>? FiMaVouchers { get; set; }
     //relationship with PriceCategory
     public virtual ICollection<MaPriceCategory> PriceCategories { get; set; }
+	 public virtual ICollection<Locations> Locations { get; set; }
+    //relation with Location Types
+    public virtual ICollection<LocationTypes> LocationTypes { get; set; }
 }
