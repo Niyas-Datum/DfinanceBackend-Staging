@@ -11,9 +11,7 @@ namespace Dfinance.Application.Services.General.Interface
         CommonResponse FillRole(int RoleId);
         CommonResponse GetRole();
         CommonResponse SaveUser(UserDto maEmployeeDetailsDto);
-        CommonResponse UpdateUser(UserDto maEmployeeDetailsDto, int Id);
-        CommonResponse DeleteUserRight(int Id);
-        CommonResponse DeleteBranchdetails(int Id);
+        CommonResponse UpdateUser(UserDto maEmployeeDetailsDto);
         CommonResponse Deleteuser(int Id);
     }
 }
