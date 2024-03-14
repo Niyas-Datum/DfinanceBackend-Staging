@@ -17,7 +17,7 @@ namespace Dfinance.DataModels.Dto
         public string? OrderNo { get; set; }
         public string? PartyNameandAddress { get; set; }
         public DateTime? ExpiryDate { get; set; }
-        public DropdownDto TransactionType { get; set; }
+        public DropdownDto TransPortationType { get; set; }
         public int? CreditPeriod { get; set; }
         public PopUpDto? SalesMan { get; set; }
         public DropdownDto? SalesArea { get; set; }

@@ -87,7 +87,8 @@ public partial class DFCoreContext : DbContext
 
     //TransactionAddtionals
     public DbSet<FiTransactionAdditionals> FiTransactionAdditionals { get; set; }
-    
+    //MaVehicle
+    public DbSet<MaVehicles> MaVehicles { get; set; }
 
 
     //view init
