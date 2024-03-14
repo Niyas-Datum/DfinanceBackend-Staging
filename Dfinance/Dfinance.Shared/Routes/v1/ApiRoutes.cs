@@ -67,13 +67,8 @@ namespace Dfinance.Shared.Routes.v1
 
             public const string SaveUser = $"{Main}/Save";
 
-            public const string UpdateUser = $"{Main}/update/{{Id}}";
-
-            public const string DeleteUserRight = $"{Main}/deleteuserright/{{Id}}";
-
-            public const string DeleteBranchDetails = $"{Main}/deletebranchdetails/{{Id}}";
-
-            public const string DeleteUser = $"{Main}/deleteuser/{{Id}}";
+            public const string UpdateUser = $"{Main}/update";
+            public const string DeleteUser = $"{Main}/deleteuser";
             public const string FillRole = $"{Main}/fillrole";
             public const string GetRole = $"{Main}/getrole";
         }

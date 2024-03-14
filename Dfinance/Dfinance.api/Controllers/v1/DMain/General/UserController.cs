@@ -4,7 +4,6 @@ using Dfinance.Application.Services.General.Interface;
 using Dfinance.DataModels.Dto.General;
 using Dfinance.Shared.Routes.v1;
 using Microsoft.AspNetCore.Mvc;
-using static Dfinance.Shared.Routes.v1.ApiRoutes;
 
 namespace Dfinance.api.Controllers.v1.DMain
 {
@@ -103,7 +102,7 @@ namespace Dfinance.api.Controllers.v1.DMain
             }
         }
         [HttpPatch(ApiRoutes.User.UpdateUser)]
-        public IActionResult UpdateUser([FromBody]UserDto employeeDetailsDto, int Id)
+        public IActionResult UpdateUser([FromBody]UserDto employeeDetailsDto)
         {
             try
             {
@@ -111,33 +110,7 @@ namespace Dfinance.api.Controllers.v1.DMain
                 {
                     return BadRequest(ModelState);
                 }
-                object result = _userService.UpdateUser(employeeDetailsDto, Id);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-        [HttpDelete(ApiRoutes.User.DeleteUserRight)]
-        public IActionResult DeleteUserRight(int Id)
-        {
-            try
-            {
-                var result = _userService.DeleteUserRight(Id);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-        [HttpDelete(ApiRoutes.User.DeleteBranchDetails)]
-        public IActionResult DeleteBranchDetails(int Id)
-        {
-            try
-            {
-                var result = _userService.DeleteBranchdetails(Id);
+                object result = _userService.UpdateUser(employeeDetailsDto);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -158,5 +131,6 @@ namespace Dfinance.api.Controllers.v1.DMain
                 return BadRequest(ex.Message);
             }
         }
+       
     }
 }
