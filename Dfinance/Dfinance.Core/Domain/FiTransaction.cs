@@ -59,7 +59,7 @@ namespace Dfinance.Core
         public virtual TblMaFinYear? FinYear { get; set; }
         public virtual FiTransaction? RefTrans { get; set; }
         public virtual MaMisc? Status { get; set; }
-        //public virtual FiMaVoucher Voucher { get; set; } = null!;
+       public virtual Voucher Voucher { get; set; } = null!;
        // public virtual FiTransactionAdditionals? FiTransactionAdditionalTransaction { get; set; }
         //public virtual ICollection<BudgetMonth> BudgetMonths { get; set; }
         //public virtual ICollection<DocumentReference> DocumentReferences { get; set; }
