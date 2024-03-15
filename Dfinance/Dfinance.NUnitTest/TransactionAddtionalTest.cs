@@ -99,5 +99,73 @@ namespace Dfinance.NUnitTest
 
             Assert.That(result.Data, Is.Not.Null);
         }
+        [Test]
+        public void PopupVechicleNoTest()
+        {
+            //Arrange
+            _transactionAdditionalsService.Setup(x => x.PopupVechicleNo()).Returns(new CommonResponse { Exception = null, Data = new FiTransactionAdditionalDto() });
+
+            //Act
+            var result = _transactionAdditionalsService.Object.PopupVechicleNo();
+            //Assert
+            //Assert.Pass();
+            Assert.That(result, Is.Not.Null);
+            //Assert.IsNotNull(result);
+
+            Assert.That(result.IsValid, Is.True);
+
+            Assert.That(result.Data, Is.Not.Null);
+        }
+        [TestCase(34382)]
+        public void PopupDelivaryLocationsTest(int salesManId)
+        {
+            //Arrange
+            _transactionAdditionalsService.Setup(x => x.PopupDelivaryLocations(salesManId)).Returns(new CommonResponse { Exception = null, Data = new FiTransactionAdditionalDto() });
+
+            //Act
+            var result = _transactionAdditionalsService.Object.PopupDelivaryLocations(salesManId);
+            //Assert
+            //Assert.Pass();
+            Assert.That(result, Is.Not.Null);
+            //Assert.IsNotNull(result);
+
+            Assert.That(result.IsValid, Is.True);
+
+            Assert.That(result.Data, Is.Not.Null);
+        }
+        [Test]
+        public void GetTransPortationTypeTest()
+        {
+            //Arrange
+            _transactionAdditionalsService.Setup(x => x.GetTransPortationType()).Returns(new CommonResponse { Exception = null, Data = new FiTransactionAdditionalDto() });
+
+            //Act
+            var result = _transactionAdditionalsService.Object.GetTransPortationType();
+            //Assert
+            //Assert.Pass();
+            Assert.That(result, Is.Not.Null);
+            //Assert.IsNotNull(result);
+
+            Assert.That(result.IsValid, Is.True);
+
+            Assert.That(result.Data, Is.Not.Null);
+        }
+        [Test]
+        public void GetSalesAreaTest()
+        {
+            //Arrange
+            _transactionAdditionalsService.Setup(x => x.GetSalesArea()).Returns(new CommonResponse { Exception = null, Data = new FiTransactionAdditionalDto() });
+
+            //Act
+            var result = _transactionAdditionalsService.Object.GetSalesArea();
+            //Assert
+            //Assert.Pass();
+            Assert.That(result, Is.Not.Null);
+            //Assert.IsNotNull(result);
+
+            Assert.That(result.IsValid, Is.True);
+
+            Assert.That(result.Data, Is.Not.Null);
+        }
     }
 }
