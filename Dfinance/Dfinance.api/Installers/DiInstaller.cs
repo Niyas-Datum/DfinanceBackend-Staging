@@ -21,9 +21,9 @@ using Dfinance.Shared.Configuration.Service;
 using Dfinance.Shared.Deserialize;
 using Dfinance.Stakeholder.Services;
 using Dfinance.Stakeholder.Services.Interface;
-using Dfinance.Warehouse.Services;
+using Serilog.Formatting;
 using Dfinance.Warehouse.Services.Interface;
-
+using Dfinance.Warehouse.Services;
 
 
 namespace Dfinance.api.Installers;
@@ -79,8 +79,8 @@ public class DiInstaller : IInstaller
 
         service.AddScoped<IHrEmployeeService, HrEmployeeService>();
 
-        //Item
-        service.AddScoped<IItemMasterService, ItemMasterService>();
+        //log
+       service.AddScoped <ITextFormatter, LogFormatterService>();
 
         service.AddScoped<IItemUnitsService, ItemUnitsService>();
 
