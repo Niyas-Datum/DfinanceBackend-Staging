@@ -40,7 +40,7 @@ namespace Dfinance.Core.Domain
 
        // public virtual ICollection<FiTransactionEntry> FiTransactionEntries { get; set; } = new List<FiTransactionEntry>();
 
-       // public virtual ICollection<FiTransaction> FiTransactions { get; set; } = new List<FiTransaction>();
+       public virtual ICollection<FiTransaction> FiTransactions { get; set; } 
     }
 }
 

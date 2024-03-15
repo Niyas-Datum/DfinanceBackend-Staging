@@ -26,7 +26,7 @@
 
         public virtual MaEmployee CreatedByNavigation { get; set; } = null!;
 
-        //public virtual ICollection<FiTransaction> FiTransactions { get; set; } = new List<FiTransaction>();
+        public virtual ICollection<FiTransaction> FiTransactions { get; set; } = new List<FiTransaction>();
 
         //public virtual ICollection<TblMaFinPeriod> TblMaFinPeriods { get; set; } = new List<TblMaFinPeriod>();
     }
