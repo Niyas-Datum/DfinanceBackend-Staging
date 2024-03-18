@@ -18,41 +18,46 @@ namespace Dfinance.DataModels.Dto.Inventory
         public DateTime PartyInvoiceDate { get; set; }
         public int PartyInvoiceNo {  get; set; }    
         public string Description { get; set; }
+        public FiTransactionAdditionalDto FiTransactionAdditionalDto { get; set; }
         public List<ItemListDto> Items { get; set; }    
         public TransactionEntries TransactionEntries { get; set; }
     }
     public class ItemListDto
     {
         public string? ItemCode { get; set; }
-        public string ItemName { get; set; }
-        public string BatchNo { get; set; }
-        public string unit { get; set; }
+        public string? ItemName { get; set; }
+        public string?BatchNo { get; set; }
+        public string? unit { get; set; }
         public decimal Qty { get; set; }
         public decimal? FocQty { get; set; }
         public decimal Rate { get; }
-        public int GrossAmt { get; set; }
+        public decimal? GrossAmt { get; set; }
         public decimal? Discount { get; set; }
-        public int Amount { get; set; }
-        public decimal TaxPerc { get; set; }
+        public decimal? DiscountPerc { get; set; }
+        public decimal Amount { get; set; }
+        public decimal? TaxValue { get; set; }
+        public decimal? TaxPerc { get; set; }
+        public decimal? Total {  get; set; }
+        public DateTime? ExpiryDate { get; set; }
 
     }
     public class TransactionEntries
     {
         public string? Terms { get; set; }
-        public decimal TotalDisc { get; set; }
-        public decimal Amt { get; set; }
-        public decimal Roundoff { get; set; }
-        public decimal NetAmount { get; set; }
+        public decimal? TotalDisc { get; set; }
+        public decimal? Amt { get; set; }
+        public decimal? Roundoff { get; set; }
+        public decimal? NetAmount { get; set; }
         public decimal? Tax { get; set; }
-        public int AddCharges { get; }
-        public decimal GrandTotal { get; set; }
-        public int PayType { get; set; }
+        public decimal? AddCharges { get; }
+        public decimal? GrandTotal { get; set; }
+        public DropdownDto PayType { get; set; }
         public decimal? Advance { get; set; }
         public decimal TotalPaid { get; set; }
         public decimal Cash { get; set; }
         public decimal Card { get; set; }
         public decimal Balance { get; set; }
-        public int Cheque { get; set; }
+        public decimal? Cheque { get; set; }
         public DateTime DueDate { get; set; }
 
     }
