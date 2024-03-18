@@ -168,42 +168,30 @@ namespace Dfinance.Application.Services.General
             {
                 try
                 {
-                    int CreatedBy = _authService.GetId().Value;
-                    int CreatedBranchId = _authService.GetBranchId().Value;
-                    DateTime CreatedOn = DateTime.Now;
+                    int createdBy = _authService.GetId().Value;
+                    int createdBranchId = _authService.GetBranchId().Value;
 
-                    var Passwordtemp = _encryptService.Encrypt(userDto.Password);
+                    string encryptedPassword = _encryptService.Encrypt(userDto.Password);
 
-                    int NewIdUser = InsertMaEmployees(userDto, CreatedBranchId, Passwordtemp);
-                    if (NewIdUser == 0)
+                    int newUserId = InsertMaEmployees(userDto, createdBranchId, encryptedPassword);
+                    if (newUserId == 0)
                         return CommonResponse.Error("Failed to insert user.");
 
-                    List<int> newUserDetailIds = InsertMaEmployeeDetails(userDto, NewIdUser);
+                    InsertMaEmployeeDetails(userDto, newUserId);
 
-                    if (newUserDetailIds.Count == 0)
-                    {
-                        transaction.Rollback();
-                        return CommonResponse.Error("Failed to insert employee details.");
-                    }
-
-                    foreach (var newUserDetailId in newUserDetailIds)
-                    {
-                        InsertMaUserRights(userDto, newUserDetailId);
-                    }
-
-                    transaction.Commit(); 
+                    transaction.Commit();
 
                     return CommonResponse.Created("Successfully Inserted");
                 }
                 catch (Exception ex)
                 {
-                    transaction.Rollback(); 
-                    return CommonResponse.Error(ex.Message);
+                    transaction.Rollback();
+                    return CommonResponse.Error($"Failed to insert user. Error: {ex.Message}");
                 }
             }
         }
 
-        private int InsertMaEmployees(UserDto userDto, int CreatedBranchId, string encryptedPassword)
+        private int InsertMaEmployees(UserDto userDto, int createdBranchId, string encryptedPassword)
         {
             string criteria = "InsertMaEmployees";
             SqlParameter newIdparam = new SqlParameter("@NewID", SqlDbType.Int)
@@ -215,15 +203,13 @@ namespace Dfinance.Application.Services.General
                 userDto.Account.Id = null;
             }
             _context.Database.ExecuteSqlRaw("EXEC spNewEmployees @Criteria={0}, @FirstName={1},@MiddleName={2},@LastName={3},@Address={4},@EmailID={5},@OfficeNumber={6},@MobileNumber={7},@DesignationID={8},@Active={9},@EmployeeType={10},@UserName={11},@Password={12},@GmailID={13},@IsLocationRestrictedUser={14},@PhotoID={15},@CreatedBranchId={16},@AccountID={17},@ImagePath={18},@NewID={19} OUTPUT", criteria,
-                 userDto.FirstName, userDto.MiddleName, userDto.LastName, userDto.Address, userDto.EmailId, userDto.OfficeNumber, userDto.MobileNumber, userDto.Designation.Id, userDto.Active, userDto.EmployeeType.Id, userDto.Username, encryptedPassword, userDto.GmailId, userDto.IsLocationRestrictedUser, userDto.PhotoId, CreatedBranchId, userDto.Account.Id, userDto.ImagePath, newIdparam);
+                    userDto.FirstName, userDto.MiddleName, userDto.LastName, userDto.Address, userDto.EmailId, userDto.OfficeNumber, userDto.MobileNumber, userDto.Designation.Id, userDto.Active, userDto.EmployeeType.Id, userDto.Username, encryptedPassword, userDto.GmailId, userDto.IsLocationRestrictedUser, userDto.PhotoId, createdBranchId, userDto.Account.Id, userDto.ImagePath, newIdparam);
 
             return (int)newIdparam.Value;
         }
 
-        private List<int> InsertMaEmployeeDetails(UserDto userDto, int NewIdUser)
+        private void InsertMaEmployeeDetails(UserDto userDto, int newUserId)
         {
-            List<int> newUserDetailIds = new List<int>();
-
             foreach (var branchDetail in userDto.UserBranchDetails)
             {
                 string criteria1 = "InsertMaEmployeeDetails";
@@ -233,35 +219,32 @@ namespace Dfinance.Application.Services.General
                     Direction = ParameterDirection.Output
                 };
 
-
                 _context.Database.ExecuteSqlRaw("EXEC spNewEmployees @Criteria={0},@EmployeeID={1},@BranchID={2},@DepartmentID={3},@ActiveFlag={4},@IsMainBranch={5},@SupervisorID={6},@MaRoleID={7},@NewID={8} OUTPUT", criteria1,
-                    NewIdUser, branchDetail.BranchName.Id, branchDetail.DepartmentName.Id, branchDetail.ActiveFlag, branchDetail.IsMainBranch, branchDetail.Supervisor.Id, branchDetail.MaRoleId, newIdUserdetails);
+                    newUserId, branchDetail.BranchName.Id, branchDetail.DepartmentName.Id, branchDetail.ActiveFlag, branchDetail.IsMainBranch, branchDetail.Supervisor.Id, branchDetail.MaRoleId, newIdUserdetails);
 
                 int newUserDetailId = (int)newIdUserdetails.Value;
-                newUserDetailIds.Add(newUserDetailId);
-            }
 
-            return newUserDetailIds;
+                // Insert user rights based on this branch detail
+                InsertMaUserRights(branchDetail, newUserDetailId);
+            }
         }
 
-
-        private void InsertMaUserRights(UserDto userDto, int NewIdUserDetails)
+        private void InsertMaUserRights(UserBranchDetailsDto branchDetail, int newUserDetailId)
         {
-            foreach (var branchDetail in userDto.UserBranchDetails)
+            foreach (var maUserRight in branchDetail.MapagemenuDto)
             {
-                foreach (var maUserRight in branchDetail.MapagemenuDto)
-                {
-                    string criteria2 = "InsertMaUserRights";
+                string criteria2 = "InsertMaUserRights";
 
-                    SqlParameter newIdUserRight = new SqlParameter("@NewID", SqlDbType.Int)
-                    {
-                        Direction = ParameterDirection.Output
-                    };
-                    _context.Database.ExecuteSqlRaw("EXEC spNewEmployees @Criteria={0},@UserDetailsID={1},@PageMenuID={2},@IsView={3},@IsCreate={4},@IsEdit={5},@IsCancel={6},@IsDelete={7},@IsApprove={8},@IsEditApproved={9},@IsHigherApprove={10},@IsPrint={11},@IsEmail={12},@FrequentlyUsed={13},@NewID={14} OUTPUT",
-                        criteria2, NewIdUserDetails, maUserRight.PageMenuId, maUserRight.IsView, maUserRight.IsCreate, maUserRight.IsEdit, maUserRight.IsCancel, maUserRight.IsDelete, maUserRight.IsApprove, maUserRight.IsEditApproved, maUserRight.IsHigherApprove, maUserRight.IsPrint, maUserRight.IsEmail, maUserRight.FrequentlyUsed, newIdUserRight);
-                }
+                SqlParameter newIdUserRight = new SqlParameter("@NewID", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.Output
+                };
+
+                _context.Database.ExecuteSqlRaw("EXEC spNewEmployees @Criteria={0},@UserDetailsID={1},@PageMenuID={2},@IsView={3},@IsCreate={4},@IsEdit={5},@IsCancel={6},@IsDelete={7},@IsApprove={8},@IsEditApproved={9},@IsHigherApprove={10},@IsPrint={11},@IsEmail={12},@FrequentlyUsed={13},@NewID={14} OUTPUT",
+                    criteria2, newUserDetailId, maUserRight.PageMenuId, maUserRight.IsView, maUserRight.IsCreate, maUserRight.IsEdit, maUserRight.IsCancel, maUserRight.IsDelete, maUserRight.IsApprove, maUserRight.IsEditApproved, maUserRight.IsHigherApprove, maUserRight.IsPrint, maUserRight.IsEmail, maUserRight.FrequentlyUsed, newIdUserRight);
             }
         }
+
 
         /// <summary>
         /// Update User 
@@ -307,11 +290,8 @@ namespace Dfinance.Application.Services.General
                     // Save changes to the database
                     _context.SaveChanges();
                     // Insert new branch details and user rights
-                    List<int> newUserDetailIds = InsertMaEmployeeDetails(userDto, userfind.Id);
-                    foreach (var newUserDetailId in newUserDetailIds)
-                    {
-                        InsertMaUserRights(userDto, newUserDetailId);
-                    }
+                    InsertMaEmployeeDetails(userDto, userfind.Id);
+
 
                     transaction.Commit();
                     return CommonResponse.Created("Successfully Updated");
