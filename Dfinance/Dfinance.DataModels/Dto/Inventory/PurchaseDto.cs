@@ -18,20 +18,26 @@ namespace Dfinance.DataModels.Dto.Inventory
         public DateTime PartyInvoiceDate { get; set; }
         public int PartyInvoiceNo {  get; set; }    
         public string Description { get; set; }
-        //Items
-        public string? ItemCode {  get; set; }
+        public List<ItemListDto> Items { get; set; }    
+        public TransactionEntries TransactionEntries { get; set; }
+    }
+    public class ItemListDto
+    {
+        public string? ItemCode { get; set; }
         public string ItemName { get; set; }
-        public string BatchNo {  get; set; }
-        public string unit { get; set;}
-        public decimal Qty { get; set; } 
+        public string BatchNo { get; set; }
+        public string unit { get; set; }
+        public decimal Qty { get; set; }
         public decimal? FocQty { get; set; }
-        public decimal Rate { get;}
+        public decimal Rate { get; }
         public int GrossAmt { get; set; }
-        public decimal? Discount { get; set;}
-        public int Amount { get; set; } 
+        public decimal? Discount { get; set; }
+        public int Amount { get; set; }
         public decimal TaxPerc { get; set; }
 
-        //Bottom
+    }
+    public class TransactionEntries
+    {
         public string? Terms { get; set; }
         public decimal TotalDisc { get; set; }
         public decimal Amt { get; set; }
@@ -39,7 +45,7 @@ namespace Dfinance.DataModels.Dto.Inventory
         public decimal NetAmount { get; set; }
         public decimal? Tax { get; set; }
         public int AddCharges { get; }
-        public decimal GrandTotal {  get; set; }
+        public decimal GrandTotal { get; set; }
         public int PayType { get; set; }
         public decimal? Advance { get; set; }
         public decimal TotalPaid { get; set; }
@@ -48,5 +54,6 @@ namespace Dfinance.DataModels.Dto.Inventory
         public decimal Balance { get; set; }
         public int Cheque { get; set; }
         public DateTime DueDate { get; set; }
+
     }
 }
