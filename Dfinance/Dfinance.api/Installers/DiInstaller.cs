@@ -27,6 +27,8 @@ using Dfinance.Warehouse.Services;
 
 using Dfinance.Inventory.Service.Interface;
 using Dfinance.Inventory.Service;
+using Dfinance.Application.LabelAndGridSettings.Interface;
+using Dfinance.Application.LabelAndGridSettings;
 
 
 
@@ -96,7 +98,8 @@ public class DiInstaller : IInstaller
 
         service.AddScoped<IWarehouseService, WarehouseService>();
 		 //purchase
-       service.AddScoped<ITransactionFactory, TransactionFactory>();
-
+       service.AddScoped<IPurchase, PurchaseService>();
+        //label&Grid
+        service.AddScoped<ILabelAndGridSettings, LabelAndGridSettings>();
     }
 }
