@@ -25,6 +25,12 @@ using Serilog.Formatting;
 using Dfinance.Warehouse.Services.Interface;
 using Dfinance.Warehouse.Services;
 
+using Dfinance.Inventory.Service.Interface;
+using Dfinance.Inventory.Service;
+using Dfinance.Application.LabelAndGridSettings.Interface;
+using Dfinance.Application.LabelAndGridSettings;
+
+
 
 namespace Dfinance.api.Installers;
 
@@ -91,6 +97,9 @@ public class DiInstaller : IInstaller
         service.AddScoped<ITransactionAdditionalsService, TransactionAdditionalsService>();
 
         service.AddScoped<IWarehouseService, WarehouseService>();
-
+		 //purchase
+       service.AddScoped<IPurchase, PurchaseService>();
+        //label&Grid
+        service.AddScoped<ILabelAndGridSettings, LabelAndGridSettings>();
     }
 }
