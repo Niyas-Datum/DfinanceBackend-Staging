@@ -54,5 +54,7 @@ public partial class FiMaAccount
     public Parties Parties { get; set; }
 	   //relationship with itemmaster
     public ICollection<ItemMaster> Items { get; set; }
+    public virtual ICollection<FiTransaction>? FiTransactions { get; set; }
+
 
 }

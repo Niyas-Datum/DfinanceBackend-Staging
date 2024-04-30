@@ -45,6 +45,6 @@
         public virtual FiMaAccount? PostAccount { get; set; }
         public virtual MaNumbering? NumberingNavigation { get; set; }
         public virtual TaxFormMaster? Form { get; set; }
-
+        public virtual ICollection<FiTransaction> FiTransactions { get; set; } = new List<FiTransaction>();
     }
 }

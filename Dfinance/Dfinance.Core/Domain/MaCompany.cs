@@ -117,5 +117,12 @@ namespace Dfinance.Core.Domain
         public ICollection<MaPriceCategory> PriceCategories { get; set; }
         //relation with FiMaVoucher
         public virtual ICollection<Voucher>? FiMaVouchers { get; set; }
+        public virtual ICollection<Locations> Locations { get; set; }
+        //relation with Location Types
+        public virtual ICollection<LocationTypes> LocationTypes { get; set; }
+        //relation with LocationBranchList
+        public virtual ICollection<LocationBranchList> LocationBranchList { get; set; }
+        public virtual ICollection<FiTransaction> FiTransactions { get; set; }
+        
     }
 }

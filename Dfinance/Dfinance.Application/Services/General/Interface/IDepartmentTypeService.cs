@@ -6,6 +6,7 @@ namespace Dfinance.Application.Services.General.Interface
     public interface IDepartmentTypeService
     {
         CommonResponse DepartmentDropdown();
+        CommonResponse DeptPopup();
         CommonResponse FillDepartment();
         CommonResponse FillDepartmentById(int Id);
         CommonResponse AddDepartment(DepartmentTypeDto departmentDto);

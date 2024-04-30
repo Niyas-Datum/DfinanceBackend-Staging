@@ -47,7 +47,10 @@ public partial class MaEmployee
     //used for who created emplyee branch details
     public virtual ICollection<MaEmployeeDetail> EmployeeBranchDetCreatedUserList { get; set; } = new List<MaEmployeeDetail>();
 
-
+    //employee branch details
+    public virtual ICollection<FiTransaction> FiTransactionAddedByNavigations { get; set; } 
+    //used for who created emplyee branch details
+    public virtual ICollection<FiTransaction> FiTransactionApprovedByNavigations { get; set; }
     /// end use
     //---relationship ma Account one =>---
     public virtual FiMaAccount? Account { get; set; }
@@ -74,4 +77,7 @@ public partial class MaEmployee
     public virtual ICollection<Voucher>? FiMaVouchers { get; set; }
     //relationship with PriceCategory
     public virtual ICollection<MaPriceCategory> PriceCategories { get; set; }
+	 public virtual ICollection<Locations> Locations { get; set; }
+    //relation with Location Types
+    public virtual ICollection<LocationTypes> LocationTypes { get; set; }
 }
