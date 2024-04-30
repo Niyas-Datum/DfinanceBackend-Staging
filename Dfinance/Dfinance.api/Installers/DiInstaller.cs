@@ -21,8 +21,14 @@ using Dfinance.Shared.Configuration.Service;
 using Dfinance.Shared.Deserialize;
 using Dfinance.Stakeholder.Services;
 using Dfinance.Stakeholder.Services.Interface;
-using Dfinance.Warehouse.Services;
+using Serilog.Formatting;
 using Dfinance.Warehouse.Services.Interface;
+using Dfinance.Warehouse.Services;
+
+using Dfinance.Inventory.Service.Interface;
+using Dfinance.Inventory.Service;
+using Dfinance.Application.LabelAndGridSettings.Interface;
+using Dfinance.Application.LabelAndGridSettings;
 
 
 
@@ -79,8 +85,8 @@ public class DiInstaller : IInstaller
 
         service.AddScoped<IHrEmployeeService, HrEmployeeService>();
 
-        //Item
-        service.AddScoped<IItemMasterService, ItemMasterService>();
+        //log
+       service.AddScoped <ITextFormatter, LogFormatterService>();
 
         service.AddScoped<IItemUnitsService, ItemUnitsService>();
 
@@ -91,6 +97,9 @@ public class DiInstaller : IInstaller
         service.AddScoped<ITransactionAdditionalsService, TransactionAdditionalsService>();
 
         service.AddScoped<IWarehouseService, WarehouseService>();
-
+		 //purchase
+       service.AddScoped<IPurchase, PurchaseService>();
+        //label&Grid
+        service.AddScoped<ILabelAndGridSettings, LabelAndGridSettings>();
     }
 }

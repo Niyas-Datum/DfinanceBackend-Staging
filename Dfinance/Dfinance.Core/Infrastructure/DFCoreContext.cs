@@ -11,6 +11,7 @@ using Dfinance.Core.Views.PagePermission;
 using Dfinance.Core.Views.Common;
 using Dfinance.Shared.Configuration.Service;
 using Dfinance.Core.Views.Finance;
+using System.Reflection.Emit;
 
 namespace Dfinance.Core.Infrastructure;
 
@@ -87,7 +88,15 @@ public partial class DFCoreContext : DbContext
 
     //TransactionAddtionals
     public DbSet<FiTransactionAdditionals> FiTransactionAdditionals { get; set; }
-    
+
+    public DbSet<FiTransaction> FiTransaction{ get; set; }
+
+    //MaVehicle
+    public DbSet<MaVehicles> MaVehicles { get; set; }
+
+    //Grid and Label
+    public DbSet<FormGridLabelView> FormGridSetting { get; set; }
+    public DbSet<FormLabelSetting> FormLabelSetting { get; set; }
 
 
     //view init
@@ -192,6 +201,9 @@ public partial class DFCoreContext : DbContext
 
     //FitransactionAdditonals
     public DbSet<SpGetTransactionAdditionals> SpGetTransactionAdditionals { get; set; }
+    //Label&Grid
+    public DbSet<FormLabelView> FormLabelView { get; set; }
+    public DbSet<FormGridView> FormGridView { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     //  => optionsBuilder.UseSqlServer(@"Data Source=ip.datuminnovation.com,9600;TrustServerCertificate=true;Initial Catalog=DatumSystemMain;User ID=sa;pwd=Datum123!");
@@ -246,7 +258,7 @@ public partial class DFCoreContext : DbContext
 
         //TransactionAddition
         mb.ApplyConfiguration(new FiTransactionAdditionalConfiguration());
-
+        mb.ApplyConfiguration(new FiTransactionConfiguration());
         //View
 
         mb.Entity<CurrencyCode>().HasNoKey().ToView(null);
@@ -330,13 +342,17 @@ public partial class DFCoreContext : DbContext
         //Password
         mb.Entity<PasswordCheckResult>().HasNoKey().ToView(null);
         mb.Entity<FillAccountList>().HasNoKey().ToView(null);
-		//Customer Supplier
-			  mb.ApplyConfiguration(new PartiesConfiguration());
+        //LabelGrid
+        mb.Entity<FormLabelView>().HasNoKey().ToView(null);
+        mb.Entity<FormGridView>().HasNoKey().ToView(null);
+        //Customer Supplier
+        mb.ApplyConfiguration(new PartiesConfiguration());
              mb.ApplyConfiguration(new MaCustomerCategoresConfiguration());
              mb.ApplyConfiguration(new MaCustomerDetailsConfiguration());
             mb.ApplyConfiguration(new DeliveryDetailsConfiguration());
-
-       
+        //label and grid
+        mb.ApplyConfiguration(new FormGridSettingConfiguration());
+        mb.ApplyConfiguration(new FormlabelSettingConfiguration());
 
     }
 }

@@ -67,13 +67,8 @@ namespace Dfinance.Shared.Routes.v1
 
             public const string SaveUser = $"{Main}/Save";
 
-            public const string UpdateUser = $"{Main}/update/{{Id}}";
-
-            public const string DeleteUserRight = $"{Main}/deleteuserright/{{Id}}";
-
-            public const string DeleteBranchDetails = $"{Main}/deletebranchdetails/{{Id}}";
-
-            public const string DeleteUser = $"{Main}/deleteuser/{{Id}}";
+            public const string UpdateUser = $"{Main}/update";
+            public const string DeleteUser = $"{Main}/deleteuser";
             public const string FillRole = $"{Main}/fillrole";
             public const string GetRole = $"{Main}/getrole";
         }
@@ -232,7 +227,7 @@ namespace Dfinance.Shared.Routes.v1
             public const string SaveCustmsupp = $"{Main}/save";
             public const string GetCode = $"{Main}/getcode";
             public const string GetCategory = $"{Main}/getcat";
-            
+            public const string supplier = $"{Main}/getsupplier";
             public const string GetType = $"{Main}/gettype";
             public const string update = $"{Main}/update";
            
@@ -243,6 +238,7 @@ namespace Dfinance.Shared.Routes.v1
             public const string GetPriceCategory = $"{Main}/getpricecatg";
             public const string CustomerCategories = $"{Main}/getcategory";
             public const string GetCommodity = $"{Main}/getcomdity";
+            public const string customer = $"{Main}/getcustomer";
         }
         public static class HR
         {
@@ -300,6 +296,13 @@ namespace Dfinance.Shared.Routes.v1
             public const string Main = $"{Base}/TaxType";
 
             public const string TaxTypeDropDown = $"{Main}/FillTaxType";
+        }
+        public static class LabelGrid
+        {
+            public const string Main = $"{Base}/LabelGrid";
+
+            public const string Getlabel = $"{Main}/Getlabel";
+            public const string Getgrid = $"{Main}/Getgrid";
         }
     }
 }

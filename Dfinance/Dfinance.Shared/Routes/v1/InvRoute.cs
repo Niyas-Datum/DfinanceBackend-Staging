@@ -29,7 +29,11 @@ namespace Dfinance.Shared.Routes
             public const string Delete = $"{Main}/delete";
             public const string GetByTransactionId = $"{Main}/getByTrnId";
         }
-        
+        public class Transactions
+        {
+            public const string Main = $"{Base}/purchase";
+            public const string getsalesman = $"{Main}/getsalesman";
+        }
 
     }
 }

@@ -11,11 +11,13 @@ namespace Dfinance.Application
 {
     public interface ITransactionAdditionalsService
     {
-        //CommonResponse PopTransactionAdditionals(int transactionId);
         CommonResponse SaveTransactionAdditional(FiTransactionAdditionalDto fiTransactionAdditionalDto);
         CommonResponse UpdateTransactionAdditional(FiTransactionAdditionalDto fiTransactionAdditionalDto);
         CommonResponse DeleteTransactionAdditional(int Id);
         CommonResponse FillTransactionAdditionals(int transactionId);
-      //  CommonResponse FillTransactionAdditionalsById(int Id);
+        CommonResponse GetTransPortationType();
+        CommonResponse GetSalesArea();
+        CommonResponse PopupVechicleNo();
+        CommonResponse PopupDelivaryLocations(int salesManId);
     }
 }

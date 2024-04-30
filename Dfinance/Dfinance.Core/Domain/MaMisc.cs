@@ -22,6 +22,6 @@ namespace Dfinance.Core.Domain
 
         //relationships
         public ICollection<ItemMaster> Items { get; set; }
-           
+        public virtual ICollection<FiTransaction> FiTransactions { get; set; } 
     }
 }

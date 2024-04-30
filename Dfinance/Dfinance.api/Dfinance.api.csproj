@@ -10,15 +10,19 @@
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'http' " />
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.10" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.12" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.10" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+    <PackageReference Include="Serilog" Version="3.1.1" />
+    <PackageReference Include="Serilog.AspNetCore" Version="7.0.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Dfinance.Application\Dfinance.Application.csproj" />
     <ProjectReference Include="..\Dfinance.HR\Dfinance.HR.csproj" />
+    <ProjectReference Include="..\Dfinance.Inventory\Dfinance.Inventory.csproj" />
     <ProjectReference Include="..\Dfinance.Item\Dfinance.Item.csproj" />
+    <ProjectReference Include="..\Dfinance.LogViewer\Dfinance.LogViewer.csproj" />
     <ProjectReference Include="..\Dfinance.Shared\Dfinance.Shared.csproj" />
     <ProjectReference Include="..\Dfinance.AuthApplication\Dfinance.AuthApplication.csproj" />
     <ProjectReference Include="..\Dfinance.AuthCore\Dfinance.AuthCore.csproj" />

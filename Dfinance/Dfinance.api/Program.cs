@@ -2,6 +2,8 @@
 using Dfinance.Shared.Configuration;
 using Dfinance.AuthAppllication.Middlewares;
 using Dfinance.api.Installers.ext;
+using Serilog;
+using Dfinance.AuthApplication.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +11,23 @@ var services = builder.Services;
 var configuration = builder.Configuration;
 
 services.InstallerServiceInAssembly(configuration);
+
+// Logfile
+
+var logFilePath = "D:\\UserFiles\\VIJAL\\GitHubProjectForWork\\Dfinance\\Dfinance.AuthApplication\\Archive\\LogFile\\.json";
+
+var logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(configuration)
+    .Enrich.FromLogContext()
+    .WriteTo.File(
+        new LogFormatterService(),
+        logFilePath,
+        rollingInterval: RollingInterval.Day)
+    .CreateLogger();
+
+Log.Logger = logger;
+builder.Logging.AddSerilog(logger);
+
 
 var app = builder.Build();
 // Logfile
@@ -48,6 +67,8 @@ app.UseAuthorization();
 //Middleware - authentication checking - every request
 app.UseMiddleware<JwtMiddleware>();
 
+//Middleware - Logging
+app.UseMiddleware<LogMiddleware>(logFilePath);
 
 app.MapControllers();
 
