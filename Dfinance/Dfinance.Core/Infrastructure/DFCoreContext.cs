@@ -11,7 +11,7 @@ using Dfinance.Core.Views.PagePermission;
 using Dfinance.Core.Views.Common;
 using Dfinance.Shared.Configuration.Service;
 using Dfinance.Core.Views.Finance;
-using System.Reflection.Emit;
+using Dfinance.Core.Views.Inventory.Purchase;
 
 namespace Dfinance.Core.Infrastructure;
 
@@ -41,7 +41,7 @@ public partial class DFCoreContext : DbContext
     public DbSet<ItemMaster> ItemMaster { get; set; }
     public DbSet<MaEmployee> MaEmployees { get; set; }
     public DbSet<MaEmployeeDetail> MaEmployeeBranchDet { get; set; }
-    public DbSet<MaRoles> UserRoles { get; set; }
+    //public DbSet<MaRoles> UserRoles { get; set; }
     public DbSet<MaUserRight> UserRolePermission { get; set; }
     public DbSet<MaPageMenu> MaPageMenus { get; set; }
 
@@ -94,9 +94,6 @@ public partial class DFCoreContext : DbContext
     //MaVehicle
     public DbSet<MaVehicles> MaVehicles { get; set; }
 
-    //Grid and Label
-    public DbSet<FormGridLabelView> FormGridSetting { get; set; }
-    public DbSet<FormLabelSetting> FormLabelSetting { get; set; }
 
 
     //view init
@@ -151,6 +148,7 @@ public partial class DFCoreContext : DbContext
     public DbSet<FillCurrencyById> FillCurrencyById { get; set; }
  //-------------ItemMaster  ------------------------------------------ 
     
+    public DbSet<TaxDropDownView> TaxDropDownView { get; set; }
     public DbSet<SpFillItemMasterById> SpFillItemMasterById { get; set; }
     public DbSet<SpFillItemMaster> SpFillItemMaster { get; set; }
     public DbSet<ItemNextCode> ItemNextCode { get; set; }
@@ -178,15 +176,25 @@ public partial class DFCoreContext : DbContext
 
     //MaNumbering
     public DbSet<MaNumbering> MaNumbering { get; set; }
+//UserTrack
+public DbSet <UserTrack> UserTrack { get; set; }
+    public DbSet<UserTrackView> UserTrackView { get; set; }
     //password 
     public DbSet<PasswordCheckResult> PasswordCheckResult { get; set; }
     //SettingView 
     public DbSet<FillSettingById> FillSettingById { get; set; }
   //----------------ItemUnits------------------------------------------------     
     public DbSet<FillItemUnitsView> FillItemUnitsView { get; set; }
+    public DbSet<TransItemUnits> TransItemUnits { get; set; }
+    
 
     //--------------UnitMaster----------------------------------------
     public DbSet<UnitPopupView> UnitPopupView { get; set; }
+	//UnitMaster
+    //public DbSet<UnitMaster> UnitMaster { get; set; }
+    public DbSet<SpFillUnitMaster> SpFillUnitMaster { get; set; }
+    public DbSet<SpFillByUnit> SpFillByUnit { get; set; }
+    public DbSet<DropDownView> DropDownView { get; set; } 
     //------------------------------------------------------------------
     public DbSet<FillSetting> FillSetting { get; set; }
     //fillcustomeritem=>Customer&supplier
@@ -201,10 +209,24 @@ public partial class DFCoreContext : DbContext
 
     //FitransactionAdditonals
     public DbSet<SpGetTransactionAdditionals> SpGetTransactionAdditionals { get; set; }
+public DbSet<TransItemsView> TransItemsView { get; set; }
+    public DbSet<CommandTextView> CommandTextView { get; set; }
+
+
+ //Roles
+
+    public DbSet<MaRoles> UserRoles { get; set; }
+    public DbSet<MaRoleRight> MaRoleRights { get; set; }
+
+    public DbSet<FillRole> FillRole { get; set; }
+    public DbSet<FillRoleRight> FillRoleRight { get; set; }
+    public DbSet<SpFillRoles> SpFillRoles { get; set; }
+ //Grid and Label
+    public DbSet<FormGridSetting> FormGridSettings { get; set; }
+    public DbSet<FormLabelSetting> FormLabelSettings { get; set; }
     //Label&Grid
     public DbSet<FormLabelView> FormLabelView { get; set; }
     public DbSet<FormGridView> FormGridView { get; set; }
-
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     //  => optionsBuilder.UseSqlServer(@"Data Source=ip.datuminnovation.com,9600;TrustServerCertificate=true;Initial Catalog=DatumSystemMain;User ID=sa;pwd=Datum123!");
    // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -227,6 +249,8 @@ public partial class DFCoreContext : DbContext
         mb.ApplyConfiguration(new CostCategoryConfiguration());
         mb.ApplyConfiguration(new MaEmployeeDetailConfiguration());
         mb.ApplyConfiguration(new MaRolesConfiguration());
+        mb.ApplyConfiguration(new CurrencyCodeConfigurations());
+        //  mb.ApplyConfiguration(new MaRoleRightConfiguration());
         mb.ApplyConfiguration(new MaUserRightConfiguration());
         mb.ApplyConfiguration(new MaPageMenuConfiguration());
         mb.ApplyConfiguration(new LogInfoConfiguration());
@@ -252,6 +276,8 @@ public partial class DFCoreContext : DbContext
         mb.ApplyConfiguration(new LocationsConfiguration());
         mb.ApplyConfiguration(new LocationTypesConfiguration());
         mb.ApplyConfiguration(new LocationBranchListConfiguration());
+        //usertrack
+        mb.ApplyConfiguration(new UserTrackConfiguration());
         //warehouse
         mb.Entity<Warehousebranchfill>().HasNoKey().ToView(null);
  mb.Entity<WareHouseView>().HasNoKey().ToView(null);
@@ -342,17 +368,25 @@ public partial class DFCoreContext : DbContext
         //Password
         mb.Entity<PasswordCheckResult>().HasNoKey().ToView(null);
         mb.Entity<FillAccountList>().HasNoKey().ToView(null);
-        //LabelGrid
-        mb.Entity<FormLabelView>().HasNoKey().ToView(null);
-        mb.Entity<FormGridView>().HasNoKey().ToView(null);
-        //Customer Supplier
-        mb.ApplyConfiguration(new PartiesConfiguration());
+		//Customer Supplier
+			  mb.ApplyConfiguration(new PartiesConfiguration());
              mb.ApplyConfiguration(new MaCustomerCategoresConfiguration());
              mb.ApplyConfiguration(new MaCustomerDetailsConfiguration());
             mb.ApplyConfiguration(new DeliveryDetailsConfiguration());
-        //label and grid
-        mb.ApplyConfiguration(new FormGridSettingConfiguration());
-        mb.ApplyConfiguration(new FormlabelSettingConfiguration());
+
+        mb.Entity<TransItemsView>().HasNoKey().ToView(null);
+        mb.Entity<CommandTextView>().HasNoKey().ToView(null);
+//Role
+        mb.Entity<SpFillRoles>().HasNoKey().ToView(null);
+        mb.Entity<FillRoleRight>().HasNoKey().ToView(null);
+        mb.Entity<SpFillRoles>().HasNoKey().ToView(null);
+       
+//UnitMaster
+        mb.Entity<SpFillUnitMaster>().HasNoKey().ToView(null);
+        mb.Entity<SpFillByUnit>().HasNoKey().ToView(null);
+        mb.Entity<DropDownView>().HasNoKey().ToView(null);
+//UserTrack
+        mb.Entity<UserTrackView>().HasNoKey().ToView(null); 
 
     }
 }
