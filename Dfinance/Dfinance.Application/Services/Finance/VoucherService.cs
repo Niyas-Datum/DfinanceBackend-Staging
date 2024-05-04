@@ -167,10 +167,9 @@ namespace Dfinance.Application.Services.Finance
             try
             {
                 string msg = null;
-                var desig = _context.FiMaVouchers.Where(i => i.PrimaryVoucherId == PrimaryVoucherId).
-                    Select(i => i.Id).
-                    SingleOrDefault();
-                if (desig == 0)
+                var desig = _context.FiMaVouchers.Any(i => i.PrimaryVoucherId == PrimaryVoucherId);
+                   
+                if (!desig)
                 {
                     msg = "Voucher Not Found";
                     return CommonResponse.NotFound(msg);
