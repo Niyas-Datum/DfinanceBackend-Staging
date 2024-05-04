@@ -12,6 +12,7 @@ using Dfinance.Core.Views.Common;
 using Dfinance.Shared.Configuration.Service;
 using Dfinance.Core.Views.Finance;
 using Dfinance.Core.Views.Inventory.Purchase;
+using Dfinance.Core.Views.Item;
 
 namespace Dfinance.Core.Infrastructure;
 
