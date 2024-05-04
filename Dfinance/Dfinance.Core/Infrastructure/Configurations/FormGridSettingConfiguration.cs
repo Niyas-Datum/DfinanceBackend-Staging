@@ -1,11 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Dfinance.Core.Domain;
 
 namespace Dfinance.Core.Infrastructure.Configurations
 {
-    public class FormGridSettingConfiguration : IEntityTypeConfiguration<FormGridLabelView>
+    public class FormGridSettingConfiguration : IEntityTypeConfiguration<FormGridSetting>
     {
-        public void Configure(EntityTypeBuilder<FormGridLabelView> builder)
+        public void Configure(EntityTypeBuilder<FormGridSetting> builder)
         {
             builder.Property(e => e.Id).HasColumnName("ID");
 
