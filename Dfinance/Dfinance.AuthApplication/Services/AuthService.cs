@@ -171,4 +171,12 @@ public class AuthService : IAuthService
         
         }
     }
+
+    public bool IsPageValid(int pageId)
+    {
+        var page = _dfCoreContext.MaPageMenus.Any(m => m.Id == pageId);
+        if (!page)
+            return false;
+        return true;
+    }
 }
