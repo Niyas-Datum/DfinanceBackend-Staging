@@ -11,6 +11,7 @@ namespace Dfinance.Application.Services.General.Interface
         CommonResponse SaveSettings(SettingsDto settingsDto, string password);
         CommonResponse UpdateSettings(SettingsDto settingsDto, int Id, string password);
         CommonResponse DeleteSettings(int Id, string password);
-        CommonResponse KeyValue(string key);
+        CommonResponse GetSettings(string key);
+        CommonResponse GetAllSettings();
     }
 }

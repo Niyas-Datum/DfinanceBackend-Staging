@@ -98,7 +98,7 @@ namespace Dfinance.Application.Services.General
 
                     int newId = (int)newIdParam.Value;
 
-                    return CommonResponse.Ok(newId);
+                    return CommonResponse.Ok("Setting Created Successfully");
                 }
                 else
                 {
@@ -122,8 +122,8 @@ namespace Dfinance.Application.Services.General
 
                 
                 string msg = null;
-                var setttingId = _context.MaSettings.Where(i => i.Id == Id).Select(i => i.Id).SingleOrDefault();
-                if (setttingId == null)
+                var setttingId = _context.MaSettings.Any(i => i.Id == Id);
+                if (!setttingId )
                 {
                     msg = "Settings Not Found";
                     return CommonResponse.NotFound(msg);
@@ -162,8 +162,8 @@ namespace Dfinance.Application.Services.General
                 var criteria = "Delete";
                 //var isPasswordOk = _passwordService.IsPasswordOk(password);
                 string msg = null;
-                var deleteId = _context.MaSettings.Where(i => i.Id == Id).Select(i => i.Id).SingleOrDefault();
-                if (deleteId == null)
+                var deleteId = _context.MaSettings.Any(i => i.Id == Id);
+                if (!deleteId)
                 {
                     msg = "Settings to be deleted  is not found";
                     return CommonResponse.NotFound(msg);
@@ -198,18 +198,25 @@ namespace Dfinance.Application.Services.General
     
         //called by MaSettingsController/KeyValue
         //**************************** KeyValue ****************************************
-        public CommonResponse KeyValue(string key)
+        //get value from Masetting by passing key
+        public CommonResponse GetSettings(string key)
         {
             try
             {
-                string msg = null;
+                string msg = null;                
                 var keys = _context.MaSettings.Any(i => i.Key == key);
                 if(keys)
                 {
                     var value = _context.MaSettings.Where(i => i.Key == key)
                               .Select(i => i.Value)
                               .SingleOrDefault();
-                    return CommonResponse.Ok(value);
+                    value = value.Trim().ToLower();
+                    if (value=="true"||value=="1"||value=="yes")
+                    {
+                        return CommonResponse.Ok(true);
+                    }                   
+                    return CommonResponse.Ok(false);                  
+                   
                 }               
                     msg = "key Not Found";
                     return CommonResponse.NotFound(msg);
@@ -220,6 +227,27 @@ namespace Dfinance.Application.Services.General
                 return CommonResponse.Error(ex);
             }
 
+        }
+        //get all settings key,value from masettings table
+        public CommonResponse GetAllSettings()
+        {
+            try
+            {
+                var settings = _context.MaSettings.Select(m => new
+                {
+                    Key = m.Key,
+                    Value = (
+                        m.Value.ToLower() == "true" ||
+                        m.Value.ToLower() == "yes" ||
+                        m.Value == "1"
+                    ) ? "true" : "false"
+                }).ToList();
+                return CommonResponse.Ok(settings);
+            }
+            catch (Exception ex)
+            {
+                return CommonResponse.Error(ex);
+            }
         }
     }
 }

@@ -8,26 +8,24 @@ using Dfinance.DataModels.Dto.Common;
 
 public class ItemMasterDto
     {  
-   
+   public int? Id { get; set; }
     [NullValidation(ErrorMessage ="ItemCode is Mandatory!!")]   
     public string ItemCode { get; set; }
     
    [NullValidation( ErrorMessage = "Item Name is mandatory!!")]
     public string ItemName { get; set; }
-    public string? ArabicName { get; set; }
-     
-    //[NullValidation(ErrorMessage = "Basic Unit is mandatory!!")]
+    public string? ArabicName { get; set; }     
+   
     public UnitPopupDto Unit { get; set; }    
     public string? BarCode { get; set; }
-    
-    //[NullValidation(ErrorMessage = "Category is mandatory!!")]
-    public CatPopupDto Category { get; set; }//popup=>commodity in db
+        
+    public CatPopupDto? Category { get; set; }//popup=>commodity in db
     public bool? IsUniqueItem { get; set; }
     public bool? StockItem { get; set; }
    
    
     [DecimalValidation(4,ErrorMessage = "Enter valid Purchase Rate!!")]
-    public decimal? PurchaseRate { get; set; }
+    public decimal? CostPrice { get; set; }
 
     [DecimalValidation(4, ErrorMessage = "Enter valid Selling Price!!")]
     public decimal? SellingPrice { get; set; }
@@ -83,7 +81,7 @@ public class ItemMasterDto
         public DropDownDtoName? PurchaseAccount { get; set; }//dropdown=>PurchaseAccountId
         public string? Remarks { get; set; }       
         public List<ItemUnitsDto>? ItemUnit { get; set; }        
-        public DropDownDtoName Branch {  get; set; }
+        public List<DropDownDtoName> Branch {  get; set; }
         //public IFormFile? ImageFile { get; set; }
       public string? ImageFile { get; set; }
 }

@@ -88,29 +88,29 @@ namespace Dfinance.api.Controllers.v1.DMain.Finance
                 return BadRequest(ex.Message);
             }
         }
-        ///// <summary>
-        ///// @windows: -Finance/masters/ChartOfAccount     
-        /////  @field:  account category
-        ///// </summary>
-        /////  <returns>DropDownAccountCategory </returns>
-        //[HttpGet(FinRoute.Coa.accountcategory)]
-        //public iactionresult dropdownaccountcategory()
-        //{
-        //    try
-        //    {
-        //        var data = _chartofaccounts.dropdownaccountcategory();
-        //        return ok(data);
-        //    }
-        //    catch (exception ex)
-        //    {
-        //        return badrequest(ex.message);
-        //    }
-        //}
-        ///// <summary>
-        ///// @windows: -Finance/masters  
-        /////  @field:  add new account 
-        ///// </summary>    
-        ///// <param name="ChartOfAccountsDto"> []</param> 
+        /// <summary>
+        /// @windows: -Finance/masters/ChartOfAccount     
+        ///  @field:  account category
+        /// </summary>
+        ///  <returns>DropDownAccountCategory </returns>
+        [HttpGet(FinRoute.Coa.AccountCategory)]
+        public IActionResult DropdownAccountCategory()
+        {
+            try
+            {
+                var data = _chartofaccounts.DropDownAccountCategory();
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
+        /// @windows: -Finance/masters  
+        ///  @field:  add new account 
+        /// </summary>    
+        /// <param name="ChartOfAccountsDto"> []</param> 
         [HttpPost(FinRoute.Coa.SaveAccount)]
         public IActionResult SaveAccount([FromBody] ChartOfAccountsDto accountsDto)
         {
@@ -129,46 +129,46 @@ namespace Dfinance.api.Controllers.v1.DMain.Finance
                 return BadRequest(ex.Message);
             }
         }
-        ///// <summary>
-        ///// @windows: -Finance/masters    
-        /////  @field:  Update account
-        ///// </summary>    
-        ///// <param name="ChartOfAccountsDto"> []</param> 
-        //[HttpPatch(FinRoute.Coa.UpdateAccount)]
-        //public IActionResult UpdateAccounts([FromBody]ChartOfAccountsDto accountsDto,int Id)
-        //{
-        //    try
-        //    {
-        //        if (!ModelState.IsValid)
-        //        {
-        //            return BadRequest(ModelState);
-        //        }
-        //        var data = _chartofaccounts.UpdateAccounts(accountsDto,Id);
+        /// <summary>
+        /// @windows: -Finance/masters    
+        ///  @field:  Update account
+        /// </summary>    
+        /// <param name="ChartOfAccountsDto"> []</param> 
+        [HttpPatch(FinRoute.Coa.UpdateAccount)]
+        public IActionResult UpdateAccounts([FromBody] ChartOfAccountsDto accountsDto, int Id)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+                var data = _chartofaccounts.UpdateAccounts(accountsDto, Id);
 
-        //        return Ok(data);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
-        ///// <summary>
-        ///// delete account 
-        ///// </summary>
-        ///// <param name="Id"></param>
-        ///// <returns></returns>
-        //[HttpDelete(FinRoute.Coa.DeleteAccount)]
-        //public IActionResult DeleteAccount(int Id)
-        //{
-        //    try
-        //    {
-        //        var result = _chartofaccounts.DeleteAccount(Id);
-        //        return Ok(result);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
+        /// delete account 
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns></returns>
+        [HttpDelete(FinRoute.Coa.DeleteAccount)]
+        public IActionResult DeleteAccount(int Id)
+        {
+            try
+            {
+                var result = _chartofaccounts.DeleteAccount(Id);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

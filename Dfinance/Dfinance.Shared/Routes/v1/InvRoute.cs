@@ -29,10 +29,22 @@ namespace Dfinance.Shared.Routes
             public const string Delete = $"{Main}/delete";
             public const string GetByTransactionId = $"{Main}/getByTrnId";
         }
-        public class Transactions
+        public static class UnitMaster
         {
-            public const string Main = $"{Base}/purchase";
-            public const string getsalesman = $"{Main}/getsalesman";
+            public const string Main = $"{Base}/UnitMaster";
+
+            public const string UnitPopup = $"{Main}/FillUnit";
+            public const string FillMaster = $"{Main}/FillMaster";
+
+            public const string FillByUnit = $"{Main}/FillByUnit";
+
+            public const string UnitDropDown = $"{Main}/UnitDropDown";
+
+            public const string SaveUnitMaster = $"{Main}/SaveUnitMaster";
+
+            public const string UpdateUnitMaster = $"{Main}/UpdateUnitMaster";
+
+            public const string DeleteUnitMaster = $"{Main}/DeleteUnitMaster";
         }
 
     }

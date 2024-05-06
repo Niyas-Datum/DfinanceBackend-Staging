@@ -84,8 +84,8 @@ namespace Dfinance.Application.Services.Finance
                 try
                 {
                 string msg = null;
-                var currencyCode = _context.CurrencyCode.Find(Id);
-                if (currencyCode == null)
+                var currencyCode = _context.CurrencyCode.Any(c=>c.Id==Id);
+                if (!currencyCode)
                 {
                     msg = "CurrencyCode Not Found";
                     return CommonResponse.NotFound(msg);
@@ -117,7 +117,7 @@ namespace Dfinance.Application.Services.Finance
                 }
 
                 var criteria = "DeleteCurrencyCode";
-                msg = "CurrencyCode " + currency + " is Deleted Successfully";
+                msg = "CurrencyCode is Deleted Successfully";
                 var result = _context.Database.ExecuteSqlRaw($"EXEC spCurrency @Criteria='{criteria}',@ID='{Id}'");
                 return CommonResponse.Ok(msg);
             }
@@ -198,8 +198,8 @@ namespace Dfinance.Application.Services.Finance
             try
             {
                 string msg = null;
-                var currencyid = _context.CurrencyCode.Find(Id);
-                if (currencyid == null)
+                var currencyid = _context.Currency.Any(c=>c.CurrencyId==Id);
+                if (!currencyid )
                 {
                     msg = "Currency Not Found";
                     return CommonResponse.NotFound(msg);

@@ -132,7 +132,7 @@ namespace Dfinance.api.Controllers.v1.DMain.General
         {
             try
             {
-                var view = _MaSettingsService.KeyValue(key);
+                var view = _MaSettingsService.GetSettings(key);
                 return Ok(view);
             }
             catch (Exception ex)

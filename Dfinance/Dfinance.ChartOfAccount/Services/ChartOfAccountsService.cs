@@ -250,7 +250,7 @@ namespace Dfinance.ChartOfAccount.Services.Finance
                 }
 
                 // Check if the account code already exists
-                var already = _context.FiMaAccounts.FirstOrDefault(x => x.Alias == accountsDto.AccountCode);
+                var already = _context.FiMaAccounts.FirstOrDefault(x => x.Alias == accountsDto.AccountCode && x.Id!=Id);
                 if (already != null)
                 {
                     return CommonResponse.Error("Error: Account code already exists.");
@@ -382,7 +382,7 @@ namespace Dfinance.ChartOfAccount.Services.Finance
 
                 string criteria = "DeleteAccounts";
                 msg = "Accounts " + acc + " is Deleted Successfully";
-                var result = _context.Database.ExecuteSqlRaw($"EXEC AccountsSP @Criteria='{criteria}', @CurrencyID={Id}");
+                var result = _context.Database.ExecuteSqlRaw($"EXEC AccountsSP @Criteria='{criteria}', @ID={Id}");
                 return CommonResponse.Ok(msg);
             }
 
