@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Dfinance.Core
+﻿namespace Dfinance.Core.Domain
 {
-    public partial class FormGridLabelView
+    public partial class FormGridSetting
     {
         public int Id { get; set; }
         public string FormName { get; set; } = null!;

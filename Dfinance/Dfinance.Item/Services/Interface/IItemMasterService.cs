@@ -4,15 +4,18 @@ namespace Dfinance.Item.Services.Inventory.Interface
 {
     public interface IItemMasterService
     {
-        CommonResponse FillItemMaster(int Id);      
-        //CommonResponse FillItemByID(int Id, int BranchId);
-        CommonResponse GetNextItemCode();       
+        CommonResponse FillItemMaster(int[]? catId, int[]? brandId, string search = null, int pageNo = 0, int limit = 0);
+
+        CommonResponse FillItemByID(int pageId,int Id, int BranchId = 0);
+        CommonResponse GetNextItemCode();
         CommonResponse ParentItemPopup();
-        CommonResponse SaveItemMaster(ItemMasterDto itemDto);
-        CommonResponse UpdateItemMaster(ItemMasterDto itemDto, int Id);
-        CommonResponse DeleteItem(int ItemId);
+        CommonResponse SaveItemMaster(ItemMasterDto itemDto,int pageId);
+        CommonResponse UpdateItemMaster(ItemMasterDto itemDto, int Id, int pageId);
+        CommonResponse DeleteItem(int ItemId, int pageId);
         CommonResponse GenerateBarCode();
-        CommonResponse TaxDropDown();
+        CommonResponse TaxDropDown();       
+        CommonResponse FillTransItems(int partyId, int PageID, int locId, int voucherId);
+        CommonResponse GetUniqueExpiryItem(int itemId);
 
     }
 }

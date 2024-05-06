@@ -14,18 +14,44 @@ services.InstallerServiceInAssembly(configuration);
 
 // Logfile
 
-var logFilePath = "D:\\UserFiles\\VIJAL\\GitHubProjectForWork\\Dfinance\\Dfinance.AuthApplication\\Archive\\LogFile\\.json";
+//var logFilePath = "\\WEB-SERVER\\DfinaceBackEnd\\Project\\log\\.json";
+
+string currentPath = Directory.GetCurrentDirectory();
+
+if (!Directory.Exists(Path.Combine(currentPath, "Archive\\LogFile")))
+
+    Directory.CreateDirectory(Path.Combine(currentPath, "Archive\\LogFile"));
+
+var logFilePath = Path.Combine(currentPath, "Archive\\LogFile\\.json");
 
 var logger = new LoggerConfiguration()
+
     .ReadFrom.Configuration(configuration)
+
     .Enrich.FromLogContext()
+
+    .Filter.ByExcluding(e => e.MessageTemplate.Text.Contains("Now listening on:") ||
+
+                                      e.MessageTemplate.Text.Contains("Application started. Press Ctrl+C to shut down.") ||
+
+                                      e.MessageTemplate.Text.Contains("Hosting environment:") ||
+
+                                      e.MessageTemplate.Text.Contains("Content root path:"))
+
     .WriteTo.File(
+
         new LogFormatterService(),
+
         logFilePath,
+
         rollingInterval: RollingInterval.Day)
+
     .CreateLogger();
 
+
+
 Log.Logger = logger;
+
 builder.Logging.AddSerilog(logger);
 
 

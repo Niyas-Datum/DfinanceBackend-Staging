@@ -24,12 +24,11 @@ using Dfinance.Stakeholder.Services.Interface;
 using Serilog.Formatting;
 using Dfinance.Warehouse.Services.Interface;
 using Dfinance.Warehouse.Services;
-
-using Dfinance.Inventory.Service.Interface;
-using Dfinance.Inventory.Service;
 using Dfinance.Application.LabelAndGridSettings.Interface;
 using Dfinance.Application.LabelAndGridSettings;
 
+using Dfinance.Inventory.Interface;
+using Dfinance.Inventory;
 
 
 namespace Dfinance.api.Installers;
@@ -49,7 +48,6 @@ public class DiInstaller : IInstaller
 
         //GENERAL
         service.AddScoped<IBranchService, BranchService>();
-
         service.AddScoped<IDepartmentTypeService, DepartmentTypeService>();
         service.AddScoped<IUserService, UserService>();
         service.AddScoped<IDesignationsService, DesignationsService>();
@@ -88,18 +86,24 @@ public class DiInstaller : IInstaller
         //log
        service.AddScoped <ITextFormatter, LogFormatterService>();
 
+        //itemmaster
+
+        service.AddScoped<IItemMasterService, ItemMasterService>();
         service.AddScoped<IItemUnitsService, ItemUnitsService>();
 
-        // service.AddScoped<IUnitMasterService, UnitMasterService>();
+        service.AddScoped<IUnitMasterService, UnitMasterService>();
+        service.AddScoped<IUserTrackService, UserTrackService>();
 
         // service.AddScoped<ITaxTypeService, TaxTypeService>();
 
         service.AddScoped<ITransactionAdditionalsService, TransactionAdditionalsService>();
 
         service.AddScoped<IWarehouseService, WarehouseService>();
-		 //purchase
-       service.AddScoped<IPurchase, PurchaseService>();
-        //label&Grid
+
+        //Roles
+        service.AddScoped<IRoleService, RoleService>();
+ //label&Grid
         service.AddScoped<ILabelAndGridSettings, LabelAndGridSettings>();
+        
     }
 }
