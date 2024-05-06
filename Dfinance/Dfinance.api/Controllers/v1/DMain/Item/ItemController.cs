@@ -1,9 +1,9 @@
 ﻿using Dfinance.api.Authorization;
 using Dfinance.api.Framework;
-using Microsoft.AspNetCore.Mvc;
-using Dfinance.Shared.Routes.v1;
+using Dfinance.Item.Services.Inventory;
 using Dfinance.Item.Services.Inventory.Interface;
-using FluentValidation;
+using Dfinance.Shared.Routes.v1;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Dfinance.api.Controllers.v1.DMain.Item
 {
@@ -12,10 +12,12 @@ namespace Dfinance.api.Controllers.v1.DMain.Item
     public class ItemController : BaseController
     {
         private readonly IItemMasterService _itemService;
+        private readonly ILogger<ItemMasterService> _logger;
 
-        public ItemController(IItemMasterService itemService)
+        public ItemController(IItemMasterService itemService, ILogger<ItemMasterService> logger)
         {
             _itemService = itemService;
+            _logger = logger;
         }
 
 
@@ -25,34 +27,42 @@ namespace Dfinance.api.Controllers.v1.DMain.Item
         /// </summary>
         ///  <returns>Item Details</returns>
         /********************* Fill All Items ******************/
-        [HttpGet(ApiRoutes.ItemMaster.FillItem)]
-        public IActionResult FillItemMaster(int Id)
+        [HttpGet(ApiRoutes.ItemMaster.FillMaster)]
+        public IActionResult FillItemMaster([FromQuery]int[]? catId,[FromQuery] int[]? brandId, string search = null, int pageNo = 0, int limit = 0)
         {
             try
             {
-                var result = _itemService.FillItemMaster(Id);
+                var response = _itemService.FillItemMaster(catId, brandId, search,pageNo,limit);
+                return Ok(response); 
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// @windows: -Inventory/masters 
+        /// @Form:  ItemMaster                    
+        /// </summary>
+        ///  <returns>fill item details by id,itemunits,item history,stock</returns>
+        [HttpGet(ApiRoutes.ItemMaster.FillById)]
+        public IActionResult FillItemByID(int pageId,int Id, int BranchId = 0)
+        {
+            try
+            {
+                var result = _itemService.FillItemByID(pageId,Id, BranchId);
                 return Ok(result);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return BadRequest(ex.Message);
             }
         }
 
-        //[HttpGet(ApiRoutes.ItemMaster.FillItemById)]
-        //public IActionResult FillItemByID(int Id,int BranchId)
-        //{
-        //    try
-        //    {
-        //        var result = _itemService.FillItemByID(Id, BranchId);
-        //        return Ok(result);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
-
+       
 
         /// <summary>
         /// @windows: -Inventory/masters 
@@ -69,6 +79,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Item
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return BadRequest(ex.Message);
             }
         }
@@ -89,6 +100,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Item
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return BadRequest(ex.Message);
             }
         }
@@ -108,17 +120,25 @@ namespace Dfinance.api.Controllers.v1.DMain.Item
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return BadRequest(ex.Message);
             }
         }
+
+        /// <summary>
+        /// @windows: -Inventory/masters 
+        /// @Form:  ItemMaster                    
+        /// </summary>
+        ///  <returns>save item</returns>
+        ///
         [HttpPost(ApiRoutes.ItemMaster.SaveItem)]
-        public IActionResult SaveItemMaster(ItemMasterDto itemDto)
+        public IActionResult SaveItemMaster([FromBody]ItemMasterDto itemDto,int pageId)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    var result = _itemService.SaveItemMaster(itemDto);
+                    var result = _itemService.SaveItemMaster(itemDto,pageId);
                     return Ok(result);
                 }
 
@@ -131,41 +151,54 @@ namespace Dfinance.api.Controllers.v1.DMain.Item
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return BadRequest(new { Errors = new List<string> { ex.Message } });
             }
         }
 
-
+        /// <summary>
+        /// @windows: -Inventory/masters 
+        /// @Form:  ItemMaster                    
+        /// </summary>
+        ///  <returns>update item</returns>
+        ///
 
         [HttpPatch(ApiRoutes.ItemMaster.UpdateItem)]
-        public IActionResult UpdateItemMaster(ItemMasterDto itemDto, int Id)
+        public IActionResult UpdateItemMaster(ItemMasterDto itemDto, int Id, int pageId)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    var result = _itemService.UpdateItemMaster(itemDto, Id);
+                    var result = _itemService.UpdateItemMaster(itemDto, Id,pageId);
                     return Ok(result);
                 }
                 return BadRequest(ModelState);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return BadRequest(ex.Message);
             }
         }
-
+        /// <summary>
+        /// @windows: -Inventory/masters 
+        /// @Form:  ItemMaster                    
+        /// </summary>
+        ///  <returns>delete item</returns>
+        ///
         [HttpDelete(ApiRoutes.ItemMaster.DeletItem)]
-        public IActionResult DeleteItem(int Id)
+        public IActionResult DeleteItem(int Id, int pageId)
         {
             try
             {
-                var result = _itemService.DeleteItem(Id);
+                var result = _itemService.DeleteItem(Id,pageId);
                 return Ok(result);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                _logger.LogError(ex.Message);
+                return BadRequest("Item used in transactions so Cannot be deleted ");
             }
         }
 
@@ -179,36 +212,11 @@ namespace Dfinance.api.Controllers.v1.DMain.Item
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return BadRequest(ex.Message);
             }
         }
 
-        //[HttpGet(ApiRoutes.ItemMaster.History)]
-        //public IActionResult FillItemHistory(int ItemId)
-        //{
-        //    try
-        //    {
-        //        var result = _itemService.FillItemHistory(ItemId);
-        //        return Ok(result);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
 
-        //[HttpGet(ApiRoutes.ItemMaster.CurrStock)]
-        //public IActionResult GetCurrentStock(int ItemId)
-        //{
-        //    try
-        //    {
-        //        var result = _itemService.GetCurrentStock(ItemId);
-        //        return Ok(result);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
     }
 }

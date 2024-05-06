@@ -214,7 +214,13 @@ namespace Dfinance.Shared.Routes.v1
             public const string DeleteSettings = $"{Main}/delete";
 
             public const string KeyValue = $"{Main}/KeyValue";
+            public const string GetAllSettings = $"{Main}/getallsettings";
 
+        }
+		  public static class UserTrack
+        {
+            public const string Main = $"{Base}/UserTrack";
+            public const string FillUserTrack = $"{Main}/FillUserTrack";
         }
         public static class Password
         {
@@ -227,7 +233,7 @@ namespace Dfinance.Shared.Routes.v1
             public const string SaveCustmsupp = $"{Main}/save";
             public const string GetCode = $"{Main}/getcode";
             public const string GetCategory = $"{Main}/getcat";
-            public const string supplier = $"{Main}/getsupplier";
+            
             public const string GetType = $"{Main}/gettype";
             public const string update = $"{Main}/update";
            
@@ -238,7 +244,6 @@ namespace Dfinance.Shared.Routes.v1
             public const string GetPriceCategory = $"{Main}/getpricecatg";
             public const string CustomerCategories = $"{Main}/getcategory";
             public const string GetCommodity = $"{Main}/getcomdity";
-            public const string customer = $"{Main}/getcustomer";
         }
         public static class HR
         {
@@ -250,13 +255,11 @@ namespace Dfinance.Shared.Routes.v1
         {
             public const string Main = $"{Base}/ItemMaster";
 
-            public const string FillItem = $"{Main}/FillItem";
+            public const string FillMaster = $"{Main}/fillmaster";
 
-            // public const string FillItemById = $"{Main}/FillItemById";
+            public const string FillById = $"{Main}/FillById";
 
-            public const string GetNextCode = $"{Main}/NxtItemCode";
-
-            //public const string FillQuality = $"{Main}/Fillqlty";
+            public const string GetNextCode = $"{Main}/NxtItemCode";          
 
             public const string ParentPopup = $"{Main}/FillParent";
 
@@ -282,14 +285,10 @@ namespace Dfinance.Shared.Routes.v1
             public const string UpdateItemUnit = $"{Main}/updateitemunit";
 
             public const string DeletItemUnit = $"{Main}/deleteitemunit";
+            public const string FillBranchwiseUnits = $"{Main}/branchwiseunits";
         }
 
-        public static class UnitMaster
-        {
-            public const string Main = $"{Base}/UnitMaster";
-
-            public const string UnitPopup = $"{Main}/FillUnit";
-        }
+      
 
         public static class TaxType
         {
@@ -297,12 +296,26 @@ namespace Dfinance.Shared.Routes.v1
 
             public const string TaxTypeDropDown = $"{Main}/FillTaxType";
         }
+
+        public static class Role
+        {
+            public const string Main = $"{Base}/Role";
+            public const string FillRole = $"{Main}/fillrole";
+            public const string FillRoleRight = $"{Main}/fillroleright";
+            public const string FillRoleAndRight = $"{Main}/fillroleandright";
+            public const string Saverole = $"{Main}/Saverole";
+            public const string UpdateRole = $"{Main}/UpdateRole";
+            public const string DeleteRole = $"{Main}/Deleterole";
+        }
         public static class LabelGrid
         {
             public const string Main = $"{Base}/LabelGrid";
-
             public const string Getlabel = $"{Main}/Getlabel";
             public const string Getgrid = $"{Main}/Getgrid";
+            public const string UpdateLabel = $"{Main}/UpdateLabel";
+            public const string Updategrid = $"{Main}/Updategrid";
+            public const string labelGridpopup = $"{Main}/labelGridpopup";
+
         }
     }
 }

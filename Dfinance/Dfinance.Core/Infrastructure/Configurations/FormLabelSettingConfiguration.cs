@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
+using Dfinance.Core.Domain;
 
 namespace Dfinance.Core.Infrastructure.Configurations
 {

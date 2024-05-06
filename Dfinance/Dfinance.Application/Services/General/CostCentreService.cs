@@ -67,7 +67,10 @@ namespace Dfinance.Application.Services.General
                 int CreatedBy = _authService.GetId().Value;
                 int CreatedBranchId = _authService.GetBranchId().Value;
                 DateTime CreatedOn = DateTime.Now;
-
+                var consultancy = _context.FiMaAccounts.Any(f => f.Id == costCentreDto.Consultancy);
+                var client= _context.FiMaAccounts.Any(f => f.Id == costCentreDto.Client);
+                var engineer= _context.FiMaAccounts.Any(f => f.Id == costCentreDto.Engineer);
+                var foreman= _context.FiMaAccounts.Any(f => f.Id == costCentreDto.Foreman);
                 SqlParameter newIdParam = new SqlParameter("@NewID", SqlDbType.Int)
                 {
                     Direction = ParameterDirection.Output
@@ -86,7 +89,7 @@ namespace Dfinance.Application.Services.General
                     null,
                     costCentreDto.SerialNo,
                     costCentreDto.RegNo,
-                    costCentreDto.Consultancy,
+                    consultancy? costCentreDto.Consultancy:null,
                     costCentreDto.Status.Value,
                     costCentreDto.Remarks,
                     costCentreDto.Rate,
@@ -96,10 +99,10 @@ namespace Dfinance.Application.Services.General
                     costCentreDto.EndDate,
                     costCentreDto.ContractValue,
                     costCentreDto.InvoiceValue,
-                    costCentreDto.Client,
-                    costCentreDto.Engineer,
+                    client? costCentreDto.Client:null,
+                    engineer? costCentreDto.Engineer:null,
                     null,
-                    costCentreDto.Foreman,
+                    foreman? costCentreDto.Foreman:null,
                     costCentreDto.Site,
                     costCentreDto.IsGroup,
                     costCentreDto.Category.Id,
@@ -131,12 +134,15 @@ namespace Dfinance.Application.Services.General
                 {                
                     return CommonResponse.NotFound("This CostCentre is Not Found");
                 }
-
+                var consultancy = _context.FiMaAccounts.Any(f => f.Id == costCentreDto.Consultancy);
+                var client = _context.FiMaAccounts.Any(f => f.Id == costCentreDto.Client);
+                var engineer = _context.FiMaAccounts.Any(f => f.Id == costCentreDto.Engineer);
+                var foreman = _context.FiMaAccounts.Any(f => f.Id == costCentreDto.Foreman);
                 int CreatedBy = _authService.GetId().Value;
                 int CreatedBranchId = _authService.GetBranchId().Value;
                 DateTime CreatedOn = DateTime.Now;
                 string criteria = "Update";
-                var result = _context.Database.ExecuteSqlRaw($"EXEC CostCentreSP @Criteria='{criteria}',@ID='{Id}',@Code='{costCentreDto.Code}',@Description='{costCentreDto.Name}',@InActive='{costCentreDto.Active}',@PType='{costCentreDto.Nature}',@Type='{null}',@SerialNo='{costCentreDto.SerialNo}',@RegNo='{costCentreDto.RegNo}',@SupplierID='{costCentreDto.Consultancy}',@Status='{costCentreDto.Status.Value}',@Remarks='{costCentreDto.Remarks}',@Rate='{costCentreDto.Rate}',@SDate='{costCentreDto.StartDate}',@Make='{costCentreDto.Make}',@MYear='{costCentreDto.MakeYear}',@EDate='{costCentreDto.EndDate}',@ContractValue='{costCentreDto.ContractValue}',@InvoicedAmt='{costCentreDto.InvoiceValue}',@ClientID='{costCentreDto.Client}',@StaffID='{costCentreDto.Engineer}',@IsPaid='{null}',@StaffID1='{costCentreDto.Foreman}',@Site='{costCentreDto.Site}',@IsGroup='{costCentreDto.IsGroup}',@CostCategoryID='{costCentreDto.Category.Id}',@ParentID='{costCentreDto.CreateUnder.Id}',@CreatedOn='{CreatedOn}',@CreatedBy='{CreatedBy}',@CreatedBranchID='{CreatedBranchId}'");
+                var result = _context.Database.ExecuteSqlRaw($"EXEC CostCentreSP @Criteria='{criteria}',@ID='{Id}',@Code='{costCentreDto.Code}',@Description='{costCentreDto.Name}',@InActive='{costCentreDto.Active}',@PType='{costCentreDto.Nature.Key}',@Type='{null}',@SerialNo='{costCentreDto.SerialNo}',@RegNo='{costCentreDto.RegNo}',@SupplierID='{(consultancy? costCentreDto.Consultancy:null)}',@Status='{costCentreDto.Status.Value}',@Remarks='{costCentreDto.Remarks}',@Rate='{costCentreDto.Rate}',@SDate='{costCentreDto.StartDate}',@Make='{costCentreDto.Make}',@MYear='{costCentreDto.MakeYear}',@EDate='{costCentreDto.EndDate}',@ContractValue='{costCentreDto.ContractValue}',@InvoicedAmt='{costCentreDto.InvoiceValue}',@ClientID='{costCentreDto.Client}',@StaffID='{costCentreDto.Engineer}',@IsPaid='{null}',@StaffID1='{costCentreDto.Foreman}',@Site='{costCentreDto.Site}',@IsGroup='{costCentreDto.IsGroup}',@CostCategoryID='{costCentreDto.Category.Id}',@ParentID='{costCentreDto.CreateUnder.Id}',@CreatedOn='{CreatedOn}',@CreatedBy='{CreatedBy}',@CreatedBranchID='{CreatedBranchId}'");
                 return CommonResponse.Ok("CostCentre Updated Successfully");
             }
             catch (Exception ex)
