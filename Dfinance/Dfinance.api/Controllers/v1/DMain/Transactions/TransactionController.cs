@@ -14,18 +14,18 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
         {
             _transfactory = transfactory;
         }
-        [HttpGet(InvRoute.Transactions.getsalesman)]
-        public IActionResult GetSalesMan()
-        {
-            try
-            {
-                var data = _transfactory.GetSalesman();
-                return Ok(data);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
+        //[HttpGet(InvRoute.Transactions.getsalesman)]
+        //public IActionResult GetSalesMan()
+        //{
+        //    try
+        //    {
+        //        var data = _transfactory.GetSalesman();
+        //        return Ok(data);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }
+        //}
     }
 }
