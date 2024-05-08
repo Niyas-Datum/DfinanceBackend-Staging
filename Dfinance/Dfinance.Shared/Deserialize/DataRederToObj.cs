@@ -18,7 +18,25 @@ namespace Dfinance.Shared.Deserialize
                 {
                     if (!reader.IsDBNull(reader.GetOrdinal(prop.Name)))
                     {
-                        prop.SetValue(obj, reader[prop.Name]);
+                        var value = reader[prop.Name];
+                        var propertyType = prop.PropertyType;
+
+                        if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
+                        {
+                            propertyType = Nullable.GetUnderlyingType(propertyType);
+                        }
+
+                        if (propertyType == typeof(int))
+                        {
+                            if (int.TryParse(value.ToString(), out int intValue))
+                            {
+                                prop.SetValue(obj, intValue);
+                            }
+                        }
+                        else
+                        {
+                            prop.SetValue(obj, Convert.ChangeType(value, propertyType));
+                        }
                     }
                 }
 

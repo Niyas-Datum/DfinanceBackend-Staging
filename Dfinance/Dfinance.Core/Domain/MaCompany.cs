@@ -123,6 +123,7 @@ namespace Dfinance.Core.Domain
         //relation with LocationBranchList
         public virtual ICollection<LocationBranchList> LocationBranchList { get; set; }
         public virtual ICollection<FiTransaction> FiTransactions { get; set; }
-        
+        public virtual ICollection<MaChargeType> MaChargeTypes { get; set; }
+
     }
 }

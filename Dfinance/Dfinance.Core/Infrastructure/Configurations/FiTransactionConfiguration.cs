@@ -8,13 +8,14 @@ namespace Dfinance.Core.Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder<FiTransaction> builder)
         {
+            builder.ToTable("FiTransactions");
             builder.HasIndex(e => new { e.CompanyId, e.VoucherId, e.TransactionNo }, "IX_FiTransactions");
 
             builder.HasIndex(e => new { e.VoucherId, e.CompanyId }, "IX_FiTransactions_1");
 
             builder.HasIndex(e => new { e.VoucherId, e.TransactionNo, e.CompanyId }, "uq_FiTransactions")
                 .IsUnique();
-
+           
             builder.Property(e => e.Id).HasColumnName("ID");
 
             builder.Property(e => e.AccountId).HasColumnName("AccountID");

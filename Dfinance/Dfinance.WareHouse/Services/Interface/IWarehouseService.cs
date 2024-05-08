@@ -5,6 +5,7 @@ namespace Dfinance.Warehouse.Services.Interface
     public interface IWarehouseService
     {
         CommonResponse WarehouseDropdown();
+        CommonResponse WarehouseDropdownUsingBranch();
         CommonResponse BranchWiseWarehouseFill();
         CommonResponse WarehouseFillMaster();
         CommonResponse WarehouseFillById(int Id);

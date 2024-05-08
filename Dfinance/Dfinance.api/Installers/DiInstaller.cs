@@ -24,6 +24,12 @@ using Dfinance.Stakeholder.Services.Interface;
 using Serilog.Formatting;
 using Dfinance.Warehouse.Services.Interface;
 using Dfinance.Warehouse.Services;
+using Dfinance.Inventory.Service.Interface;
+using Dfinance.Inventory.Service;
+//using Dfinance.Application.LabelAndGridSettings.Interface;
+//using Dfinance.Application.LabelAndGridSettings;
+using Dfinance.Purchase.Services;
+using Dfinance.Purchase.Services.Interface;
 using Dfinance.Application.LabelAndGridSettings.Interface;
 using Dfinance.Application.LabelAndGridSettings;
 
@@ -96,7 +102,7 @@ public class DiInstaller : IInstaller
 
         // service.AddScoped<ITaxTypeService, TaxTypeService>();
 
-        service.AddScoped<ITransactionAdditionalsService, TransactionAdditionalsService>();
+        //service.AddScoped<ITransactionAdditionalsService, TransactionAdditionalsService>();
 
         service.AddScoped<IWarehouseService, WarehouseService>();
 
@@ -104,6 +110,16 @@ public class DiInstaller : IInstaller
         service.AddScoped<IRoleService, RoleService>();
  //label&Grid
         service.AddScoped<ILabelAndGridSettings, LabelAndGridSettings>();
-        
+		
+		 //commonservice in inventory
+        service.AddScoped<Dfinance.Inventory.CommonService>();
+        	 //purchase
+      
+        service.AddScoped<IInventoryTransactionService, InventoryTransactionService>();
+        service.AddScoped<IInventoryAdditional, InventoryAdditional>();
+        service.AddScoped<IInventoryItemService, InventoryItemservice>();
+        service.AddScoped<IInventoryPaymentService, InventoryPaymentService>();
+        service.AddScoped<IInventoryTransFactory, InventoryTransFactory>();
+        service.AddScoped<IPurchaseService, PurchaseService>();
     }
 }

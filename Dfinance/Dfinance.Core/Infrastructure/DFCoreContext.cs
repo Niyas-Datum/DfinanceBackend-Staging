@@ -33,7 +33,7 @@ public partial class DFCoreContext : DbContext
         _connectionServices = connectionServices;
         con = _connectionServices.getcon();
     }
-
+    
     public DbSet<ItemMultiRate> ItemMultiRate { get; set; }   
     public DbSet<BranchItems> BranchItems { get; set; }
     public DbSet<TaxType> TaxType { get; set; }
@@ -79,6 +79,8 @@ public partial class DFCoreContext : DbContext
     public DbSet<TblMaFinYear> TblMaFinYear { get; set; }
     public DbSet<MaCustomerDetails> MaCustomerDetails { get; set; }
     public DbSet<MaCustomerCategories> MaCustomerCategories { get; set; }
+    public DbSet<MaCustomerItems> MaCustomerItems { get; set; }
+
     public DbSet<DeliveryDetails>DeliveryDetails { get; set; }
     public DbSet<MaPriceCategory> MaPriceCategory { get; set; }
 
@@ -87,15 +89,22 @@ public partial class DFCoreContext : DbContext
     public DbSet<LocationTypes> LocationTypes { get; set; }
     public DbSet<LocationBranchList> LocationBranchList { get; set; }
 
-    //TransactionAddtionals
+    //Transaction
+    public DbSet<FiTransaction> FiTransaction { get; set; }
     public DbSet<FiTransactionAdditionals> FiTransactionAdditionals { get; set; }
-
-    public DbSet<FiTransaction> FiTransaction{ get; set; }
-
+    public DbSet<TransReference> TransReference { get; set; }
+ //InvTransItems
+    public DbSet<InvTransItems> InvTransItems { get; set; }
+    public DbSet<InvAvgCost> InvAvgCost {  get; set; }
+public DbSet<InvUniqueItems> InvUniqueItems { get; set; }
+   // public DbSet<InvBatchWiseItem> InvBatchWiseItem { get; set; }
+  
     //MaVehicle
     public DbSet<MaVehicles> MaVehicles { get; set; }
 
-
+    public DbSet<FiTransactionEntry> TransactionEntries { get; set; }
+    public DbSet<FiVoucherAllocation> FiVoucherAllocation { get; set; }
+    public DbSet<TransExpense> TransactionExpense { get; set; }
 
     //view init
 
@@ -210,15 +219,31 @@ public DbSet <UserTrack> UserTrack { get; set; }
 
     //FitransactionAdditonals
     public DbSet<SpGetTransactionAdditionals> SpGetTransactionAdditionals { get; set; }
+public DbSet<ReferenceView> ReferenceView {  get; set; }
+public DbSet<NextBatchNoView> NextBatchNoView { get; set; }
 public DbSet<TransItemsView> TransItemsView { get; set; }
     public DbSet<CommandTextView> CommandTextView { get; set; }
+    public DbSet<ItemTransaction> ItemTransaction { get; set; }
+    public DbSet<DropDownViewIsdeft> DropDownViewIsdeft { get; set; }
 
+    //purchase
+    public DbSet<FillAdvanceView> FillAdvanceView { get; set; }
+    public DbSet<Fillvoucherview> Fillvoucherview {  get; set; }
+    public DbSet<PriceCategoryPopUp> PriceCategoryPopUp { get; set; }
 
  //Roles
 
     public DbSet<MaRoles> UserRoles { get; set; }
     public DbSet<MaRoleRight> MaRoleRights { get; set; }
 
+ //Cheque
+    public DbSet<FiCheques> fiCheques { get; set; }
+ //FimaUniqueAccounts
+    public DbSet<FimaUniqueAccount> FimaUniqueAccount { get; set; }
+    //ChargeType
+    public DbSet<MaChargeType> MaChargeType { get; set; }
+	 public DbSet<TransCollection> TransCollections { get; set; }
+    public DbSet<TransCollnAllocation> TransCollnAllocations { get; set; }
     public DbSet<FillRole> FillRole { get; set; }
     public DbSet<FillRoleRight> FillRoleRight { get; set; }
     public DbSet<SpFillRoles> SpFillRoles { get; set; }
@@ -263,6 +288,7 @@ public DbSet<TransItemsView> TransItemsView { get; set; }
         mb.ApplyConfiguration(new CategoryConfiguration());
         mb.ApplyConfiguration(new CategoryTypeConfiguration());
         mb.ApplyConfiguration(new FiMaVouchersConfiguration());
+        mb.ApplyConfiguration(new FiVoucherAllocationsConfiguration());
         //settings
         mb.ApplyConfiguration(new MaSettingsConfiguration());
 		//currency 
@@ -273,6 +299,10 @@ public DbSet<TransItemsView> TransItemsView { get; set; }
         mb.ApplyConfiguration(new FiAccountsListConfiguration());
         mb.ApplyConfiguration(new FiMaAccountsListConfiguration());
 
+ //InvTransItems
+        mb.ApplyConfiguration(new InvTransItemConfiguration());
+        mb.ApplyConfiguration(new InvUniqueItemConfiguration());
+      //  mb.ApplyConfiguration(new InvBatwiseItemConfiguration());
  //Warehouse
         mb.ApplyConfiguration(new LocationsConfiguration());
         mb.ApplyConfiguration(new LocationTypesConfiguration());
@@ -286,6 +316,11 @@ public DbSet<TransItemsView> TransItemsView { get; set; }
         //TransactionAddition
         mb.ApplyConfiguration(new FiTransactionAdditionalConfiguration());
         mb.ApplyConfiguration(new FiTransactionConfiguration());
+        mb.ApplyConfiguration(new TransReferenceConfiguration());
+
+        mb.ApplyConfiguration(new FimaUniqueAccountConfiguration());
+        mb.ApplyConfiguration(new MaChargeTypeConfiguration());
+
         //View
 
         mb.Entity<CurrencyCode>().HasNoKey().ToView(null);
@@ -388,6 +423,23 @@ public DbSet<TransItemsView> TransItemsView { get; set; }
         mb.Entity<DropDownView>().HasNoKey().ToView(null);
 //UserTrack
         mb.Entity<UserTrackView>().HasNoKey().ToView(null); 
+ mb.Entity<FillAdvanceView>().HasNoKey().ToView(null);
+          mb.Entity<Fillvoucherview>().HasNoKey().ToView(null);
+		//TransItems
 
+
+        mb.Entity<TransItemsView>().HasNoKey().ToView(null);
+        mb.Entity<CommandTextView>().HasNoKey().ToView(null);
+        mb.Entity<NextBatchNoView>().HasNoKey().ToView(null);
+        mb.Entity<ItemTransaction>().HasNoKey().ToView(null);
+        mb.ApplyConfiguration(new TransCollectionConfiguration());
+        mb.ApplyConfiguration(new TransCollnAllocationConfiguration());
+		  mb.ApplyConfiguration(new MaChargeTypeConfiguration());
+        mb.ApplyConfiguration(new FimaUniqueAccountConfiguration());
+	 mb.Entity<ReferenceView>().HasNoKey().ToView(null);
+        mb.Entity<DropDownViewIsdeft>().HasNoKey().ToView(null);
+     mb.Entity<FillPartyView>().HasNoKey().ToView(null);//inventory=>Customer/supplier dropdown
+
+mb.Entity<PriceCategoryPopUp>().HasNoKey().ToView(null);
     }
 }

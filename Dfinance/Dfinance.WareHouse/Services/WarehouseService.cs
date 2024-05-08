@@ -30,6 +30,15 @@ namespace Dfinance.Warehouse.Services
         {
             var data = _context.DropDownViewName.FromSqlRaw("Exec DropDownListSP @Criteria = 'FillLocationTypes'").ToList();
             return CommonResponse.Ok(data);
+        }  /// <summary> 
+           /// DropDown Location type 
+           /// </summary>
+           /// <returns>Id,Name</returns>
+        public CommonResponse WarehouseDropdownUsingBranch()
+        {
+            int createdBranchId = _authService.GetBranchId().Value;
+            var data = _context.DropDownViewIsdeft.FromSqlRaw($"Exec spLocations @Criteria = 'FillLocationusingBranch',@BranchID='{createdBranchId}'").ToList();
+            return CommonResponse.Ok(data);
         }
         /// <summary>
         /// Fill Warehouse details in Side bar

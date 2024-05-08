@@ -29,6 +29,49 @@ namespace Dfinance.Shared.Routes
             public const string Delete = $"{Main}/delete";
             public const string GetByTransactionId = $"{Main}/getByTrnId";
         }
+		
+		  public class InventroyTransactions
+        {
+            public const string Main = $"{Base}/invtrans";
+            public const string getsalesman = $"{Main}/fillsalesman";
+            public const string getvoucherno = $"{Main}/getvocno";
+            public const string getreference = $"{Main}/getrefer";
+            public const string DeletePurchase = $"{Main}/delete";
+        }
+        public class Purchase
+        {
+            public const string Main = $"{Base}/purchase";
+            public const string Savepurchase = $"{Main}/savepurchase";
+            public const string Updatepurchase = $"{Main}/updatepurchase";
+            public const string Fillpurchasebyid = $"{Main}/fillpurchasebyid";
+            public const string Fillpurchase = $"{Main}/fillpurchase";
+            public const string Delpurchase = $"{Main}/delpurchase";
+            public const string fillitems = $"{Main}/fillitems";
+            public const string GetData = $"{Main}/getdata";
+            public const string GetSupplier = $"{Main}/getsupplier";
+
+        }
+        public class InventoryPaymentTransaction
+        {
+            public const string Main = $"{Base}/invpaytrans";
+            public const string FillTax = $"{Main}/popupTax";
+            public const string FillAddCharge = $"{Main}/popupAddCharge";
+            public const string FillCash = $"{Main}/popupCash";
+            public const string FillCard = $"{Main}/popupCard";
+            public const string FillEpay = $"{Main}/popupEpay";
+            public const string FillAdvance = $"{Main}/popupAdvance";
+            public const string FillCheque = $"{Main}/popupCheque";
+            public const string FillBankName = $"{Main}/popupBankName";
+            public const string SaveCheque = $"{Main}/SaveCheque";
+
+        }
+        public class InventoryItem
+        {
+            public const string Main = $"{Base}/invitem";
+            public const string getItems = $"{Main}/getItems";
+            public const string DeleteItems = $"{Main}/delItems";
+            public const string ItemTransData = $"{Main}/itemtransdata";
+        }
         public static class UnitMaster
         {
             public const string Main = $"{Base}/UnitMaster";
