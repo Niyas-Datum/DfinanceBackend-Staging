@@ -27,10 +27,10 @@ namespace Dfinance.Core.Domain
         public decimal? Discount { get; set; }
 
         //relationships
-        public ICollection<ItemMaster> Items { get; set; }
-        
+        public ICollection<ItemMaster> Items { get; set; }//with ItemMaster
+        public ICollection<InvTransItems> InvTransItems { get; set;}//with InvTransItems
 
-
+        public virtual ICollection<MaCustomerItems> MaCustomerItems { get; set; }
 
     }
 }

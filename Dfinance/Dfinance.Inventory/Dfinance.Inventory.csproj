@@ -9,7 +9,9 @@
   <ItemGroup>
     <ProjectReference Include="..\Dfinance.Application\Dfinance.Application.csproj" />
     <ProjectReference Include="..\Dfinance.AuthApplication\Dfinance.AuthApplication.csproj" />
+    <ProjectReference Include="..\Dfinance.Core\Dfinance.Core.csproj" />
     <ProjectReference Include="..\Dfinance.DataModels\Dfinance.DataModels.csproj" />
+    <ProjectReference Include="..\Dfinance.Item\Dfinance.Item.csproj" />
     <ProjectReference Include="..\Dfinance.Shared\Dfinance.Shared.csproj" />
   </ItemGroup>
 

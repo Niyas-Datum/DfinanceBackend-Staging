@@ -23,4 +23,10 @@ namespace Dfinance.Core.Views.Common
         public int Id { get; set; }
         public string Description { get; set; }
     }
+    public class DropDownViewIsdeft
+    {
+        public int ID { get; set; }
+        public string? Name { get; set; }
+        public bool? IsDefault { get; set; }
+    }
 }

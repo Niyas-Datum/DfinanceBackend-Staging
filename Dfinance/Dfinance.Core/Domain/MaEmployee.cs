@@ -80,4 +80,5 @@ public partial class MaEmployee
 	 public virtual ICollection<Locations> Locations { get; set; }
     //relation with Location Types
     public virtual ICollection<LocationTypes> LocationTypes { get; set; }
+    public virtual ICollection<MaChargeType> MaChargeTypes { get; set; }
 }

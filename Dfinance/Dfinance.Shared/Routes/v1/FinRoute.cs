@@ -26,6 +26,9 @@ namespace Dfinance.Shared.Routes.v1
             public const string AccountGroup = $"{Main}/accgrps";
             public const string AccountCategory = $"{Main}/acccat";
             public const string DeleteAccount = $"{Main}/delacc";
+            public const string Accounts = $"{Main}/getacc";
+            public const string AccountsGroup = $"{Main}/getaccgrp";
+
 
         }
         public static class Currency

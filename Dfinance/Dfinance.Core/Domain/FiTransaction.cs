@@ -1,6 +1,7 @@
 ﻿using Dfinance.Core.Domain;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
@@ -68,9 +69,11 @@ namespace Dfinance.Core
         //public virtual ICollection<EduFeeDetail> EduFeeDetails { get; set; }
         //public virtual ICollection<EduFeePostingDetail> EduFeePostingDetails { get; set; }
         public virtual ICollection<FiTransactionAdditionals> FiTransactionAdditionalRefTransId1Navigations { get; set; }
-        //public virtual ICollection<FiTransactionEntry> FiTransactionEntries { get; set; }
-        //public virtual ICollection<FiVoucherAllocation> FiVoucherAllocationRefTrans { get; set; }
-        //public virtual ICollection<FiVoucherAllocation> FiVoucherAllocationVidNavigations { get; set; }
+        public virtual ICollection<FiTransactionEntry> FiTransactionEntries { get; set; }
+       
+        public virtual ICollection<FiVoucherAllocation> FiVoucherAllocationRefTrans { get; set; }
+       
+        public virtual ICollection<FiVoucherAllocation> FiVoucherAllocationVidNavigations { get; set; }
         //public virtual ICollection<HmsconsultationDetail> HmsconsultationDetails { get; set; }
         //public virtual ICollection<HmseyeTest> HmseyeTests { get; set; }
         //public virtual ICollection<HmsgeneralFinding> HmsgeneralFindings { get; set; }
@@ -83,18 +86,18 @@ namespace Dfinance.Core
         //public virtual ICollection<Hrsalary> Hrsalaries { get; set; }
         //public virtual ICollection<HrtimeSheetDetail> HrtimeSheetDetails { get; set; }
         //public virtual ICollection<InvOptic> InvOptics { get; set; }
-        //public virtual ICollection<InvTransItem> InvTransItems { get; set; }
-        //public virtual ICollection<InvUniqueItem> InvUniqueItems { get; set; }
+        public virtual ICollection<InvTransItems> InvTransItems { get; set; }
+        public virtual ICollection<InvUniqueItems> InvUniqueItems { get; set; }
         public virtual ICollection<FiTransaction> InverseRefTrans { get; set; }
         //public virtual ICollection<JobDetail> JobDetails { get; set; }
-        //public virtual ICollection<TransCollection> TransCollections { get; set; }
+        public virtual ICollection<TransCollection> TransCollections { get; set; }
         //public virtual ICollection<TransCriterion> TransCriteria { get; set; }
         //public virtual ICollection<TransEmployee> TransEmployees { get; set; }
-        //public virtual ICollection<TransExpense> TransExpenses { get; set; }
+        public virtual ICollection<TransExpense> TransExpenses { get; set; }
         //public virtual ICollection<TransItemExpense> TransItemExpenses { get; set; }
         //public virtual ICollection<TransLoadSchedule> TransLoadSchedules { get; set; }
-        //public virtual ICollection<TransReference> TransReferenceRefTrans { get; set; }
-        //public virtual ICollection<TransReference> TransReferenceTransactions { get; set; }
+        public virtual ICollection<TransReference> TransReferenceRefTrans { get; set; }
+        public virtual ICollection<TransReference> TransReferenceTransactions { get; set; }
         //public virtual ICollection<TransReminder> TransReminders { get; set; }
         //public virtual ICollection<TransShippingItem> TransShippingItems { get; set; }
     }

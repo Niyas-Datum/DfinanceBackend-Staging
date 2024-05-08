@@ -56,5 +56,12 @@ public partial class FiMaAccount
     public ICollection<ItemMaster> Items { get; set; }
     public virtual ICollection<FiTransaction>? FiTransactions { get; set; }
 
+    //relationship with InvTransItem
+    public ICollection<InvTransItems>? InvTransItems { get; set; }
+    public virtual ICollection<FiVoucherAllocation>? FiVoucherAllocations { get; set; }
+    public virtual ICollection<FiTransactionEntry>? FiTransactionEntries { get; set; }
+    public virtual ICollection<FimaUniqueAccount>? FimaUniqueAccounts { get; set; }
+    public virtual ICollection<MaChargeType>? MaChargeTypeAccounts { get; set; }
+    public virtual ICollection<MaChargeType>? MaChargeTypePayableAccounts { get; set; }
 
 }

@@ -94,7 +94,7 @@ namespace Dfinance.Core.Domain
 
         public virtual ICollection<MaCustomerDetails> MaCustomerDetails { get; set; } = new List<MaCustomerDetails>();
 
-        // public virtual ICollection<MaCustomerItem> MaCustomerItems { get; set; } = new List<MaCustomerItem>();
+         public virtual ICollection<MaCustomerItems> MaCustomerItems { get; set; } = new List<MaCustomerItems>();
 
         public virtual MaPriceCategory? PriceCategory { get; set; }
     }

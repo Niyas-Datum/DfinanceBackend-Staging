@@ -233,10 +233,10 @@ namespace Dfinance.Shared.Routes.v1
             public const string SaveCustmsupp = $"{Main}/save";
             public const string GetCode = $"{Main}/getcode";
             public const string GetCategory = $"{Main}/getcat";
-            
+            public const string supplier = $"{Main}/getsupplier";
             public const string GetType = $"{Main}/gettype";
-            public const string update = $"{Main}/update";
-           
+            public const string update = $"{Main}/update"; 
+            public const string FillParty = $"{Main}/fillparty";
         }
         public static class CustomerDetails
         {
@@ -244,6 +244,7 @@ namespace Dfinance.Shared.Routes.v1
             public const string GetPriceCategory = $"{Main}/getpricecatg";
             public const string CustomerCategories = $"{Main}/getcategory";
             public const string GetCommodity = $"{Main}/getcomdity";
+            public const string customer = $"{Main}/getcustomer";
         }
         public static class HR
         {

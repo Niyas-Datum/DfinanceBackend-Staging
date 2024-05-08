@@ -23,6 +23,7 @@
     <ProjectReference Include="..\Dfinance.Inventory\Dfinance.Inventory.csproj" />
     <ProjectReference Include="..\Dfinance.Item\Dfinance.Item.csproj" />
     <ProjectReference Include="..\Dfinance.LogViewer\Dfinance.LogViewer.csproj" />
+    <ProjectReference Include="..\Dfinance.Purchase\Dfinance.Purchase.csproj" />
     <ProjectReference Include="..\Dfinance.Shared\Dfinance.Shared.csproj" />
     <ProjectReference Include="..\Dfinance.AuthApplication\Dfinance.AuthApplication.csproj" />
     <ProjectReference Include="..\Dfinance.AuthCore\Dfinance.AuthCore.csproj" />

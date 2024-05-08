@@ -89,6 +89,9 @@ namespace Dfinance.Core.Domain
         public ICollection<BranchItems> BranchItems { get; set; }
 
         public ICollection<ItemMultiRate> MultiRate {  get; set; }
-
+        public ICollection<InvTransItems> InvTransItemItems { get; set;}//with InvTransItems
+        public ICollection<InvTransItems> InvTransItemGroupItems { get; set; }
+        public ICollection<InvTransItems> InvTransItemStockItems { get; set; }
+        public ICollection<InvUniqueItems> InvUniqueItems { get; set; }
     }
 }
