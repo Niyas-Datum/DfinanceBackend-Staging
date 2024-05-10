@@ -67,6 +67,13 @@ public partial class DFCoreContext : DbContext
     public DbSet<CategoryType> CategoryType { get; set; }
     //General(Perties(C&S)
     public DbSet<Parties> Parties { get; set; } 
+	public DbSet<FillPartyView> FillPartyView { get; set; }
+    public DbSet<FillSideBar>FillSideBars { get; set; }
+    public DbSet<FillPartyById> FillPartyById { get; set; }
+    public DbSet<FillCustdetails> FillCustdetails { get; set; }
+    public DbSet<FillDeldetails> FillDeldetails { get; set; }
+
+
     //MaSettings
     public DbSet<MaSettings> MaSettings { get; set; }
    
@@ -200,6 +207,9 @@ public DbSet <UserTrack> UserTrack { get; set; }
 
     //--------------UnitMaster----------------------------------------
     public DbSet<UnitPopupView> UnitPopupView { get; set; }
+ //fillcustomeritem=>Customer&supplier
+    public DbSet<FillCustomeritem> FillCustomeritem { get;set; }
+    public DbSet<CrdtCollView> CrdtCollView { get; set; }
 	//UnitMaster
     //public DbSet<UnitMaster> UnitMaster { get; set; }
     public DbSet<SpFillUnitMaster> SpFillUnitMaster { get; set; }
@@ -207,8 +217,7 @@ public DbSet <UserTrack> UserTrack { get; set; }
     public DbSet<DropDownView> DropDownView { get; set; } 
     //------------------------------------------------------------------
     public DbSet<FillSetting> FillSetting { get; set; }
-    //fillcustomeritem=>Customer&supplier
-    public DbSet<FillCustomeritem> FillCustomeritem { get;set; }
+   
 
  
     //Fillwarehouse=>Warehousemaster
@@ -439,7 +448,10 @@ public DbSet<TransItemsView> TransItemsView { get; set; }
 	 mb.Entity<ReferenceView>().HasNoKey().ToView(null);
         mb.Entity<DropDownViewIsdeft>().HasNoKey().ToView(null);
      mb.Entity<FillPartyView>().HasNoKey().ToView(null);//inventory=>Customer/supplier dropdown
-
-mb.Entity<PriceCategoryPopUp>().HasNoKey().ToView(null);
+        mb.Entity<FillPartyById>().HasNoKey().ToView(null);
+        mb.Entity<FillCustdetails>().HasNoKey().ToView(null);
+        mb.Entity<FillDeldetails>().HasNoKey().ToView(null);
+        mb.Entity<CrdtCollView>().HasNoKey().ToView(null);
+        mb.Entity<PriceCategoryPopUp>().HasNoKey().ToView(null);
     }
 }

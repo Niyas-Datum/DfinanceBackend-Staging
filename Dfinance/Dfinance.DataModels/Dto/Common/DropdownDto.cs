@@ -20,8 +20,8 @@ namespace Dfinance.DataModels.Dto.Common
 
     public class  DropDownDtoNature
     {
-        public string Key {  get; set; }
-        public string Value { get; set; }
+        public string? Key {  get; set; }
+        public string? Value { get; set; }
     }
     public class DropDownDesc
     {

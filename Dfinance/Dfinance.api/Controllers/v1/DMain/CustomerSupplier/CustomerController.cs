@@ -17,20 +17,7 @@ namespace Dfinance.api.Controllers.v1.DMain.CustomerSupplier
         {
             _custSuppService = custSuppService;
         }
-        [HttpGet(ApiRoutes.CustomerDetails.GetCommodity)]
-
-        public IActionResult GetCommodity()
-        {
-            try
-            {
-                var result = _custSuppService.FillCommodity();
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
+        
 
         [HttpGet(ApiRoutes.CustomerDetails.GetPriceCategory)]
 
@@ -53,6 +40,34 @@ namespace Dfinance.api.Controllers.v1.DMain.CustomerSupplier
             try
             {
                 var result = _custSuppService.FillCustomerCategories();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet(ApiRoutes.CustomerDetails.customer)]
+
+        public IActionResult GetCustomer()
+        {
+            try
+            {
+                var result = _custSuppService.FillCustomer();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet(ApiRoutes.CustomerDetails.CreditDropdown)]
+
+        public IActionResult CrdtCollDropdown()
+        {
+            try
+            {
+                var result = _custSuppService.CrdtCollDropdown();
                 return Ok(result);
             }
             catch (Exception ex)

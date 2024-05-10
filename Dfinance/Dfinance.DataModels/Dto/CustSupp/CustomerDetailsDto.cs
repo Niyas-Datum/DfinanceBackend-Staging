@@ -4,26 +4,26 @@ namespace Dfinance.DataModels.Dto.CustSupp
 {
     public class CustomerDetailsDto
     {
-        public int? CommoditySought { get; set; }
-        public DropdownDto? SalesType { get; set; }  // {Cash/Credit}
+        public List<DropdownDto>? CommoditySought { get; set; }
+        public DropDownDtoNature? SalesType { get; set; }  // {Cash/Credit}-CashCreditType
         public int? QuantityPlanned { get; set; }
         public decimal? BasicUnit { get; set; }
-        public DropdownDto? CreditCollectionType { get; set; }
+        public DropDownDtoNature? CreditCollectionType { get; set; }//[CreditCollnThru]{Direct}
         public string? DL1 { get; set; }
         public string? DL2 { get; set; }
         public DropDownDtoName? PriceCategory { get; set; }
-        public DropdownDto? PlaceOfSupply { get; set; }
+        public DropdownDto? PlaceOfSupply { get; set; }//popup-pass the value to backend
 
         // Business Details
-        public DropdownDto? BusinessType { get; set; } // BusPrimaryType {Primary(P)/Secondary(S)}
-        public DropdownDto? AvailedAnyLoanLimits { get; set; } // isLoanAvailable {Yes(Y)/No(N)}
-        public DropdownDto? BusinessNature { get; set; } // BusRetailType {Retail(R)/Wholesale(W)}
+        public DropDownDtoNature? BusinessType { get; set; } // BusPrimaryType {Primary(P)/Secondary(S)}
+        public DropDownDtoNature? AvailedAnyLoanLimits { get; set; } // isLoanAvailable {Yes(Y)/No(N)}
+        public DropDownDtoNature? BusinessNature { get; set; } // BusRetailType {Retail(R)/Wholesale(W)}
         public string? OtherMerchantsOfCustomer { get; set; } // MainMerchants input value {Owned(O),Rental(R)}
-        public DropdownDto? BusinessAddress { get; set; } // AddressOwned
+        public DropDownDtoNature? BusinessAddress { get; set; } // AddressOwned
         public decimal? ValueOfProperty { get; set; } // Value of Property
         public int? YearsOfBusiness { get; set; } // BusYear 
         public decimal? YearlyTurnover { get; set; } // BusYearTurnover
-        public string? MarketReputation { get; set; } // MarketReputation
+        public DropDownDtoNature? MarketReputation { get; set; } // MarketReputation
 
         // For Branch
         public DropDownDtoName? CategoryRecommended { get; set; } // BandByImportId
