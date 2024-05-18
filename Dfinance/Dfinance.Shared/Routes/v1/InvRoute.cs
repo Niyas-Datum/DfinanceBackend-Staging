@@ -11,6 +11,7 @@ namespace Dfinance.Shared.Routes
         {
             public const string Main = $"{Base}/warehouse";
             public const string DropdownLocationTypes = $"{Main}/dropdown";
+            public const string DropdownBranch = $"{Main}/dropdownbranch";
             public const string GetAll = $"{Main}/get";
             public const string GetById = $"{Main}/getbyid";
             public const string GetBWFill = $"{Main}/getBW";

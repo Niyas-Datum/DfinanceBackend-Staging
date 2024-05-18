@@ -1,64 +1,58 @@
 ﻿using Dfinance.AuthAppllication.Services.Interface;
 using Dfinance.Core.Infrastructure;
-using Dfinance.Core.Views.Common;
 using Dfinance.DataModels.Dto.CustSupp;
 using Dfinance.Shared.Domain;
 using Dfinance.Stakeholder.Services.Interface;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System.Data;
 
 namespace Dfinance.Stakeholder.Services
 {
-    public class CustomerService:ICustomerService
+    public class CustomerService : ICustomerService
     {
         private readonly DFCoreContext _context;
         private readonly IAuthService _authService;
-
-        public CustomerService(DFCoreContext context, IAuthService authService )
+        private readonly ILogger<CustomerService> _logger;
+        public CustomerService(DFCoreContext context, IAuthService authService, ILogger<CustomerService> logger)
         {
             _context = context;
             _authService = authService;
-        }
-     /// <summary>
-     /// Fill Commodity Sought(Text Area(Customer Form))
-     /// </summary>
-     /// <returns>Id,PartyId,CommodityId</returns>
-        public CommonResponse FillCommodity()
+            _logger = logger;
+        } /// <summary>
+          /// 
+          /// </summary>
+          /// <returns></returns>
+        public CommonResponse FillCustomer()
         {
-            try
-            {
-                string criteria = "FillCustomerItems";
-                var result = _context.FillCustomeritem.FromSqlRaw($"EXEC PartyMasterSP @Criteria='{criteria}'").ToList();
+            int branchId = _authService.GetBranchId().Value;
 
-                return CommonResponse.Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return CommonResponse.Error(ex);
-            }
+            var Supp = _context.Parties
+                .Where(md => md.CompanyId == branchId && md.Nature == "C")
+                .Select(x => new
+                {
+                    Id = x.Id,
+                    Vatno = x.SalesTaxNo,
+                    Mobilenumber = x.MobileNo,
+                    Accountcode = x.Code,
+                    Accountname = x.Name,
+                    AccountId = x.AccountId
+                })
+                .ToList();
+            return CommonResponse.Ok(Supp);
         }
+
+
         /// <summary>
         /// Fill Price Category (DropDown)
         /// </summary>
         /// <returns>Id,Name</returns>
         public CommonResponse FillPriceCategory()
         {
-            try
-            {
-                string criteria = "FillPriceCategory";
-                var result = _context.DropDownViewName.FromSqlRaw($"EXEC DropDownListSP @Criteria='{criteria}'").ToList();
-                //var res = result.Select(x => new DropDownViewName
-                //{
-                //    ID = x.ID,
-                //    Name = x.Name,
-                //}).ToList();
-                return CommonResponse.Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return CommonResponse.Error(ex);
-            }
+            string criteria = "FillPriceCategory";
+            var result = _context.DropDownViewName.FromSqlRaw($"EXEC DropDownListSP @Criteria='{criteria}'").ToList();
+            return CommonResponse.Ok(result);
         }
         /// <summary>
         /// Fill CategoryRecommednded &Category Fixed(DropDown)
@@ -66,17 +60,23 @@ namespace Dfinance.Stakeholder.Services
         /// <returns>Id,name</returns>
         public CommonResponse FillCustomerCategories()
         {
-            try
-            {
-                string criteria = "FillMaCustomerCategories";
-                var CustomerCategories = _context.DropDownViewName.FromSqlRaw($"EXEC DropDownListSP @Criteria='{criteria}'").ToList();
-                return CommonResponse.Ok(CustomerCategories);
-            }
-            catch (Exception ex)
-            {
-                return CommonResponse.Error(ex);
-            }
+            string criteria = "FillMaCustomerCategories";
+            var CustomerCategories = _context.DropDownViewName.FromSqlRaw($"EXEC DropDownListSP @Criteria='{criteria}'").ToList();
+            return CommonResponse.Ok(CustomerCategories);
         }
+
+        /// <summary>
+        /// Fill CategoryRecommednded &Category Fixed(DropDown)
+        /// </summary>
+        /// <returns>Id,name</returns>
+        public CommonResponse CrdtCollDropdown()
+        {
+            string criteria = "CreditCollectionType";
+            var CustomerCategories = _context.CrdtCollView.FromSqlRaw($"EXEC DropDownListSP @Criteria='{criteria}'").ToList();
+            return CommonResponse.Ok(CustomerCategories);
+        }
+
+
         /// <summary>
         /// 
         /// </summary>
@@ -88,12 +88,16 @@ namespace Dfinance.Stakeholder.Services
         {
             try
             {
-                //party  == CustomerSupplierId
                 var CustmId = _context.MaCustomerDetails
                                       .Where(cd => cd.PartyId == PartyId)
                                       .Select(cd => cd.Id)
                                       .SingleOrDefault();
-
+                var custItems = new List<int>();
+                if (customerDetailsDto.CommoditySought.Count > 0)
+                {
+                    foreach (var c in customerDetailsDto.CommoditySought)
+                        custItems.Add(c.Id.Value);
+                }
 
                 if (CustmId == 0)
                 {
@@ -112,18 +116,18 @@ namespace Dfinance.Stakeholder.Services
                       PartyId,
                       customerDetailsDto.QuantityPlanned, //int
                       customerDetailsDto.BasicUnit,
-                      customerDetailsDto.SalesType.Id,
+                      customerDetailsDto.SalesType.Key,
                       CreditPeriod,
-                      customerDetailsDto.CreditCollectionType.Id,
-                      customerDetailsDto.BusinessType.Id,
-                      customerDetailsDto.BusinessNature.Id,
+                      customerDetailsDto.CreditCollectionType.Key,
+                      customerDetailsDto.BusinessType.Key,
+                      customerDetailsDto.BusinessNature.Key,
                       customerDetailsDto.YearsOfBusiness,
                       customerDetailsDto.YearlyTurnover,
-                      customerDetailsDto.AvailedAnyLoanLimits.Value, //int
+                      customerDetailsDto.AvailedAnyLoanLimits.Key,
                        customerDetailsDto.OtherMerchantsOfCustomer,
-                       customerDetailsDto.BusinessAddress.Id,
+                       customerDetailsDto.BusinessAddress.Key,
                        customerDetailsDto.ValueOfProperty,
-                       customerDetailsDto.MarketReputation,
+                       customerDetailsDto.MarketReputation.Key,
                        customerDetailsDto.CategoryRecommended.Id,
                        customerDetailsDto.LimitRecommended,
                        customerDetailsDto.CategoryFixed.Id,
@@ -136,13 +140,14 @@ namespace Dfinance.Stakeholder.Services
                        customerDetailsDto.SalesPriceUpVarLimit,
                         newIdCust
                     );
-                   // int NewCustId = (int)newIdCust.Value;
+
+                    SaveMaCustomerItems(PartyId, custItems);
+                    _logger.LogInformation("Customer Details Saved Successfully");
                     return true;
 
                 }
                 else
                 {
-
                     string criteria1 = "UpdateCustomerDetails";
                     _context.Database.ExecuteSqlRaw(
                       "EXEC PartyMasterSP @Criteria={0},@PartyID={1},@PlannedPcs={2},@PlannedCFT={3},@CashCreditType={4},@CreditPeriod={5},@CreditCollnThru={6},@BusPrimaryType={7},@BusRetailType={8},@BusYears={9},@BusYearTurnover={10},@IsLoanAvailed={11},@MainMerchants={12},@AddressOwned={13},@ValueofProperty={14},@MarketReputation={15},@BandByImportID={16},@SalesLimitByImport={17},@BandByHOID={18},@SalesLimitByHO={19},@CreditPeriodByHO={20},@OverdueLimitPerc={21},@OverduePeriodLimit={22},@ChequeBounceLimit={23},@SalesPriceLowVarPerc={24},@SalesPriceUpVarPerc={25},@ID={26}",
@@ -150,18 +155,18 @@ namespace Dfinance.Stakeholder.Services
                       PartyId,
                       customerDetailsDto.QuantityPlanned,
                       customerDetailsDto.BasicUnit,
-                      customerDetailsDto.SalesType.Id,
+                      customerDetailsDto.SalesType.Key,
                       CreditPeriod,
-                      customerDetailsDto.CreditCollectionType.Id,
-                      customerDetailsDto.BusinessType.Id,
-                      customerDetailsDto.BusinessNature.Id,
+                      customerDetailsDto.CreditCollectionType.Key,
+                      customerDetailsDto.BusinessType.Key,
+                      customerDetailsDto.BusinessNature.Key,
                       customerDetailsDto.YearsOfBusiness,
                       customerDetailsDto.YearlyTurnover,
-                      customerDetailsDto.AvailedAnyLoanLimits.Value,
+                      customerDetailsDto.AvailedAnyLoanLimits.Key,
                        customerDetailsDto.OtherMerchantsOfCustomer,
-                       customerDetailsDto.BusinessAddress.Id,
+                       customerDetailsDto.BusinessAddress.Key,
                        customerDetailsDto.ValueOfProperty,
-                       customerDetailsDto.MarketReputation,
+                       customerDetailsDto.MarketReputation.Key,
                        customerDetailsDto.CategoryRecommended.Id,
                        customerDetailsDto.LimitRecommended,
                        customerDetailsDto.CategoryFixed.Id,
@@ -174,16 +179,38 @@ namespace Dfinance.Stakeholder.Services
                        customerDetailsDto.SalesPriceUpVarLimit,
                        CustmId
                    );
-                    return true;
 
+                    if (customerDetailsDto.CommoditySought.Count > 0)
+                    {
+                        var remove = _context.MaCustomerItems.Where(u => u.PartyId == PartyId).ToList();
+                        _context.MaCustomerItems.RemoveRange(remove);
+                        _context.SaveChanges();
+                        SaveMaCustomerItems(PartyId, custItems);
+                    }
+                    _logger.LogInformation("Customer Details Updated Successfully");
+                    return true;
                 }
             }
             catch (Exception ex)
             {
-
+                _logger.LogError("Error in Saving Customer Details");
                 return false;
-
             }
+        }
+        private CommonResponse SaveMaCustomerItems(int PartyId, List<int> CommodityId)
+        {
+            SqlParameter newId = new SqlParameter("@NewID", SqlDbType.Int)
+            {
+                Direction = ParameterDirection.Output
+            };
+            string criteria = "InsertCustomerItems";
+            foreach (var c in CommodityId)
+            {
+                var data = _context.Database.ExecuteSqlRaw("Exec PartyMasterSP @Criteria={0},@PartyID={1},@CommodityID={2},@NewID={3} OUTPUT",
+                    criteria, PartyId, c, newId);
+            }
+            _logger.LogInformation("MaCustomerItems Saved Successfully");
+            return CommonResponse.Ok();
         }
     }
 }

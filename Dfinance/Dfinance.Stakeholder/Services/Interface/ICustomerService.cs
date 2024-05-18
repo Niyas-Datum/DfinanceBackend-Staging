@@ -10,9 +10,10 @@ namespace Dfinance.Stakeholder.Services.Interface
 {
     public interface ICustomerService
     {
-        CommonResponse FillCommodity();
+        CommonResponse FillCustomer();        
         CommonResponse FillPriceCategory();
         CommonResponse FillCustomerCategories();
         bool SaveCustomDetails(CustomerDetailsDto customerDetailsDto, decimal? CreditPeriod, int PartyId);
+        CommonResponse CrdtCollDropdown();
     }
 }

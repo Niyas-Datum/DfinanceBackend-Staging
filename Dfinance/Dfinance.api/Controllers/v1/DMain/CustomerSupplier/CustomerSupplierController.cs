@@ -13,12 +13,12 @@ namespace Dfinance.api.Controllers.v1.DMain.CustomerSupplier
 
     public class CustomerSupplierController : BaseController
     {
-            private readonly ICustomerSupplierService _custSuppService;
+        private readonly ICustomerSupplierService _custSuppService;
 
-            public CustomerSupplierController(ICustomerSupplierService custSuppService)
-            {
-                _custSuppService = custSuppService;
-            }
+        public CustomerSupplierController(ICustomerSupplierService custSuppService)
+        {
+            _custSuppService = custSuppService;
+        }
 
         [HttpGet(ApiRoutes.Parties.GetCode)]
 
@@ -53,10 +53,30 @@ namespace Dfinance.api.Controllers.v1.DMain.CustomerSupplier
 
         }
 
+        [HttpGet(ApiRoutes.Parties.FillParty)]
+        public IActionResult FillParty()
+        {
+            var result = _custSuppService.FillParty();
 
-        [AllowAnonymous]
+
+            return Ok(result.Data);
+
+        }
+
+        [HttpGet(ApiRoutes.Parties.FillPartyById)]
+        public IActionResult FillPartyWithID(int Id,int pageId)
+        {
+            try
+            {
+                var result = _custSuppService.FillPartyWithID(Id,pageId);
+                return Ok(result.Data);
+            }
+            catch (Exception ex) { return BadRequest(ex.Message); }
+        }
+
+
         [HttpPost(ApiRoutes.Parties.SaveCustmsupp)]
-        public IActionResult SaveGen([FromBody] GeneralDto generalDto)
+        public IActionResult SaveGen([FromBody] GeneralDto generalDto,int pageId)
         {
             try
             {
@@ -65,7 +85,7 @@ namespace Dfinance.api.Controllers.v1.DMain.CustomerSupplier
                     return BadRequest(ModelState);
                 }
 
-                var result = _custSuppService.SaveGen(generalDto);
+                var result = _custSuppService.SaveGen(generalDto,pageId);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -75,7 +95,7 @@ namespace Dfinance.api.Controllers.v1.DMain.CustomerSupplier
         }
         [AllowAnonymous]
         [HttpPatch(ApiRoutes.Parties.update)]
-        public IActionResult Update([FromBody] GeneralDto generalDto)
+        public IActionResult Update([FromBody] GeneralDto generalDto,int pageId)
         {
             try
             {
@@ -84,7 +104,36 @@ namespace Dfinance.api.Controllers.v1.DMain.CustomerSupplier
                     return BadRequest(ModelState);
                 }
 
-                var result = _custSuppService.SaveGen(generalDto);
+                var result = _custSuppService.SaveGen(generalDto,pageId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet(ApiRoutes.Parties.supplier)]
+
+        public IActionResult GetSupplier(int locId, int pageId, int voucherId)
+        {
+            try
+            {
+                var result = _custSuppService.FillSupplier(locId, pageId, voucherId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+        [HttpDelete(ApiRoutes.Parties.Delete)]
+        public IActionResult Delete(int Id,int pageId)
+        {
+            try
+            {
+                var result = _custSuppService.Delete(Id,pageId);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -93,4 +142,6 @@ namespace Dfinance.api.Controllers.v1.DMain.CustomerSupplier
             }
         }
     }
-        }
+       
+
+}

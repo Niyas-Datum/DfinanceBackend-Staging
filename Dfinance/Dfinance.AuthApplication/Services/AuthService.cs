@@ -40,13 +40,13 @@ public class AuthService : IAuthService
             int mod = 10;
 
             var userData = _dfCoreContext.UserInfo.FromSqlRaw($"EXEC spAuthendication  @Mode='{mod}', @BranchID='{model.Branch.Id}', @Username='{model.Username}', @Password='{Passwordtemp}'").AsEnumerable().FirstOrDefault();
-
+            int empid = userData.EmployeeID;
             // Get Menu only if authentication is successful
             if (userData != null)
             {
                 string criteria = "FillMenuWeb";
                 string Language = "English";
-                loginMenu = _dfCoreContext.UserPageListView.FromSqlRaw($"EXEC MenuSP @Criteria='{criteria}',@Language='{Language}',@EmployeeID='{94}',@BranchID='{model.Branch.Id}'").ToList();
+                loginMenu = _dfCoreContext.UserPageListView.FromSqlRaw($"EXEC MenuSP @Criteria='{criteria}',@Language='{Language}',@EmployeeID='{empid}',@BranchID='{model.Branch.Id}'").ToList();
 
                 var data = GetTree(loginMenu, null);
 

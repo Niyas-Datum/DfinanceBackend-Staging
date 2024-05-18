@@ -33,13 +33,13 @@ namespace Dfinance.DataModels.Dto.CustSupp
             public string? City { get; set; }
             public string? POBox { get; set; }
             public string? CountryCode { get; set; }
-            public int? Country { get; set; }//dropdown
+            public DropdownDto? Country { get; set; }//dropdown
             public string? BulidingNo { get; set; }
             public string? District { get; set; }
             public string? DistrictArabic { get; set; }
             public string? CityArabic { get; set; }
             public string? ProvinceArabic { get; set; }
-        public DropDownDtoName? Area { get; set; }//DropDown
+            public DropDownDtoName? Area { get; set; }//DropDown
             public string? Province { get; set; }
 
             //*************otherDetails*****************************
@@ -54,8 +54,8 @@ namespace Dfinance.DataModels.Dto.CustSupp
             public DropDownDtoName? AccountGroup { get; set; }//DropDown
             public DropDownDtoName? Account { get; set; }//Dropdown
             public string? Remarks { get; set; }
-            public string Image { get; set; }
+            public string? Image { get; set; }
             public CustomerDetailsDto CustomerDetails { get; set; }
-            public List<DeliveryDetailsDto> DeliveryDetails { get; set; }
+            public List<DeliveryDetailsDto>? DeliveryDetails { get; set; }
     }
 }

@@ -237,6 +237,8 @@ namespace Dfinance.Shared.Routes.v1
             public const string GetType = $"{Main}/gettype";
             public const string update = $"{Main}/update"; 
             public const string FillParty = $"{Main}/fillparty";
+            public const string FillPartyById = $"{Main}/FillPartyById";
+            public const string Delete = $"{Main}/del";
         }
         public static class CustomerDetails
         {
@@ -245,6 +247,8 @@ namespace Dfinance.Shared.Routes.v1
             public const string CustomerCategories = $"{Main}/getcategory";
             public const string GetCommodity = $"{Main}/getcomdity";
             public const string customer = $"{Main}/getcustomer";
+            public const string CreditDropdown = $"{Main}/CreditDropdown";
+            
         }
         public static class HR
         {
