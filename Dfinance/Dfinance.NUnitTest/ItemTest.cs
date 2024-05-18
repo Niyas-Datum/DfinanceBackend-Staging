@@ -49,11 +49,11 @@ namespace Testing
         [Test]
         public void FillByIDTest()
         {
-            int itemId = 5;
+            int itemId = 9;
             int branchId = 1;
             int pageId = 55;
             _itemServiceMock.Setup(x => x.FillItemByID(pageId,itemId, branchId)).Returns(new CommonResponse { Exception = null, Data = new ItemMaster() });
-            var result = _itemServiceMock.Object.FillItemByID(itemId, branchId);
+            var result = _itemServiceMock.Object.FillItemByID(pageId,itemId, branchId);
            
             Assert.That(result, Is.Not.Null);
             Assert.That(result.IsValid, Is.True);

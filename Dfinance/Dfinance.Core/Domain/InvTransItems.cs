@@ -101,18 +101,18 @@ namespace Dfinance.Core.Domain
         public int? ParentId { get; set; }
 
         //relationships
-        public virtual FiMaAccount FiMaAccount {  get; set; }// with FimaAccounts
-        public virtual Categories Commodity {  get; set; }//with Category
+        public virtual FiMaAccount? FiMaAccount {  get; set; }// with FimaAccounts
+        public virtual Categories? Commodity {  get; set; }//with Category
        
-        public virtual ItemMaster Item { get; set; }//with ItemMaster
+        public virtual ItemMaster? Item { get; set; }//with ItemMaster
        
         public virtual ItemMaster? GroupItem { get; set; }
        
         public virtual ItemMaster? StockItem { get; set; }
         public virtual InvTransItems? Ref { get; set; }//self reference
-        public virtual ICollection<InvTransItems> InverseRef { get; set; }
-        public virtual FiTransaction Transaction {  get; set; }
-        public ICollection<InvUniqueItems> InvUniqueItems { get; set; }
+        public virtual ICollection<InvTransItems>? InverseRef { get; set; }
+        public virtual FiTransaction? Transaction {  get; set; }
+        public ICollection<InvUniqueItems>? InvUniqueItems { get; set; }
       //  public virtual ICollection<InvBatchWiseItem> InvBatchWiseItems { get; set; }
     }
 }

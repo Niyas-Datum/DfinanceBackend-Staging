@@ -8,6 +8,7 @@ namespace Dfinance.Core.Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder <InvTransItems> builder) 
         {
+            builder.ToTable("InvTransItems");
             builder.Property(e => e.Id).HasColumnName("ID");
             builder.Property(e => e.TransactionId).HasColumnName("TransactionID");
             builder.Property(e => e.ItemId).HasColumnName("ItemID");

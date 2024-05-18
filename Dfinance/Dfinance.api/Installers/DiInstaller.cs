@@ -35,6 +35,7 @@ using Dfinance.Application.LabelAndGridSettings;
 
 using Dfinance.Inventory.Interface;
 using Dfinance.Inventory;
+using Dfinance.Sales;
 
 
 namespace Dfinance.api.Installers;
@@ -118,8 +119,10 @@ public class DiInstaller : IInstaller
         service.AddScoped<IInventoryTransactionService, InventoryTransactionService>();
         service.AddScoped<IInventoryAdditional, InventoryAdditional>();
         service.AddScoped<IInventoryItemService, InventoryItemservice>();
-        service.AddScoped<IInventoryPaymentService, InventoryPaymentService>();
-        service.AddScoped<IInventoryTransFactory, InventoryTransFactory>();
+        service.AddScoped<IInventoryPaymentService, InventoryPaymentService>();       
         service.AddScoped<IPurchaseService, PurchaseService>();
+        service.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
+		 service.AddScoped<ISalesInvoiceService, SalesInvoiceService>();
+		 service.AddScoped<IPurchaseEnquiryService, PurchaseEnquiryService>();
     }
 }

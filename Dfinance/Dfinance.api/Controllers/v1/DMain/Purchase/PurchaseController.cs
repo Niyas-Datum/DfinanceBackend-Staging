@@ -63,11 +63,11 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
         }
         [HttpGet(InvRoute.Purchase.Fillpurchasebyid)]
         
-        public IActionResult FillPurschaseById(int TransId)
+        public IActionResult FillPurschaseById(int TransId, int PageId)
         {
             try
             {
-                var data = _purchaseservice.FillPurchaseById(TransId);
+                var data = _purchaseservice.FillPurchaseById(TransId,PageId);
                 return Ok(data);
             }
             catch (Exception ex)
@@ -77,7 +77,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
         }
 
         [HttpPost(InvRoute.Purchase.Savepurchase)]
-        public IActionResult Save([FromBody] PurchaseDto purchaseDto, int PageId, int voucherId)
+        public IActionResult Save([FromBody] InventoryTransactionDto purchaseDto, int PageId, int voucherId)
         {
             try
             {
@@ -95,7 +95,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
             }
         }
         [HttpPatch(InvRoute.Purchase.Updatepurchase)]
-        public IActionResult Update([FromBody] PurchaseDto purchaseDto, int PageId, int voucherId)
+        public IActionResult Update([FromBody] InventoryTransactionDto purchaseDto, int PageId, int voucherId)
         {
             try
             {
@@ -113,7 +113,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
             }
         }
         [HttpDelete(InvRoute.Purchase.Delpurchase)]
-        public IActionResult Delete(int transId)
+        public IActionResult Delete(int transId,int pageId)
         {
             try
             {
@@ -121,7 +121,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
                 {
                     return BadRequest(ModelState);
                 }
-                object result = _purchaseservice.DeletePurchase(transId);
+                object result = _purchaseservice.DeletePurchase(transId, pageId);
                 return Ok(result);
             }
             catch (Exception ex)

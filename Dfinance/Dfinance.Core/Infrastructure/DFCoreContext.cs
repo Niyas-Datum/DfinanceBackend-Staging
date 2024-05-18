@@ -109,9 +109,9 @@ public DbSet<InvUniqueItems> InvUniqueItems { get; set; }
     //MaVehicle
     public DbSet<MaVehicles> MaVehicles { get; set; }
 
-    public DbSet<FiTransactionEntry> TransactionEntries { get; set; }
+    public DbSet<FiTransactionEntry> FiTransactionEntries { get; set; }
     public DbSet<FiVoucherAllocation> FiVoucherAllocation { get; set; }
-    public DbSet<TransExpense> TransactionExpense { get; set; }
+    public DbSet<TransExpense> TransExpense { get; set; }
 
     //view init
 
@@ -329,6 +329,12 @@ public DbSet<TransItemsView> TransItemsView { get; set; }
 
         mb.ApplyConfiguration(new FimaUniqueAccountConfiguration());
         mb.ApplyConfiguration(new MaChargeTypeConfiguration());
+
+        //TransExpense
+        mb.ApplyConfiguration(new TransExpensesConfiguration());
+
+        //TransactionEntries
+        mb.ApplyConfiguration(new FiTransactionEntryConfiguration());
 
         //View
 

@@ -7,13 +7,13 @@ namespace Dfinance.DataModels.Dto.Inventory.Purchase
       public FillTransactions? fillTransactions {  get; set; }
       public  List<FillTransactionEntries>? fillTransactionEntries { get; set; }
       public  FillVoucherAllocationUsingRef? fillVoucherAllocationUsingRef { get; set; }
-        public  FillCheques? fillCheques { get; set; }
+        public  List<FillCheques>? fillCheques { get; set; }
         public  FillTransCollnAllocations? fillTransCollnAllocations { get; set; }
         public  List<FillInvTransItems>? fillInvTransItems { get; set; }
         public  FillInvTransItemDetails? fillInvTransItemDetails { get; set; }
         public  FillTransactionItemExpenses? fillTransactionItemExpenses { get; set; }
         public  FillDocuments? fillDocuments { get; set; }
-        public  FillTransactionExpenses? fillTransactionExpenses { get; set; }
+        public List<FillTransactionExpenses>? fillTransactionExpenses { get; set; }
         public  FillDocumentRequests? fillDocumentRequests { get; set; }
         public  FillDocumentReferences? fillDocumentReferences { get; set; }
         public FillTransactionReferences? fillTransactionReferences { get; set; }
@@ -85,7 +85,7 @@ namespace Dfinance.DataModels.Dto.Inventory.Purchase
         public int TransactionID { get; set; }
         public int? RefTransID1 { get; set; }
         public int? RefTransID2 { get; set; }
-        public int? TypeIdD{ get; set; }
+        public int? TypeID{ get; set; }
         public int? ModeID { get; set; }
         public int? MeasureTypeID { get; set; }
         public int? LoadMeasureTypeID { get; set; }
