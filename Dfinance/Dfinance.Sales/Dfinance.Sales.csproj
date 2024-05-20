@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Dfinance.AuthApplication\Dfinance.AuthAppllication.csproj" />
+    <ProjectReference Include="..\Dfinance.DataModels\Dfinance.DataModels.csproj" />
+    <ProjectReference Include="..\Dfinance.Inventory\Dfinance.Inventory.csproj" />
+    <ProjectReference Include="..\Dfinance.Purchase\Dfinance.Purchase.csproj" />
+    <ProjectReference Include="..\Dfinance.Shared\Dfinance.Shared.csproj" />
+    <ProjectReference Include="..\Dfinance.Stakeholder\Dfinance.Stakeholder.csproj" />
+    <ProjectReference Include="..\Dfinance.WareHouse\Dfinance.WareHouse.csproj" />
+  </ItemGroup>
+
+</Project>
