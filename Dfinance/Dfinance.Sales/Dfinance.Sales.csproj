@@ -7,7 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Dfinance.AuthApplication\Dfinance.AuthAppllication.csproj" />
+    <ProjectReference Include="..\Dfinance.AuthApplication\Dfinance.AuthApplication.csproj" />
+   
     <ProjectReference Include="..\Dfinance.DataModels\Dfinance.DataModels.csproj" />
     <ProjectReference Include="..\Dfinance.Inventory\Dfinance.Inventory.csproj" />
     <ProjectReference Include="..\Dfinance.Purchase\Dfinance.Purchase.csproj" />

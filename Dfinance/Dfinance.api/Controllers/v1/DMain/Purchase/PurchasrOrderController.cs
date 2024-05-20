@@ -44,7 +44,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPatch(InvRoute.PurchaseOrder.DeletePO)]
+        [HttpDelete(InvRoute.PurchaseOrder.DeletePO)]
         public IActionResult DeletePurchaseOrder(int TransId, int PageId)
         {
             try
