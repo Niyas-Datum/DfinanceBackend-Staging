@@ -7,6 +7,7 @@ namespace Dfinance.Core
     {
         public void Configure(EntityTypeBuilder<FiTransactionAdditionals> builder)
         {
+            builder.ToTable("FiTransactionAdditionals");
             builder.HasKey(e => e.TransactionId).HasName("PK_FiTransactionAdditionals");             
             builder.Property(e => e.TransactionId)
                 .ValueGeneratedNever()
@@ -203,10 +204,10 @@ namespace Dfinance.Core
             //    .HasForeignKey(d => d.AreaId)
             //    .HasConstraintName("FK__FiTransac__AreaI__4479F5BF");
 
-            //builder.HasOne(d => d.CountryOfOrigin)
-            //    .WithMany(p => p.FiTransactionAdditionalCountryOfOrigins)
-            //    .HasForeignKey(d => d.CountryOfOriginId)
-            //    .HasConstraintName("FK_FiTransactionAdditionals_MaMisc5");
+            builder.HasOne(d => d.CountryOfOrigin)
+                .WithMany(p => p.FiTransactionAdditionalCountryOfOrigins)
+                .HasForeignKey(d => d.CountryOfOriginId)
+                .HasConstraintName("FK_FiTransactionAdditionals_MaMisc5");
 
             //builder.HasOne(d => d.Department)
             //    .WithMany(p => p.FiTransactionAdditionals)
@@ -228,10 +229,10 @@ namespace Dfinance.Core
             //    .HasForeignKey(d => d.InLocId)
             //    .HasConstraintName("FK_FiTransactionAdditionals_Locations1");
 
-            //builder.HasOne(d => d.Mode)
-            //    .WithMany(p => p.FiTransactionAdditionalModes)
-            //    .HasForeignKey(d => d.ModeId)
-            //    .HasConstraintName("FK_FiTransactionAdditionals_MaMisc4");
+            builder.HasOne(d => d.Mode)
+                .WithMany(p => p.FiTransactionAdditionalModes)
+                .HasForeignKey(d => d.ModeId)
+                .HasConstraintName("FK_FiTransactionAdditionals_MaMisc4");
 
             //builder.HasOne(d => d.OtherBranch)
             //    .WithMany(p => p.FiTransactionAdditionalOtherBranches)
@@ -278,10 +279,10 @@ namespace Dfinance.Core
                 .HasForeignKey(d => d.TransactionId)
                 .HasConstraintName("FK_FiTransactionAdditionals_FiTransactions");
 
-            //builder.HasOne(d => d.Type)
-            //    .WithMany(p => p.FiTransactionAdditionalTypes)
-            //    .HasForeignKey(d => d.TypeId)
-            //    .HasConstraintName("FK_FiTransactionAdditionals_MaMisc1");
+            builder.HasOne(d => d.Type)
+                .WithMany(p => p.FiTransactionAdditionalTypes)
+                .HasForeignKey(d => d.TypeId)
+                .HasConstraintName("FK_FiTransactionAdditionals_MaMisc1");
         }
     }
 }

@@ -70,5 +70,32 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet(InvRoute.InventoryPaymentTransaction.FillVoucherType)]
+        public IActionResult FillVoucherType(int voucherId)
+        {
+            try
+            {
+                var data = _transactionService.FillVoucherType(voucherId);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet(InvRoute.InventoryPaymentTransaction.FillRefItems)]
+        public IActionResult FillRefItems(int transId)
+        {
+            try
+            {
+                var data = _transactionService.FillRefItems(transId);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

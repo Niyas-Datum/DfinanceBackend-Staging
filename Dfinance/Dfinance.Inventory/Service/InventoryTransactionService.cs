@@ -33,7 +33,7 @@ namespace Dfinance.Inventory.Service
             try
             {
                 var voucher = _context.FiMaVouchers
-                    .Where(x => x.PrimaryVoucherId == voucherid)
+                    .Where(x => x.Id == voucherid)
                     .FirstOrDefault();
 
                 if (voucher == null)
@@ -84,6 +84,14 @@ namespace Dfinance.Inventory.Service
                 return CommonResponse.Error(ex);
             }
         }
+
+        //fill the voucher type dropdown in import reference
+        public CommonResponse FillVoucherType(int voucherId)
+        {
+            string criteria = "FillPreVouchers";
+            var voucherType=_context.DropDownViewName.FromSqlRaw("Exec DropDownListSP @Criteria={0},@IntParam={1}",criteria,voucherId);
+            return CommonResponse.Ok(voucherType);
+        }
         /// <summary>
         /// Get Refernce
         /// </summary>
@@ -91,8 +99,7 @@ namespace Dfinance.Inventory.Service
         public CommonResponse GetReference(int voucherno, DateTime? date = null)
         {
             try
-            {
-               
+            {               
                 int BranchID= _authService.GetBranchId().Value;
                 int? OtherBranchID = null;
                 string criteria = "FillImportTransactions";
@@ -101,13 +108,10 @@ namespace Dfinance.Inventory.Service
                 string referenceImportItemTracking = _context.MaSettings
                     .Where(setting => setting.Key == "ReferenceImportItemTracking")
                     .Select(setting => setting.Value)
-                    .FirstOrDefault();
-                
+                    .FirstOrDefault();                
 
                 bool isReferenceImportItemTrackingTrue = !string.IsNullOrEmpty(referenceImportItemTracking) &&
-                                                         (referenceImportItemTracking == "True" || referenceImportItemTracking == "1");
-
-               
+                                                         (referenceImportItemTracking == "True" || referenceImportItemTracking == "1");               
                 var data = _context.ReferenceView
                     .FromSqlRaw("EXEC VoucherAdditionalsSP @Criteria={0}, @VoucherID={1}, @BranchID={2}, @Date={3}, @OtherBranchID={4}",
                         criteria, voucherno, BranchID , date ?? null, OtherBranchID ?? null)
@@ -127,14 +131,31 @@ namespace Dfinance.Inventory.Service
                 return CommonResponse.Error("An error occurred while fetching references.");
             }
         }
-
+        //fill the itemlist of selected reference
+        public CommonResponse FillRefItems(int transId)
+        {
+            var items = from ti in _context.InvTransItems
+                        join im in _context.ItemMaster on ti.ItemId equals im.Id
+                        where ti.TransactionId == transId
+                        select new
+                        {
+                            ti.ItemId,
+                            im.ItemCode,
+                            im.ItemName,
+                            ti.Unit,
+                            ti.Qty,
+                            ti.Rate
+                        };
+            var result=items.ToList();
+            return CommonResponse.Created(result);          
+        }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="transactionDto"></param>
         /// <returns></returns>
-        public CommonResponse SaveTransaction(PurchaseDto transactionDto, int PageId, int VoucherId, string Status)
+        public CommonResponse SaveTransaction(InventoryTransactionDto transactionDto, int PageId, int VoucherId, string Status)
         {
             try
             {
@@ -171,7 +192,7 @@ namespace Dfinance.Inventory.Service
                         transactionDto.VoucherNo, false, transactionDto.Currency.Id, transactionDto.ExchangeRate, null, null,
                         ReferencesId, branchId, null, null, null,
                         null, null, transactionDto.Description, createdBy, null, DateTime.Now, null,
-                        ApprovalStatus, null, null, Status, Autoentry, true, true, false, transactionDto.Supplier.Id,
+                        ApprovalStatus, null, null, Status, Autoentry, true, true, false, transactionDto.Party.Id,
                         null, RefTransId, transactionDto.Project.Id, PageId, newId);
 
                     var NewId = (int)newId.Value;
@@ -201,7 +222,7 @@ namespace Dfinance.Inventory.Service
                         transactionDto.VoucherNo, false, transactionDto.Currency.Id, transactionDto.ExchangeRate, null, null,
                         ReferencesId, branchId, null, null, null,
                         null, null, transactionDto.Description, createdBy, null, DateTime.Now, null,
-                        ApprovalStatus, null, null, Status, Autoentry, true, true, false, transactionDto.Supplier.Id,
+                        ApprovalStatus, null, null, Status, Autoentry, true, true, false, transactionDto.Party.Id,
                         null, RefTransId, transactionDto.Project.Id, PageId, Transaction);
 
                     return CommonResponse.Ok(transactionDto.Id);
@@ -221,7 +242,7 @@ namespace Dfinance.Inventory.Service
          /// <param name="VoucherId"></param>
          /// <param name="Status"></param>
          /// <returns></returns>
-        public CommonResponse SaveTransactionPayment(PurchaseDto transactionDto, int TransId, string Status)
+        public CommonResponse SaveTransactionPayment(InventoryTransactionDto transactionDto, int TransId, string Status, int VoucherId)
         {
            
             try
@@ -232,8 +253,8 @@ namespace Dfinance.Inventory.Service
                 bool Autoentry = false;
                 int? RefTransId = null;
                 string? ApprovalStatus = "A";
-                int VoucherId = 2;
-                int PageId = 69;
+                //int VoucherId = 2;
+                int PageId = _context.MaPageMenus.Where(p=>p.VoucherId==VoucherId).Select(p=>p.Id).FirstOrDefault();
                 Autoentry = true;
                 RefTransId = TransId;
                 string ReferenceId = null;
@@ -261,7 +282,7 @@ namespace Dfinance.Inventory.Service
                         transactionDto.VoucherNo, false, transactionDto.Currency.Id, transactionDto.ExchangeRate, null, null,
                         ReferenceId, branchId, null, null, null,
                         null, null, transactionDto.Description, createdBy, null, DateTime.Now, null,
-                        ApprovalStatus, null, null, Status, Autoentry, true, true, false, transactionDto.Supplier.Id,
+                        ApprovalStatus, null, null, Status, Autoentry, true, true, false, transactionDto.Party.Id,
                         null, RefTransId, transactionDto.Project.Id, PageId, newId);
 
                     //transactionDto.Id = (int)newId.Value;
@@ -290,10 +311,10 @@ namespace Dfinance.Inventory.Service
                         transactionDto.VoucherNo, false, transactionDto.Currency.Id, transactionDto.ExchangeRate, null, null,
                         ReferenceId, branchId, null, null, null,
                         null, null, transactionDto.Description, createdBy, null, DateTime.Now, null,
-                        ApprovalStatus, null, null, Status, Autoentry, true, true, false, transactionDto.Supplier.Id,
+                        ApprovalStatus, null, null, Status, Autoentry, true, true, false, transactionDto.Party.Id,
                         null, RefTransId, transactionDto.Project.Id, PageId, PayId);
 
-                    return CommonResponse.Ok(transactionDto.Id);
+                    return CommonResponse.Ok(PayId);
                 }
             }
             catch (Exception ex)

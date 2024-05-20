@@ -4,10 +4,9 @@ using Dfinance.DataModels.Validation;
 
 namespace Dfinance.DataModels.Dto.Inventory.Purchase
 {
-    public class PurchaseDto
+    public class InventoryTransactionDto
     {
         public int? Id { get; set; }
-
        
         public string? VoucherNo { get; set; }//TransNo
 
@@ -16,29 +15,29 @@ namespace Dfinance.DataModels.Dto.Inventory.Purchase
         public List<ReferenceDto>? Reference { get; set; }
 
         [NullValidation(ErrorMessage = "Party is Mandatory!!")]
-        public PopUpDto Supplier { get; set; }  //POPUP
+        public PopUpDto Party { get; set; }  //POPUP
         public DropdownDto? Currency { get; set; }
 
         [DecimalValidation(4, ErrorMessage = "Enter valid ExchangeRate!!")]
         public decimal ExchangeRate { get; set; }
 
-        [NullValidation(ErrorMessage = "Warehouse is Mandatory!!")]
-        public DropdownDto Warehouse { get; set; }//dropdown
+        //[NullValidation(ErrorMessage = "Warehouse is Mandatory!!")]
+        //public DropdownDto Warehouse { get; set; }//dropdown
         public PopUpDto Project { get; set; }//POPUP
         public string? Description { get; set; }
         public bool? Approve { get; set; }
         public bool? CloseVoucher { get; set; }
         public bool? GrossAmountEdit { get; set; }
-        public FiTransactionAdditionalDto FiTransactionAdditionalDto { get; set; }
-        public List<ItemListDto> Items { get; set; }
-        public TransactionEntries? TransactionEntries { get; set; }
-        public List<AccountDetailsDto> AccountDetails { get; set; }
-        public List<ChequesDto> Cheques { get; set; }
+        public InvTransactionAdditionalDto FiTransactionAdditional { get; set; }
+        public List<InvTransItemDto> Items { get; set; }
+        public InvTransactionEntriesDto? TransactionEntries { get; set; }       
+        
     }
-   public class ItemListDto
+   public class InvTransItemDto
     {
-        public int? TransactionId {  get; set; }       
-        public DropdownDto? Warehouse { get; set; }
+        public int? TransactionId {  get; set; }      
+        
+        public int ItemId { get; set; }
         public string? ItemCode { get; set; }//popup
         public string? ItemName { get; set; }
         public string? BatchNo { get; set; }//generated Batchno
@@ -120,15 +119,15 @@ namespace Dfinance.DataModels.Dto.Inventory.Purchase
         public bool? IsReturn {  get; set; }
         public DateTime? ManufactureDate { get; set; }
         public int? PriceCategory { get; set; }//popup
-        public List<UniqueItems>? UniqueItems { get; set; }
+        public List<InvUniqueItemDto>? UniqueItems { get; set; }
     }
 
-    public class UniqueItems
+    public class InvUniqueItemDto
     {
         
         public string? UniqueNumber {  get; set; }
     }
-    public class TransactionEntries
+    public class InvTransactionEntriesDto
     {
        
         public string? Terms { get; set; }
@@ -140,23 +139,26 @@ namespace Dfinance.DataModels.Dto.Inventory.Purchase
         public decimal? Roundoff { get; set; }
         [DecimalValidation(4, ErrorMessage = "NetAmount is not valid!!")]
         public decimal? NetAmount { get; set; }
-        public List<AccountDetailsDto>? Tax { get; set; }
-        public List<AccountDetailsDto>? AddCharges { get; }
+       
         [DecimalValidation(4, ErrorMessage = "GrandTotal is not valid!!")]
         public decimal? GrandTotal { get; set; }
         public DropdownDto PayType { get; set; }
-        public List<AdvanceDto>? Advance { get; set; }
+        public DateTime? DueDate { get; set; }
         [DecimalValidation(4, ErrorMessage = "TotalPaid is not valid!!")]
         public decimal? TotalPaid { get; set; }
-        public List<AccountDetailsDto>? Cash { get; set; }
-        public List<AccountDetailsDto>? Card { get; set; }
+      
         [DecimalValidation(4, ErrorMessage = "Balance is not valid!!")]
         public decimal Balance { get; set; }
-        public List<AccountDetailsDto>? Cheque { get; set; }
-        public DateTime? DueDate { get; set; }
+        public List<InvAdvanceDto>? Advance { get; set; }
+        public List<InvAccountDetailsDto>? Cash { get; set; }
+        public List<InvAccountDetailsDto>? Card { get; set; }
+        public List<InvChequesDto>? Cheque { get; set; }
+        public List<InvAccountDetailsDto>? Tax { get; set; }
+        public List<InvAccountDetailsDto>? AddCharges { get; set; }
+        
        
     }
-    public class AccountDetailsDto
+    public class InvAccountDetailsDto
     {
        
         public int AccountId { get; set; }
@@ -168,7 +170,7 @@ namespace Dfinance.DataModels.Dto.Inventory.Purchase
         public string? TransType { get; set; }
         public AccountNamePopUpDto? PayableAccount { get; set; }
     }
-    public class ChequesDto
+    public class InvChequesDto
     {
       
         public AccountNamePopUpDto? PDCPayable { get; set; }
@@ -188,10 +190,9 @@ namespace Dfinance.DataModels.Dto.Inventory.Purchase
         public decimal? Amount { get; set; }
        
     }
-    public class AdvanceDto
+    public class InvAdvanceDto
 
-    {
-       
+    {       
         public int? VID { get; set; }    
         public int? VEID { get; set; }   
         public string? VNo { get; set; }  
@@ -209,6 +210,39 @@ namespace Dfinance.DataModels.Dto.Inventory.Purchase
         public string? DrCr { get; set; }   
         public int? PartyInvNo { get; set; }  
         public DateTime? PartyInvDate { get; set; } 
+    }
+    public class InvTransactionAdditionalDto
+    {
+        public int TransactionId {  get; set; }
+        [NullValidation(ErrorMessage = "Warehouse is Mandatory!!")]
+        public DropdownDto Warehouse { get; set; }//dropdown
+        public string? PartyInvoiceNo { get; set; }
+        public DateTime? PartyDate { get; set; }
+        public DateTime? OrderDate { get; set; }
+        public string? OrderNo { get; set; }
+        public string? PartyNameandAddress { get; set; }
+        public DateTime? ExpiryDate { get; set; }
+        public DropdownDto? TransPortationType { get; set; }
+        public int? CreditPeriod { get; set; }
+        public PopUpDto? SalesMan { get; set; }
+        public DropdownDto? SalesArea { get; set; }
+        public decimal? StaffIncentives { get; set; }
+        public string? MobileNo { get; set; }
+        public PopUpDto? VehicleNo { get; set; }
+        public string? Attention { get; set; }
+        public string? DespatchNo { get; set; }
+        public DateTime? DespatchDate { get; set; }
+        public DateTime? DeliveryDate { get; set; }
+        public string? DeliveryNote { get; set; }
+        public string? PartyName { get; set; }
+        public string? AddressLine1 { get; set; }
+        public string? AddressLine2 { get; set; }
+        public PopUpDto? DelivaryLocation { get; set; }
+        public string? TermsOfDelivery { get; set; }
+        public DropdownDto PayType { get; set; }
+        public bool? Approve {  get; set; }
+        public bool? CloseVoucher {  get; set; }
+
     }
 }
 

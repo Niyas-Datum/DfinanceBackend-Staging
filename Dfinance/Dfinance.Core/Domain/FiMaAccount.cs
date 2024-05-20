@@ -63,5 +63,7 @@ public partial class FiMaAccount
     public virtual ICollection<FimaUniqueAccount>? FimaUniqueAccounts { get; set; }
     public virtual ICollection<MaChargeType>? MaChargeTypeAccounts { get; set; }
     public virtual ICollection<MaChargeType>? MaChargeTypePayableAccounts { get; set; }
+    public virtual ICollection<TransExpense> TransExpenseAccounts { get; set; }
+    public virtual ICollection<TransExpense> TransExpensePayableAccounts { get; set; }
 
 }

@@ -128,7 +128,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
         }
         [HttpPost(InvRoute.InventoryPaymentTransaction.SaveCheque)]
 
-        public IActionResult SaveCheque([FromBody] ChequesDto chequeDto, int VEId, int PartyId, string Status)
+        public IActionResult SaveCheque([FromBody] InvChequesDto chequeDto, int VEId, int PartyId, string Status)
         {
             try
             {

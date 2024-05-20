@@ -1,207 +1,204 @@
-﻿using Dfinance.AuthAppllication.Services;
-using Dfinance.AuthAppllication.Services.Interface;
+﻿using Dfinance.AuthAppllication.Services.Interface;
 using Dfinance.Core.Infrastructure;
 using Dfinance.DataModels.Dto.Inventory.Purchase;
 using Dfinance.Inventory.Service.Interface;
 using Dfinance.Shared.Domain;
+using Dfinance.Shared.Enum;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
 
 namespace Dfinance.Inventory.Service
 {
-    public class InventoryAdditional:IInventoryAdditional
+    public class InventoryAdditional : IInventoryAdditional
     {
         private readonly DFCoreContext _context;
         private readonly IAuthService _authService;
         private readonly IHostEnvironment _environment;
-        
-    public InventoryAdditional(DFCoreContext context, IAuthService authService, IHostEnvironment hostEnvironment)
-    {
-        _context = context;
-        _authService = authService;
-        _environment = hostEnvironment;
 
-       
-    }
-    /// <summary>
-    /// PopupVechicleNo in Additionaldetails
-    /// </summary>
-    /// <returns></returns>
-    public CommonResponse PopupVechicleNo()
-    {
-        try
+        public InventoryAdditional(DFCoreContext context, IAuthService authService, IHostEnvironment hostEnvironment)
         {
-            var result = _context.MaVehicles.Where(x => !string.IsNullOrEmpty(x.CostCenterId.ToString()) && x.ActiveFlag == 1).Select(x => new { VehicleNo = x.RegistrationNo, Name = x.Name, ID = x.Id }).ToList();
-            return CommonResponse.Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return CommonResponse.Error(ex);
-        }
-    }
-    /// <summary>
-    /// Fill Popup Delivary Location(from customer&Suppliyer)
-    /// </summary>
-    /// <returns></returns>
-    public CommonResponse PopupDelivaryLocations(int salesManId)
-    {
-        try
-        {
-            var result = _context.DeliveryDetails.Where(x => x.PartyId == (_context.Parties.Where(p => p.AccountId == salesManId).Select(p => p.Id).FirstOrDefault())).Select(x => new { Location = x.LocationName, ProjectName = x.ProjectName, ContactPerson = x.ContactPerson, ContactNo = x.ContactNo, Address = x.Address, Party = x.Party.Name, ID = x.Id }).ToList();
-            return CommonResponse.Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return CommonResponse.Error(ex);
-        }
-    }
-    /************* Fill all TransactionAdditionals  *******************/
-    public CommonResponse FillTransactionAdditionals(int transactionId)
-    {
-        try
-        {
-            string criteria = "FillFiTransactionAdditionals";
-            var result = _context.SpGetTransactionAdditionals.FromSqlRaw($"EXEC VoucherAdditionalsSP @Criteria='{criteria}',@TransactionID='{transactionId}'").ToList();
+            _context = context;
+            _authService = authService;
+            _environment = hostEnvironment;
 
-            return CommonResponse.Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return CommonResponse.Error();
-        }
-    }
-    /////************* Fill TransPortation Type By Criteria *******************/
-    public CommonResponse GetTransPortationType()
-    {
-        try
-        {
 
-            string criteria = "FillMaMisc";
-            string key = "Transportation Mode";
-            var result = _context.SpFillAreaMasterByIdG.FromSqlRaw($"EXEC DropDownListSP @Criteria='{criteria}',@StrParam='{key}'").ToList();
-            return CommonResponse.Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return CommonResponse.Error();
-        }
-    }
-    /// <summary>
-    ///  /////************* Fill SalesArea By Criteria *******************/
-    public CommonResponse GetSalesArea()
-    {
-        try
-        {
-
-            string criteria = "FillArea";
-            var result = _context.SpFillAreaMasterByIdG.FromSqlRaw($"EXEC DropDownListSP @Criteria='{criteria}'").ToList();
-            return CommonResponse.Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return CommonResponse.Error();
-        }
-    }
-        /// </summary>
-        /// <param name="fiTransactionAdditionalDto"></param>
-        /// <returns></returns>
-        /****************** Save TransactionAdditional  *******************/
-        public CommonResponse SaveTransactionAdditional(FiTransactionAdditionalDto fiTransactionAdditionalDto, int TransId)
-        {
-            string criteria = "InsertFiTransactionAdditionals";
-
-            _context.Database.ExecuteSqlRaw("EXEC VoucherAdditionalsSP @Criteria={0},@TransactionID={1},@TypeID={2},@Name={3},@Address ={4}," +
-                "@Period={5},@LCNo={6},@InterestAmt={7},@DocumentNo={8},@DocumentDate={9},@EntryDate={10},@EntryNo={11},@BankAddress={12}," +
-                "@ExpiryDate={13},@SubmitDate={14},@PassNo={15},@ReferenceDate={16},@ReferenceNo={17},@RecommendNote={18},@AccountID={19}," +
-                "@AreaID={20},@PartyName={21},@Address1={22},@Address2={23}",
-                criteria,
-                TransId,
-                fiTransactionAdditionalDto.TransPortationType.Id == 0 ? null : fiTransactionAdditionalDto.TransPortationType.Id,
-                fiTransactionAdditionalDto.PartyNameandAddress,
-                fiTransactionAdditionalDto.TermsOfDelivery,
-                fiTransactionAdditionalDto.CreditPeriod,
-                fiTransactionAdditionalDto.MobileNo,
-                fiTransactionAdditionalDto.StaffIncentives,
-                fiTransactionAdditionalDto.DespatchNo,
-                fiTransactionAdditionalDto.DespatchDate,
-                fiTransactionAdditionalDto.PartyDate,
-                fiTransactionAdditionalDto.PartyInvoiceNo,
-                fiTransactionAdditionalDto.Attention,
-                fiTransactionAdditionalDto.ExpiryDate,
-                fiTransactionAdditionalDto.DespatchDate,
-                fiTransactionAdditionalDto.DeliveryDate,
-                fiTransactionAdditionalDto.OrderDate,
-                fiTransactionAdditionalDto.OrderNo,
-                fiTransactionAdditionalDto.DelivaryLocation.Name,
-                fiTransactionAdditionalDto.SalesMan.Id == 0 ? null : fiTransactionAdditionalDto.SalesMan.Id,
-                fiTransactionAdditionalDto.SalesArea.Id == 0 ? null : fiTransactionAdditionalDto.SalesArea.Id,
-                fiTransactionAdditionalDto.PartyName,
-                fiTransactionAdditionalDto.AddressLine1,
-                fiTransactionAdditionalDto.AddressLine2
-
-                );
-
-            return CommonResponse.Ok();
         }
         /// <summary>
-        /// UpdateTransactionAdditional
+        /// PopupVechicleNo in Additionaldetails
         /// </summary>
-        /// <param name="fiTransactionAdditionalDto"></param>
-        /// <param name="TransId"></param>
         /// <returns></returns>
-        /****************** Update TransactionAdditional  *******************/
-        public CommonResponse UpdateTransactionAdditional(FiTransactionAdditionalDto fiTransactionAdditionalDto, int TransId)
+        public CommonResponse PopupVechicleNo()
         {
             try
             {
-                var TId = _context.FiTransactionAdditionals.Where(i => i.TransactionId == TransId).
-                   Select(i => i.TransactionId).
-                   SingleOrDefault();
-                if (TId == null)
-                {
-                    return CommonResponse.NotFound("TransactionAdditional Not Found");
-                }
+                var result = _context.MaVehicles.Where(x => !string.IsNullOrEmpty(x.CostCenterId.ToString()) && x.ActiveFlag == 1).Select(x => new { VehicleNo = x.RegistrationNo, Name = x.Name, ID = x.Id }).ToList();
+                return CommonResponse.Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return CommonResponse.Error(ex);
+            }
+        }
+        /// <summary>
+        /// Fill Popup Delivary Location(from customer&Suppliyer)
+        /// </summary>
+        /// <returns></returns>
+        public CommonResponse PopupDelivaryLocations(int salesManId)
+        {
+            try
+            {
+                var result = _context.DeliveryDetails.Where(x => x.PartyId == (_context.Parties.Where(p => p.AccountId == salesManId).Select(p => p.Id).FirstOrDefault())).Select(x => new { Location = x.LocationName, ProjectName = x.ProjectName, ContactPerson = x.ContactPerson, ContactNo = x.ContactNo, Address = x.Address, Party = x.Party.Name, ID = x.Id }).ToList();
+                return CommonResponse.Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return CommonResponse.Error(ex);
+            }
+        }
+        /************* Fill all TransactionAdditionals  *******************/
+        public CommonResponse FillTransactionAdditionals(int transactionId)
+        {
+            try
+            {
+                string criteria = "FillFiTransactionAdditionals";
+                var result = _context.SpGetTransactionAdditionals.FromSqlRaw($"EXEC VoucherAdditionalsSP @Criteria='{criteria}',@TransactionID='{transactionId}'").ToList();
 
-                string criteria = "UpdateFiTransactionAdditionals";
-                var result = _context.Database.ExecuteSqlRaw("EXEC VoucherAdditionalsSP @Criteria={0},@TransactionID={1},@TypeID={2},@Name={3},@Address ={4}," +
-                    "@Period={5},@LCNo={6},@InterestAmt={7},@DocumentNo={8},@DocumentDate={9},@EntryDate={10},@EntryNo={11},@BankAddress={12}," +
-                    "@ExpiryDate={13},@SubmitDate={14},@PassNo={15},@ReferenceDate={16},@ReferenceNo={17},@RecommendNote={18},@AccountID={19}," +
-                    "@AreaID={20},@PartyName={21},@Address1={22},@Address2={23}",
-                criteria,
-                    TransId,
-                    fiTransactionAdditionalDto.TransPortationType.Id,
-                    fiTransactionAdditionalDto.PartyNameandAddress,
-                    fiTransactionAdditionalDto.TermsOfDelivery,
-                    fiTransactionAdditionalDto.CreditPeriod,
-                    fiTransactionAdditionalDto.MobileNo,
-                    fiTransactionAdditionalDto.StaffIncentives,
-                    fiTransactionAdditionalDto.DespatchNo,
-                    fiTransactionAdditionalDto.DespatchDate,
-                    fiTransactionAdditionalDto.PartyDate,
-                    fiTransactionAdditionalDto.PartyInvoiceNo,
-                    fiTransactionAdditionalDto.Attention,
-                    fiTransactionAdditionalDto.ExpiryDate,
-                    fiTransactionAdditionalDto.DespatchDate,
-                    fiTransactionAdditionalDto.DeliveryDate,
-                    fiTransactionAdditionalDto.OrderDate,
-                    fiTransactionAdditionalDto.OrderNo,
-                    fiTransactionAdditionalDto.DelivaryLocation.Name,
-                    fiTransactionAdditionalDto.SalesMan.Id,
-                    fiTransactionAdditionalDto.SalesArea.Id,
-                    fiTransactionAdditionalDto.PartyName,
-                    fiTransactionAdditionalDto.AddressLine1,
-                    fiTransactionAdditionalDto.AddressLine2
-                    );
-                return CommonResponse.Ok("TransactionAdditional Updated Successfully");
-
+                return CommonResponse.Ok(result);
             }
             catch (Exception ex)
             {
                 return CommonResponse.Error();
             }
         }
+        /////************* Fill TransPortation Type By Criteria *******************/
+        public CommonResponse GetTransPortationType()
+        {
+            try
+            {
+
+                string criteria = "FillMaMisc";
+                string key = "Transportation Mode";
+                var result = _context.SpFillAreaMasterByIdG.FromSqlRaw($"EXEC DropDownListSP @Criteria='{criteria}',@StrParam='{key}'").ToList();
+                return CommonResponse.Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return CommonResponse.Error();
+            }
+        }
+        /// <summary>
+        ///  /////************* Fill SalesArea By Criteria *******************/
+        public CommonResponse GetSalesArea()
+        {
+            try
+            {
+
+                string criteria = "FillArea";
+                var result = _context.SpFillAreaMasterByIdG.FromSqlRaw($"EXEC DropDownListSP @Criteria='{criteria}'").ToList();
+                return CommonResponse.Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return CommonResponse.Error();
+            }
+        }
+        /// </summary>
+        /// <param name="fiTransactionAdditionalDto"></param>
+        /// <returns></returns>
+        /****************** Save & Update TransactionAdditional  *******************/
+        public CommonResponse SaveTransactionAdditional(InvTransactionAdditionalDto fiTransactionAdditionalDto, int TransId, int voucherId)
+        {
+            int? fromLocId = null, toLocId = null,inLocId=null,outLocId=null;
+            string criteria = "";
+            switch ((VoucherType)voucherId)
+            {
+                case VoucherType.Purchase:
+                case VoucherType.Purchase_Order:
+                    toLocId = fiTransactionAdditionalDto.Warehouse.Id;
+                    outLocId=fiTransactionAdditionalDto.Warehouse.Id;
+
+                    break;
+                case VoucherType.Sales_Invoice:
+                    fromLocId = fiTransactionAdditionalDto.Warehouse.Id;
+                    inLocId=fiTransactionAdditionalDto.Warehouse.Id;
+                    break;
+            }
+            var additionalId = _context.FiTransactionAdditionals.Any(x => x.TransactionId == TransId);
+            if (!additionalId)
+                criteria = "InsertFiTransactionAdditionals";
+            else
+                criteria = "UpdateFiTransactionAdditionals";
+
+                _context.Database.ExecuteSqlRaw("EXEC VoucherAdditionalsSP @Criteria={0},@TransactionID={1},@RefTransID1={2},@RefTransID2={3},@TypeID={4},@ModeID={5},@MeasureTypeID={6}," +
+            "@LoadMeasureTypeID={7},@ConsignTermID={8},@FromLocationID={9},@ToLocationID={10},@ExchangeRate1={11}, @AdvanceExRate={12}, @CustomsExRate={13}, @ApprovalDays={14}," +
+            "@WorkflowDays={15}, @PostedBranchID={16}, @ShipBerthDate={17}, @IsBit={18}, @Name={19},@Code={20}, @Address={21}, @Rate={22}, @SystemRate={23}, @Period={24}," +
+            "@Days={25}, @LCOptionID={26}, @LCNo={27}, @LCAmt={28}, @AvailableLCAmt={29}, @CreditAmt={30}, @MarginAmt={31}, @InterestAmt={32}, @AvailableAmt={33}," +
+            "@AllocationPerc={34}, @InterestPerc={35}, @TolerencePerc={36}, @CountryID={37}, @CountryOfOriginID={38}, @MaxDays={39}, @DocumentNo={40}, @DocumentDate={41}, @BEMaxDays={42}," +
+            "@EntryDate={43}, @EntryNo={44}, @ApplicationCode={45}, @BankAddress={46}, @Unit={47}, @Amount={48}, @AcceptDate={49}, @ExpiryDate={50}, @DueDate={51}, @OpenDate={52}, @CloseDate={53}, @StartDate={54}," +
+            "@EndDate={55}, @ClearDate={56}, @ReceiveDate={57}, @SubmitDate={58}, @EndTime={59}, @HandOverTime={60}, @LorryHireRate={61}, @QtyPerLoad={62}, @PassNo={63}, @ReferenceDate={64}, @ReferenceNo={65}," +
+            "@AuditNote={66}, @Terms={67}, @FirmID={68}, @VehicleID={69}, @WeekDays={70}, @BankWeekDays={71}, @RecommendByID={72}, @RecommendDate={73}, @RecommendNote={74}, @RecommendStatus={75}," +
+            "@IsHigherApproval={76}, @LCApplnTransID={77}, @InLocID={78}, @OutLocID={79}, @ExchangeRate2={80}, @RouteID={81}, @AccountID={82}, @AccountID2={83}, @Hours={84}, @Year={85}," +
+            "@BranchID={86}, @AreaID={87}, @TaxFormID={88}, @PriceCategoryID={89}, @IsClosed={90}, @DepartmentID={91}, @PartyName={92}, @Address1={93}, @Address2={94}, @ItemID={95}, @VATNo={96}",
+                    criteria,//0
+                    TransId,//1
+                    null, null, null,//2,3,4
+                    fiTransactionAdditionalDto.PayType.Id,//5
+                    null, null,//6,7
+                    fiTransactionAdditionalDto.DelivaryLocation.Id,//8
+                    fromLocId,//9
+                    toLocId,//10
+                    null, null, null, null, null, null, null, null, null, null,//11,12,13,14,15,16,17,18,19,20
+                    fiTransactionAdditionalDto.TermsOfDelivery,//21
+                    null, null,//22,23
+                    fiTransactionAdditionalDto.CreditPeriod,//24
+                    null, null,
+                    fiTransactionAdditionalDto.MobileNo,//27
+                    null, null, null, null,
+                    fiTransactionAdditionalDto.StaffIncentives,//32
+                    null, null, null, null, null, null, null,
+                    fiTransactionAdditionalDto.DespatchNo,//40
+                    fiTransactionAdditionalDto.DespatchDate,//41
+                    null,
+                    fiTransactionAdditionalDto.PartyDate,//43
+                    fiTransactionAdditionalDto.PartyInvoiceNo,//44
+                    null,
+                    fiTransactionAdditionalDto.Attention,//46
+                    null, null, null,
+                    fiTransactionAdditionalDto.ExpiryDate,//50
+                    null, null, null, null, null, null, null,
+                    fiTransactionAdditionalDto.DeliveryDate,//58
+                    null, null, null, null,
+                    fiTransactionAdditionalDto.DeliveryNote,//63
+                    fiTransactionAdditionalDto.OrderDate,//64
+                    fiTransactionAdditionalDto.OrderNo,//65
+                    null, null, null,
+                    fiTransactionAdditionalDto.VehicleNo.Id,//69
+                    null, null, null, null,
+                    fiTransactionAdditionalDto.DelivaryLocation.Name,//74
+                    null,
+                    fiTransactionAdditionalDto.Approve,//76
+                    null,
+                    inLocId,//78
+                    outLocId,//79
+                    null, null,
+                    fiTransactionAdditionalDto.SalesMan.Id,//82
+                    null, null, null, null,
+                    fiTransactionAdditionalDto.SalesArea.Id,//87
+                    null, null,
+                    fiTransactionAdditionalDto.CloseVoucher,//90
+                    null,
+                    fiTransactionAdditionalDto.PartyName,//92
+                    fiTransactionAdditionalDto.AddressLine1,//93
+                    fiTransactionAdditionalDto.AddressLine2,//94
+                    null, null
+
+                    );
+
+                return CommonResponse.Ok();
+          
+           
+        }
+       
 
         /// <summary>
         /// deleteTransactionAdditional
@@ -234,4 +231,4 @@ namespace Dfinance.Inventory.Service
             }
         }
     }
-    }
+}

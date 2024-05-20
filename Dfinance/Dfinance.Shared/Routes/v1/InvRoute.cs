@@ -64,7 +64,8 @@ namespace Dfinance.Shared.Routes
             public const string FillCheque = $"{Main}/popupCheque";
             public const string FillBankName = $"{Main}/popupBankName";
             public const string SaveCheque = $"{Main}/SaveCheque";
-
+            public const string FillVoucherType= $"{Main}/fillVoucherType";
+            public const string FillRefItems = $"{Main}/fillRefItems";
         }
         public class InventoryItem
         {
@@ -91,5 +92,32 @@ namespace Dfinance.Shared.Routes
             public const string DeleteUnitMaster = $"{Main}/DeleteUnitMaster";
         }
 
+        public class PurchaseOrder
+        {
+            public const string Main = $"{Base}/purchaseOrder";
+            public const string SavePO = $"{Main}/savePO";
+            public const string UpdatePO = $"{Main}/updatePO";
+            public const string DeletePO = $"{Main}/deletePO";
+        }
+		 public class Sales
+        {
+            public const string Main = $"{Base}/sales";
+            public const string SaveSales = $"{Main}/saveSales";
+            public const string UpdateSales = $"{Main}/updateSales";
+            public const string FillSalesbyid = $"{Main}/fillsalebyid";
+            public const string FillSales = $"{Main}/fillsales";
+            public const string DelSales = $"{Main}/delsales";
+            public const string fillitems = $"{Main}/fillitems";
+            public const string GetData = $"{Main}/getdata";
+            public const string GetCustomer = $"{Main}/getCustomer";
+
+        }
+		  public class PurchaseEnquiry
+        {
+            public const string Main = $"{Base}/PurchaseEnquiry";
+            public const string SavePUE = $"{Main}/savePUE";
+            public const string UpdatePUE = $"{Main}/updatePUE";
+            public const string DeletePUE = $"{Main}/deletePUE";
+		}
     }
 }

@@ -23,8 +23,9 @@ namespace Dfinance.Inventory.Service
       //  private readonly ILogger<PurchaseService> _logger;
         private string purchaseVoucherCredit = string.Empty;
         private string purchaseVoucherDebit = string.Empty;
-        private const string Asset = "ASSET";
+       // private const string Asset = "ASSET";
         private const string EXPENSE = "EXPENSE";
+        private const string ROUNDOFF = "Round Off Account";
         private string? nature = null;
         private DateTime? bankDate = null;
         private int? refPageTypeId = null;
@@ -48,102 +49,115 @@ namespace Dfinance.Inventory.Service
         /// <param name="transactionId"></param>
         /// <param name="transPayId"></param>
         /// <returns></returns>
-        public CommonResponse SaveTransactionEntries(PurchaseDto purchaseDto, int pageId, int transactionId, int transPayId)
+        public CommonResponse SaveTransactionEntries(InventoryTransactionDto transactionDto, int pageId, int transactionId, int transPayId)
         {
             try
             {
-                var Reference = "null";
+                string? Reference = null;
                 SetVoucherDebitCreditDetails(pageId);
+                int? netAmtAcId = null;
+                if(pageId==15) { netAmtAcId = 147; }
+                else if(pageId==149) { netAmtAcId = 35; }
                 int insertedId = 0;
                 //RoundOff
-                if (purchaseDto.TransactionEntries.Roundoff > 0)
+                if (transactionDto.TransactionEntries.Roundoff > 0)
                 {
                     tranType = "RoundOff";
-                    nature = "NULL";
-                    SaveTransactionEntries(transactionId, purchaseVoucherDebit, nature, purchaseDto.Supplier.Id,
-                        purchaseDto.TransactionEntries.Roundoff ?? null, bankDate ?? null, refPageTypeId, purchaseDto.Currency.Id, purchaseDto.ExchangeRate,
-                        refPageTableId, Reference, description, tranType, purchaseDto.TransactionEntries.DueDate, null, null);
+                    nature = null;
+                    var roundOffId=_context.FiMaAccounts.Where(a=>a.Name == ROUNDOFF).Select(a=>a.Id).FirstOrDefault();
+                    SaveTransactionEntries(transactionId, purchaseVoucherDebit, nature, roundOffId,
+                        transactionDto.TransactionEntries.Roundoff ?? null, bankDate ?? null, refPageTypeId, transactionDto.Currency.Id, transactionDto.ExchangeRate,
+                        refPageTableId, Reference, description, tranType, transactionDto.TransactionEntries.DueDate, null, null);
                 }
                 //Tax
-                if (purchaseDto.TransactionEntries.Tax.Count > 0)
+                if (transactionDto.TransactionEntries.Tax.Count > 0)
                 {
                     tranType = "Tax";
-                    nature = "NULL";
-                    foreach (var tax in purchaseDto.TransactionEntries.Tax.Where(a => a.TransType == tranType).ToList())
+                    nature = null;
+                    foreach (var tax in transactionDto.TransactionEntries.Tax.Where(a => a.AccountId != 0 && a?.AccountId != null).ToList())
                     {
                         SaveTransactionEntries(transactionId, purchaseVoucherDebit, nature, tax.AccountId,
-                            tax.Amount ?? null, bankDate ?? null, refPageTypeId, purchaseDto.Currency.Id, purchaseDto.ExchangeRate,
-                            refPageTableId, Reference, description, tranType, purchaseDto.TransactionEntries.DueDate, null, null);
+                            tax.Amount ?? null, bankDate ?? null, refPageTypeId, transactionDto.Currency.Id, transactionDto.ExchangeRate,
+                            refPageTableId, Reference, description, tranType, transactionDto.TransactionEntries.DueDate, null, null);
                     }
                 }
                 //AddCharges
-                if (purchaseDto.TransactionEntries != null && purchaseDto.TransactionEntries.AddCharges != null && purchaseDto.TransactionEntries.AddCharges.Count > 0)
+                if (transactionDto.TransactionEntries != null && transactionDto.TransactionEntries.AddCharges != null && transactionDto.TransactionEntries.AddCharges.Count > 0)
                 {
                     tranType = "Expense";
-                    nature = "NULL";
-                    foreach (var expanse in purchaseDto.TransactionEntries.AddCharges.Where(a => a.TransType == tranType).ToList())
+                    nature = null;
+                    foreach (var expanse in transactionDto.TransactionEntries.AddCharges.Where(a => a.AccountId != 0 && a?.AccountId != null).ToList())
                     {
                         SaveTransactionEntries(transactionId, purchaseVoucherDebit, nature, expanse.AccountId,
-                        expanse.Amount ?? null, bankDate ?? null, refPageTypeId, purchaseDto.Currency.Id, purchaseDto.ExchangeRate,
-                        refPageTableId, Reference, description, tranType, purchaseDto.TransactionEntries.DueDate, null, null);
+                        expanse.Amount ?? null, bankDate ?? null, refPageTypeId, transactionDto.Currency.Id, transactionDto.ExchangeRate,
+                        refPageTableId, Reference, description, tranType, transactionDto.TransactionEntries.DueDate, null, null);
                     }
                 }
+                if (transactionDto.TransactionEntries.NetAmount > 0)
+                {
+                    tranType = null;
+                    nature = "M";
+                     SaveTransactionEntries(transactionId, purchaseVoucherDebit, nature, netAmtAcId,
+                         transactionDto.TransactionEntries.NetAmount ?? null, bankDate ?? null, refPageTypeId, transactionDto.Currency.Id, transactionDto.ExchangeRate,
+                         refPageTableId, Reference, description, tranType, transactionDto.TransactionEntries.DueDate, null, null);
+
+                }
                 //GrandTotal - PartyEntry
-                if (purchaseDto.TransactionEntries.GrandTotal > 0)
+                if (transactionDto.TransactionEntries.GrandTotal > 0)
                 {
                     tranType = "Party";
                     nature = "M";
-                    insertedId = SaveTransactionEntries(transactionId, purchaseVoucherCredit, nature, purchaseDto.Supplier.Id,
-                         purchaseDto.TransactionEntries.GrandTotal ?? null, bankDate ?? null, refPageTypeId, purchaseDto.Currency.Id, purchaseDto.ExchangeRate,
-                         refPageTableId, Reference, description, tranType, purchaseDto.TransactionEntries.DueDate, null, null);
+                    insertedId = SaveTransactionEntries(transactionId, purchaseVoucherCredit, nature, transactionDto.Party.Id,
+                         transactionDto.TransactionEntries.GrandTotal ?? null, bankDate ?? null, refPageTypeId, transactionDto.Currency.Id, transactionDto.ExchangeRate,
+                         refPageTableId, Reference, description, tranType, transactionDto.TransactionEntries.DueDate, null, null);
 
                 }
                 //Advance
-                if (purchaseDto.TransactionEntries.Advance.Count > 0)
+                if (transactionDto.TransactionEntries.Advance.Count > 0)
                 {
                     tranType = "Normal";
                     nature = "M";
-                    foreach (var advance in purchaseDto.TransactionEntries.Advance.Where(a => a.Selection == true).ToList())
+                    foreach (var advance in transactionDto.TransactionEntries.Advance.Where(a => a.AccountID != 0 && a?.AccountID != null).ToList())
                     {
-                        SaveTransactionEntries(transPayId, purchaseVoucherDebit, nature, purchaseDto.Supplier.Id,
-                        advance.Amount ?? null, bankDate ?? null, refPageTypeId, purchaseDto.Currency.Id, purchaseDto.ExchangeRate,
-                        refPageTableId, Reference, description, tranType, purchaseDto.TransactionEntries.DueDate, null, null);
+                        SaveTransactionEntries(transPayId, purchaseVoucherDebit, nature, transactionDto.Party.Id,
+                        advance.Amount ?? null, bankDate ?? null, refPageTypeId, transactionDto.Currency.Id, transactionDto.ExchangeRate,
+                        refPageTableId, Reference, description, tranType, transactionDto.TransactionEntries.DueDate, null, null);
                     }
                 }
                 //Cash
-                if (purchaseDto.TransactionEntries.Cash.Count > 0)
+                if (transactionDto.TransactionEntries.Cash.Count > 0)
                 {
                     tranType = "Cash";
                     nature = "M";
-                    foreach (var cash in purchaseDto.TransactionEntries.Cash.Where(a => a.TransType == tranType).ToList())
+                    foreach (var cash in transactionDto.TransactionEntries.Cash.Where(a => a.AccountId != 0 && a?.AccountId != null).ToList())
                     {
                         SaveTransactionEntries(transPayId, purchaseVoucherCredit, nature, cash.AccountId ,
-                        cash.Amount, bankDate ?? null, refPageTypeId, purchaseDto.Currency.Id, purchaseDto.ExchangeRate,
-                        refPageTableId, Reference, description, tranType, purchaseDto.TransactionEntries.DueDate, null, null);
+                        cash.Amount, bankDate ?? null, refPageTypeId, transactionDto.Currency.Id, transactionDto.ExchangeRate,
+                        refPageTableId, Reference, description, tranType, transactionDto.TransactionEntries.DueDate, null, null);
                     }
                 }
                 //Cheque
-                if (purchaseDto.TransactionEntries.Cheque.Count > 0 && purchaseDto.TransactionEntries.Cheque.Select(x => x.AccountId).FirstOrDefault() != 0)
+                if (transactionDto.TransactionEntries.Cheque.Count > 0 && transactionDto.TransactionEntries.Cheque.Select(x => x.PDCPayable.ID).FirstOrDefault() != 0)
                 {
                     tranType = "Cheque";
                     nature = "M";
-                    foreach (var cheque in purchaseDto.TransactionEntries.Cheque)
+                    foreach (var cheque in transactionDto.TransactionEntries.Cheque.Where(a => a.PDCPayable.ID != 0 && a?.PDCPayable.ID != null))
                     {
-                        SaveTransactionEntries(transPayId, purchaseVoucherCredit, nature, cheque.AccountId ,
-                            cheque.Amount ?? null, bankDate ?? null, refPageTypeId, purchaseDto.Currency.Id, purchaseDto.ExchangeRate,
-                            refPageTableId, Reference, description, tranType, purchaseDto.TransactionEntries.DueDate, null, null);
+                        SaveTransactionEntries(transPayId, purchaseVoucherCredit, nature, cheque.PDCPayable.ID ,
+                            cheque.Amount ?? null, bankDate ?? null, refPageTypeId, transactionDto.Currency.Id, transactionDto.ExchangeRate,
+                            refPageTableId, Reference, description, tranType, transactionDto.TransactionEntries.DueDate, null, null);
                     }
                 }
                 //Card
-                if (purchaseDto.TransactionEntries.Card.Count > 0)
+                if (transactionDto.TransactionEntries.Card.Count > 0)
                 {
                     tranType = "Card";
                     nature = "M";
-                    foreach (var card in purchaseDto.TransactionEntries.Card.Where(a => a.TransType == tranType).ToList())
+                    foreach (var card in transactionDto.TransactionEntries.Card.Where(a => a.AccountId != 0 && a?.AccountId != null).ToList())
                     {
                         SaveTransactionEntries(transPayId, purchaseVoucherCredit, nature, card.AccountId,
-                        card.Amount, bankDate ?? null, refPageTypeId, purchaseDto.Currency.Id, purchaseDto.ExchangeRate,
-                        refPageTableId, Reference, description, tranType, purchaseDto.TransactionEntries.DueDate, null, null);
+                        card.Amount, bankDate ?? null, refPageTypeId, transactionDto.Currency.Id, transactionDto.ExchangeRate,
+                        refPageTableId, Reference, description, tranType, transactionDto.TransactionEntries.DueDate, null, null);
                     }
                 }
                 //var veId=_context.TransactionEntries.Where(e=>e.TransactionId == transactionId && e.TranType=="Party").Select(e=>e.Id).FirstOrDefault();
@@ -160,35 +174,68 @@ namespace Dfinance.Inventory.Service
             int? refPageTypeId, int? currencyId, decimal? exchangeRate, int? refPageTableID, string? referenceCode, string? description,
             string? tranType, DateTime? dueDate, int? refTransID, decimal? taxPerc)
         {
-            criteria = "InsertTransactionEntries";
-            SqlParameter newIdParameter = new SqlParameter("@NewID", SqlDbType.Int)
+            var teId=_context.FiTransactionEntries.Where(te=>te.TransactionId==transactionId && te.TranType==tranType).Select(t=>t.Id).FirstOrDefault();
+            if(teId == null || teId==0)
             {
-                Direction = ParameterDirection.Output
-            };
-            _context.Database.ExecuteSqlRaw("EXEC VoucherSP @Criteria={0},@TransactionId={1},@DrCr={2},@Nature={3}," +
-                "@AccountID={4},@Amount={5},@FCAmount={6},@BankDate={7},@RefPageTypeID={8},@CurrencyID={9},@ExchangeRate={10}," +
-                "@RefPageTableID={11}, @ReferenceNo={12}, @Description={13}, @TranType={14}, @DueDate={15}, @RefTransID={16}, @TaxPerc={17},@NewID={18} OUTPUT",
-                criteria,
-                transactionId,
-                drCr,
-                nature,
-                accountId,
-                grandTotal,
-                grandTotal,
-                bankDate,
-                this.refPageTypeId,
-                currencyId,
-                exchangeRate,
-                refPageTableID,
-                referenceCode,
-                description,
-                tranType,
-                dueDate,
-                refTransID,
-                taxPerc,
-                newIdParameter);
-            var newId = newIdParameter.Value;
-            return (int)newId;
+                criteria = "InsertTransactionEntries";
+                SqlParameter newIdParameter = new SqlParameter("@NewID", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.Output
+                };
+                _context.Database.ExecuteSqlRaw("EXEC VoucherSP @Criteria={0},@TransactionId={1},@DrCr={2},@Nature={3}," +
+               "@AccountID={4},@Amount={5},@FCAmount={6},@BankDate={7},@RefPageTypeID={8},@CurrencyID={9},@ExchangeRate={10}," +
+               "@RefPageTableID={11}, @ReferenceNo={12}, @Description={13}, @TranType={14}, @DueDate={15}, @RefTransID={16}, @TaxPerc={17},@NewID={18} OUTPUT",
+               criteria,
+               transactionId,
+               drCr,
+               nature,
+               accountId,
+               grandTotal,
+               grandTotal,
+               bankDate,
+               this.refPageTypeId,
+               currencyId,
+               exchangeRate,
+               refPageTableID,
+               referenceCode,
+               description,
+               tranType,
+               dueDate,
+               refTransID,
+               taxPerc,
+               newIdParameter);
+                var newId = newIdParameter.Value;
+                return (int)newId;
+            }
+            else
+            {
+                criteria = "UpdateTransactionEntries";
+                _context.Database.ExecuteSqlRaw("EXEC VoucherSP @Criteria={0},@TransactionId={1},@DrCr={2},@Nature={3}," +
+               "@AccountID={4},@Amount={5},@FCAmount={6},@BankDate={7},@RefPageTypeID={8},@CurrencyID={9},@ExchangeRate={10}," +
+               "@RefPageTableID={11}, @ReferenceNo={12}, @Description={13}, @TranType={14}, @DueDate={15}, @RefTransID={16}, @TaxPerc={17},@ID={18}",
+               criteria,
+               transactionId,
+               drCr,
+               nature,
+               accountId,
+               grandTotal,
+               grandTotal,
+               bankDate,
+               this.refPageTypeId,
+               currencyId,
+               exchangeRate,
+               refPageTableID,
+               referenceCode,
+               description,
+               tranType,
+               dueDate,
+               refTransID,
+               taxPerc,
+               teId);                
+                return (int)teId;
+            }
+           
+           
         }
 
         private void SetVoucherDebitCreditDetails(int pageId)
@@ -229,8 +276,8 @@ namespace Dfinance.Inventory.Service
                 var tax = from fa in _context.FiMaAccounts
                           join ba in _context.FiMaBranchAccounts on fa.Id equals ba.AccountId
                           join sg in _context.FiMaSubGroups on fa.SubGroup equals sg.Id
-                          where fa.IsGroup == false && fa.Active == true &&
-                                sg.MajorGroup == Asset && ba.BranchId == branchId
+                          where fa.IsGroup == false && fa.Active == true && sg.Description== "Duties And Taxes" &&
+                              ba.BranchId == branchId
                           select new
                           {
                               Id = fa.Id,
@@ -427,7 +474,7 @@ namespace Dfinance.Inventory.Service
 
         }
 
-        public CommonResponse SaveCheque(ChequesDto chequeDto, int VEId, int PartyId, string Status)
+        public CommonResponse SaveCheque(InvChequesDto chequeDto, int VEId, int PartyId, string Status)
         {
             try
             {
@@ -448,42 +495,23 @@ namespace Dfinance.Inventory.Service
         }
 
         //************SaveTransactionExpenses**********************
-        public CommonResponse SaveTransactionExpenses(List<AccountDetailsDto> accountDetailsDtos, int transactionId, string tranType)
+        public CommonResponse SaveTransactionExpenses(List<InvAccountDetailsDto> accountDetailsDtos, int transactionId, string tranType)
         {
             try
             {
                 foreach (var accountDetailsDto in accountDetailsDtos)
                 {
-                    int? entryId = _context.TransactionEntries.Where(i => i.TransactionId == transactionId && i.TranType == tranType).
+                    int? entryId = _context.FiTransactionEntries.Where(i => i.TransactionId == transactionId && i.TranType == tranType).
                   Select(i => i.Id).
                   SingleOrDefault();
                     entryId = entryId == 0 ? null : entryId;
-                    int? TeId = _context.TransactionExpense.Where(i => i.TransactionId == transactionId && i.AccountId == accountDetailsDto.AccountId).
+                    int? TeId = _context.TransExpense.Where(i => i.TransactionId == transactionId && i.AccountId == accountDetailsDto.AccountId).
                            Select(i => i.Id).
                            SingleOrDefault();
                     TeId = TeId == 0 ? null : TeId;
                     int? chargeTypeId = null;
-                    // tranType = "ItemExpense";
-                    if (TeId != null)
-                    {
-                        criteria = "UpdateTransactionExpenses";
-                        _context.Database.ExecuteSqlRaw("EXEC VoucherAdditionalsSP @Criteria={0},@TransactionID={1},@AccountID={2}," +
-                            "@Description={3},@Amount={4},@PayableAccountID={5},@ChargeTypeID={6},@VEID={7},@PreCalculatedAmt={8},@TranType={9},@ID={10} ",
-                            criteria,
-                            transactionId,
-                            accountDetailsDto.AccountId,
-                            accountDetailsDto.Description,
-                            accountDetailsDto.Amount ?? 0,
-                            accountDetailsDto?.PayableAccount?.ID ?? 0,
-                            chargeTypeId,
-                            entryId,
-                            accountDetailsDto?.Amount ?? null,
-                            tranType,
-                            TeId);
-                    }
-
-                    else
-                    {
+                    
+                   
                         criteria = "InsertTransactionExpenses";
                         SqlParameter newIdParameter = new SqlParameter("@NewID", SqlDbType.Int)
                         {
@@ -496,14 +524,14 @@ namespace Dfinance.Inventory.Service
                             accountDetailsDto.AccountId,
                             accountDetailsDto.Description,
                             accountDetailsDto.Amount ?? 0,
-                            accountDetailsDto?.PayableAccount?.ID ?? 0,
+                            accountDetailsDto?.PayableAccount?.ID == 0?null: accountDetailsDto?.PayableAccount?.ID,
                             chargeTypeId,
-                            entryId,
-                            accountDetailsDto?.Amount ?? null,
+                            entryId==0?null:entryId,
+                            accountDetailsDto.Amount ?? 0,
                             tranType,
                             newIdParameter);
 
-                    }
+                  //  }
                 }
 
                 return CommonResponse.Ok("Success");
@@ -512,10 +540,23 @@ namespace Dfinance.Inventory.Service
             {
                 return CommonResponse.Error("Not saved");
             }
-
         }
-
-        public CommonResponse SaveTransCollections(TransactionEntries transactionEntries, int transactionId)
+        public CommonResponse UpdateTransactionExpenses(List<InvAccountDetailsDto> accountDetailsDtos, int transactionId, string tranType)
+        {
+            try 
+            {
+                var removeExp = _context.TransExpense.Where(t => t.TransactionId == transactionId && t.TranType == tranType).ToList();
+                _context.TransExpense.RemoveRange(removeExp);
+                _context.SaveChanges();
+                SaveTransactionExpenses(accountDetailsDtos, transactionId, tranType);
+                return CommonResponse.Ok();
+            }
+            catch (Exception ex)
+            {
+                return CommonResponse.Error("Not saved");
+            }
+        }
+        public CommonResponse SaveTransCollections(InvTransactionEntriesDto transactionEntries, int transactionId)
         {
             int? tcId = _context.TransCollections.Where(t => t.TransactionId == transactionId).Select(t => t.Id).FirstOrDefault();
             tcId = tcId == 0 ? null : tcId;
@@ -561,7 +602,7 @@ namespace Dfinance.Inventory.Service
             }
             return CommonResponse.Ok("Success");
         }
-        public CommonResponse SaveTransCollectionsAllocation(TransactionEntries transactionEntries, int transCollectionId, int vAllocId)
+        public CommonResponse SaveTransCollectionsAllocation(InvTransactionEntriesDto transactionEntries, int transCollectionId, int vAllocId)
         {
             int? tcId = _context.TransCollnAllocations.Where(t => t.TransCollectionId == transCollectionId && t.VallocationId == vAllocId).Select(t => t.Id).FirstOrDefault();
             tcId = tcId == 0 ? null : tcId;

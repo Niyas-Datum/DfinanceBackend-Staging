@@ -16,7 +16,7 @@ namespace Dfinance.Shared.Enum
     //Opening_Stock = 38,
     Opening_Stock = 28, // Primary voucher id of Opening stock is 28.
     Purchase_Return=76,
-    Sales_Return = 77, Delivery = 80, Service = 81, Payment_Voucher = 5, Receipt_Voucher = 7, Journal = 6, Contra = 4, PurchaseOrder = 18, Sales_Enquiry = 84, Sales_Quotation = 85,
+    Sales_Return = 77, Delivery = 80, Service = 81, Payment_Voucher = 5, Receipt_Voucher = 7, Journal = 6, Contra = 4, Purchase_Order = 18, Sales_Enquiry = 84, Sales_Quotation = 85,
     Stock_Transfer = 83, Delivery_In = 13, Delivery_Out = 14, Stock_Adjustment = 46, Physical_Stock = 16, Stock_Return = 86, Stock_Issue = 90, Stock_Receipt = 91,
     Sales_Estimate = 93,Sales_Order = 94,Purchase_Enquiry = 95,Production = 92,Service_Invoice = 107, Service_Estimate = 104, Service_Order = 106, Service_Quotation = 105,
     Service_Enquiry = 103, Service_Delivery_Out=108, GRN_Quotation=113,JobCard=112,WarrentyClaim=114,GRN=111, Queue = 137, Budgeting = 70, RestaurantInvoice = 118, RestaurantKOT = 117,

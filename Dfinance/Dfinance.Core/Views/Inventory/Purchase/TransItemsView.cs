@@ -53,7 +53,7 @@
         public DateTime? EntryDate { get; set; }
         public string? AccountName { get; set; }
         public string? Phone { get; set; }
-        public string? Status { get; set; }
+        public bool? Status { get; set; }
         public int? SerialNo { get; set; }
         public string? VATNo { get; set; }
     }

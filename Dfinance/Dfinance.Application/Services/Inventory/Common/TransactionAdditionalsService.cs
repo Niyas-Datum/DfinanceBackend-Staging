@@ -4,6 +4,7 @@ using Dfinance.Core.Infrastructure;
 using Dfinance.Core.Views.Inventory;
 using Dfinance.DataModels.Dto;
 using Dfinance.DataModels.Dto.Inventory;
+using Dfinance.DataModels.Dto.Inventory.Purchase;
 using Dfinance.Shared.Domain;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -113,7 +114,7 @@ namespace Dfinance.Application
         /// <param name="fiTransactionAdditionalDto"></param>
         /// <returns></returns>
         /****************** Save TransactionAdditional  *******************/
-        public CommonResponse SaveTransactionAdditional(FiTransactionAdditionalDto fiTransactionAdditionalDto)
+        public CommonResponse SaveTransactionAdditional(InvTransactionAdditionalDto fiTransactionAdditionalDto)
         {
             try
             {
@@ -165,7 +166,7 @@ namespace Dfinance.Application
         }
 
         /****************** Update TransactionAdditional  *******************/
-        public CommonResponse UpdateTransactionAdditional(FiTransactionAdditionalDto fiTransactionAdditionalDto)
+        public CommonResponse UpdateTransactionAdditional(InvTransactionAdditionalDto fiTransactionAdditionalDto)
         {
             try
             {

@@ -13,6 +13,7 @@ namespace Dfinance.Core.Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder<FiTransactionEntry> builder)
         {
+            builder.ToTable("FiTransactionEntries");
             builder.HasIndex(e => e.TransactionId, "IX_FiTransactionEntries");
 
             builder.Property(e => e.Id).HasColumnName("ID");

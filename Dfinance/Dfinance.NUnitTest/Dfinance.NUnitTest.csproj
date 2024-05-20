@@ -27,6 +27,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Dfinance.Application\Dfinance.Application.csproj" />
     <ProjectReference Include="..\Dfinance.Item\Dfinance.Item.csproj" />
+    <ProjectReference Include="..\Dfinance.Purchase\Dfinance.Purchase.csproj" />
   </ItemGroup>
 
   <ItemGroup>

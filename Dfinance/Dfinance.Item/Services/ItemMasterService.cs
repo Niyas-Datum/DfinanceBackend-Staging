@@ -28,7 +28,7 @@ namespace Dfinance.Item.Services.Inventory
         private readonly ISettingsService _settings;
         private readonly ILogger<ItemMasterService> _logger;
         private readonly IUserTrackService _userTrack;
-
+        private string uploadPath;
         public ItemMasterService(DFCoreContext context, IAuthService authService, IItemUnitsService itemunitService, IHostEnvironment environment,
            IConfiguration configuration, ISettingsService settings, ILogger<ItemMasterService> logger,IUserTrackService userTrack)
         {
@@ -40,6 +40,9 @@ namespace Dfinance.Item.Services.Inventory
             _settings = settings;
             _logger = logger;
             _userTrack = userTrack;
+            // Get upload path from app settings
+             uploadPath = _configuration["AppSettings:UploadPath"];
+
         }
 
         private string base64RemoveData = "data:image/png;base64,";
@@ -83,7 +86,7 @@ namespace Dfinance.Item.Services.Inventory
                 
             string criteria = "FillItemByID";
             var itemdata = _context.SpFillItemMasterById.FromSqlRaw($"Exec ItemMasterSP @Criteria='{criteria}',@ID='{Id}'").AsEnumerable().FirstOrDefault();
-            string imagePath = itemdata?.Imagepath;
+            string imagePath =uploadPath+ itemdata?.Imagepath;
 
             string imageBase64 = null;
 
@@ -200,15 +203,13 @@ namespace Dfinance.Item.Services.Inventory
             base64EncodedData = base64EncodedData.Replace(base64RemoveData, "");
             byte[] imageData = Convert.FromBase64String(base64EncodedData);
 
-            // Get upload path from app settings
-            string uploadPath = _configuration["AppSettings:UploadPath"];
-
+          
             if (!Directory.Exists(uploadPath))
                 Directory.CreateDirectory(uploadPath);
 
             // Construct image paths
             string imagePath = Path.Combine(uploadPath, $"{itemCode}.jpg");
-            string imagePathDb = imagePath;
+            string imagePathDb = itemCode+".jpg";
 
             // Write image data to file
             File.WriteAllBytes(imagePath, imageData);
@@ -224,7 +225,7 @@ namespace Dfinance.Item.Services.Inventory
             {
                 return PageNotValid(pageId);
             }
-            if (!_authService.UserPermCheck(pageId, 1))
+            if (!_authService.UserPermCheck(pageId, 2))
             {
                 return PermissionDenied("Save Items");
             }
@@ -433,7 +434,7 @@ namespace Dfinance.Item.Services.Inventory
             {
                 return PageNotValid(pageId);
             }
-            if (!_authService.UserPermCheck(pageId, 1))
+            if (!_authService.UserPermCheck(pageId, 3))
             {
                 return PermissionDenied("Edit Items");
             }
@@ -649,7 +650,7 @@ namespace Dfinance.Item.Services.Inventory
             {
                 return PageNotValid(pageId);
             }
-            if (!_authService.UserPermCheck(pageId, 1))
+            if (!_authService.UserPermCheck(pageId, 5))
             {
                 return PermissionDenied("Delete Items");
             }

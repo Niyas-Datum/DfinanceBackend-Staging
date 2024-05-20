@@ -13,10 +13,11 @@ namespace Dfinance.Inventory.Service.Interface
         CommonResponse FillAdvance(int AccountId, string Drcr, DateTime? date);
         CommonResponse FillCheque();
         CommonResponse FillBankName();
-        CommonResponse SaveCheque(ChequesDto chequeDto, int VEId, int PartyId, string Status);
-        CommonResponse SaveTransactionEntries(PurchaseDto purchaseDto, int pageId, int transactionId, int transPayId);
-        CommonResponse SaveTransactionExpenses(List<AccountDetailsDto> accountDetailsDtos, int transactionId, string tranType);
-        CommonResponse SaveTransCollections(TransactionEntries transactionEntries, int transactionId);
-        CommonResponse SaveTransCollectionsAllocation(TransactionEntries transactionEntries, int transCollectionId, int vAllocId);
+        CommonResponse SaveCheque(InvChequesDto chequeDto, int VEId, int PartyId, string Status);
+        CommonResponse SaveTransactionEntries(InventoryTransactionDto purchaseDto, int pageId, int transactionId, int transPayId);
+        CommonResponse SaveTransactionExpenses(List<InvAccountDetailsDto> accountDetailsDtos, int transactionId, string tranType);
+        CommonResponse UpdateTransactionExpenses(List<InvAccountDetailsDto> accountDetailsDtos, int transactionId, string tranType);
+        CommonResponse SaveTransCollections(InvTransactionEntriesDto transactionEntries, int transactionId);
+        CommonResponse SaveTransCollectionsAllocation(InvTransactionEntriesDto transactionEntries, int transCollectionId, int vAllocId);
     }
 }

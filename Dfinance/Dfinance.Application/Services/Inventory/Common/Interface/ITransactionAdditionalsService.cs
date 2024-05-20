@@ -1,5 +1,6 @@
 ﻿using Dfinance.DataModels.Dto;
 using Dfinance.DataModels.Dto.Inventory;
+using Dfinance.DataModels.Dto.Inventory.Purchase;
 using Dfinance.Shared.Domain;
 using System;
 using System.Collections.Generic;
@@ -11,8 +12,8 @@ namespace Dfinance.Application
 {
     public interface ITransactionAdditionalsService
     {
-        CommonResponse SaveTransactionAdditional(FiTransactionAdditionalDto fiTransactionAdditionalDto);
-        CommonResponse UpdateTransactionAdditional(FiTransactionAdditionalDto fiTransactionAdditionalDto);
+        CommonResponse SaveTransactionAdditional(InvTransactionAdditionalDto fiTransactionAdditionalDto);
+        CommonResponse UpdateTransactionAdditional(InvTransactionAdditionalDto fiTransactionAdditionalDto);
         CommonResponse DeleteTransactionAdditional(int Id);
         CommonResponse FillTransactionAdditionals(int transactionId);
         CommonResponse GetTransPortationType();

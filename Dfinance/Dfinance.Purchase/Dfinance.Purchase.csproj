@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Services\4jn114nu.shf~" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Dfinance.Application\Dfinance.Application.csproj" />
     <ProjectReference Include="..\Dfinance.Core\Dfinance.Core.csproj" />
     <ProjectReference Include="..\Dfinance.DataModels\Dfinance.DataModels.csproj" />
