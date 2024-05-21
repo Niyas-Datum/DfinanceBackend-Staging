@@ -136,7 +136,7 @@ namespace Dfinance.Warehouse.Services
                 }
                 else
                 {
-                    if (warehouseDto.Type.ID ==2)
+                    if (warehouseDto.Type.ID ==10)
                     {
                         return CommonResponse.Error("Updation not possiable in Type IN TRANSIT ");
                     }
