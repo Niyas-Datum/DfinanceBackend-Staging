@@ -1,6 +1,5 @@
 using Dfiance.Hr.Employees;
 using Dfiance.Hr.Employees.Interface;
-using Dfinance.Application;
 using Dfinance.Application.Services;
 using Dfinance.Application.Services.Finance;
 using Dfinance.Application.Services.Finance.Interface;
@@ -28,14 +27,14 @@ using Dfinance.Inventory.Service.Interface;
 using Dfinance.Inventory.Service;
 //using Dfinance.Application.LabelAndGridSettings.Interface;
 //using Dfinance.Application.LabelAndGridSettings;
-using Dfinance.Purchase.Services;
-using Dfinance.Purchase.Services.Interface;
 using Dfinance.Application.LabelAndGridSettings.Interface;
 using Dfinance.Application.LabelAndGridSettings;
 
 using Dfinance.Inventory.Interface;
 using Dfinance.Inventory;
 using Dfinance.Sales;
+using Dfinance.Purchase.Services.Interface;
+using Dfinance.Purchase.Services;
 
 
 namespace Dfinance.api.Installers;
