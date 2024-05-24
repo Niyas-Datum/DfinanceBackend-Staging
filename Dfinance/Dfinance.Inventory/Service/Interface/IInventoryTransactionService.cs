@@ -21,7 +21,7 @@ namespace Dfinance.Inventory.Service.Interface
         CommonResponse FillVoucherType(int voucherId);
         CommonResponse FillRefItems(int transId);
 
-
+        CommonResponse FillReference(int transId, int[]? itemId);
 
 
 

@@ -71,7 +71,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
             }
         }
 
-        [HttpGet(InvRoute.InventoryPaymentTransaction.FillVoucherType)]
+        [HttpGet(InvRoute.InventroyTransactions.FillVoucherType)]
         public IActionResult FillVoucherType(int voucherId)
         {
             try
@@ -84,7 +84,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
                 return BadRequest(ex.Message);
             }
         }
-        [HttpGet(InvRoute.InventoryPaymentTransaction.FillRefItems)]
+        [HttpGet(InvRoute.InventroyTransactions.FillRefItems)]
         public IActionResult FillRefItems(int transId)
         {
             try

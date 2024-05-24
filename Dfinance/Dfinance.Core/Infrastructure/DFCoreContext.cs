@@ -229,6 +229,8 @@ public DbSet <UserTrack> UserTrack { get; set; }
     //FitransactionAdditonals
     public DbSet<SpGetTransactionAdditionals> SpGetTransactionAdditionals { get; set; }
 public DbSet<ReferenceView> ReferenceView {  get; set; }
+    public DbSet<RefItemsView> RefItemsView { get; set; }
+    
 public DbSet<NextBatchNoView> NextBatchNoView { get; set; }
 public DbSet<TransItemsView> TransItemsView { get; set; }
     public DbSet<CommandTextView> CommandTextView { get; set; }
@@ -459,5 +461,6 @@ public DbSet<TransItemsView> TransItemsView { get; set; }
         mb.Entity<FillDeldetails>().HasNoKey().ToView(null);
         mb.Entity<CrdtCollView>().HasNoKey().ToView(null);
         mb.Entity<PriceCategoryPopUp>().HasNoKey().ToView(null);
+        mb.Entity<RefItemsView>().HasNoKey().ToView(null);
     }
 }
