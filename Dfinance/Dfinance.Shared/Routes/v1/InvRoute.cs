@@ -154,5 +154,20 @@ namespace Dfinance.Shared.Routes
             public const string UpdateGIT = $"{Main}/update";
             public const string DeleteGIT = $"{Main}/delete";
         }
+		 public class SalesReturn
+        {
+            public const string Main = $"{Base}/salesReturn";
+            public const string SaveSalesReturn = $"{Main}/saveSalesRtn";
+            public const string UpdateSalesReturn = $"{Main}/updateSalesRtn";
+            public const string DelSalesReturn = $"{Main}/delsalesRtn";
+
+        }
+		 public class PurchaseReturn
+        {
+            public const string Main = $"{Base}/PurchaseReturn";
+            public const string SavePurchaseRtn = $"{Main}/savePR";
+            public const string UpdatePurchaseRtn = $"{Main}/updatePR";
+            public const string DeletePurchaseRtn = $"{Main}/deletePR";
+        }
     }
 }

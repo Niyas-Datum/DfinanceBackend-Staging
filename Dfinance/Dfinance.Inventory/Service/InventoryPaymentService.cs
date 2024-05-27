@@ -64,8 +64,15 @@ namespace Dfinance.Inventory.Service
                 SetVoucherDebitCreditDetails(pageId);
                 int BranchID = _authService.GetBranchId().Value;
                 int? netAmtAcId = null;
-                var voucherId = _context.MaPageMenus.Where(p => p.Id == pageId).FirstOrDefault();
-                var voucherName = _context.FiMaVouchers.Where(v => v.Id == voucherId.VoucherId).FirstOrDefault();
+                var voucherName = (from pageMenu in _context.MaPageMenus
+                                   join voucher in _context.FiMaVouchers on pageMenu.VoucherId equals voucher.Id
+                                   where pageMenu.Id == pageId
+                                   select new
+                                   {
+                                       VoucherId = voucher.Id,
+                                       VoucherName = voucher.Name
+                                   }).FirstOrDefault();
+
                 int? discountId = null;
                 netAmtAcId = null;
                 int? roundOffId = null;
@@ -73,7 +80,7 @@ namespace Dfinance.Inventory.Service
 
                 using (var dbCommand = _context.Database.GetDbConnection().CreateCommand())
                 {
-                    dbCommand.CommandText = $"EXEC FillPartyDetailsSP @BranchID={BranchID},@VoucherName='{voucherName.Name}'";
+                    dbCommand.CommandText = $"EXEC FillPartyDetailsSP @BranchID={BranchID},@VoucherName='{voucherName.VoucherName}'";
                     SqlDataAdapter da=new SqlDataAdapter((SqlCommand)dbCommand);
                     DataSet dataSet = new DataSet();
                     da.Fill(dataSet);
