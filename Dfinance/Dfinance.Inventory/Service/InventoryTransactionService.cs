@@ -406,6 +406,7 @@ namespace Dfinance.Inventory.Service
                     else
                     {
                         refTransId = transpayId;
+                        adv.VID = transId;
                     }
                         SqlParameter newId = new SqlParameter("@NewID", SqlDbType.Int)
                     {

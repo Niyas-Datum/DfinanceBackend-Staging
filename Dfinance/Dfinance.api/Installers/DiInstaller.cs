@@ -127,5 +127,7 @@ public class DiInstaller : IInstaller
         service.AddScoped<IPurchaseQuotationService, PurchaseQuotationService>();
         service.AddScoped<IInternationalPurchaseService, InternationalPurchaseService>();
         service.AddScoped<IGoodsInTransitService, GoodsInTransitService>();
+		service.AddScoped<ISalesReturnService, SalesReturnService>();
+		service.AddScoped<IPurchaseReturnService, PurchaseReturnService>();
     }
 }
