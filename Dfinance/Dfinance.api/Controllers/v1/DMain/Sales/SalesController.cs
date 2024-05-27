@@ -16,6 +16,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Sales
             _salesService = sales;
         }
         [HttpPost(InvRoute.Sales.SaveSales)]
+
         public IActionResult Save([FromBody] InventoryTransactionDto salesDto, int PageId, int voucherId)
         {
             try

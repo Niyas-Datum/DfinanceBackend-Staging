@@ -128,11 +128,11 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
         }
         [HttpPost(InvRoute.InventoryPaymentTransaction.SaveCheque)]
 
-        public IActionResult SaveCheque([FromBody] InvChequesDto chequeDto, int VEId, int PartyId, string Status)
+        public IActionResult SaveCheque([FromBody] InvChequesDto chequeDto, int VEId, int PartyId)
         {
             try
             {
-                var view = _payservice.SaveCheque(chequeDto, VEId, PartyId, Status);
+                var view = _payservice.SaveCheque(chequeDto, VEId, PartyId);
                 return Ok(view);
             }
             catch (Exception ex)

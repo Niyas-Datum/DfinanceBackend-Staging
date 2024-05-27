@@ -232,11 +232,20 @@ namespace Dfinance.Sales
                     //int VoucherId=_com.GetVoucherId(PageId);
                     string Status = "Approved";
                     int TransId = (int)_transactionService.SaveTransaction(salesDto, PageId, voucherId, Status).Data;
-
-                    int transpayId = (int)_transactionService.SaveTransactionPayment(salesDto, TransId, Status,7).Data;
+                    int transpayId = TransId;
+                    if (salesDto.TransactionEntries.Cash.Count > 0 || salesDto.TransactionEntries.Card.Count > 0 || salesDto.TransactionEntries.Cheque.Count > 0)
+                    {
+                        transpayId = (int)_transactionService.SaveTransactionPayment(salesDto, TransId, Status, 2).Data;
+                    }
                     if (salesDto.FiTransactionAdditional != null)
                     {
                         _additionalService.SaveTransactionAdditional(salesDto.FiTransactionAdditional, TransId, voucherId);
+                    }
+                    if (salesDto.Reference.Count > 0 && salesDto.Reference.Select(x => x.Id).FirstOrDefault() != 0)
+                    {
+                        List<int?> referIds = salesDto.Reference.Select(x => x.Id).ToList();
+
+                        _transactionService.SaveTransReference(TransId, referIds);
                     }
                     if (salesDto.Items != null)
                     {
@@ -245,33 +254,16 @@ namespace Dfinance.Sales
                     if (salesDto.TransactionEntries != null)
                     {
 
-                        int TransEntId = (int)_paymentService.SaveTransactionEntries(salesDto, PageId, TransId, transpayId).Data;
-
-                        List<int> transpaIdList = new List<int>();
+                        int TransEntId = (int)_paymentService.SaveTransactionEntries(salesDto, PageId, TransId, transpayId).Data;                       
 
                         if (salesDto.TransactionEntries.Advance != null && salesDto.TransactionEntries.Advance.Any())
-                        {
-                            foreach (var adv in salesDto.TransactionEntries.Advance)
-                            {
-                                if (adv.VID != 0)
-                                {
-                                    transpaIdList.Add(adv.VID.Value);
-                                }
-                                else
-                                {
-                                    transpaIdList.Add(transpayId);
-                                }
-                            }
+                        {                            
+                            _transactionService.SaveVoucherAllocation(TransId,transpayId, salesDto.TransactionEntries);                            
                         }
-                        _transactionService.SaveVoucherAllocation(transpayId, TransEntId, salesDto.Party.Id, salesDto.TransactionEntries.GrandTotal, transpaIdList);
+                        
 
 
-                        if (salesDto.Reference.Count > 0 && salesDto.Reference.Select(x => x.Id).FirstOrDefault() != 0)
-                        {
-                            List<int?> referIds = salesDto.Reference.Select(x => x.Id).ToList();
-
-                            _transactionService.SaveTransReference(TransId, referIds);
-                        }
+                        
                     }
                     _logger.LogInformation("Successfully Created");
                     transactionScope.Complete();
@@ -286,7 +278,7 @@ namespace Dfinance.Sales
             }
         }
 
-        public CommonResponse UpdateSales(InventoryTransactionDto purchaseDto, int PageId, int voucherId)
+        public CommonResponse UpdateSales(InventoryTransactionDto salesDto, int PageId, int voucherId)
         {
             if (!_authService.IsPageValid(PageId))
             {
@@ -303,49 +295,35 @@ namespace Dfinance.Sales
                 {
                     //int VoucherId = _com.GetVoucherId(PageId);
                     string Status = "Approved";
-                    int TransId = (int)_transactionService.SaveTransaction(purchaseDto, PageId, voucherId, Status).Data;
+                    int TransId = (int)_transactionService.SaveTransaction(salesDto, PageId, voucherId, Status).Data;
 
-                    int transpayId = (int)_transactionService.SaveTransactionPayment(purchaseDto, TransId, Status, 7).Data;
+                    int transpayId = (int)_transactionService.SaveTransactionPayment(salesDto, TransId, Status, 7).Data;
 
-                    if (purchaseDto.FiTransactionAdditional != null)
+                    if (salesDto.FiTransactionAdditional != null)
                     {
-                        _additionalService.SaveTransactionAdditional(purchaseDto.FiTransactionAdditional, TransId, voucherId);
+                        _additionalService.SaveTransactionAdditional(salesDto.FiTransactionAdditional, TransId, voucherId);
                     }
-                    if (purchaseDto.Items != null)
-
+                    if (salesDto.Reference.Count > 0 && salesDto.Reference.Select(x => x.Id).FirstOrDefault() != 0)
                     {
-                        _itemService.UpdateInvTransItems(purchaseDto, voucherId, TransId);
+                        List<int?> referIds = salesDto.Reference.Select(x => x.Id).ToList();
+
+                        _transactionService.UpdateTransReference(TransId, referIds);
                     }
-                    if (purchaseDto.TransactionEntries != null)
+                    if (salesDto.Items != null)
+
+                    {
+                        _itemService.UpdateInvTransItems(salesDto, voucherId, TransId);
+                    }
+                    if (salesDto.TransactionEntries != null)
                     {
 
-                        int TransEntId = (int)_paymentService.SaveTransactionEntries(purchaseDto, PageId, TransId, transpayId).Data;
+                        int TransEntId = (int)_paymentService.SaveTransactionEntries(salesDto, PageId, TransId, transpayId).Data;
 
-                        List<int> transpaIdList = new List<int>();
-
-                        if (purchaseDto.TransactionEntries.Advance != null && purchaseDto.TransactionEntries.Advance.Any())
+                        if (salesDto.TransactionEntries.Advance != null && salesDto.TransactionEntries.Advance.Any(a => a.VID != null || a.VID != 0))
                         {
-                            foreach (var adv in purchaseDto.TransactionEntries.Advance)
-                            {
-                                if (adv.VID != 0)
-                                {
-                                    transpaIdList.Add(adv.VID.Value);
-                                }
-                                else
-                                {
-                                    transpaIdList.Add(transpayId);
-                                }
-                            }
+                            _transactionService.SaveVoucherAllocation(TransId, transpayId, salesDto.TransactionEntries);
                         }
-                        _transactionService.UpdateVoucherAllocation(transpayId, TransEntId, purchaseDto.Party.Id, purchaseDto.TransactionEntries.GrandTotal, transpaIdList);
 
-                        if (purchaseDto.Reference.Count > 0 && purchaseDto.Reference.Select(x => x.Id).FirstOrDefault() != 0)
-                        {
-                            List<int?> referIds = purchaseDto.Reference.Select(x => x.Id).ToList();
-
-
-                            _transactionService.UpdateTransReference(TransId, referIds);
-                        }
                     }
                     transactionScope.Complete();
                     _logger.LogInformation("Successfully Updated");
