@@ -1,7 +1,6 @@
-﻿using Dfinance.Application;
-using Dfinance.DataModels.Dto.Common;
-using Dfinance.DataModels.Dto.Inventory;
+﻿using Dfinance.DataModels.Dto.Common;
 using Dfinance.DataModels.Dto.Inventory.Purchase;
+using Dfinance.DataModels.Dto.Inventory;
 using Dfinance.Sales;
 using Dfinance.Shared.Domain;
 using Moq;
@@ -13,18 +12,18 @@ using System.Threading.Tasks;
 
 namespace Dfinance.NUnitTest.Sales
 {
-    public class SalesServiceTest
+    public class SalesReturnTest
     {
-        private Mock<ISalesInvoiceService> _salesInvoice;
+        private Mock<ISalesReturnService> _salesReturn;
         [SetUp]
         public void Setup()
         {
-            _salesInvoice = new Mock<ISalesInvoiceService>();
+            _salesReturn = new Mock<ISalesReturnService>();
         }
         [Test]
         public void SalesInvoice_Save()
         {
-            InventoryTransactionDto salesDto = new InventoryTransactionDto
+            InventoryTransactionDto salesReturnDto = new InventoryTransactionDto
             {
                 Id = null,
                 VoucherNo = "0007",
@@ -267,11 +266,10 @@ namespace Dfinance.NUnitTest.Sales
         }
                 }
             };
-
-            _salesInvoice.Setup(x => x.SaveSales(salesDto, 149, 23)).Returns(new CommonResponse { Exception = null, Data = new InventoryTransactionDto() });
+            _salesReturn.Setup(x => x.SaveSalesReturn(salesReturnDto, 149, 23)).Returns(new CommonResponse { Exception = null, Data = new InventoryTransactionDto() });
 
             //Act
-            var result = _salesInvoice.Object.SaveSales(salesDto, 149, 23);
+            var result = _salesReturn.Object.SaveSalesReturn(salesReturnDto, 149, 23);
             Assert.That(result, Is.Not.Null);
             //Assert.IsNotNull(result);
 
@@ -282,7 +280,7 @@ namespace Dfinance.NUnitTest.Sales
         [Test]
         public void SalesInvoice_Update()
         {
-            InventoryTransactionDto salesDto = new InventoryTransactionDto
+            InventoryTransactionDto salesReturnDto = new InventoryTransactionDto
             {
                 Id = 16,
                 VoucherNo = "0007",
@@ -526,10 +524,10 @@ namespace Dfinance.NUnitTest.Sales
                 }
             };
 
-            _salesInvoice.Setup(x => x.UpdateSales(salesDto, 149, 23)).Returns(new CommonResponse { Exception = null, Data = new InventoryTransactionDto() });
+            _salesReturn.Setup(x => x.UpdateSalesReturn(salesReturnDto, 149, 23)).Returns(new CommonResponse { Exception = null, Data = new InventoryTransactionDto() });
 
             //Act
-            var result = _salesInvoice.Object.UpdateSales(salesDto, 149, 23);
+            var result = _salesReturn.Object.UpdateSalesReturn(salesReturnDto, 149, 23);
             Assert.That(result, Is.Not.Null);
             //Assert.IsNotNull(result);
 
@@ -541,57 +539,10 @@ namespace Dfinance.NUnitTest.Sales
         public void DeleteSalesTest()
         {
             int transId = 16;
-            _salesInvoice.Setup(x => x.DeleteSales(transId)).Returns(new CommonResponse { Exception = null, Data = new InventoryTransactionDto() });
-            var result = _salesInvoice.Object.DeleteSales(transId);
-
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.IsValid, Is.True);
-            Assert.That(result.Data, Is.Not.Null);
-        }
-        [Test]
-        public void FillSaleByIDTest()
-        {
-            int transId = 16;
-            _salesInvoice.Setup(x => x.FillSalesById(transId)).Returns(new CommonResponse { Exception = null, Data = new InventoryTransactionDto() });
-            var result = _salesInvoice.Object.FillSalesById(transId);
-
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.IsValid, Is.True);
-            Assert.That(result.Data, Is.Not.Null);
-        }
-        [Test]
-        public void FillSalesTest()
-        {
             int pageId = 149;
-            bool post = true;
-            _salesInvoice.Setup(x => x.FillSales(pageId, post)).Returns(new CommonResponse { Exception = null, Data = new InventoryTransactionDto() });
-            var result = _salesInvoice.Object.FillSales(pageId, post);
+            _salesReturn.Setup(x => x.DeleteSalesReturn(transId,pageId)).Returns(new CommonResponse { Exception = null, Data = new InventoryTransactionDto() });
+            var result = _salesReturn.Object.DeleteSalesReturn(transId, pageId);
 
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.IsValid, Is.True);
-            Assert.That(result.Data, Is.Not.Null);
-        }
-        [Test]
-        public void FillTransItemsTest()
-        {
-            int pageId = 149;
-            int partyId = 309;
-            int logId = 238;
-            int voucherId = 23;
-            _salesInvoice.Setup(x => x.FillTransItems(partyId, pageId, logId, voucherId)).Returns(new CommonResponse { Exception = null, Data = new InventoryTransactionDto() });
-            var result = _salesInvoice.Object.FillTransItems(partyId, pageId, logId, voucherId);
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.IsValid, Is.True);
-            Assert.That(result.Data, Is.Not.Null);
-        }
-        [Test]
-        public void GetDataTest()
-
-        {
-            int pageId = 149;
-            int voucherId = 23;
-            _salesInvoice.Setup(x => x.GetData(pageId, voucherId)).Returns(new CommonResponse { Exception = null, Data = new InventoryTransactionDto() });
-            var result = _salesInvoice.Object.GetData(pageId, voucherId);
             Assert.That(result, Is.Not.Null);
             Assert.That(result.IsValid, Is.True);
             Assert.That(result.Data, Is.Not.Null);

@@ -1,5 +1,6 @@
 ﻿using Dfinance.AuthAppllication.Services.Interface;
 using Dfinance.Core.Infrastructure;
+using Dfinance.DataModels.Dto.Common;
 using Dfinance.DataModels.Dto.Inventory.Purchase;
 using Dfinance.Inventory.Service.Interface;
 using Dfinance.Shared.Domain;
@@ -15,6 +16,7 @@ namespace Dfinance.Inventory.Service
         private readonly DFCoreContext _context;
         private readonly IAuthService _authService;
         private readonly IHostEnvironment _environment;
+        
        
         public InventoryTransactionService(DFCoreContext context, IAuthService authService, IHostEnvironment hostEnvironment)
         {
@@ -46,8 +48,12 @@ namespace Dfinance.Inventory.Service
                 var result = _context.AccountCodeView
                     .FromSqlRaw($"EXEC GetNextAutoEntryVoucherNoSP @VoucherID={voucherid}, @BranchID={branchid}")
                     .ToList();
-
-                return CommonResponse.Ok(new { Code = voucher.Code, Result = result });
+                VoucherNo voucherNo = new VoucherNo
+                {
+                    Code = voucher.Code,
+                    Result = result
+                };
+                return CommonResponse.Ok(voucherNo);
             }
             catch (Exception ex)
             {
@@ -260,6 +266,8 @@ namespace Dfinance.Inventory.Service
                 string ReferenceId = null;
                 string environmentname = _environment.EnvironmentName;
 
+                VoucherNo voucherNo = (VoucherNo)GetAutoVoucherNo(VoucherId).Data;
+
                 if (transactionDto.Id ==0 ||transactionDto.Id==null)
                 {
                     string criteria = "InsertTransactions"; 
@@ -279,7 +287,7 @@ namespace Dfinance.Inventory.Service
                         "@Posted={28}, @Active={29}, @Cancelled={30}, @AccountID={31}, @Description={32}, " +
                         "@RefTransID={33}, @CostCentreID={34}, @PageID={35}, @NewID={36} OUTPUT",
                         criteria, transactionDto.Date, DateTime.Now, VoucherId, environmentname,
-                        transactionDto.VoucherNo, false, transactionDto.Currency.Id, transactionDto.ExchangeRate, null, null,
+                        voucherNo.Result[0].AccountCode, false, transactionDto.Currency.Id, transactionDto.ExchangeRate, null, null,
                         ReferenceId, branchId, null, null, null,
                         null, null, transactionDto.Description, createdBy, null, DateTime.Now, null,
                         ApprovalStatus, null, null, Status, Autoentry, true, true, false, transactionDto.Party.Id,
@@ -366,28 +374,47 @@ namespace Dfinance.Inventory.Service
         /// <param name="amount"></param>
         /// <param name="referTransIds"></param>
         /// <returns></returns>
-        public CommonResponse SaveVoucherAllocation(int transId, int TransEntId, int? accountid, decimal? amount, List<int> referTransIds)
+        public CommonResponse SaveVoucherAllocation(int transId,int transpayId, InvTransactionEntriesDto transactionAdvance)
         {
             
-            List<int> processedReferIds = new List<int>();
+           // List<int> processedReferIds = new List<int>();
             try
             {
-              
+                int? refTransId = null;
+                var transEntryId=_context.FiTransactionEntries.Where(e=>e.TransactionId == transId && e.TranType=="Party").FirstOrDefault();
                 string criteria = "InsertVoucherAllocation";
-
-                foreach (int referId in referTransIds)
+                foreach (var adv in transactionAdvance.Advance)
                 {
-                    SqlParameter newId = new SqlParameter("@NewID", SqlDbType.Int)
+                    if (adv.VID != 0)
+                    {
+                        refTransId = adv.VID.Value;
+                    }
+                    else
+                    {
+                        refTransId = transpayId;
+                    }
+                        SqlParameter newId = new SqlParameter("@NewID", SqlDbType.Int)
                     {
                         Direction = ParameterDirection.Output
                     };
 
                     _context.Database.ExecuteSqlRaw("EXEC VoucherSP @Criteria={0}, @VID={1}, @VEID={2}, @AccountID={3},@Amount={4},@RefTransID={5}, @NewID={6} OUTPUT",
-                        criteria, transId, TransEntId, accountid, amount, referId, newId);
-
-                    processedReferIds.Add(referId);
+                        criteria, adv.VID, transEntryId.Id, adv.AccountID, adv.Amount, refTransId, newId);
+                   
                 }
-                return CommonResponse.Ok(processedReferIds);
+                //foreach (int referId in referTransIds)
+                //{
+                //    SqlParameter newId = new SqlParameter("@NewID", SqlDbType.Int)
+                //    {
+                //        Direction = ParameterDirection.Output
+                //    };
+
+                //    _context.Database.ExecuteSqlRaw("EXEC VoucherSP @Criteria={0}, @VID={1}, @VEID={2}, @AccountID={3},@Amount={4},@RefTransID={5}, @NewID={6} OUTPUT",
+                //        criteria, transId, TransEntId, accountid, amount, referId, newId);
+
+                //    processedReferIds.Add(referId);
+                //}
+                return CommonResponse.Ok();
 
             }
             catch (Exception ex)
@@ -405,27 +432,28 @@ namespace Dfinance.Inventory.Service
         /// <param name="amount"></param>
         /// <param name="referTransIds"></param>
         /// <returns></returns>
-        public CommonResponse UpdateVoucherAllocation(int transId, int TransEntId, int? accountid, decimal? amount, List<int> referTransIds)
+        public CommonResponse UpdateVoucherAllocation(int transId, int transpayId, InvTransactionEntriesDto transactionAdvance)
         {
 
-            List<int> processedReferIds = new List<int>();
+           // List<int> processedReferIds = new List<int>();
             try
             {
-                int Id=_context.FiVoucherAllocation .Where(x => x.Vid == transId)
-                 .Select(x => x.Id)
-                 .FirstOrDefault();
+                _context.FiVoucherAllocation.Where(v => v.RefTransId == transId).ExecuteDelete();
+                   SaveVoucherAllocation(transId,transpayId, transactionAdvance);
+                //int Id=_context.FiVoucherAllocation .Where(x => x.RefTransId == transId)
+                // .Select(x => x.Id)
+                // .FirstOrDefault();
 
-                string criteria = "UpdateVoucherAllocation";
+                //string criteria = "UpdateVoucherAllocation";
+                //foreach (var adv in transactionAdvance.Advance)
+                //{
 
-                foreach (int referId in referTransIds)
-                {
 
-                    _context.Database.ExecuteSqlRaw("EXEC VoucherSP @Criteria={0}, @VID={1}, @VEID={2}, @AccountID={3},@Amount={4},@RefTransID={5}, @NewID={6} OUTPUT",
-                        criteria, transId, TransEntId, accountid, amount, referId, Id);
+                //    _context.Database.ExecuteSqlRaw("EXEC VoucherSP @Criteria={0}, @VID={1}, @VEID={2}, @AccountID={3},@Amount={4},@RefTransID={5}, @ID={6} ",
+                //        criteria, adv.VID, adv.VEID, adv.AccountID, adv.Amount, transId, Id);
 
-                    processedReferIds.Add(referId);
-                }
-                return CommonResponse.Ok(processedReferIds);
+                //}
+                return CommonResponse.Ok();
 
             }
             catch (Exception ex)
