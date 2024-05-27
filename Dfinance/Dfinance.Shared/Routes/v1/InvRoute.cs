@@ -38,6 +38,9 @@ namespace Dfinance.Shared.Routes
             public const string getvoucherno = $"{Main}/getvocno";
             public const string getreference = $"{Main}/getrefer";
             public const string DeletePurchase = $"{Main}/delete";
+            public const string FillVoucherType = $"{Main}/fillVoucherType";
+            public const string FillRefItems = $"{Main}/fillRefItems";
+            public const string FillRef = $"{Main}/fillRef";
         }
         public class Purchase
         {
@@ -64,8 +67,7 @@ namespace Dfinance.Shared.Routes
             public const string FillCheque = $"{Main}/popupCheque";
             public const string FillBankName = $"{Main}/popupBankName";
             public const string SaveCheque = $"{Main}/SaveCheque";
-            public const string FillVoucherType= $"{Main}/fillVoucherType";
-            public const string FillRefItems = $"{Main}/fillRefItems";
+           
         }
         public class InventoryItem
         {
@@ -119,5 +121,38 @@ namespace Dfinance.Shared.Routes
             public const string UpdatePUE = $"{Main}/updatePUE";
             public const string DeletePUE = $"{Main}/deletePUE";
 		}
+
+        public class PurchaseRequest
+        {
+            public const string Main = $"{Base}/purchaseReq";
+            public const string SavePuReq = $"{Main}/save";
+            public const string UpdatePuReq = $"{Main}/update";
+            public const string DeletePuReq = $"{Main}/delete";
+        }
+        public class PurchaseQuotaion
+        {
+            public const string Main = $"{Base}/purchaseQut";
+            public const string SavePuQut = $"{Main}/save";
+            public const string UpdatePuQut = $"{Main}/update";
+            public const string DeletePuQut = $"{Main}/delete";
+        }
+        public class InternationalPurchase
+        {
+            public const string Main = $"{Base}/IntPurchase";
+            public const string SaveInpurchase = $"{Main}/save";
+            public const string UpdateInpurchase = $"{Main}/update";
+            public const string FillInpurchasebyid = $"{Main}/fillbyid";
+            public const string FillInpurchase = $"{Main}/fill";
+            public const string DelInpurchase = $"{Main}/delete";
+            public const string fillitems = $"{Main}/fillitems";
+            public const string GetData = $"{Main}/getdata";
+        }
+        public class GoodsInTransit
+        {
+            public const string Main = $"{Base}/goodsInTransit";
+            public const string SaveGIT = $"{Main}/save";
+            public const string UpdateGIT = $"{Main}/update";
+            public const string DeleteGIT = $"{Main}/delete";
+        }
     }
 }

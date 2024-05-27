@@ -114,13 +114,17 @@ namespace Dfinance.Inventory.Service
             {
                 case VoucherType.Purchase:
                 case VoucherType.Purchase_Order:
+                case VoucherType.Purchase_Request:
+                case VoucherType.Purchase_Quotation:
                     toLocId = fiTransactionAdditionalDto.Warehouse.Id;
-                    outLocId=fiTransactionAdditionalDto.Warehouse.Id;
-
+                    inLocId = fiTransactionAdditionalDto.Warehouse.Id;
                     break;
                 case VoucherType.Sales_Invoice:
                     fromLocId = fiTransactionAdditionalDto.Warehouse.Id;
-                    inLocId=fiTransactionAdditionalDto.Warehouse.Id;
+                    outLocId = fiTransactionAdditionalDto.Warehouse.Id;
+                    break;
+                case VoucherType.Purchase_Enquiry:
+                    inLocId = fiTransactionAdditionalDto.Warehouse.Id;
                     break;
             }
             var additionalId = _context.FiTransactionAdditionals.Any(x => x.TransactionId == TransId);

@@ -144,10 +144,24 @@ namespace Dfinance.Inventory.Service
                             im.ItemName,
                             ti.Unit,
                             ti.Qty,
-                            ti.Rate
+                            ti.Rate,
+                            ti.PrintedMrp,
+                            Amount=ti.Qty*ti.Rate
                         };
             var result=items.ToList();
             return CommonResponse.Created(result);          
+        }
+
+        public CommonResponse FillReference(int transId, int[]? itemId)
+        {
+            string itemIds = null;
+            if (itemId.Length > 0)
+                itemIds = string.Join(",", itemId);
+            string criteria = "FillImportItemsWeb";
+            var data = _context.RefItemsView.FromSqlRaw("exec VoucherAdditionalsSP @Criteria={0},@TransactionID={1},@ItemIdString={2}",
+                criteria, transId, itemIds).ToList();
+            return CommonResponse.Ok(data);
+
         }
 
         /// <summary>
