@@ -130,5 +130,18 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
                 return BadRequest(ex.Message);
             }
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="purchaseReportDto"></param>
+        /// <returns></returns>
+            [HttpPost(InvRoute.Purchase.getPurchaseReport)]
+            [AllowAnonymous]
+            public IActionResult GetPurchaseReport(PurchaseReportDto purchaseReportDto)
+            {
+                var result = _purchaseservice.GetPurchaseReport(purchaseReportDto);
+                return Ok(result);
+            }
+        }
     }
-}
+

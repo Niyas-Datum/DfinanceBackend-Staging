@@ -35,8 +35,6 @@ using Dfinance.Inventory;
 using Dfinance.Sales;
 using Dfinance.Purchase.Services.Interface;
 using Dfinance.Purchase.Services;
-using Dfinance.Purchase.Reports.Interface;
-using Dfinance.Purchase.Reports;
 
 
 namespace Dfinance.api.Installers;
@@ -132,8 +130,7 @@ public class DiInstaller : IInstaller
 		service.AddScoped<ISalesReturnService, SalesReturnService>();
         //service.AddScoped<IPurchaseReturnService, PurchaseReturnService>();
 
-        //report 
-        service.AddScoped<IPurchaseReportService, PurchaseReportService>();
+       
 
     }
 }

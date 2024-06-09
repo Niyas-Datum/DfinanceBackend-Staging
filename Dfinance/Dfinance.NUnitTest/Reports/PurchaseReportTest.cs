@@ -2,8 +2,8 @@
 using Dfinance.Core.Infrastructure;
 using Dfinance.DataModels.Dto.Common;
 using Dfinance.DataModels.Dto.Inventory.Purchase;
-using Dfinance.Purchase.Reports;
-using Dfinance.Purchase.Reports.Interface;
+using Dfinance.Purchase.Services;
+using Dfinance.Purchase.Services.Interface;
 using Microsoft.Extensions.Logging;
 using Moq;
 
@@ -14,16 +14,18 @@ namespace Dfinance.NUnitTest.Reports
     {
         private Mock<DFCoreContext> _mockContext;
         private Mock<IAuthService> _mockAuthService;
-        private Mock<ILogger<PurchaseReportService>> _mockLogger;
-        private IPurchaseReportService _purchaseReportService;
+        private Mock<ILogger<PurchaseService>> _mockLogger;
+        private IPurchaseService _purchaseReportService;
+
+       
+
+        private Mock<IPurchaseService> _purchaseMock;
 
         [SetUp]
-        public void SetUp()
+        public void Setup()
         {
-            _mockContext = new Mock<DFCoreContext>();
-            _mockAuthService = new Mock<IAuthService>();
-            _mockLogger = new Mock<ILogger<PurchaseReportService>>();
-            _purchaseReportService = new PurchaseReportService(_mockContext.Object, _mockAuthService.Object, _mockLogger.Object);
+            _purchaseMock = new Mock<IPurchaseService>();
+
         }
 
         [Test]
@@ -32,7 +34,7 @@ namespace Dfinance.NUnitTest.Reports
             // Arrange
             var reportDto = new PurchaseReportDto
             {
-                ViewBy = false,
+                ViewBy = null,
                 From = new DateTime(2022, 4, 6),
                 To = new DateTime(2024, 4, 6),
                 Branch = new DropdownDto { Id = 1 },
@@ -51,7 +53,7 @@ namespace Dfinance.NUnitTest.Reports
             };
 
            //
-            var result = _purchaseReportService.FillPurchaseReport(reportDto);
+            var result = _purchaseReportService.GetPurchaseReport(reportDto);
 
             // Assert
             Assert.That(result, Is.Not.Null);
