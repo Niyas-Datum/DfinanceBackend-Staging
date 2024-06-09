@@ -23,25 +23,25 @@ namespace Dfinance.Item.Services.Inventory
         private readonly IAuthService _authService;
         IItemUnitsService _itemunitService;
         private static int reqCount = 0;
-        private readonly IHostEnvironment _environment;       
+        private readonly IHostEnvironment _environment;
         private readonly IConfiguration _configuration;
         private readonly ISettingsService _settings;
         private readonly ILogger<ItemMasterService> _logger;
         private readonly IUserTrackService _userTrack;
         private string uploadPath;
         public ItemMasterService(DFCoreContext context, IAuthService authService, IItemUnitsService itemunitService, IHostEnvironment environment,
-           IConfiguration configuration, ISettingsService settings, ILogger<ItemMasterService> logger,IUserTrackService userTrack)
+           IConfiguration configuration, ISettingsService settings, ILogger<ItemMasterService> logger, IUserTrackService userTrack)
         {
             _context = context;
             _authService = authService;
             _itemunitService = itemunitService;
-            _environment = environment;        
+            _environment = environment;
             _configuration = configuration;
             _settings = settings;
             _logger = logger;
             _userTrack = userTrack;
             // Get upload path from app settings
-             uploadPath = _configuration["AppSettings:UploadPath"];
+            uploadPath = _configuration["AppSettings:UploadPath"];
 
         }
 
@@ -49,7 +49,7 @@ namespace Dfinance.Item.Services.Inventory
         //called by ItemMasterController/FillItemMaster
         /******************* Fill Item Master (Left side Table) ********************/
         public CommonResponse FillItemMaster(int[]? catId, int[]? brandId, string search = null, int pageNo = 0, int limit = 0)
-        {            
+        {
             int branchId = _authService.GetBranchId().Value;
             if (catId.Length == 0 && brandId.Length == 0 && search == null && pageNo == 0)
             {
@@ -73,20 +73,20 @@ namespace Dfinance.Item.Services.Inventory
             {
                 return PageNotValid(pageId);
             }
-            if (!_authService.UserPermCheck(pageId,1))
+            if (!_authService.UserPermCheck(pageId, 1))
             {
                 return PermissionDenied("Fill Items");
             }
             var itemId = _context.ItemMaster.Any(i => i.Id == Id);
             if (!itemId)
             {
-                _logger.LogInformation(Id+" Item Not Found");
+                _logger.LogInformation(Id + " Item Not Found");
                 return CommonResponse.NoContent("Item Not Exists");
             }
-                
+
             string criteria = "FillItemByID";
             var itemdata = _context.SpFillItemMasterById.FromSqlRaw($"Exec ItemMasterSP @Criteria='{criteria}',@ID='{Id}'").AsEnumerable().FirstOrDefault();
-            string imagePath =uploadPath+ itemdata?.Imagepath;
+            string imagePath = uploadPath + itemdata?.Imagepath;
 
             string imageBase64 = null;
 
@@ -114,7 +114,7 @@ namespace Dfinance.Item.Services.Inventory
 
         private CommonResponse PermissionDenied(string msg)
         {
-            _logger.LogInformation("No Permission for "+msg);
+            _logger.LogInformation("No Permission for " + msg);
             return CommonResponse.Error("No Permission ");
         }
 
@@ -127,7 +127,7 @@ namespace Dfinance.Item.Services.Inventory
         //called by ItemMasterController/GetNextItemCode
         //Generate next ItemCode
         public CommonResponse GetNextItemCode()
-        {           
+        {
 
             return CommonResponse.Ok(GenerateCode());
         }
@@ -153,7 +153,7 @@ namespace Dfinance.Item.Services.Inventory
                     ID = i.Id,
                     ItemCode = i.ItemCode,
                     ItemName = i.ItemName
-                }).ToList();            
+                }).ToList();
             return CommonResponse.Ok(data);
         }
 
@@ -203,13 +203,13 @@ namespace Dfinance.Item.Services.Inventory
             base64EncodedData = base64EncodedData.Replace(base64RemoveData, "");
             byte[] imageData = Convert.FromBase64String(base64EncodedData);
 
-          
+
             if (!Directory.Exists(uploadPath))
                 Directory.CreateDirectory(uploadPath);
 
             // Construct image paths
             string imagePath = Path.Combine(uploadPath, $"{itemCode}.jpg");
-            string imagePathDb = itemCode+".jpg";
+            string imagePathDb = itemCode + ".jpg";
 
             // Write image data to file
             File.WriteAllBytes(imagePath, imageData);
@@ -219,7 +219,7 @@ namespace Dfinance.Item.Services.Inventory
 
         //save itemmaster,itemunits
         //called by ItemMasterController/SaveItemMaster
-        public CommonResponse SaveItemMaster(ItemMasterDto itemDto,int pageId)
+        public CommonResponse SaveItemMaster(ItemMasterDto itemDto, int pageId)
         {
             if (!_authService.IsPageValid(pageId))
             {
@@ -230,7 +230,7 @@ namespace Dfinance.Item.Services.Inventory
                 return PermissionDenied("Save Items");
             }
             using (var transaction = _context.Database.BeginTransaction())
-            {                
+            {
                 int CreatedBy = _authService.GetId().Value;
                 int BranchId = _authService.GetBranchId().Value;
                 //int pageId = 55;
@@ -246,7 +246,7 @@ namespace Dfinance.Item.Services.Inventory
                         _logger.LogInformation("Commodity field is mandatory, but it not entered");
                         return CommonResponse.Error("Commodity is Mandatory");
                     }
-                        
+
                 }
                 //check dropdowns and popups are null or not
                 var catId = _context.Category.Any(t => t.Id == itemDto.Category.ID);
@@ -375,7 +375,7 @@ namespace Dfinance.Item.Services.Inventory
                 {
                     if (itemDto.Branch.Count > 0)
                         foreach (var b in itemDto.Branch)
-                            branch.Add(b.Id.Value);                   
+                            branch.Add(b.Id.Value);
                 }
                 else
                     branch.Add(BranchId);
@@ -387,7 +387,7 @@ namespace Dfinance.Item.Services.Inventory
                 if (itemDto.ItemUnit != null && itemDto.ItemUnit.Count > 0)
                 {
                     var unisdata = _itemunitService.SaveItemUnits(itemDto.ItemUnit, branch, NewItemId);
-                }                
+                }
                 transaction.Commit();
                 var jsonItemSave = JsonSerializer.Serialize(itemDto);
                 _userTrack.AddUserActivity(itemDto.ItemCode, NewItemId, 0, "Added", "InvItemMaster", "Item Master", 0, jsonItemSave);
@@ -428,7 +428,7 @@ namespace Dfinance.Item.Services.Inventory
 
         //update itemmaster,itemunits
         //called by ItemMasterController/UpdateItemMaster
-        public CommonResponse UpdateItemMaster(ItemMasterDto itemDto, int ItemId,int pageId)
+        public CommonResponse UpdateItemMaster(ItemMasterDto itemDto, int ItemId, int pageId)
         {
             if (!_authService.IsPageValid(pageId))
             {
@@ -438,11 +438,11 @@ namespace Dfinance.Item.Services.Inventory
             {
                 return PermissionDenied("Edit Items");
             }
-            var beforeUpdate = _context.ItemMaster.AsNoTracking().FirstOrDefault(i => i.Id == ItemId);           
-            var jsonBeforeUpdate=JsonSerializer.Serialize(beforeUpdate);
+            var beforeUpdate = _context.ItemMaster.AsNoTracking().FirstOrDefault(i => i.Id == ItemId);
+            var jsonBeforeUpdate = JsonSerializer.Serialize(beforeUpdate);
             using (var transaction = _context.Database.BeginTransaction())
             {
-               
+
                 //check dropdowns and popups are null or not
                 var taxId = _context.TaxType.Any(t => t.Id == itemDto.TaxType.Id);
                 var parentId = _context.ItemMaster.Any(i => i.Id == itemDto.Parent.ID);
@@ -604,8 +604,8 @@ namespace Dfinance.Item.Services.Inventory
                 }
 
                 transaction.Commit();
-               
-                var afterUpdate= _context.ItemMaster.AsNoTracking().FirstOrDefault(i => i.Id == ItemId);
+
+                var afterUpdate = _context.ItemMaster.AsNoTracking().FirstOrDefault(i => i.Id == ItemId);
                 var jsonAfterUpdate = JsonSerializer.Serialize(afterUpdate);
                 var diffObj = new JsonDiffPatch();
                 var jsonDifference = diffObj.Diff(jsonBeforeUpdate, jsonAfterUpdate);
@@ -659,10 +659,10 @@ namespace Dfinance.Item.Services.Inventory
                 var check = _context.ItemMaster.Any(i => i.Id == ItemId);
                 if (check == false)
                 {
-                    _logger.LogInformation(ItemId+" Item Not Exists");
+                    _logger.LogInformation(ItemId + " Item Not Exists");
                     return CommonResponse.NotFound("Item Not Exists");
                 }
-                    
+
                 var unitId = _context.ItemUnits.Where(i => i.ItemId == ItemId).Select(i => i.Id).ToList();
                 var branchitems = _context.BranchItems.Where(i => i.ItemId == ItemId).Select(i => i.Id).ToList();
                 var itemData = _context.ItemMaster.Where(i => i.Id == ItemId).Select(i => new { i.ItemCode, i.ItemName }).FirstOrDefault();
@@ -671,7 +671,7 @@ namespace Dfinance.Item.Services.Inventory
                 if (!string.IsNullOrEmpty(imagepath) && System.IO.File.Exists(imagepath))
                     System.IO.File.Delete(imagepath);//delete imagepath from the folder
 
-               var del= _context.Database.ExecuteSqlRaw($"Exec ItemMasterSP @Criteria='Delete',@ID='{ItemId}'");
+                var del = _context.Database.ExecuteSqlRaw($"Exec ItemMasterSP @Criteria='Delete',@ID='{ItemId}'");
 
                 //for deleting corresponding itemunits                   
                 foreach (var u in unitId)
@@ -685,9 +685,9 @@ namespace Dfinance.Item.Services.Inventory
                     _context.Database.ExecuteSqlRaw($"Exec ItemMasterSP @Criteria='DeleteInvBranchItems',@ID='{b}'");
                 }
                 transaction.Commit();
-               
-                _userTrack.AddUserActivity(itemData.ItemCode, ItemId, 1, "Deleted", "InvItemMaster", "Item Master", 0, itemData.ItemName+" Deleted");
-                _logger.LogInformation(ItemId+" Item Deleted");
+
+                _userTrack.AddUserActivity(itemData.ItemCode, ItemId, 1, "Deleted", "InvItemMaster", "Item Master", 0, itemData.ItemName + " Deleted");
+                _logger.LogInformation(ItemId + " Item Deleted");
                 return CommonResponse.Ok(new { msg = "Item Details Deleted successfully", data = 0 });
             }
         }
@@ -749,6 +749,31 @@ namespace Dfinance.Item.Services.Inventory
                FirstOrDefault();
             return CommonResponse.Ok(result);
         }
+        /// <summary>
+        /// inv=>Report=>ItemSearch
+        /// </summary>
+        /// <param name="itemId"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public CommonResponse GetItemSearch(int? itemId, string? value)
+        {
+            try
+            {
+                string Criteria = null;
+                      int branchid = _authService.GetBranchId().Value;
+                var data = _context.ItemSearchView.FromSqlRaw($"Exec ItemSearchItemSP @Criteria='{Criteria}',@BranchID='{branchid}',@ItemID={itemId},@Value={value}").ToList();
+                return CommonResponse.Ok(data);
+
+             
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Error(ex.Message);
+            }
+
+        }
     }
 }
+
 

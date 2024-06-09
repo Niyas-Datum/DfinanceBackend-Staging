@@ -216,7 +216,26 @@ namespace Dfinance.api.Controllers.v1.DMain.Item
                 return BadRequest(ex.Message);
             }
         }
-
+        /// <summary>
+        /// inv=>Report=>ItemSearch
+        /// </summary>
+        /// <param name="itemId"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        [HttpGet(ApiRoutes.ItemMaster.itemsearch)]
+        public IActionResult GetItemSearch(int? itemId, string? value)
+        {
+            try
+            {
+                var result = _itemService.GetItemSearch(itemId,value);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
 
     }
 }

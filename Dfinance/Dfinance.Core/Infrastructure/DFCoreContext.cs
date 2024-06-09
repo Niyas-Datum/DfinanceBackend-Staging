@@ -13,7 +13,6 @@ using Dfinance.Shared.Configuration.Service;
 using Dfinance.Core.Views.Finance;
 using Dfinance.Core.Views.Inventory.Purchase;
 using Dfinance.Core.Views.Item;
-using Dfinance.Core.Views.Inventory.Purchase.PurchaseReport;
 
 namespace Dfinance.Core.Infrastructure;
 
@@ -88,7 +87,7 @@ public partial class DFCoreContext : DbContext
     public DbSet<MaCustomerDetails> MaCustomerDetails { get; set; }
     public DbSet<MaCustomerCategories> MaCustomerCategories { get; set; }
     public DbSet<MaCustomerItems> MaCustomerItems { get; set; }
-public DbSet<FiMaCards> FiMaCards { get; set; }
+
     public DbSet<DeliveryDetails>DeliveryDetails { get; set; }
     public DbSet<MaPriceCategory> MaPriceCategory { get; set; }
 
@@ -127,7 +126,6 @@ public DbSet<InvUniqueItems> InvUniqueItems { get; set; }
     //nextcode in cat type
     
     public DbSet<NextCodeCat> NextCodeCat { get; set; }
-    public DbSet<NextCategoryCode> NextCategoryCode { get; set; }
     public DbSet<DropDownViewDesc> DropDownViewDesc { get; set; }
 
     public DbSet<SpFillCategoryTypeById> SpFillCategoryTypeById { get; set; }
@@ -165,8 +163,6 @@ public DbSet<InvUniqueItems> InvUniqueItems { get; set; }
     public DbSet<FillCurrencyCodeById> FillCurrencyCodeById { get; set; }
     public DbSet<FillCurrency> FillCurrency { get; set; }
     public DbSet<FillCurrencyById> FillCurrencyById { get; set; }
- public DbSet<FillCardMaster> FillCardMaster { get; set; }
- public DbSet<FillMaster> FillMaster { get; set; }
  //-------------ItemMaster  ------------------------------------------ 
     
     public DbSet<TaxDropDownView> TaxDropDownView { get; set; }
@@ -271,6 +267,8 @@ public DbSet<TransItemsView> TransItemsView { get; set; }
     //ReportsView
     public DbSet<PurchaseReportView> PurchaseReportView { get; set; }
     public DbSet<PurchaseReportViews> PurchaseReportViews { get; set; }
+    public DbSet<ItemSearchView> ItemSearchView { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     //  => optionsBuilder.UseSqlServer(@"Data Source=ip.datuminnovation.com,9600;TrustServerCertificate=true;Initial Catalog=DatumSystemMain;User ID=sa;pwd=Datum123!");
    // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -317,7 +315,6 @@ public DbSet<TransItemsView> TransItemsView { get; set; }
         mb.ApplyConfiguration(new FiAccountsListConfiguration());
         mb.ApplyConfiguration(new FiMaAccountsListConfiguration());
 
-mb.ApplyConfiguration(new FiMaCardsConfiguration());
  //InvTransItems
         mb.ApplyConfiguration(new InvTransItemConfiguration());
         mb.ApplyConfiguration(new InvUniqueItemConfiguration());
@@ -345,7 +342,7 @@ mb.ApplyConfiguration(new FiMaCardsConfiguration());
 
         //TransactionEntries
         mb.ApplyConfiguration(new FiTransactionEntryConfiguration());
-
+        mb.ApplyConfiguration(new FiTransactionEntryConfiguration());
         //View
 
         mb.Entity<CurrencyCode>().HasNoKey().ToView(null);
@@ -379,8 +376,6 @@ mb.ApplyConfiguration(new FiMaCardsConfiguration());
         mb.Entity<NextCodeView>().HasNoKey().ToView(null);
         mb.Entity<SpFillCategoryTypeById>().HasNoKey().ToView(null);
         mb.Entity<NextCodeCat>().HasNoKey().ToView(null);
-        mb.Entity<NextCategoryCode>().HasNoKey().ToView(null);
-        
 
         mb.Entity<SpGetTransactionAdditionals>().HasNoKey().ToView(null);
 
@@ -452,9 +447,6 @@ mb.ApplyConfiguration(new FiMaCardsConfiguration());
         mb.Entity<UserTrackView>().HasNoKey().ToView(null); 
  mb.Entity<FillAdvanceView>().HasNoKey().ToView(null);
           mb.Entity<Fillvoucherview>().HasNoKey().ToView(null);
-		  
-		   mb.Entity<FillCardMaster>().HasNoKey().ToView(null);
-		    mb.Entity<FillMaster>().HasNoKey().ToView(null);
 		//TransItems
 
 
@@ -477,5 +469,6 @@ mb.ApplyConfiguration(new FiMaCardsConfiguration());
         mb.Entity<RefItemsView>().HasNoKey().ToView(null);
         mb.Entity<PurchaseReportView>().HasNoKey().ToView(null);
         mb.Entity<PurchaseReportViews>().HasNoKey().ToView(null);
+        mb.Entity<ItemSearchView>().HasNoKey().ToView(null);
     }
 }

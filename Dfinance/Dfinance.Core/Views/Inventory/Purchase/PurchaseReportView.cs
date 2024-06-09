@@ -1,4 +1,4 @@
-﻿namespace Dfinance.Core.Views.Inventory.Purchase.PurchaseReport
+﻿namespace Dfinance.Core.Views.Inventory.Purchase
 {
     public class PurchaseReportView
     {
