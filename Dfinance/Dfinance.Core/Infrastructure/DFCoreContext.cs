@@ -13,6 +13,7 @@ using Dfinance.Shared.Configuration.Service;
 using Dfinance.Core.Views.Finance;
 using Dfinance.Core.Views.Inventory.Purchase;
 using Dfinance.Core.Views.Item;
+using Dfinance.Core.Views.Inventory.Purchase.PurchaseReport;
 
 namespace Dfinance.Core.Infrastructure;
 
@@ -264,6 +265,9 @@ public DbSet<TransItemsView> TransItemsView { get; set; }
     //Label&Grid
     public DbSet<FormLabelView> FormLabelView { get; set; }
     public DbSet<FormGridView> FormGridView { get; set; }
+    //ReportsView
+    public DbSet<PurchaseReportView> PurchaseReportView { get; set; }
+    public DbSet<PurchaseReportViews> PurchaseReportViews { get; set; }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     //  => optionsBuilder.UseSqlServer(@"Data Source=ip.datuminnovation.com,9600;TrustServerCertificate=true;Initial Catalog=DatumSystemMain;User ID=sa;pwd=Datum123!");
    // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -462,5 +466,7 @@ public DbSet<TransItemsView> TransItemsView { get; set; }
         mb.Entity<CrdtCollView>().HasNoKey().ToView(null);
         mb.Entity<PriceCategoryPopUp>().HasNoKey().ToView(null);
         mb.Entity<RefItemsView>().HasNoKey().ToView(null);
+        mb.Entity<PurchaseReportView>().HasNoKey().ToView(null);
+        mb.Entity<PurchaseReportViews>().HasNoKey().ToView(null);
     }
 }

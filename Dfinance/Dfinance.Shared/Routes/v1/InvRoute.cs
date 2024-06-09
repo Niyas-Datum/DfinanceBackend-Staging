@@ -169,5 +169,11 @@ namespace Dfinance.Shared.Routes
             public const string UpdatePurchaseRtn = $"{Main}/updatePR";
             public const string DeletePurchaseRtn = $"{Main}/deletePR";
         }
+
+        public class PurchaseReport
+        {
+            public const string Main = $"{Base}/PurchaseReport";
+            public const string getPurchaseReport = $"{Main}/getPuReport";
+        }
     }
 }
