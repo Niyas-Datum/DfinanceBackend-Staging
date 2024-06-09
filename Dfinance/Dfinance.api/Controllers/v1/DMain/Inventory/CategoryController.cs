@@ -73,6 +73,20 @@ namespace Dfinance.api.Controllers.v1.DMain.Inventory
             }
         }
 
+        [HttpGet(ApiRoutes.Category.NextCode)]
+        public IActionResult GetNextCode()
+        {
+            try
+            {
+                var result = _categoryService.GetNextCode();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpGet(ApiRoutes.Category.FillCategoryById)]
         public IActionResult FillCategoryById(int Id)
         {

@@ -43,4 +43,9 @@ namespace Dfinance.Core.Views.Inventory
         public string? CategoryType {  get; set; }
     }
 
+    public class NextCategoryCode
+    {
+        public string Value { get; set; }
+    }
+
 }

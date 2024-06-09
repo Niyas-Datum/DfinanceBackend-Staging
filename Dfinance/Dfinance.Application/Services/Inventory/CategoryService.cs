@@ -35,7 +35,16 @@ namespace Dfinance.Application.Services.Inventory
                 return CommonResponse.Error(ex);
             }
         }
-
+        //getting next code
+        public CommonResponse GetNextCode()
+        {
+            string criteria = "GetNextCommodityCode";
+            var code = _context.NextCategoryCode.FromSqlRaw($"Exec spCommodity @Criteria ='{criteria}'")
+                .AsEnumerable()
+                .Select(x => x.Value)
+                .FirstOrDefault();
+            return CommonResponse.Ok(code);
+        }
         /******************** Fill Category By Id  ***********************/
         public CommonResponse FillCategoryById(int Id)
         {
