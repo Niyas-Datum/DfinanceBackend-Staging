@@ -11,11 +11,11 @@ namespace Dfinance.Core.Views.Inventory
     public class SpFillCategoryTypeById
     {
         public int ID { get; set; }
-        public string Code { get; set; }
-        public string Description { get; set; }
-        public int CreatedBy {  get; set; }
-        public DateTime CreatedOn { get; set;}
-        public byte ActiveFlag { get; set; }
+        public string? Code { get; set; }
+        public string? Description { get; set; }
+        public int? CreatedBy {  get; set; }
+        public DateTime? CreatedOn { get; set;}
+        public byte? ActiveFlag { get; set; }
         public decimal? AvgStockQuantity {  get; set; }
     }
 

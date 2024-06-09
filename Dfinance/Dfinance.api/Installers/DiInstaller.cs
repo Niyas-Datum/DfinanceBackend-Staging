@@ -72,6 +72,7 @@ public class DiInstaller : IInstaller
         //FINANCE
         service.AddScoped<IFinanceYearService, FinanceYearService>();
         service.AddScoped<ICurrencyService, CurrencyService>();
+		service.AddScoped<ICardMaster, CardMasterService>();
 
         service.AddScoped<IChartOfAccountsService, ChartOfAccountsService>();
         service.AddScoped<IVoucherService, VoucherService>();

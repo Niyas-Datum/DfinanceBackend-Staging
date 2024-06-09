@@ -100,6 +100,16 @@ namespace Dfinance.Shared.Routes.v1
             public const string AccountListPopUP = $"{Main}/PopUp";
 
         }
-  
+        public static class CardMaster
+        {
+            public const string Main = $"{Base}/CardMaster";
+            public const string SaveCardMaster = $"{Main}/SaveCardMaster";
+            public const string UpdateCardMaster = $"{Main}/UpdateCardMaster";
+            public const string DeleteCardMaster = $"{Main}/DeleteCardMaster";
+            public const string FillCardMaster = $"{Main}/FillCardMaster";
+            public const string FillMaster = $"{Main}/FillMaster";
+
+        }
+
     }
 }

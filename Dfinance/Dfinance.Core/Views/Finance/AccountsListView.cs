@@ -18,7 +18,17 @@ namespace Dfinance.Core.Views.Finance
              
              
     }
-  
+    public class FillCardMaster
+    {
+        public int ID { get; set; }
+        public int AccountID { get; set; }
+        public string Description { get; set; } = null!;
+
+        public double? Commission { get; set; }
+        public string? AccountName { get; set; }
+
+        public bool? Default { get; set; }
+    }
     public class FillMaster
     { 
         public int ID { get; set; }

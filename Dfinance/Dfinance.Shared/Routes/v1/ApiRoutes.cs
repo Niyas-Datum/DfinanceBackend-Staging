@@ -139,6 +139,8 @@ namespace Dfinance.Shared.Routes.v1
             public const string FillCategory = $"{Main}/Fill";
 
             public const string FillCategoryById = $"{Main}/FillById";
+
+            public const string NextCode = $"{Main}/nextCode";
         }
 
         public static class  AreaMaster

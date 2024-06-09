@@ -19,5 +19,7 @@ namespace Dfinance.Application.Services.Inventory.Interface
         CommonResponse FillCategory();
 
         CommonResponse FillCategoryById(int Id);
+
+        CommonResponse GetNextCode();
     }
 }
