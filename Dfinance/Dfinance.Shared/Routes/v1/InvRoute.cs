@@ -53,6 +53,7 @@ namespace Dfinance.Shared.Routes
             public const string fillitems = $"{Main}/fillitems";
             public const string GetData = $"{Main}/getdata";
             public const string GetSupplier = $"{Main}/getsupplier";
+            public const string getPurchaseReport = $"{Main}/getPuReport";
 
         }
         public class InventoryPaymentTransaction
@@ -170,10 +171,5 @@ namespace Dfinance.Shared.Routes
             public const string DeletePurchaseRtn = $"{Main}/deletePR";
         }
 
-        public class PurchaseReport
-        {
-            public const string Main = $"{Base}/PurchaseReport";
-            public const string getPurchaseReport = $"{Main}/getPuReport";
-        }
     }
 }

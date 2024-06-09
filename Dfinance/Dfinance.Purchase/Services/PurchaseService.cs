@@ -250,10 +250,10 @@ namespace Dfinance.Purchase.Services
                     }
                     if (invTranseDto.TransactionEntries != null)
                     {
-                        int TransEntId = (int)_paymentService.SaveTransactionEntries(invTranseDto, PageId, TransId, transpayId).Data;                      
+                        int TransEntId = (int)_paymentService.SaveTransactionEntries(invTranseDto, PageId, TransId, transpayId).Data;
 
                         if (invTranseDto.TransactionEntries.Advance != null && invTranseDto.TransactionEntries.Advance.Any(a => a.VID != null || a.VID != 0))
-                        {                            
+                        {
                             _transactionService.SaveVoucherAllocation(TransId, transpayId, invTranseDto.TransactionEntries);
                         }
                     }
@@ -316,8 +316,8 @@ namespace Dfinance.Purchase.Services
 
                         if (invTranseDto.TransactionEntries.Advance != null && invTranseDto.TransactionEntries.Advance.Any(a => a.AccountID != null || a.AccountID != 0))
                         {
-                             _transactionService.UpdateVoucherAllocation(TransId, transpayId, invTranseDto.TransactionEntries);
-                        }     
+                            _transactionService.UpdateVoucherAllocation(TransId, transpayId, invTranseDto.TransactionEntries);
+                        }
                     }
                     transactionScope.Complete();
                     _logger.LogInformation("Purchase Update Successfully");
@@ -360,6 +360,55 @@ namespace Dfinance.Purchase.Services
             {
                 _logger.LogError("Failed to Delete Purchase");
                 return CommonResponse.Error(ex);
+            }
+        }
+        /// <summary>
+        /// Inv=>Report=>PurchaseRegister
+        /// </summary>
+        /// <param name="reportdto"></param>
+        /// <returns></returns>
+        public CommonResponse GetPurchaseReport(PurchaseReportDto reportdto)
+        {
+            string criteria = string.IsNullOrEmpty(reportdto.ViewBy) ? null : "Extract";
+            object result = null;
+
+            try
+            {
+                var query = $@"
+                    EXEC InventoryRegisterSP 
+                    @Criteria = '{criteria}',
+                    @DateFrom = '{reportdto.From}',
+                    @DateUpto = '{reportdto.To}',
+                    @BranchID = '{reportdto.Branch}',
+                    @BasicVTypeID = '{reportdto.BaseType}',
+                    @VTypeID = '{reportdto.VoucherType}',
+                    @AccountID = '{reportdto.customerSupplier}',
+                    @PaymentTypeID = '{reportdto.PaymentType}',
+                    @ItemID = '{reportdto.Item}',
+                    @Inventory = '{reportdto.Inventory}',
+                    @CounterID = '{reportdto.Counter}',
+                    @PartyInvNo = '{reportdto.InvoiceNo}',
+                    @BatchNo = '{reportdto.BatchNo}',
+                    @UserID = '{reportdto.User}',
+                    @AreaID = '{reportdto.Area}',
+                    @StaffID = '{reportdto.Staff}'
+                ";
+
+                if (reportdto.ViewBy == null)
+                {
+                    result = _context.PurchaseReportView.FromSqlRaw(query).ToList();
+                }
+                else
+                {
+                    result = _context.PurchaseReportViews.FromSqlRaw(query).ToList();
+                }
+
+                return CommonResponse.Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Error(ex.Message);
             }
         }
     }

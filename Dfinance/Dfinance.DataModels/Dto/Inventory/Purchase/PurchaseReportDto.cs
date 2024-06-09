@@ -4,7 +4,7 @@ namespace Dfinance.DataModels.Dto.Inventory.Purchase
 {
     public class PurchaseReportDto
     {
-        public bool? ViewBy { get; set; }
+        public string ViewBy { get; set; }
 
         public DateTime? From { get; set; }
         public DateTime? To { get; set; }
