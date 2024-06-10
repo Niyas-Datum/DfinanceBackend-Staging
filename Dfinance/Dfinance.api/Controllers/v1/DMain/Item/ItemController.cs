@@ -222,7 +222,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Item
         /// <param name="itemId"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        [HttpGet(ApiRoutes.ItemMaster.itemsearch)]
+        [HttpGet(ApiRoutes.ItemMaster.Itemsearch)]
         public IActionResult GetItemSearch(int? itemId, string? value)
         {
             try
