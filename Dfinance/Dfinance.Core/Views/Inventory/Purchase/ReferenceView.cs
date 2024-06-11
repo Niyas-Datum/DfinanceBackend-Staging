@@ -91,4 +91,17 @@
         public decimal? AvgCost { get; set; }
         public decimal? Profit { get; set; }
     }
+
+    public class ImportItemListView
+    {
+       // public bool? Select { get; set; }
+        public int? ItemID { get; set; }
+        public string? ItemCode { get; set; }
+        public string? ItemName { get; set; }
+        public string? Unit { get; set; }
+        public decimal? Qty { get; set; }
+        public decimal? Rate { get; set; }
+        public decimal? PrintedMRP { get; set; }
+        public decimal? Amount { get; set; }
+    }
 }

@@ -108,11 +108,12 @@ namespace Dfinance.Inventory.Service
         /****************** Save & Update TransactionAdditional  *******************/
         public CommonResponse SaveTransactionAdditional(InvTransactionAdditionalDto fiTransactionAdditionalDto, int TransId, int voucherId)
         {
-            int? fromLocId = null, toLocId = null,inLocId=null,outLocId=null;
+            int? fromLocId = null, toLocId = null, inLocId = null, outLocId = null;
             string criteria = "";
             switch ((VoucherType)voucherId)
             {
                 case VoucherType.Purchase:
+                case VoucherType.Sales_Return:
                 case VoucherType.Purchase_Order:
                 case VoucherType.Purchase_Request:
                 case VoucherType.Purchase_Quotation:
@@ -120,12 +121,15 @@ namespace Dfinance.Inventory.Service
                     inLocId = fiTransactionAdditionalDto.Warehouse.Id;
                     break;
                 case VoucherType.Sales_Invoice:
+                case VoucherType.Purchase_Return:
                     fromLocId = fiTransactionAdditionalDto.Warehouse.Id;
                     outLocId = fiTransactionAdditionalDto.Warehouse.Id;
                     break;
+
                 case VoucherType.Purchase_Enquiry:
                     inLocId = fiTransactionAdditionalDto.Warehouse.Id;
                     break;
+
             }
             var additionalId = _context.FiTransactionAdditionals.Any(x => x.TransactionId == TransId);
             if (!additionalId)
@@ -133,76 +137,76 @@ namespace Dfinance.Inventory.Service
             else
                 criteria = "UpdateFiTransactionAdditionals";
 
-                _context.Database.ExecuteSqlRaw("EXEC VoucherAdditionalsSP @Criteria={0},@TransactionID={1},@RefTransID1={2},@RefTransID2={3},@TypeID={4},@ModeID={5},@MeasureTypeID={6}," +
-            "@LoadMeasureTypeID={7},@ConsignTermID={8},@FromLocationID={9},@ToLocationID={10},@ExchangeRate1={11}, @AdvanceExRate={12}, @CustomsExRate={13}, @ApprovalDays={14}," +
-            "@WorkflowDays={15}, @PostedBranchID={16}, @ShipBerthDate={17}, @IsBit={18}, @Name={19},@Code={20}, @Address={21}, @Rate={22}, @SystemRate={23}, @Period={24}," +
-            "@Days={25}, @LCOptionID={26}, @LCNo={27}, @LCAmt={28}, @AvailableLCAmt={29}, @CreditAmt={30}, @MarginAmt={31}, @InterestAmt={32}, @AvailableAmt={33}," +
-            "@AllocationPerc={34}, @InterestPerc={35}, @TolerencePerc={36}, @CountryID={37}, @CountryOfOriginID={38}, @MaxDays={39}, @DocumentNo={40}, @DocumentDate={41}, @BEMaxDays={42}," +
-            "@EntryDate={43}, @EntryNo={44}, @ApplicationCode={45}, @BankAddress={46}, @Unit={47}, @Amount={48}, @AcceptDate={49}, @ExpiryDate={50}, @DueDate={51}, @OpenDate={52}, @CloseDate={53}, @StartDate={54}," +
-            "@EndDate={55}, @ClearDate={56}, @ReceiveDate={57}, @SubmitDate={58}, @EndTime={59}, @HandOverTime={60}, @LorryHireRate={61}, @QtyPerLoad={62}, @PassNo={63}, @ReferenceDate={64}, @ReferenceNo={65}," +
-            "@AuditNote={66}, @Terms={67}, @FirmID={68}, @VehicleID={69}, @WeekDays={70}, @BankWeekDays={71}, @RecommendByID={72}, @RecommendDate={73}, @RecommendNote={74}, @RecommendStatus={75}," +
-            "@IsHigherApproval={76}, @LCApplnTransID={77}, @InLocID={78}, @OutLocID={79}, @ExchangeRate2={80}, @RouteID={81}, @AccountID={82}, @AccountID2={83}, @Hours={84}, @Year={85}," +
-            "@BranchID={86}, @AreaID={87}, @TaxFormID={88}, @PriceCategoryID={89}, @IsClosed={90}, @DepartmentID={91}, @PartyName={92}, @Address1={93}, @Address2={94}, @ItemID={95}, @VATNo={96}",
-                    criteria,//0
-                    TransId,//1
-                    null, null, null,//2,3,4
-                    fiTransactionAdditionalDto.PayType.Id,//5
-                    null, null,//6,7
-                    fiTransactionAdditionalDto.DelivaryLocation.Id,//8
-                    fromLocId,//9
-                    toLocId,//10
-                    null, null, null, null, null, null, null, null, null, null,//11,12,13,14,15,16,17,18,19,20
-                    fiTransactionAdditionalDto.TermsOfDelivery,//21
-                    null, null,//22,23
-                    fiTransactionAdditionalDto.CreditPeriod,//24
-                    null, null,
-                    fiTransactionAdditionalDto.MobileNo,//27
-                    null, null, null, null,
-                    fiTransactionAdditionalDto.StaffIncentives,//32
-                    null, null, null, null, null, null, null,
-                    fiTransactionAdditionalDto.DespatchNo,//40
-                    fiTransactionAdditionalDto.DespatchDate,//41
-                    null,
-                    fiTransactionAdditionalDto.PartyDate,//43
-                    fiTransactionAdditionalDto.PartyInvoiceNo,//44
-                    null,
-                    fiTransactionAdditionalDto.Attention,//46
-                    null, null, null,
-                    fiTransactionAdditionalDto.ExpiryDate,//50
-                    null, null, null, null, null, null, null,
-                    fiTransactionAdditionalDto.DeliveryDate,//58
-                    null, null, null, null,
-                    fiTransactionAdditionalDto.DeliveryNote,//63
-                    fiTransactionAdditionalDto.OrderDate,//64
-                    fiTransactionAdditionalDto.OrderNo,//65
-                    null, null, null,
-                    fiTransactionAdditionalDto.VehicleNo.Id,//69
-                    null, null, null, null,
-                    fiTransactionAdditionalDto.DelivaryLocation.Name,//74
-                    null,
-                    fiTransactionAdditionalDto.Approve,//76
-                    null,
-                    inLocId,//78
-                    outLocId,//79
-                    null, null,
-                    fiTransactionAdditionalDto.SalesMan.Id,//82
-                    null, null, null, null,
-                    fiTransactionAdditionalDto.SalesArea.Id,//87
-                    null, null,
-                    fiTransactionAdditionalDto.CloseVoucher,//90
-                    null,
-                    fiTransactionAdditionalDto.PartyName,//92
-                    fiTransactionAdditionalDto.AddressLine1,//93
-                    fiTransactionAdditionalDto.AddressLine2,//94
-                    null, null
+            _context.Database.ExecuteSqlRaw("EXEC VoucherAdditionalsSP @Criteria={0},@TransactionID={1},@RefTransID1={2},@RefTransID2={3},@TypeID={4},@ModeID={5},@MeasureTypeID={6}," +
+        "@LoadMeasureTypeID={7},@ConsignTermID={8},@FromLocationID={9},@ToLocationID={10},@ExchangeRate1={11}, @AdvanceExRate={12}, @CustomsExRate={13}, @ApprovalDays={14}," +
+        "@WorkflowDays={15}, @PostedBranchID={16}, @ShipBerthDate={17}, @IsBit={18}, @Name={19},@Code={20}, @Address={21}, @Rate={22}, @SystemRate={23}, @Period={24}," +
+        "@Days={25}, @LCOptionID={26}, @LCNo={27}, @LCAmt={28}, @AvailableLCAmt={29}, @CreditAmt={30}, @MarginAmt={31}, @InterestAmt={32}, @AvailableAmt={33}," +
+        "@AllocationPerc={34}, @InterestPerc={35}, @TolerencePerc={36}, @CountryID={37}, @CountryOfOriginID={38}, @MaxDays={39}, @DocumentNo={40}, @DocumentDate={41}, @BEMaxDays={42}," +
+        "@EntryDate={43}, @EntryNo={44}, @ApplicationCode={45}, @BankAddress={46}, @Unit={47}, @Amount={48}, @AcceptDate={49}, @ExpiryDate={50}, @DueDate={51}, @OpenDate={52}, @CloseDate={53}, @StartDate={54}," +
+        "@EndDate={55}, @ClearDate={56}, @ReceiveDate={57}, @SubmitDate={58}, @EndTime={59}, @HandOverTime={60}, @LorryHireRate={61}, @QtyPerLoad={62}, @PassNo={63}, @ReferenceDate={64}, @ReferenceNo={65}," +
+        "@AuditNote={66}, @Terms={67}, @FirmID={68}, @VehicleID={69}, @WeekDays={70}, @BankWeekDays={71}, @RecommendByID={72}, @RecommendDate={73}, @RecommendNote={74}, @RecommendStatus={75}," +
+        "@IsHigherApproval={76}, @LCApplnTransID={77}, @InLocID={78}, @OutLocID={79}, @ExchangeRate2={80}, @RouteID={81}, @AccountID={82}, @AccountID2={83}, @Hours={84}, @Year={85}," +
+        "@BranchID={86}, @AreaID={87}, @TaxFormID={88}, @PriceCategoryID={89}, @IsClosed={90}, @DepartmentID={91}, @PartyName={92}, @Address1={93}, @Address2={94}, @ItemID={95}, @VATNo={96}",
+                criteria,//0
+                TransId,//1
+                null, null, null,//2,3,4
+                fiTransactionAdditionalDto.PayType.Id,//5
+                null, null,//6,7
+                fiTransactionAdditionalDto.DelivaryLocation.Id,//8
+                fromLocId,//9
+                toLocId,//10
+                null, null, null, null, null, null, null, null, null, null,//11,12,13,14,15,16,17,18,19,20
+                fiTransactionAdditionalDto.TermsOfDelivery,//21
+                null, null,//22,23
+                fiTransactionAdditionalDto.CreditPeriod,//24
+                null, null,
+                fiTransactionAdditionalDto.MobileNo,//27
+                null, null, null, null,
+                fiTransactionAdditionalDto.StaffIncentives,//32
+                null, null, null, null, null, null, null,
+                fiTransactionAdditionalDto.DespatchNo,//40
+                fiTransactionAdditionalDto.DespatchDate,//41
+                null,
+                fiTransactionAdditionalDto.PartyDate,//43
+                fiTransactionAdditionalDto.PartyInvoiceNo,//44
+                null,
+                fiTransactionAdditionalDto.Attention,//46
+                null, null, null,
+                fiTransactionAdditionalDto.ExpiryDate,//50
+                null, null, null, null, null, null, null,
+                fiTransactionAdditionalDto.DeliveryDate,//58
+                null, null, null, null,
+                fiTransactionAdditionalDto.DeliveryNote,//63
+                fiTransactionAdditionalDto.OrderDate,//64
+                fiTransactionAdditionalDto.OrderNo,//65
+                null, null, null,
+                fiTransactionAdditionalDto.VehicleNo.Id,//69
+                null, null, null, null,
+                fiTransactionAdditionalDto.DelivaryLocation.Name,//74
+                null,
+                fiTransactionAdditionalDto.Approve,//76
+                null,
+                inLocId,//78
+                outLocId,//79
+                null, null,
+                fiTransactionAdditionalDto.SalesMan.Id,//82
+                null, null, null, null,
+                fiTransactionAdditionalDto.SalesArea.Id,//87
+                null, null,
+                fiTransactionAdditionalDto.CloseVoucher,//90
+                null,
+                fiTransactionAdditionalDto.PartyName,//92
+                fiTransactionAdditionalDto.AddressLine1,//93
+                fiTransactionAdditionalDto.AddressLine2,//94
+                null, null
 
-                    );
+                );
 
-                return CommonResponse.Ok();
-          
-           
+            return CommonResponse.Ok();
+
+
         }
-       
+
 
         /// <summary>
         /// deleteTransactionAdditional

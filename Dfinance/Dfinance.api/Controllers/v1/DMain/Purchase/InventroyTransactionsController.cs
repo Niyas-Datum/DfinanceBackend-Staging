@@ -1,4 +1,5 @@
 ﻿using Dfinance.api.Framework;
+using Dfinance.DataModels.Dto.Common;
 using Dfinance.Inventory.Service;
 using Dfinance.Inventory.Service.Interface;
 using Dfinance.Shared.Routes;
@@ -85,11 +86,11 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
             }
         }
         [HttpGet(InvRoute.InventroyTransactions.FillRefItems)]
-        public IActionResult FillRefItems(int transId)
+        public IActionResult FillRefItems(List<ReferenceDto> referenceDto)
         {
             try
             {
-                var data = _transactionService.FillRefItems(transId);
+                var data = _transactionService.FillReference(referenceDto);
                 return Ok(data);
             }
             catch (Exception ex)
