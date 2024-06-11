@@ -5,7 +5,9 @@ using Dfinance.DataModels.Dto.Finance;
 using Dfinance.Shared.Domain;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System.Data;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Dfinance.Application.Services.Finance
 {
@@ -14,11 +16,12 @@ namespace Dfinance.Application.Services.Finance
     {
         private readonly DFCoreContext _context;
         private readonly IAuthService _authService;
-
-        public CurrencyService(DFCoreContext context, IAuthService authService)
+        private ILogger<CurrencyService> _logger;
+        public CurrencyService(DFCoreContext context, IAuthService authService, ILogger<CurrencyService> logger)
         {
             _context = context;
             _authService = authService;
+            _logger = logger;
         }
         //*****************************Fill CurrencyCode**************************************************
         //called by CurrencyController/FillAllCurrencyCode
@@ -62,19 +65,19 @@ namespace Dfinance.Application.Services.Finance
             try
             {
                 string criteria = "InsertCurrencyCode";
-               
-
                 SqlParameter newId = new SqlParameter("@NewID", SqlDbType.Int)
                 {
                     Direction = ParameterDirection.Output
                 };
                 _context.Database.ExecuteSqlRaw("Exec spCurrency @Criteria={0},@Code={1},@Name={2},@NewID={3} OUTPUT", criteria, currencyCodeDto.Code, currencyCodeDto.Name, newId);
                 var CCNewId = newId.Value;
+                _logger.LogInformation("CurrencyCode Successfully ");
                 return CommonResponse.Created("CurrencyCode " + currencyCodeDto.Name + " is Created Successfully");
             }
             catch (Exception ex)
             {
-                return CommonResponse.Error(ex.Message);
+                _logger.LogError("Fail to save currencyCode");
+                return CommonResponse.Error("Fail to save currencyCode");
             }
         }
         //*****************************Update CurrencyCode**************************************************
@@ -97,7 +100,8 @@ namespace Dfinance.Application.Services.Finance
                 }
                 catch (Exception ex)
                 {
-                    return CommonResponse.Error(ex.Message);
+                _logger.LogError("Fail to update currencyCode");
+                return CommonResponse.Error("Fail to update currencyCode");
                 }
             }
         //*****************************DeleteCurrencyCode**************************************************
@@ -124,6 +128,7 @@ namespace Dfinance.Application.Services.Finance
         
             catch (Exception ex)
             {
+                _logger.LogError("Fail to delete currencyCode");
                 return CommonResponse.Error(ex);
             }
         }
@@ -180,13 +185,14 @@ namespace Dfinance.Application.Services.Finance
                 {
                     Direction = ParameterDirection.Output
                 };
-             _context.Database.ExecuteSqlRaw("Exec spCurrency @Criteria={0},@Currency={1},@Abbreviation={2},@DefaultCurrency={3},@CurrencyRate={4},@CreatedBy={5},@ActiveFlag={6},@CreatedBranchID={7},@Coin={8},@Precision={9},@Culture={10},@FormatString={11},@NewID={12} OUTPUT", criteria, currencyDto.CurrencyName, currencyDto.CurrencyCode, currencyDto.IsDefault, currencyDto.CurrencyRate, CreatedBy,1, CreatedBranchId, currencyDto.Coin, 2, "en - IN", "{0:N2}", newId);
+             _context.Database.ExecuteSqlRaw("Exec spCurrency @Criteria={0},@Currency={1},@Abbreviation={2},@DefaultCurrency={3},@CurrencyRate={4},@CreatedBy={5},@ActiveFlag={6},@CreatedBranchID={7},@Coin={8},@Precision={9},@Culture={10},@FormatString={11},@Symbol={12},@NewID={13} OUTPUT", criteria, currencyDto.CurrencyName, currencyDto.CurrencyCode.Key, currencyDto.IsDefault, currencyDto.CurrencyRate, CreatedBy,1, CreatedBranchId, currencyDto.Coin, 2, "en - IN", "{0:N2}",currencyDto.Symbol, newId);
                 var NewId = newId.Value;
                 return CommonResponse.Created(NewId);
 
             }
             catch (Exception ex)
             {
+                _logger.LogError("Fail to save currency");
                 return CommonResponse.Error(ex.Message);
             }
         }
@@ -208,12 +214,13 @@ namespace Dfinance.Application.Services.Finance
                 int CreatedBranchId = _authService.GetBranchId().Value;
                 DateTime CreatedOn = DateTime.Now;
                 var criteria = "UpdateCurrency";
-              var currency=  _context.Database.ExecuteSqlRaw("Exec spCurrency @Criteria={0},@Currency={1},@Abbreviation={2},@DefaultCurrency={3},@CurrencyRate={4},@CreatedBy={5},@ActiveFlag={6},@CreatedBranchID={7},@Coin={8},@Precision={9},@Culture={10},@FormatString={11},@CurrencyID={12},@CreatedOn={13}", criteria, currencyDto.CurrencyName, currencyDto.CurrencyCode, currencyDto.IsDefault, currencyDto.CurrencyRate, CreatedBy, 1, CreatedBranchId, currencyDto.Coin, 2, "en - IN", "{0:N2}",Id, CreatedOn);
+              var currency=  _context.Database.ExecuteSqlRaw("Exec spCurrency @Criteria={0},@Currency={1},@Abbreviation={2},@DefaultCurrency={3},@CurrencyRate={4},@CreatedBy={5},@ActiveFlag={6},@CreatedBranchID={7},@Coin={8},@Precision={9},@Culture={10},@FormatString={11},@CurrencyID={12},@CreatedOn={13},@Symbol={14}", criteria, currencyDto.CurrencyName, currencyDto.CurrencyCode.Key, currencyDto.IsDefault, currencyDto.CurrencyRate, CreatedBy, 1, CreatedBranchId, currencyDto.Coin, 2, "en - IN", "{0:N2}",Id, CreatedOn,currencyDto.Symbol);
                 return CommonResponse.Created(currency);
 
             }
             catch (Exception ex)
             {
+                _logger.LogError("Fail to update currency");
                 return CommonResponse.Error(ex.Message);
             }
         }
@@ -241,6 +248,7 @@ namespace Dfinance.Application.Services.Finance
 
             catch (Exception ex)
             {
+                _logger.LogError("Fail to delete currency");
                 return CommonResponse.Error(ex);
             }
         }

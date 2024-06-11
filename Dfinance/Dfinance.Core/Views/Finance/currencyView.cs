@@ -37,15 +37,13 @@ namespace Dfinance.Core.Views.Finance
         public string? Abbreviation { get; set; }
         public bool? DefaultCurrency { get; set; }
         public double? CurrencyRate { get; set; }
-        public int? CreatedBy { get; set; }
-      
+        public int? CreatedBy { get; set; }      
         public DateTime? CreatedOn { get; set; }
         public byte? ActiveFlag {get;set;}
         public byte? Precision { get;set;}
         public string? Culture { get; set;}
         public string? Coin { get; set; }
         public string? FormatString { get; set; }
-
-
+        public string? Symbol {  get; set; }
     }
 }
