@@ -8,10 +8,10 @@ namespace Dfinance.DataModels.Dto.Finance
         public string FinanceYear { get; set; }
 
         [Required(ErrorMessage = "Startdate is required")]
-        public DateTime Startdate { get; set; }
+        public DateTime StartDate { get; set; }
 
         [Required(ErrorMessage = "Enddate is required")]
-        public DateTime Enddate { get; set; } = DateTime.Now;
+        public DateTime EndDate { get; set; } = DateTime.Now;
 
         [Required(ErrorMessage = "LockTillDate is required")]
         public DateTime LockTillDate { get; set; }
