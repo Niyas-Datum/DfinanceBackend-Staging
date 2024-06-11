@@ -4,6 +4,9 @@ using Dfinance.AuthAppllication.Middlewares;
 using Dfinance.api.Installers.ext;
 using Serilog;
 using Dfinance.AuthApplication.Middlewares;
+using Microsoft.AspNetCore.Hosting;
+using AutoMapper;
+using Dfinance.Application.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -54,7 +57,18 @@ Log.Logger = logger;
 
 builder.Logging.AddSerilog(logger);
 
+// Add AutoMapper to the service collection
 
+
+var mapperConfig = new MapperConfiguration(mc =>
+{
+    mc.AddProfile(new MapperConfig());
+});
+
+IMapper mapper = mapperConfig.CreateMapper();
+services.AddSingleton(mapper);
+
+//builder.Services.AddAutoMapper(typeof(Program).Assembly);
 var app = builder.Build();
 // Logfile
 //Log.Logger = new LoggerConfiguration()
