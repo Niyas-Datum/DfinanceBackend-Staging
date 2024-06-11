@@ -94,9 +94,10 @@ namespace Dfinance.Application.Services.Finance
 
         private void SetCurrentStatus(FinanceYearDto financeYearDto)
         {
+            var currentFinYear = _context.TblMaFinYear.Where(f => f.Status == "R").FirstOrDefault();
+
             if (financeYearDto.Status == "R")
-            {
-                var currentFinYear = _context.TblMaFinYear.Where(f => f.Status == "R").FirstOrDefault();
+            {               
                 if (currentFinYear != null)
                 {
                     if (currentFinYear.EndDate <= financeYearDto.StartDate)
@@ -124,7 +125,14 @@ namespace Dfinance.Application.Services.Finance
                 if (finyearid == null)
                 {
                     msg = "FinanceYear Not Found";
-                    return CommonResponse.NotFound(msg);
+                    _logger.LogInformation(msg);
+                    return CommonResponse.Error(msg);
+                }
+                if (finyearid.Status == "R")
+                {
+                    msg = "Current Finance Year Status can't Updated.Please Insert First";
+                    _logger.LogInformation(msg);
+                    return CommonResponse.Error(msg);
                 }
                 SetCurrentStatus(financeYearDto);
                 int CreatedBy = _authService.GetId().Value;
@@ -154,7 +162,8 @@ namespace Dfinance.Application.Services.Finance
                 if (finyear == null)
                 {
                     msg = "FinanceYear Not Found";
-                    return CommonResponse.NotFound(msg);
+                    _logger.LogInformation(msg);
+                    return CommonResponse.Error(msg);
                 }
                 else if (finyear != "R")
                 {
