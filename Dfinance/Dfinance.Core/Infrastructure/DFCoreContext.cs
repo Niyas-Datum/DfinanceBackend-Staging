@@ -112,7 +112,7 @@ public DbSet<InvUniqueItems> InvUniqueItems { get; set; }
     public DbSet<FiTransactionEntry> FiTransactionEntries { get; set; }
     public DbSet<FiVoucherAllocation> FiVoucherAllocation { get; set; }
     public DbSet<TransExpense> TransExpense { get; set; }
-
+    public DbSet<TransItemExpense> TransItemExpenses { get; set; }
     //view init
 
     // read- id, code name
@@ -233,6 +233,7 @@ public DbSet <UserTrack> UserTrack { get; set; }
     public DbSet<SpGetTransactionAdditionals> SpGetTransactionAdditionals { get; set; }
 public DbSet<ReferenceView> ReferenceView {  get; set; }
     public DbSet<RefItemsView> RefItemsView { get; set; }
+    public DbSet<ImportItemListView> ImportItemListView { get; set; }
     
 public DbSet<NextBatchNoView> NextBatchNoView { get; set; }
 public DbSet<TransItemsView> TransItemsView { get; set; }
@@ -479,5 +480,6 @@ mb.ApplyConfiguration(new FiMaCardsConfiguration());
         mb.Entity<PurchaseReportView>().HasNoKey().ToView(null);
         mb.Entity<PurchaseReportViews>().HasNoKey().ToView(null);
         mb.Entity<ItemSearchView>().HasNoKey().ToView(null);
+		mb.Entity<ImportItemListView>().HasNoKey().ToView(null);
     }
 }

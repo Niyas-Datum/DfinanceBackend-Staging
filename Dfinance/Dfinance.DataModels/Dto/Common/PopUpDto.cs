@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Dfinance.Core.Views.Inventory.Purchase;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -36,6 +37,19 @@ namespace Dfinance.DataModels.Dto.Common
         public int? Id { get; set; }
         public string? VoucherType { get; set; }
         public string? MobileNo { get; set; }
+        public List<ImportItemListDto> RefItems { get; set; }
+    }
+    public class ImportItemListDto
+    {
+        public bool? Select { get; set; }
+        public int? ItemID { get; set; }
+        public string? ItemCode { get; set; }
+        public string? ItemName { get; set; }
+        public string? Unit { get; set; }
+        public decimal? Qty { get; set; }
+        public decimal? Rate { get; set; }
+        public decimal? PrintedMRP { get; set; }
+        public decimal? Amount { get; set; }
     }
     public class FillAdvanceDto
 

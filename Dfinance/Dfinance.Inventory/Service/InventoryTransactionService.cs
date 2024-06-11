@@ -1,9 +1,12 @@
 ﻿using Dfinance.AuthAppllication.Services.Interface;
 using Dfinance.Core.Infrastructure;
+using Dfinance.Core.Views.Inventory.Purchase;
 using Dfinance.DataModels.Dto.Common;
 using Dfinance.DataModels.Dto.Inventory.Purchase;
 using Dfinance.Inventory.Service.Interface;
+using Dfinance.Shared;
 using Dfinance.Shared.Domain;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
@@ -137,36 +140,42 @@ namespace Dfinance.Inventory.Service
                 return CommonResponse.Error("An error occurred while fetching references.");
             }
         }
-        //fill the itemlist of selected reference
-        public CommonResponse FillRefItems(int transId)
+        public CommonResponse FillImportItemList(int? transId, int? voucherId)
         {
-            var items = from ti in _context.InvTransItems
-                        join im in _context.ItemMaster on ti.ItemId equals im.Id
-                        where ti.TransactionId == transId
-                        select new
-                        {
-                            ti.ItemId,
-                            im.ItemCode,
-                            im.ItemName,
-                            ti.Unit,
-                            ti.Qty,
-                            ti.Rate,
-                            ti.PrintedMrp,
-                            Amount=ti.Qty*ti.Rate
-                        };
-            var result=items.ToList();
-            return CommonResponse.Created(result);          
+            string criteria = "FillImportItemListWeb";
+            var data = _context.ImportItemListView.FromSqlRaw("Exec VoucherAdditionalsSP @Criteria={0},@VoucherID={1},@TransactionID={2}",
+                criteria, voucherId, transId).ToList();
+            return CommonResponse.Ok(data);
         }
 
-        public CommonResponse FillReference(int transId, int[]? itemId)
+        public CommonResponse FillReference(List<ReferenceDto> referenceDto)
         {
-            string itemIds = null;
-            if (itemId.Length > 0)
-                itemIds = string.Join(",", itemId);
+            int? transId = 0;
             string criteria = "FillImportItemsWeb";
-            var data = _context.RefItemsView.FromSqlRaw("exec VoucherAdditionalsSP @Criteria={0},@TransactionID={1},@ItemIdString={2}",
-                criteria, transId, itemIds).ToList();
-            return CommonResponse.Ok(data);
+            string itemIds = null;
+            List<int?>? itemId = null;
+            List<RefItemsView>? refItems = null;
+            foreach (var refer in referenceDto)
+            {
+                if (refer.Sel == true)
+                {
+                    transId = refer.Id;
+                    // importItems = (List<ImportItemListDto>?)FillImportItemList(transId, refer.VoucherId).Data;
+                    if (refer.AddItem == true)
+                    {
+                        itemId = refer.RefItems.Select(r => r.ItemID).ToList();
+                    }
+                    else
+                    {
+                        itemId = refer.RefItems.Where(i => i.Select == true).Select(r => r.ItemID).ToList();
+                    }
+                    if (itemId.Count > 0)
+                        itemIds = string.Join(",", itemId.ToArray());
+                    refItems = _context.RefItemsView.FromSqlRaw("exec VoucherAdditionalsSP @Criteria={0},@TransactionID={1},@ItemIdString={2}",
+                        criteria, transId, itemIds).ToList();
+                }
+            }
+            return CommonResponse.Ok(refItems);
 
         }
 
@@ -179,6 +188,25 @@ namespace Dfinance.Inventory.Service
         {
             try
             {
+                if (VoucherId == 17 || VoucherId == 23 || VoucherId == 77 && VoucherId == 76)
+                {
+                    if (transactionDto.Reference.Count > 0 && transactionDto.Reference.Any(r => r.Id != null || r.Id != 0))
+                    {
+                        var refItemView = (List<RefItemsView>)FillReference(transactionDto.Reference).Data;
+                        if (refItemView != null)
+                        {
+                            foreach (var item in transactionDto.Items)
+                            {
+                                var itemQty = refItemView.Where(i => i.ItemID == item.ItemId && i.Qty < item.Qty).FirstOrDefault() ?? null;
+                                if (itemQty != null)
+                                {
+                                    // var itemDetails = itemQty;
+                                    return CommonResponse.Ok(itemQty.ItemName + " Item quantity greater than Reference item quantity");
+                                }
+                            }
+                        }
+                    }
+                }
                 int branchId = _authService.GetBranchId().Value;
                 int createdBy = _authService.GetId().Value;
                 //int SerialNo = 1;
@@ -243,7 +271,7 @@ namespace Dfinance.Inventory.Service
                         ReferencesId, branchId, null, null, null,
                         null, null, transactionDto.Description, createdBy, null, DateTime.Now, null,
                         ApprovalStatus, null, null, Status, Autoentry, true, true, false, transactionDto.Party.Id,
-                        null, RefTransId, transactionDto.Project.Id, PageId, Transaction);
+                        null, RefTransId, transactionDto.Project.Id, PageId, transactionDto.Id);
 
                     return CommonResponse.Ok(transactionDto.Id);
 
@@ -279,12 +307,19 @@ namespace Dfinance.Inventory.Service
                 RefTransId = TransId;
                 string ReferenceId = null;
                 string environmentname = _environment.EnvironmentName;
-
-                VoucherNo voucherNo = (VoucherNo)GetAutoVoucherNo(VoucherId).Data;
-
-                if (transactionDto.Id ==0 ||transactionDto.Id==null)
+                var payType = _context.MaMisc.Where(p => p.Id == transactionDto.FiTransactionAdditional.PayType.Id).Select(p => p.Value).FirstOrDefault();
+                transactionDto.Party.Name = _context.FiMaAccounts.Where(a => a.Id == transactionDto.Party.Id).Select(a => a.Name).FirstOrDefault();
+                if (transactionDto.Party.Name != Constants.CASHCUSTOMER && transactionDto.Party.Name != Constants.CASHSUPPLIER || payType == Constants.CREDIT)
                 {
-                    string criteria = "InsertTransactions"; 
+                    VoucherNo voucherNo = (VoucherNo)GetAutoVoucherNo(VoucherId).Data;
+                   // var transaction = _mapper.Map<InventoryTransactionDto, FiTransaction>(transactionDto);
+                   
+                    if (transactionDto.Id == 0 || transactionDto.Id == null)
+                    {
+                        string criteria = "InsertTransactions";
+                        //transaction.RefTransId = RefTransId;
+                        //var transDto = Converter.ToDictionary(transaction);
+                        //transactionDto.Id = (int?)_repository.Save(transSpName, criteria, transDto).Data;
 
                     SqlParameter newId = new SqlParameter("@NewID", SqlDbType.Int)
                     {
@@ -307,7 +342,7 @@ namespace Dfinance.Inventory.Service
                         ApprovalStatus, null, null, Status, Autoentry, true, true, false, transactionDto.Party.Id,
                         null, RefTransId, transactionDto.Project.Id, PageId, newId);
 
-                    //transactionDto.Id = (int)newId.Value;
+                        transactionDto.Id = (int)newId.Value;
                     return CommonResponse.Ok((int)newId.Value);
 
                 }
@@ -336,8 +371,14 @@ namespace Dfinance.Inventory.Service
                         ApprovalStatus, null, null, Status, Autoentry, true, true, false, transactionDto.Party.Id,
                         null, RefTransId, transactionDto.Project.Id, PageId, PayId);
 
-                    return CommonResponse.Ok(PayId);
+                        transactionDto.Id = PayId;
+                    }
                 }
+                else
+                {
+                    transactionDto.Id = TransId;
+                }
+                return CommonResponse.Ok(transactionDto.Id);
             }
             catch (Exception ex)
             {                
@@ -397,38 +438,42 @@ namespace Dfinance.Inventory.Service
                 int? refTransId = null;
                 var transEntryId=_context.FiTransactionEntries.Where(e=>e.TransactionId == transId && e.TranType=="Party").FirstOrDefault();
                 string criteria = "InsertVoucherAllocation";
-                foreach (var adv in transactionAdvance.Advance)
+
+                if (transEntryId != null)
                 {
-                    if (adv.VID != 0)
+                    if (transactionAdvance.Advance != null && transactionAdvance.Advance.Any(a => a.Amount > 0))
                     {
-                        refTransId = adv.VID.Value;
+                        foreach (var adv in transactionAdvance.Advance)
+                        {
+                            if (adv.VID != 0)
+                            {
+                                refTransId = adv.VID.Value;
+                            }
+                            else
+                            {
+                                refTransId = transpayId;
+                                adv.VID = transEntryId.TransactionId;
+                            }
+                            SqlParameter newId = new SqlParameter("@NewID", SqlDbType.Int)
+                            {
+                                Direction = ParameterDirection.Output
+                            };
+
+                            _context.Database.ExecuteSqlRaw("EXEC VoucherSP @Criteria={0}, @VID={1}, @VEID={2}, @AccountID={3},@Amount={4},@RefTransID={5}, @NewID={6} OUTPUT",
+                                criteria, adv.VID, transEntryId.Id, adv.AccountID, adv.Amount, transId, newId);
+                        }
                     }
-                    else
+                    if(transId!=transpayId)
                     {
-                        refTransId = transpayId;
-                        adv.VID = transId;
-                    }
+                        var amount = transactionAdvance.Card.Sum(c=>c.Amount) + transactionAdvance.Cash.Sum(c => c.Amount) + transactionAdvance.Cheque.Sum(c => c.Amount);
                         SqlParameter newId = new SqlParameter("@NewID", SqlDbType.Int)
-                    {
-                        Direction = ParameterDirection.Output
-                    };
-
-                    _context.Database.ExecuteSqlRaw("EXEC VoucherSP @Criteria={0}, @VID={1}, @VEID={2}, @AccountID={3},@Amount={4},@RefTransID={5}, @NewID={6} OUTPUT",
-                        criteria, adv.VID, transEntryId.Id, adv.AccountID, adv.Amount, refTransId, newId);
-                   
+                        {
+                            Direction = ParameterDirection.Output
+                        };
+                        _context.Database.ExecuteSqlRaw("EXEC VoucherSP @Criteria={0}, @VID={1}, @VEID={2}, @AccountID={3},@Amount={4},@RefTransID={5}, @NewID={6} OUTPUT",
+                           criteria, transpayId, transEntryId.Id, transEntryId.AccountId, amount, transpayId, newId);
+                    }
                 }
-                //foreach (int referId in referTransIds)
-                //{
-                //    SqlParameter newId = new SqlParameter("@NewID", SqlDbType.Int)
-                //    {
-                //        Direction = ParameterDirection.Output
-                //    };
-
-                //    _context.Database.ExecuteSqlRaw("EXEC VoucherSP @Criteria={0}, @VID={1}, @VEID={2}, @AccountID={3},@Amount={4},@RefTransID={5}, @NewID={6} OUTPUT",
-                //        criteria, transId, TransEntId, accountid, amount, referId, newId);
-
-                //    processedReferIds.Add(referId);
-                //}
                 return CommonResponse.Ok();
 
             }
@@ -516,19 +561,19 @@ namespace Dfinance.Inventory.Service
         /// </summary>
         /// <param name="TransId"></param>
         /// <returns></returns>
-        public CommonResponse DeletePurchase(int TransId)
+        public CommonResponse DeletePurchase(int transId)
         {
             try
             {
-                var transid=_context.FiTransaction.Any(x=>x.Id == TransId);
-                if (!transid )
+                var transid = _context.FiTransaction.Any(x => x.Id == transId);
+                if (!transid)
                 {
                     return CommonResponse.NotFound("Transaction Not Found");
                 }
                 string criteria = "DeleteTransactions";
 
                 _context.Database.ExecuteSqlRaw("EXEC VoucherSP @Criteria={0}, @ID={1}",
-                                       criteria, TransId);
+                                       criteria, transId);
 
                 return CommonResponse.Ok("Delete successfully");
             }
@@ -537,6 +582,20 @@ namespace Dfinance.Inventory.Service
                
                 return CommonResponse.Error(ex);
             }
+        }
+        public CommonResponse EntriesAmountValidation(int TransId)
+        {
+            _context.Database.ExecuteSqlRaw("EXEC EntriesAmountCheck @TransactionID={0}",
+                                   TransId);
+
+            return CommonResponse.Ok();
+        }
+        public CommonResponse InventoryAmountValidation(int TransId)
+        {
+            _context.Database.ExecuteSqlRaw("EXEC InventoryAmountCheck @TransactionID={0}",
+                                   TransId);
+
+            return CommonResponse.Ok();
         }
     }
 }
