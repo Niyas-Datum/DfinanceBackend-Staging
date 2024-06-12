@@ -168,7 +168,16 @@ namespace Dfinance.Inventory
                 return CommonResponse.Error(ex.Message);
             }
 
-
+        }
+        public CommonResponse UnitPopup()
+        {
+            var units = _context.UnitMaster.Select(u => new
+            {
+                unit = u.Unit,
+                basicunit = u.BasicUnit,
+                factor = u.Factor
+            }).ToList();
+            return CommonResponse.Ok(units);
         }
     }
 }

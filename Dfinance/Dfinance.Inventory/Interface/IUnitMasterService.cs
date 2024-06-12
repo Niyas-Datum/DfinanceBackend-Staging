@@ -11,6 +11,6 @@ namespace Dfinance.Inventory.Interface
         CommonResponse SaveUnitMaster(UnitMasterDto unitmasterDto);
         CommonResponse UpdateUnitMaster(UnitMasterDto unitmasterDto);
         CommonResponse DeleteUnitMaster(string unit);
-
+        CommonResponse UnitPopup();
     }
 }

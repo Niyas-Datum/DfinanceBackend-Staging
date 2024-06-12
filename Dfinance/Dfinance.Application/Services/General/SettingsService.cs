@@ -229,19 +229,21 @@ namespace Dfinance.Application.Services.General
 
         }
         //get all settings key,value from masettings table
-        public CommonResponse GetAllSettings()
+        public CommonResponse GetAllSettings(string[] keys)
         {
             try
             {
-                var settings = _context.MaSettings.Select(m => new
-                {
-                    Key = m.Key,
-                    Value = (
-                        m.Value.ToLower() == "true" ||
-                        m.Value.ToLower() == "yes" ||
-                        m.Value == "1"
-                    ) ? "true" : "false"
-                }).ToList();
+                var settings = _context.MaSettings
+            .Where(m => keys.Contains(m.Key))
+            .Select(m => new
+            {
+                Key = m.Key,
+                Value = (
+                    m.Value.ToLower() == "true" ||
+                    m.Value.ToLower() == "yes" ||
+                    m.Value == "1"
+                ) ? "true" : "false"
+            }).ToList();
                 return CommonResponse.Ok(settings);
             }
             catch (Exception ex)
