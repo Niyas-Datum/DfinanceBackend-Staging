@@ -141,7 +141,19 @@ namespace Dfinance.api.Controllers.v1.DMain.General
             }
         }
 
-
+        [HttpGet(ApiRoutes.MaSettings.GetAllSettings)]
+        public IActionResult GetSettings([FromQuery] string[] keys)
+        {
+            try
+            {
+                var view = _MaSettingsService.GetAllSettings(keys);
+                return Ok(view);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
     }
 }

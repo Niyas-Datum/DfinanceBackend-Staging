@@ -139,5 +139,18 @@ namespace Dfinance.api.Controllers
             }
 
         }
+        [HttpDelete(InvRoute.UnitMaster.UnitPopup)]
+        public IActionResult UnitPopup()
+        {
+            try
+            {
+                var unit = _UnitMasterService.UnitPopup();
+                return Ok(unit);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

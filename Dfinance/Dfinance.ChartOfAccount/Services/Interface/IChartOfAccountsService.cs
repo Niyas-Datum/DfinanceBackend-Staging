@@ -6,6 +6,7 @@ namespace Dfinance.ChartOfAccount.Services.Finance.Interface
     public interface IChartOfAccountsService
     {
         CommonResponse FillAccounts(int parentId ,bool tree);
+        CommonResponse DropdownAccount();
         CommonResponse FillAccountsById(int Id);
         CommonResponse DropdownAccounts();
         CommonResponse DropDownSubGroup(int id,string Keyword="");

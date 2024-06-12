@@ -36,6 +36,19 @@ namespace Dfinance.api.Controllers.v1.DMain.Finance
                 return BadRequest(ex.Message);
             }
         }
+        [HttpGet(FinRoute.Coa.Accounts)]
+        public IActionResult DropdownAccount()
+        {
+            try
+            {
+                var data = _chartofaccounts.DropdownAccount();
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         /// @windows: -Finance/masters/ChartOfAccount  
         /// @field:  load all accounts 
         /// </summary>

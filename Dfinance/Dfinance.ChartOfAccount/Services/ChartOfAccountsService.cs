@@ -39,6 +39,23 @@ namespace Dfinance.ChartOfAccount.Services.Finance
                 return CommonResponse.Error(ex);
             }
         }
+       /// <summary>
+       /// GEt Drop Down Account for item master
+       /// </summary>
+       /// <returns></returns>
+        public CommonResponse DropdownAccount()
+        {
+            try
+            {
+                string criteria = "FillAccountIsGroupActive";
+                var result = _context.DropDownViewName.FromSqlRaw($"Exec DropDownListSP @Criteria='{criteria}'").ToList();
+                return CommonResponse.Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return CommonResponse.Error(ex);
+            }
+        }
         //called by ChartOfAccountsController/FillAccounts
         public CommonResponse FillAccounts(int Id, bool tree)
         {
