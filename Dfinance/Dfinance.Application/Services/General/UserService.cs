@@ -193,7 +193,7 @@ namespace Dfinance.Application.Services.General
 
         private int InsertMaEmployees(UserDto userDto, int createdBranchId, string encryptedPassword)
         {
-            string criteria = "InsertMaEmployees";
+            string criteria = "InsertMaEmployeesweb";
             SqlParameter newIdparam = new SqlParameter("@NewID", SqlDbType.Int)
             {
                 Direction = ParameterDirection.Output
@@ -202,8 +202,8 @@ namespace Dfinance.Application.Services.General
             {
                 userDto.Account.Id = null;
             }
-            _context.Database.ExecuteSqlRaw("EXEC spNewEmployees @Criteria={0}, @FirstName={1},@MiddleName={2},@LastName={3},@Address={4},@EmailID={5},@OfficeNumber={6},@MobileNumber={7},@DesignationID={8},@Active={9},@EmployeeType={10},@UserName={11},@Password={12},@GmailID={13},@IsLocationRestrictedUser={14},@PhotoID={15},@CreatedBranchId={16},@AccountID={17},@ImagePath={18},@NewID={19} OUTPUT", criteria,
-                    userDto.FirstName, userDto.MiddleName, userDto.LastName, userDto.Address, userDto.EmailId, userDto.OfficeNumber, userDto.MobileNumber, userDto.Designation.Id, userDto.Active, userDto.EmployeeType.Id, userDto.Username, encryptedPassword, userDto.GmailId, userDto.IsLocationRestrictedUser, userDto.PhotoId, createdBranchId, userDto.Account.Id, userDto.ImagePath, newIdparam);
+            _context.Database.ExecuteSqlRaw("EXEC spNewEmployees @Criteria={0}, @FirstName={1},@MiddleName={2},@LastName={3},@Address={4},@EmailID={5},@OfficeNumber={6},@MobileNumber={7},@DesignationID={8},@Active={9},@EmployeeType={10},@UserName={11},@Password={12},@GmailID={13},@IsLocationRestrictedUser={14},@PhotoID={15},@CreatedBranchId={16},@AccountID={17},@ImagePath={18},@CashAccountId={19},@WarehouseId={20},@NewID={21} OUTPUT", criteria,
+                    userDto.FirstName, userDto.MiddleName, userDto.LastName, userDto.Address, userDto.EmailId, userDto.OfficeNumber, userDto.MobileNumber, userDto.Designation.Id, userDto.Active, userDto.EmployeeType.Id, userDto.Username, encryptedPassword, userDto.GmailId, userDto.IsLocationRestrictedUser, userDto.PhotoId, createdBranchId, userDto.Account.Id, userDto.ImagePath,userDto.CashAccountId.Id,userDto.WarehouseId.Id ,newIdparam);
 
             return (int)newIdparam.Value;
         }
@@ -273,9 +273,9 @@ namespace Dfinance.Application.Services.General
                         userDto.Account.Id = null;
                     }
 
-                    string criteria = "UpdateMaEmployees";
-                    _context.Database.ExecuteSqlRaw("EXEC spNewEmployees @Criteria={0}, @FirstName={1},@MiddleName={2},@LastName={3},@Address={4},@EmailID={5},@OfficeNumber={6},@MobileNumber={7},@DesignationID={8},@Active={9},@EmployeeType={10},@UserName={11},@Password={12},@GmailID={13},@IsLocationRestrictedUser={14},@PhotoID={15},@CreatedBranchId={16},@AccountID={17},@ImagePath={18},@ID={19}", criteria,
-                         userDto.FirstName, userDto.MiddleName, userDto.LastName, userDto.Address, userDto.EmailId, userDto.OfficeNumber, userDto.MobileNumber, userDto.Designation.Id, userDto.Active, userDto.EmployeeType.Id, userDto.Username, encryptedPassword, userDto.GmailId, userDto.IsLocationRestrictedUser, userDto.PhotoId, createdBranchId, userDto.Account.Id, userDto.ImagePath, userDto.Id);
+                    string criteria = "UpdateMaEmployeesweb";
+                    _context.Database.ExecuteSqlRaw("EXEC spNewEmployees @Criteria={0}, @FirstName={1},@MiddleName={2},@LastName={3},@Address={4},@EmailID={5},@OfficeNumber={6},@MobileNumber={7},@DesignationID={8},@Active={9},@EmployeeType={10},@UserName={11},@Password={12},@GmailID={13},@IsLocationRestrictedUser={14},@PhotoID={15},@CreatedBranchId={16},@AccountID={17},@ImagePath={18},@CashAccountId={19},@WarehouseId={20},@ID={21}", criteria,
+                         userDto.FirstName, userDto.MiddleName, userDto.LastName, userDto.Address, userDto.EmailId, userDto.OfficeNumber, userDto.MobileNumber, userDto.Designation.Id, userDto.Active, userDto.EmployeeType.Id, userDto.Username, encryptedPassword, userDto.GmailId, userDto.IsLocationRestrictedUser, userDto.PhotoId, createdBranchId, userDto.Account.Id, userDto.ImagePath, userDto.CashAccountId.Id, userDto.WarehouseId.Id ,userDto.Id);
 
                     var existingUserDetails = _context.MaEmployeeBranchDet.Where(d => d.EmployeeId == userDto.Id).ToList();
                     var existingUserDetailsIds = existingUserDetails.Select(d => d.Id).ToList();

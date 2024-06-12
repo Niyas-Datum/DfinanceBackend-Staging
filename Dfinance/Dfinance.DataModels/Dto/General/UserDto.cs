@@ -91,7 +91,8 @@ namespace Dfinance.DataModels.Dto.General
         public DropdownDto? Account { get; set; }
 
         public string? ImagePath { get; set; }
-
+        public DropdownDto? CashAccountId { get; set; }
+        public DropdownDto? WarehouseId { get; set; }  
         public List<UserBranchDetailsDto>? UserBranchDetails { get; set; }
 
     }

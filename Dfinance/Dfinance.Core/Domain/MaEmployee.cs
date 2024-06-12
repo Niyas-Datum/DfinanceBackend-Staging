@@ -33,6 +33,8 @@ public partial class MaEmployee
     //FK
     public int? AccountId { get; set; }
     public string? ImagePath { get; set; }
+    public int? CashAccountId { get; set; }
+    public int? WarehouseId { get; set; }
 
 
     /// <summary>
@@ -40,7 +42,7 @@ public partial class MaEmployee
     /// currently using
     /// </summary>
 
-    
+
 
     //employee branch details
     public virtual ICollection<MaEmployeeDetail> EmployeeBranchDetails { get; set; } = new List<MaEmployeeDetail>();
