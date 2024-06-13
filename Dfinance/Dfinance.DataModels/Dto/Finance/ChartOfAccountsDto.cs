@@ -25,4 +25,11 @@ namespace Dfinance.DataModels.Dto.Finance
         public bool IsGroup { get; set; }
 
     }
+    public class AccountDto
+    {
+        public string AccountCode { get; set; }
+        public string AccountName { get; set; }
+        public int ID { get; set; }
+    }
+
 }

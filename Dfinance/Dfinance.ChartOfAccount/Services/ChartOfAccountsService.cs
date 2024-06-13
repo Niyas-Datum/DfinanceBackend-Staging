@@ -408,8 +408,28 @@ namespace Dfinance.ChartOfAccount.Services.Finance
                 return CommonResponse.Error(ex);
             }
         }
+        public CommonResponse AccountPopUp()
+        {
+            try
+            {
+                var accounts = _context.FiMaAccounts
+                    .Where(a => a.Active == true && a.IsGroup == false)
+                    .Select(a => new AccountDto
+                    {
+                        AccountCode = a.Alias,
+                        AccountName = a.Name,
+                        ID = a.Id
+                    })
+                    .ToList();
 
-
+                return CommonResponse.Ok(accounts);
+            }
+            catch (Exception ex)
+            {
+               
+                return CommonResponse.Error("An error occurred while fetching accounts.");
+            }
+        }
 
         private string GetNextCode(int? Id)
         {
@@ -431,6 +451,7 @@ namespace Dfinance.ChartOfAccount.Services.Finance
             }
         }
 
+
         Func<string, decimal?> stringToNullableDecimal = s =>
         {
             decimal temp;
@@ -441,6 +462,7 @@ namespace Dfinance.ChartOfAccount.Services.Finance
             return null;
         };
     }
+
 }
 
     
