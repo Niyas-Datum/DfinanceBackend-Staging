@@ -139,7 +139,7 @@ namespace Dfinance.api.Controllers
             }
 
         }
-        [HttpDelete(InvRoute.UnitMaster.UnitPopup)]
+        [HttpGet(InvRoute.UnitMaster.UnitPopup)]
         public IActionResult UnitPopup()
         {
             try

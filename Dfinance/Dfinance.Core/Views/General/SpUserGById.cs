@@ -41,8 +41,8 @@ namespace Dfinance.Core.Views.General
             public string? AccountCode { get; set; }
             public string? AccountName { get; set; }
             public string? ImagePath { get; set; }
-
-
+            public int? CashAccountId { get; set; }
+            public int? WarehouseId { get; set; }
 
         }
 

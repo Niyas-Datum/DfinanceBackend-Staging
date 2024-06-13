@@ -1,4 +1,5 @@
-﻿using Dfinance.Application.Services.General.Interface;
+﻿using Dfinance.Application.Services.Finance.Interface;
+using Dfinance.Application.Services.General.Interface;
 using Dfinance.Application.Services.Interface;
 using Dfinance.AuthApplication.Services.Interface;
 using Dfinance.AuthAppllication.Services.Interface;
@@ -10,24 +11,40 @@ using Dfinance.Shared.Domain;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System.Data;
 
 namespace Dfinance.Application.Services.General
 {
     public class UserService : IUserService
-
     {
         private readonly DFCoreContext _context;
         private readonly IAuthService _authService;
         private readonly IEncryptService _encryptService;
         private readonly IDecryptService _decryptService;
         private readonly DataRederToObj _rederToObj;
-        public UserService(DFCoreContext context, IAuthService authService, IEncryptService encryptService, DataRederToObj rederToObj)
+        private readonly IAccountList _accountList;
+        private readonly IConfiguration _configuration;
+        private readonly ILogger<IUserService> _logger;
+        private string uploadPath;
+        public UserService(DFCoreContext context, IAuthService authService, IEncryptService encryptService, DataRederToObj rederToObj, IAccountList accountList,
+            IConfiguration configuration, ILogger<IUserService> logger)
         {
             _context = context;
             _authService = authService;
             _encryptService = encryptService;
             _rederToObj = rederToObj;
+            _accountList = accountList;
+            _configuration = configuration;
+            _logger = logger;
+            uploadPath = _configuration["AppSettings:UserImage"];
+        }
+        private string base64RemoveData = "data:image/png;base64,";
+        public CommonResponse FillPettyCashAccount()
+        {
+            var cahsAcc = _accountList.FillAccountList(15).Data;
+            return CommonResponse.Ok(cahsAcc);
         }
         public CommonResponse UserDropDown()
         {
@@ -39,6 +56,7 @@ namespace Dfinance.Application.Services.General
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error in filling User dropdown");
                 return CommonResponse.Error(ex);
             }
         }
@@ -55,6 +73,7 @@ namespace Dfinance.Application.Services.General
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error in filling User Master");
                 return CommonResponse.Error(ex);
             }
         }
@@ -70,14 +89,11 @@ namespace Dfinance.Application.Services.General
                 int CreatedBranchId = _authService.GetBranchId().Value;
                 string criteria = "FillRoles";
                 var data = _context.GetRole.FromSqlRaw($"Exec DropDownListSP @Criteria='{criteria}',@IntParam='{CreatedBranchId}'").ToList();
-
-
                 return CommonResponse.Ok(data);
-
-
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error in filling UserRoles");
                 return CommonResponse.Error(ex);
             }
         }
@@ -90,17 +106,13 @@ namespace Dfinance.Application.Services.General
         {
             try
             {
-
                 string criteria = "FillUserRights";
                 var data = _context.RoleRightsModel.FromSqlRaw($"Exec spNewEmployees @Criteria='{criteria}',@RoleID='{RoleId}'").ToList();
-
-
                 return CommonResponse.Ok(data);
-
-
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error in filling UserRoleRights");
                 return CommonResponse.Error(ex);
             }
         }
@@ -111,11 +123,11 @@ namespace Dfinance.Application.Services.General
         {
             try
             {
-                string criteria = "FillUsers";
+                string criteria = "FillUsersWeb";
                 SpUserGById fillUserResponse = new SpUserGById();
 
                 _context.Database.GetDbConnection().Open();
-
+                string imageBase64 = null;
                 using (var dbCommand = _context.Database.GetDbConnection().CreateCommand())
                 {
                     dbCommand.CommandText = $"Exec spNewEmployees @Criteria='{criteria}',@ID='{Id}'";
@@ -124,7 +136,16 @@ namespace Dfinance.Application.Services.General
                     {
                         // User Details
                         fillUserResponse.UserDetails = _rederToObj.Deserialize<FillUserSpView>(reader).FirstOrDefault();
-
+                        string imagePath = uploadPath+ fillUserResponse?.UserDetails.ImagePath;
+                        
+                        if (!string.IsNullOrEmpty(imagePath) || File.Exists(imagePath))
+                        {
+                            // Read image data
+                            byte[] imageData = File.ReadAllBytes(imagePath);
+                            // Convert  to Base64 string
+                            imageBase64 = Convert.ToBase64String(imageData);
+                            imageBase64 = base64RemoveData + imageBase64;
+                        }
                         // Branch Details
                         reader.NextResult();
                         fillUserResponse.BranchDetails = _rederToObj.Deserialize<UserBranchDetails>(reader);
@@ -141,13 +162,14 @@ namespace Dfinance.Application.Services.General
 
                 if (fillUserResponse.UserDetails != null)
                 {
-                    return CommonResponse.Ok(fillUserResponse);
+                    return CommonResponse.Ok(new { User = fillUserResponse, Image = imageBase64 });
                 }
 
                 return CommonResponse.NotFound("User not found");
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error in filling User Details");
                 return CommonResponse.Error(ex);
             }
             finally
@@ -155,7 +177,26 @@ namespace Dfinance.Application.Services.General
                 _context.Database.CloseConnection();
             }
         }
+        private string UploadImage(string base64EncodedData, string username)
+        {
+            //  base64EncodedData = base64EncodedData.Replace(" ", "+");
+            // Assuming base64RemoveData is defined somewhere in your code
+            base64EncodedData = base64EncodedData.Replace(base64RemoveData, "");
+            byte[] imageData = Convert.FromBase64String(base64EncodedData);
 
+
+            if (!Directory.Exists(uploadPath))
+                Directory.CreateDirectory(uploadPath);
+
+            // Construct image paths
+            string imagePath = Path.Combine(uploadPath, $"{username}.jpg");
+            string imagePathDb = username + ".jpg";
+
+            // Write image data to file
+            File.WriteAllBytes(imagePath, imageData);
+           // _logger.LogInformation("Item Image uploaded Successfully");
+            return imagePathDb;
+        }
         /// <summary>
         /// Add User
         /// Frm:Gen=>User
@@ -180,12 +221,13 @@ namespace Dfinance.Application.Services.General
                     InsertMaEmployeeDetails(userDto, newUserId);
 
                     transaction.Commit();
-
+                    _logger.LogInformation("User Saved Successfully");
                     return CommonResponse.Created("Successfully Inserted");
                 }
                 catch (Exception ex)
                 {
                     transaction.Rollback();
+                    _logger.LogError("User Save Failed");
                     return CommonResponse.Error($"Failed to insert user. Error: {ex.Message}");
                 }
             }
@@ -202,8 +244,13 @@ namespace Dfinance.Application.Services.General
             {
                 userDto.Account.Id = null;
             }
+            string path = "";
+            if (userDto.ImagePath != null)
+            {
+                path = UploadImage(userDto.ImagePath, userDto.Username);
+            }
             _context.Database.ExecuteSqlRaw("EXEC spNewEmployees @Criteria={0}, @FirstName={1},@MiddleName={2},@LastName={3},@Address={4},@EmailID={5},@OfficeNumber={6},@MobileNumber={7},@DesignationID={8},@Active={9},@EmployeeType={10},@UserName={11},@Password={12},@GmailID={13},@IsLocationRestrictedUser={14},@PhotoID={15},@CreatedBranchId={16},@AccountID={17},@ImagePath={18},@CashAccountId={19},@WarehouseId={20},@NewID={21} OUTPUT", criteria,
-                    userDto.FirstName, userDto.MiddleName, userDto.LastName, userDto.Address, userDto.EmailId, userDto.OfficeNumber, userDto.MobileNumber, userDto.Designation.Id, userDto.Active, userDto.EmployeeType.Id, userDto.Username, encryptedPassword, userDto.GmailId, userDto.IsLocationRestrictedUser, userDto.PhotoId, createdBranchId, userDto.Account.Id, userDto.ImagePath,userDto.CashAccountId.Id,userDto.WarehouseId.Id ,newIdparam);
+                    userDto.FirstName, userDto.MiddleName, userDto.LastName, userDto.Address, userDto.EmailId, userDto.OfficeNumber, userDto.MobileNumber, userDto.Designation.Id, userDto.Active, userDto.EmployeeType.Id, userDto.Username, encryptedPassword, userDto.GmailId, userDto.IsLocationRestrictedUser, userDto.PhotoId, createdBranchId, userDto.Account.Id, path,userDto.CashAccountId.Id,userDto.WarehouseId.Id ,newIdparam);
 
             return (int)newIdparam.Value;
         }
@@ -272,10 +319,14 @@ namespace Dfinance.Application.Services.General
                     {
                         userDto.Account.Id = null;
                     }
-
+                    string path = "";
+                    if (userDto.ImagePath != null)
+                    {
+                        path = UploadImage(userDto.ImagePath, userDto.Username);
+                    }
                     string criteria = "UpdateMaEmployeesweb";
                     _context.Database.ExecuteSqlRaw("EXEC spNewEmployees @Criteria={0}, @FirstName={1},@MiddleName={2},@LastName={3},@Address={4},@EmailID={5},@OfficeNumber={6},@MobileNumber={7},@DesignationID={8},@Active={9},@EmployeeType={10},@UserName={11},@Password={12},@GmailID={13},@IsLocationRestrictedUser={14},@PhotoID={15},@CreatedBranchId={16},@AccountID={17},@ImagePath={18},@CashAccountId={19},@WarehouseId={20},@ID={21}", criteria,
-                         userDto.FirstName, userDto.MiddleName, userDto.LastName, userDto.Address, userDto.EmailId, userDto.OfficeNumber, userDto.MobileNumber, userDto.Designation.Id, userDto.Active, userDto.EmployeeType.Id, userDto.Username, encryptedPassword, userDto.GmailId, userDto.IsLocationRestrictedUser, userDto.PhotoId, createdBranchId, userDto.Account.Id, userDto.ImagePath, userDto.CashAccountId.Id, userDto.WarehouseId.Id ,userDto.Id);
+                         userDto.FirstName, userDto.MiddleName, userDto.LastName, userDto.Address, userDto.EmailId, userDto.OfficeNumber, userDto.MobileNumber, userDto.Designation.Id, userDto.Active, userDto.EmployeeType.Id, userDto.Username, encryptedPassword, userDto.GmailId, userDto.IsLocationRestrictedUser, userDto.PhotoId, createdBranchId, userDto.Account.Id, path, userDto.CashAccountId.Id, userDto.WarehouseId.Id ,userDto.Id);
 
                     var existingUserDetails = _context.MaEmployeeBranchDet.Where(d => d.EmployeeId == userDto.Id).ToList();
                     var existingUserDetailsIds = existingUserDetails.Select(d => d.Id).ToList();
@@ -294,11 +345,13 @@ namespace Dfinance.Application.Services.General
 
 
                     transaction.Commit();
+                    _logger.LogInformation("Successfully Updated User");
                     return CommonResponse.Created("Successfully Updated");
                 }
                 catch (Exception ex)
                 {
                     transaction.Rollback();
+                    _logger.LogError("User Updation Failed");
                     return CommonResponse.Error(ex.Message);
                 }
             }
@@ -334,7 +387,7 @@ namespace Dfinance.Application.Services.General
                        
                         _context.SaveChanges();
                         transaction.Commit();
-
+                        _logger.LogInformation("User Deleted Successfully");
                         msg = "User and other details deleted successfully";
                         return CommonResponse.Ok(msg);
                     }
@@ -346,6 +399,7 @@ namespace Dfinance.Application.Services.General
                 catch (Exception ex)
                 {
                     transaction.Rollback();
+                    _logger.LogError("User Cannot be Deleted");
                     return CommonResponse.Error("This user cannot be deleted because it is used in other forms");
                 }
             }

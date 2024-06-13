@@ -62,7 +62,7 @@ namespace Dfinance.Shared.Routes.v1
 
             public const string UserDropDown = $"{Main}/UserDropDown";
             public const string FillUser= $"{Main}/FillUser";
-
+            public const string FillPettyCash = $"{Main}/fillPettyCash";
             public const string FillUserById = $"{Main}/FillUserById";
 
             public const string SaveUser = $"{Main}/Save";

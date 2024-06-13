@@ -13,5 +13,6 @@ namespace Dfinance.Application.Services.General.Interface
         CommonResponse SaveUser(UserDto maEmployeeDetailsDto);
         CommonResponse UpdateUser(UserDto maEmployeeDetailsDto);
         CommonResponse Deleteuser(int Id);
+        CommonResponse FillPettyCashAccount();
     }
 }
