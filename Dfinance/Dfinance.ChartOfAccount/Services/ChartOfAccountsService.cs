@@ -138,10 +138,10 @@ namespace Dfinance.ChartOfAccount.Services.Finance
         {
             try
             {
-                //int BranchId = _authService.GetBranchId().Value;
-                //int CreatedBy = _authService.GetId().Value;
-                int BranchId = 1;
-                int CreatedBy = 118;
+                int BranchId = _authService.GetBranchId().Value;
+                int CreatedBy = _authService.GetId().Value;
+                //int BranchId = 1;
+                //int CreatedBy = 118;
                 int? CreatedBranchId = null;
                 if (accountsDto.SubGroup != null )
                 {
