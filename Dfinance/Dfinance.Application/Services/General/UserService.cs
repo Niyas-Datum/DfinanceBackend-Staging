@@ -136,10 +136,13 @@ namespace Dfinance.Application.Services.General
                     {
                         // User Details
                         fillUserResponse.UserDetails = _rederToObj.Deserialize<FillUserSpView>(reader).FirstOrDefault();
-                        string imagePath = uploadPath+ fillUserResponse?.UserDetails.ImagePath;
+                        string? imagePath = null;
+                        if (fillUserResponse.UserDetails.ImagePath !=null )
+                             imagePath = uploadPath+ fillUserResponse?.UserDetails.ImagePath;
                         
-                        if (!string.IsNullOrEmpty(imagePath) || File.Exists(imagePath))
+                        if (!string.IsNullOrEmpty(imagePath) || File.Exists(imagePath) )
                         {
+
                             // Read image data
                             byte[] imageData = File.ReadAllBytes(imagePath);
                             // Convert  to Base64 string
@@ -244,7 +247,7 @@ namespace Dfinance.Application.Services.General
             {
                 userDto.Account.Id = null;
             }
-            string path = "";
+            string? path = null;
             if (userDto.ImagePath != null)
             {
                 path = UploadImage(userDto.ImagePath, userDto.Username);
@@ -319,7 +322,7 @@ namespace Dfinance.Application.Services.General
                     {
                         userDto.Account.Id = null;
                     }
-                    string path = "";
+                    string? path = null;
                     if (userDto.ImagePath != null)
                     {
                         path = UploadImage(userDto.ImagePath, userDto.Username);
