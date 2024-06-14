@@ -183,5 +183,18 @@ namespace Dfinance.api.Controllers.v1.DMain.Finance
                 return BadRequest(ex.Message);
             }
         }
+        [HttpGet(FinRoute.Coa.Accountspopup)]
+        public IActionResult AccountPopUp()
+        {
+            try
+            {                
+                var data = _chartofaccounts.AccountPopUp();
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
