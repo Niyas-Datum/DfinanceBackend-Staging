@@ -95,6 +95,7 @@ namespace Dfinance.Stakeholder.Services
                              where m.PartyId == Id
                              select new { c.Id, c.Description };
             string? imagePath = null;
+           
             if (result?.ImagePath !=null && result.ImagePath != "")
                  imagePath = PartyImage +"\\"+ result?.ImagePath;
             string? imageBase64 = null;
@@ -197,7 +198,7 @@ namespace Dfinance.Stakeholder.Services
                 int createdBranchId = _authService.GetBranchId().Value;
                 DateTime createdOn = DateTime.Now;
                 var nature = "S";
-                var path = "";
+                string? path = null;
                 if (generalDto.Type.Id == 1)
                 {
                     nature = "C";

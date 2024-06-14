@@ -86,7 +86,9 @@ namespace Dfinance.Item.Services.Inventory
 
             string criteria = "FillItemByID";
             var itemdata = _context.SpFillItemMasterById.FromSqlRaw($"Exec ItemMasterSP @Criteria='{criteria}',@ID='{Id}'").AsEnumerable().FirstOrDefault();
-            string imagePath = uploadPath + itemdata?.Imagepath;
+            string? imagePath = null;
+            if (itemdata.Imagepath!=null)
+                 imagePath = uploadPath + itemdata?.Imagepath;
 
             string imageBase64 = null;
 
@@ -281,7 +283,7 @@ namespace Dfinance.Item.Services.Inventory
 
                 //upload image
 
-                string path = "";
+                string? path = null;
                 if (itemDto.ImageFile != null)
                 {
                     path = UploadImage(itemDto.ImageFile, itemDto.ItemCode);
@@ -492,7 +494,7 @@ namespace Dfinance.Item.Services.Inventory
                     return CommonResponse.Error("Warning:Do you want to change ItemCode??");
 
                 //upload image
-                var path = "";
+                string? path = null;
                 if (itemDto.ImageFile != null)
                 {
                     path = UploadImage(itemDto.ImageFile, itemDto.ItemCode);
@@ -582,11 +584,11 @@ namespace Dfinance.Item.Services.Inventory
                 }
                 else
                     branch.Add(BranchId);
-                var bi = _context.BranchItems.Any(b => b.ItemId == ItemId);//updating branchItems
-                if (bi)
-                {
-                    var branchItemsRemove = _context.BranchItems.Where(b => b.ItemId == ItemId).ToList();
-                    _context.BranchItems.RemoveRange(branchItemsRemove);
+
+                var bi = _context.BranchItems.Where(b => b.ItemId == ItemId).ToList();//updating branchItems
+                if (bi!=null)
+                {                    
+                    _context.BranchItems.RemoveRange(bi);
                     _context.SaveChanges();
                     foreach (var b in branch)
                     {
