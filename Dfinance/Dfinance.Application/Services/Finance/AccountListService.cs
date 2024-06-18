@@ -6,6 +6,7 @@ using Dfinance.DataModels.Dto.Finance;
 using Dfinance.Shared.Domain;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System.Data;
 
 namespace Dfinance.Application.Services.Finance
@@ -14,11 +15,12 @@ namespace Dfinance.Application.Services.Finance
     {
         private readonly DFCoreContext _context;
         private readonly IAuthService _authService;
-
-        public AccountListService(DFCoreContext context, IAuthService authService)
+        private readonly ILogger<AccountListService> _logger;
+        public AccountListService(DFCoreContext context, IAuthService authService, ILogger<AccountListService> logger)
         {
             _context = context;
             _authService = authService;
+            _logger = logger;
         }
         public CommonResponse FillAccountListByID(int Id)
         {
@@ -31,6 +33,7 @@ namespace Dfinance.Application.Services.Finance
             }
             catch (Exception ex)
             {
+                _logger.LogError("Failed to Fill AccountList by ID");
                 return CommonResponse.Error(ex.Message);
             }
         }
@@ -39,8 +42,6 @@ namespace Dfinance.Application.Services.Finance
         {
             try
             {
-               
-
                 if (ListId > 0)
                 {
                     string criteria = "FillAccountList";
@@ -51,131 +52,111 @@ namespace Dfinance.Application.Services.Finance
                 {
                     string criteria = "FillAccountsList";
                     var result = _context.DropDownViewDesc.FromSqlRaw($"Exec DropDownListSP @Criteria='{criteria}'").ToList();
-
                     return CommonResponse.Ok(result);
                 }
-
-               
             }
             catch (Exception ex)
             {
+                _logger.LogError("Failed to Fill AccountList");
                 return CommonResponse.Error(ex.Message);
             }
         }
 
-        public CommonResponse SaveAccountsList(List<AccountsListDto> accountList)
+        public CommonResponse SaveAccountsList(AccountsListDto accountList)
         {
             try
             {
                 int createdBranchId = _authService.GetBranchId().Value;
-
-                foreach (var account in accountList)
+                string criteria = "InsertAccount";
+                SqlParameter newIdAlias = new SqlParameter("@NewID", SqlDbType.Int)
                 {
-                    foreach (var acc in account.Accounts)
-                    {
-                        // Check whether the ListID already exists
-                        var listExists = _context.FiAccountsList.Any(x => x.Id == account.List.Id);
-                        if (!listExists)
-                        {
-                            return CommonResponse.Error("ListID does not exist");
-                        }
-
-                        // Check whether the AccountID already exists
-                        var accountExists = _context.FiAccountsList.Any(x => x.Id == acc.ID);
-                        if (accountExists)
-                        {
-                            return CommonResponse.Error("AccountID Already Exists");
-                        }
-
-                        if (account.Id == 0)
-                        {
-                            // Saving FiAccountList table
-                            string criteria = "InsertAccount";
-                            SqlParameter newIdAlias = new SqlParameter("@NewID", SqlDbType.Int)
-                            {
-                                Direction = ParameterDirection.Output
-                            };
-                            _context.Database.ExecuteSqlRaw("EXEC AccountsListSP @Criteria={0},@ListID={1},@AccountID={2},@BranchID={3},@NewID= {4} OUTPUT ",
-                                criteria,
-                                account.List.Id,
-                                acc.ID,
-                                createdBranchId,
-                                newIdAlias
-                            );
-                            var newId = (int)newIdAlias.Value;
-                        }
-                        else
-                        {
-                            // Updating existing record
-                            string criteria = "UpdateAccount";
-                            _context.Database.ExecuteSqlRaw("EXEC AccountsListSP @Criteria={0},@ListID={1},@AccountID={2},@BranchID={3},@ID= {4}  ",
-                                criteria,
-                                account.List.Id,
-                                acc.ID,
-                                createdBranchId,
-                                account.Id
-                            );
-                        }
-                    }
+                    Direction = ParameterDirection.Output
+                };
+                foreach (var account in accountList.Accounts)
+                {
+                    // Saving FiAccountList table                       
+                    _context.Database.ExecuteSqlRaw("EXEC AccountsListSP @Criteria={0},@ListID={1},@AccountID={2},@BranchID={3},@NewID= {4} OUTPUT ",
+                        criteria,
+                        accountList.List.Id,
+                        account.ID,
+                        createdBranchId,
+                        newIdAlias
+                    );
+                    var newId = (int)newIdAlias.Value;
                 }
-
+                _logger.LogInformation("Successfullt saved AccountList");
                 return CommonResponse.Created("Saved");
             }
             catch (Exception ex)
             {
+                _logger.LogError("Failed to Save AccountList");
                 return CommonResponse.Error(ex.Message);
             }
         }
-
+        public CommonResponse UpdateAccountList(AccountsListDto accountList)
+        {
+            try
+            {
+                //deleting records of given ListId
+                var listRemove = _context.FiAccountsList.Where(b => b.ListId == accountList.List.Id).ToList();
+                _context.FiAccountsList.RemoveRange(listRemove);
+                _context.SaveChanges();
+                // save existing records
+                var acc = SaveAccountsList(accountList);
+                _logger.LogInformation("Successfullt updated AccountList");
+                return CommonResponse.Ok("Updated");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Failed to Update AccountList");
+                return CommonResponse.Error(ex.Message);
+            }
+        }
         public CommonResponse AccountListPopUp()
         {
             try
             {
-                
-      var data = _context.FiMaAccounts
-     .Where(i => i.IsGroup == false && i.Active == true)
-     .Select(accountsList => new ReadViewAlias
-     {
-         Alias = accountsList.Alias,
-         Name = accountsList.Name,
-         ID = accountsList.Id
-     })
-     .ToList();
+
+                var data = _context.FiMaAccounts
+               .Where(i => i.IsGroup == false && i.Active == true)
+               .Select(accountsList => new ReadViewAlias
+               {
+                   Alias = accountsList.Alias,
+                   Name = accountsList.Name,
+                   ID = accountsList.Id
+               })
+               .ToList();
 
                 return CommonResponse.Ok(data);
             }
             catch (Exception ex)
             {
+                _logger.LogError("Failed to Popup Accounts in AccountList");
                 return CommonResponse.Error(ex.Message);
             }
         }
-        //Not Used In windows
-        //public CommonResponse DeleteAccountList( int Id)
-        //{
-        //    try
-        //    {
 
-        //        string msg = null;
-        //        int CreatedBranchId = _authService.GetBranchId().Value;
-
-        //        {
-        //            string criteria = "DeleteAccount";
-
-        //            var result = _context.Database.ExecuteSqlRaw($"Exec AccountsListSP @Criteria='{criteria}',@ID='{Id}'");
-        //            msg = Id + " Deleted Successfully";
-        //            return CommonResponse.Ok(msg);
-
-        //        }
-
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return CommonResponse.Error(ex.Message);
-        //    }
-        //}
+        public CommonResponse DeleteAccountList(int Id)
+        {
+            try
+            {
+                string msg = null;
+                int CreatedBranchId = _authService.GetBranchId().Value;
+                {
+                    string criteria = "DeleteAccount";
+                    var result = _context.Database.ExecuteSqlRaw($"Exec AccountsListSP @Criteria='{criteria}',@ID='{Id}'");
+                    msg = Id + " Deleted Successfully";
+                    return CommonResponse.Ok(msg);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Failed to Delete AccountList");
+                return CommonResponse.Error(ex.Message);
+            }
+        }
     }
 }
-    
-   
+
+
 

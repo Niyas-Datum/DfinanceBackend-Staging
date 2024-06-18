@@ -18,7 +18,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Finance
             _AccountListService = accountsListService;
         }
         [HttpPost(FinRoute.AccountsList.SaveAccountsList)]
-        public IActionResult SaveAccountsList([FromBody] List<AccountsListDto> accountList)
+        public IActionResult SaveAccountsList([FromBody]AccountsListDto accountList)
         {
             try
             {
@@ -30,7 +30,33 @@ namespace Dfinance.api.Controllers.v1.DMain.Finance
                 return BadRequest(ex.Message);
             }
         }
-       
+        [HttpPatch(FinRoute.AccountsList.Update)]
+        public IActionResult UpdateAccountsList([FromBody] AccountsListDto accountList)
+        {
+            try
+            {
+                var result = _AccountListService.UpdateAccountList(accountList);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpDelete(FinRoute.AccountsList.Delete)]
+        public IActionResult DeleteAccountsList(int Id)
+        {
+            try
+            {
+                var result = _AccountListService.DeleteAccountList(Id);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpGet(FinRoute.AccountsList.FillAccountList)]
         public IActionResult FillAccountList(int ListId)
         {
