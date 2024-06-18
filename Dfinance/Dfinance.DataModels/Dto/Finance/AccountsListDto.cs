@@ -7,7 +7,7 @@ namespace Dfinance.DataModels.Dto.Finance
     {
         public int? Id{ get; set; }
        public DropDownDesc? List { get; set; }
-        public List<AccountNamePopUpDto> Accounts { get; set; }
+        public List<AccountNamePopUpDto>? Accounts { get; set; }
        
     
     }

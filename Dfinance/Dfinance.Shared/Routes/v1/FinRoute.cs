@@ -95,10 +95,11 @@ namespace Dfinance.Shared.Routes.v1
         {
             public const string Main = $"{Base}/acclist";
             public const string SaveAccountsList = $"{Main}/Save";
+            public const string Update = $"{Main}/update";
             public const string FillAccountList = $"{Main}/get";
             public const string FillAccountListByID = $"{Main}/getbyid";
             public const string AccountListPopUP = $"{Main}/PopUp";
-
+            public const string Delete = $"{Main}/delete";
         }
         public static class CardMaster
         {
