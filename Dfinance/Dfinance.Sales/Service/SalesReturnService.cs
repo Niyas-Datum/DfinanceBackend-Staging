@@ -87,7 +87,17 @@ namespace Dfinance.Sales
                     //int VoucherId=_com.GetVoucherId(PageId);
                     string Status = "Approved";
 
-                    int TransId = (int)_transactionService.SaveTransaction(salesRetunDto, PageId, voucherId, Status).Data;
+                    var transaction=_transactionService.SaveTransaction(salesRetunDto, PageId, voucherId, Status).Data;
+                    int TransId = 0;
+                    var transType = transaction.GetType();
+                    if (transType.Name == "String")
+                    {
+                        return CommonResponse.Ok(transaction);
+                    }
+                    else
+                    {
+                        TransId = (int)transaction;
+                    }
                     int transpayId = TransId;
                     if (salesRetunDto.TransactionEntries.Cash.Count > 0 || salesRetunDto.TransactionEntries.Card.Count > 0 || salesRetunDto.TransactionEntries.Cheque.Count > 0)
                     {
@@ -116,8 +126,11 @@ namespace Dfinance.Sales
                         {
                             _transactionService.SaveVoucherAllocation(TransId, transpayId, salesRetunDto.TransactionEntries);
                         }
-                    }                   
-
+                    }
+                    if (salesRetunDto != null)
+                    {
+                        _transactionService.EntriesAmountValidation(TransId);
+                    }
                     _logger.LogInformation("Successfully Created");
                     transactionScope.Complete();
                     return CommonResponse.Created("Created Successfully");
@@ -180,6 +193,10 @@ namespace Dfinance.Sales
                             _transactionService.UpdateVoucherAllocation(TransId, transpayId, salesReturnDto.TransactionEntries);
                         }
                        
+                    }
+                    if (salesReturnDto != null)
+                    {
+                        _transactionService.EntriesAmountValidation(TransId);
                     }
                     transactionScope.Complete();
                     _logger.LogInformation("Successfully Updated");

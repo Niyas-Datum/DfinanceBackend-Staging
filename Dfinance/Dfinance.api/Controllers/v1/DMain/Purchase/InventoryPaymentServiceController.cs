@@ -49,7 +49,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
         {
             try
             {
-                var result = _payservice.FillCash();
+                var result = _payservice.FillPaymentDetails("CASH");
                 return Ok(result);
             }
             catch (Exception ex)
@@ -62,7 +62,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
         {
             try
             {
-                var result = _payservice.FillCard();
+                var result = _payservice.FillPaymentDetails("CARD");
                 return Ok(result);
             }
             catch (Exception ex)
@@ -76,7 +76,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
         {
             try
             {
-                var result = _payservice.FillEpay();
+                var result = _payservice.FillPaymentDetails("EPAY");
                 return Ok(result);
             }
             catch (Exception ex)

@@ -7,9 +7,9 @@ namespace Dfinance.Inventory.Service.Interface
     {
         CommonResponse FillTax();
         CommonResponse FillAddCharge();
-        CommonResponse FillCash();
-        CommonResponse FillCard();
-        CommonResponse FillEpay();
+        CommonResponse FillPaymentDetails(string description);
+        //CommonResponse FillCard();
+        //CommonResponse FillEpay();
         CommonResponse FillAdvance(int AccountId, string Drcr, DateTime? date);
         CommonResponse FillCheque();
         CommonResponse FillBankName();

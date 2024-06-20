@@ -127,9 +127,9 @@ namespace Dfinance.Inventory.Service
                 {
                     tranType = "Tax";
                     nature = null;
-                    foreach (var tax in transactionDto.TransactionEntries.Tax.Where(a => a.AccountId != 0 && a?.AccountId != null).ToList())
+                    foreach (var tax in transactionDto.TransactionEntries.Tax.Where(a => a.AccountCode.ID != 0 && a?.AccountCode.ID != null).ToList())
                     {
-                        SaveTransactionEntries(transactionId, purchaseVoucherDebit, nature, tax.AccountId,
+                        SaveTransactionEntries(transactionId, purchaseVoucherDebit, nature, tax.AccountCode.ID,
                             tax.Amount ?? null, bankDate ?? null, refPageTypeId, transactionDto.Currency.Id, transactionDto.ExchangeRate,
                             refPageTableId, Reference, description, tranType, transactionDto.TransactionEntries.DueDate, null, null);
                     }
@@ -139,9 +139,9 @@ namespace Dfinance.Inventory.Service
                 {
                     tranType = "Expense";
                     nature = null;
-                    foreach (var expanse in transactionDto.TransactionEntries.AddCharges.Where(a => a.AccountId != 0 && a?.AccountId != null).ToList())
+                    foreach (var expanse in transactionDto.TransactionEntries.AddCharges.Where(a => a.AccountCode.ID != 0 && a?.AccountCode.ID != null).ToList())
                     {
-                        SaveTransactionEntries(transactionId, purchaseVoucherDebit, nature, expanse.AccountId,
+                        SaveTransactionEntries(transactionId, purchaseVoucherDebit, nature, expanse.AccountCode.ID,
                         expanse.Amount ?? null, bankDate ?? null, refPageTypeId, transactionDto.Currency.Id, transactionDto.ExchangeRate,
                         refPageTableId, Reference, description, tranType, transactionDto.TransactionEntries.DueDate, null, null);
                     }
@@ -188,9 +188,9 @@ namespace Dfinance.Inventory.Service
                 {
                     tranType = "Cash";
                     nature = "M";
-                    foreach (var cash in transactionDto.TransactionEntries.Cash.Where(a => a.AccountId != 0 && a?.AccountId != null).ToList())
+                    foreach (var cash in transactionDto.TransactionEntries.Cash.Where(a => a.AccountCode.ID != 0 && a?.AccountCode.ID != null).ToList())
                     {
-                        SaveTransactionEntries(transPayId, purchaseVoucherCredit, nature, cash.AccountId,
+                        SaveTransactionEntries(transPayId, purchaseVoucherCredit, nature, cash.AccountCode.ID,
                         cash.Amount, bankDate ?? null, refPageTypeId, transactionDto.Currency.Id, transactionDto.ExchangeRate,
                         refPageTableId, Reference, description, tranType, transactionDto.TransactionEntries.DueDate, null, null);
                     }
@@ -214,9 +214,9 @@ namespace Dfinance.Inventory.Service
 
                     tranType = "Card";
                     nature = "M";
-                    foreach (var card in transactionDto.TransactionEntries.Card.Where(a => a.AccountId != 0 && a?.AccountId != null).ToList())
+                    foreach (var card in transactionDto.TransactionEntries.Card.Where(a => a.AccountCode.ID != 0 && a?.AccountCode.ID != null).ToList())
                     {
-                        SaveTransactionEntries(transPayId, purchaseVoucherCredit, nature, card.AccountId,
+                        SaveTransactionEntries(transPayId, purchaseVoucherCredit, nature, card.AccountCode.ID,
                         card.Amount, bankDate ?? null, refPageTypeId, transactionDto.Currency.Id, transactionDto.ExchangeRate,
                         refPageTableId, Reference, description, tranType, transactionDto.TransactionEntries.DueDate, null, null);
                     }
@@ -423,7 +423,7 @@ namespace Dfinance.Inventory.Service
         /// 
         /// </summary>
         /// <returns></returns>
-        public CommonResponse FillCash()
+        public CommonResponse FillPaymentDetails(string discription)
         {
             try
             {
@@ -431,7 +431,7 @@ namespace Dfinance.Inventory.Service
                            join al in _context.FiAccountsList on fa.Id equals al.AccountId
                            join mal in _context.FiMaAccountsLists on al.ListId equals mal.Id
                            where fa.IsGroup == false && fa.Active == true &&
-                           mal.Description == "CASH"
+                           mal.Description == description
                            select new AccountNamePopUpDto
                            {
                                Alias = fa.Alias,
@@ -447,65 +447,7 @@ namespace Dfinance.Inventory.Service
                 return CommonResponse.Error(ex);
             }
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-
-        public CommonResponse FillCard()
-        {
-            try
-            {
-                var card = from fa in _context.FiMaAccounts
-                           join al in _context.FiAccountsList on fa.Id equals al.AccountId
-                           join mal in _context.FiMaAccountsLists on al.ListId equals mal.Id
-                           where fa.IsGroup == false && fa.Active == true &&
-                           mal.Description == "CARD"
-                           select new AccountNamePopUpDto
-                           {
-                               Alias = fa.Alias,
-                               Name = fa.Name,
-                               ID = fa.Id
-                           };
-
-                return CommonResponse.Ok(card.ToList());
-
-            }
-            catch (Exception ex)
-            {
-                return CommonResponse.Error(ex);
-            }
-
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public CommonResponse FillEpay()
-        {
-            try
-            {
-                var Epay = from fa in _context.FiMaAccounts
-                           join al in _context.FiAccountsList on fa.Id equals al.AccountId
-                           join mal in _context.FiMaAccountsLists on al.ListId equals mal.Id
-                           where fa.IsGroup == false && fa.Active == true &&
-                           mal.Description == "EPAY"
-                           select new AccountNamePopUpDto
-                           {
-                               Alias = fa.Alias,
-                               Name = fa.Name,
-                               ID = fa.Id
-                           };
-
-                return CommonResponse.Ok(Epay.ToList());
-
-            }
-            catch (Exception ex)
-            {
-                return CommonResponse.Error(ex);
-            }
-
-        }
+       
 
         public CommonResponse FillAdvance(int AccountId, string Drcr, DateTime? date)
         {
@@ -614,7 +556,7 @@ namespace Dfinance.Inventory.Service
                   Select(i => i.Id).
                   SingleOrDefault();
                     entryId = entryId == 0 ? null : entryId;
-                    int? TeId = _context.TransExpense.Where(i => i.TransactionId == transactionId && i.AccountId == accountDetailsDto.AccountId).
+                    int? TeId = _context.TransExpense.Where(i => i.TransactionId == transactionId && i.AccountId == accountDetailsDto.AccountCode.ID).
                            Select(i => i.Id).
                            SingleOrDefault();
                     TeId = TeId == 0 ? null : TeId;
@@ -630,7 +572,7 @@ namespace Dfinance.Inventory.Service
                         "@Description={3},@Amount={4},@PayableAccountID={5},@ChargeTypeID={6},@VEID={7},@PreCalculatedAmt={8},@TranType={9},@NewID={10} OUTPUT",
                         criteria,
                         transactionId,
-                        accountDetailsDto.AccountId,
+                        accountDetailsDto.AccountCode.ID,
                         accountDetailsDto.Description,
                         accountDetailsDto.Amount ?? 0,
                         accountDetailsDto?.PayableAccount?.ID == 0 ? null : accountDetailsDto?.PayableAccount?.ID,
