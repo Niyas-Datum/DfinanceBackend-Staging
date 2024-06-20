@@ -7,7 +7,9 @@ using Dfinance.Core.Infrastructure;
 using Dfinance.Core.Views.PagePermission;
 using Dfinance.Shared.Domain;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System.Data;
+using Newtonsoft.Json;
 
 namespace Dfinance.AuthAppllication.Services;
 
@@ -18,16 +20,17 @@ public class AuthService : IAuthService
     private readonly IEncryptService _encryptService;
     private readonly IJwtSecret _jwtsecret;
     private readonly AuthCoreContext _authCoreContext;
-  
+    private readonly IConfiguration _configuration;
 
 
-    public AuthService(IJwtSecret jwtSecret, DFCoreContext dFCoreContext, IEncryptService encryptService, AuthCoreContext authCoreContext)
+    public AuthService(IJwtSecret jwtSecret, DFCoreContext dFCoreContext, IEncryptService encryptService, AuthCoreContext authCoreContext,
+        IConfiguration configuration)
     {
         _jwtsecret = jwtSecret;
         _dfCoreContext = dFCoreContext;
         _encryptService = encryptService;
         _authCoreContext = authCoreContext;
-       
+        _configuration = configuration;
     }
 
     public CommonResponse Authenticate(AuthenticateRequestDto model)
@@ -52,12 +55,29 @@ public class AuthService : IAuthService
 
                 var Token = _jwtsecret.GenerateJwtToken(userData);
 
+                //get settings from Masettings
+                var settingsPath = _configuration["AppSettings:SettingsJsonFilePath"];
+                var json = File.ReadAllText(settingsPath);
+                string[] keys = JsonConvert.DeserializeObject<string[]>(json);
+                var settings = _dfCoreContext.MaSettings
+            .Where(m => keys.Contains(m.Key))
+            .Select(m => new
+            {
+                Key = m.Key,
+                Value = (
+                    m.Value.ToLower() == "true" ||
+                    m.Value.ToLower() == "yes" ||
+                    m.Value == "1"
+                ) ? "true" : "false"
+            }).ToList();
+                var jsonSettings = JsonConvert.SerializeObject(settings, Formatting.Indented);
 
                 _User = new AuthResponseDto
                 {
                     Users = userData,
                     UserPageListView = data,
                     Token = Token,
+                    Settings=jsonSettings
                 };
                 //Log.Information("Authentication successful. AuthResponse: {@AuthResponse}", authResponse);
                 return CommonResponse.Ok(_User);
