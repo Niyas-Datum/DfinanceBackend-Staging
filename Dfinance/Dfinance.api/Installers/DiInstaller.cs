@@ -80,7 +80,7 @@ public class DiInstaller : IInstaller
         service.AddScoped<IPasswordService, PasswordService>();
 
         //AccountList
-        service.AddScoped<IAccountList, AccountListService>();
+        service.AddScoped<IAccountListService, AccountListService>();
 
         //Customer supplier
         service.AddScoped<ICustomerSupplierService, CustomerSupplierService>();

@@ -11,9 +11,9 @@ namespace Dfinance.api.Controllers.v1.DMain.Finance
 {
     public class AccountsListController : Controller
     {
-        private readonly IAccountList _AccountListService;
+        private readonly IAccountListService _AccountListService;
 
-        public AccountsListController(IAccountList accountsListService)
+        public AccountsListController(IAccountListService accountsListService)
         {
             _AccountListService = accountsListService;
         }
@@ -30,32 +30,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Finance
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPatch(FinRoute.AccountsList.Update)]
-        public IActionResult UpdateAccountsList([FromBody] AccountsListDto accountList)
-        {
-            try
-            {
-                var result = _AccountListService.UpdateAccountList(accountList);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-        [HttpDelete(FinRoute.AccountsList.Delete)]
-        public IActionResult DeleteAccountsList(int Id)
-        {
-            try
-            {
-                var result = _AccountListService.DeleteAccountList(Id);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
+           
 
         [HttpGet(FinRoute.AccountsList.FillAccountList)]
         public IActionResult FillAccountList(int ListId)

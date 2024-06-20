@@ -11,7 +11,7 @@ using System.Data;
 
 namespace Dfinance.Application.Services.Finance
 {
-    public class AccountListService : IAccountList
+    public class AccountListService : IAccountListService
     {
         private readonly DFCoreContext _context;
         private readonly IAuthService _authService;
@@ -72,9 +72,12 @@ namespace Dfinance.Application.Services.Finance
                 {
                     Direction = ParameterDirection.Output
                 };
+                var listRemove = _context.FiAccountsList.Where(b => b.ListId == accountList.List.Id).ToList();
+                _context.FiAccountsList.RemoveRange(listRemove);
+                _context.SaveChanges();
                 foreach (var account in accountList.Accounts)
-                {
-                    // Saving FiAccountList table                       
+                {                                      
+                    // Saving FiAccountList table                    
                     _context.Database.ExecuteSqlRaw("EXEC AccountsListSP @Criteria={0},@ListID={1},@AccountID={2},@BranchID={3},@NewID= {4} OUTPUT ",
                         criteria,
                         accountList.List.Id,
@@ -93,25 +96,7 @@ namespace Dfinance.Application.Services.Finance
                 return CommonResponse.Error(ex.Message);
             }
         }
-        public CommonResponse UpdateAccountList(AccountsListDto accountList)
-        {
-            try
-            {
-                //deleting records of given ListId
-                var listRemove = _context.FiAccountsList.Where(b => b.ListId == accountList.List.Id).ToList();
-                _context.FiAccountsList.RemoveRange(listRemove);
-                _context.SaveChanges();
-                // save existing records
-                var acc = SaveAccountsList(accountList);
-                _logger.LogInformation("Successfullt updated AccountList");
-                return CommonResponse.Ok("Updated");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("Failed to Update AccountList");
-                return CommonResponse.Error(ex.Message);
-            }
-        }
+       
         public CommonResponse AccountListPopUp()
         {
             try
@@ -134,27 +119,7 @@ namespace Dfinance.Application.Services.Finance
                 _logger.LogError("Failed to Popup Accounts in AccountList");
                 return CommonResponse.Error(ex.Message);
             }
-        }
-
-        public CommonResponse DeleteAccountList(int Id)
-        {
-            try
-            {
-                string msg = null;
-                int CreatedBranchId = _authService.GetBranchId().Value;
-                {
-                    string criteria = "DeleteAccount";
-                    var result = _context.Database.ExecuteSqlRaw($"Exec AccountsListSP @Criteria='{criteria}',@ID='{Id}'");
-                    msg = Id + " Deleted Successfully";
-                    return CommonResponse.Ok(msg);
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("Failed to Delete AccountList");
-                return CommonResponse.Error(ex.Message);
-            }
-        }
+        }       
     }
 }
 

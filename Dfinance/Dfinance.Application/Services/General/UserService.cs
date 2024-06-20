@@ -24,11 +24,11 @@ namespace Dfinance.Application.Services.General
         private readonly IEncryptService _encryptService;
         private readonly IDecryptService _decryptService;
         private readonly DataRederToObj _rederToObj;
-        private readonly IAccountList _accountList;
+        private readonly IAccountListService _accountList;
         private readonly IConfiguration _configuration;
         private readonly ILogger<IUserService> _logger;
         private string uploadPath;
-        public UserService(DFCoreContext context, IAuthService authService, IEncryptService encryptService, DataRederToObj rederToObj, IAccountList accountList,
+        public UserService(DFCoreContext context, IAuthService authService, IEncryptService encryptService, DataRederToObj rederToObj, IAccountListService accountList,
             IConfiguration configuration, ILogger<IUserService> logger)
         {
             _context = context;
