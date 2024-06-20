@@ -35,6 +35,10 @@ using Dfinance.Inventory;
 using Dfinance.Sales;
 using Dfinance.Purchase.Services.Interface;
 using Dfinance.Purchase.Services;
+using Dfinance.Finance.Vouchers.Interface;
+using Dfinance.Finance.Vouchers;
+using Dfinance.Finance.Services.Interface;
+using Dfinance.Finance.Services;
 
 
 namespace Dfinance.api.Installers;
@@ -131,6 +135,10 @@ public class DiInstaller : IInstaller
 		service.AddScoped<ISalesReturnService, SalesReturnService>();
         service.AddScoped<IPurchaseReturnService, PurchaseReturnService>();
 
+        service.AddScoped<IFinanceAdditional, FinanceAdditional>();
+        service.AddScoped<IFinancePaymentService, FinancePaymentService>();
+        service.AddScoped<IFinanceTransactionService, FinanceTransactionService>();
+        service.AddScoped<IPaymentVoucherService,PaymentVoucherService>();  
        
 
     }
