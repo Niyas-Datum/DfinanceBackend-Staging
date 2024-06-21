@@ -38,6 +38,10 @@
     {
         public string commandText { get; set; }
     }
+    public class QtyView
+    {
+        public decimal? Stock { get; set; }
+    }
     public class NextBatchNoView
     {
         public double nextBatchNo { get; set; }
@@ -56,6 +60,19 @@
         public bool? Status { get; set; }
         public int? SerialNo { get; set; }
         public string? VATNo { get; set; }
+    }
+    public class FillVoucherWithTrnasId
+    {
+        public int ID { get; set; }
+        public string? TransactionNo { get; set; }
+        public DateTime? Date { get; set; }
+        public decimal? Amount { get; set; }
+        public bool? cancelled { get; set; }
+        public string? EntryNo { get; set; }
+        public DateTime? EntryDate { get; set; }
+        public string? AccountName { get; set; }
+        public string? Phone { get; set; }
+        
     }
     public class ItemTransaction// for tooltip in itemgrid
     {
