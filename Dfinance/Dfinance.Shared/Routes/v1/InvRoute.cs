@@ -170,7 +170,23 @@ namespace Dfinance.Shared.Routes
             public const string UpdatePurchaseRtn = $"{Main}/updatePR";
             public const string DeletePurchaseRtn = $"{Main}/deletePR";
         }
- public class DeliveryIn
+		 public class MaterialRequest
+        {
+            public const string Main = $"{Base}/materialReq";
+            public const string GetData = $"{Main}/getdata";
+            public const string GetFromWH = $"{Main}/fromWh";
+            public const string fillitems = $"{Main}/fillitems";
+            public const string Fill = $"{Main}/fill";
+            public const string FillById = $"{Main}/fillById";
+            public const string Save = $"{Main}/save";
+            public const string Update = $"{Main}/update";
+            public const string Delete = $"{Main}/delete";
+            public const string getSettings = $"{Main}/getSettings";
+            public const string sizeMasterPopup = $"{Main}/sizeMasterPopup";
+            public const string findQty = $"{Main}/findQty";
+            public const string latVoucherdate = $"{Main}/latVoucherdate";
+        }
+        public class DeliveryIn
         {
             public const string Main = $"{Base}/deliveryIn";
             public const string Save = $"{Main}/save";
@@ -178,5 +194,24 @@ namespace Dfinance.Shared.Routes
             public const string Delete = $"{Main}/delete";
         }
 
+        public class MaterialReceipt
+        {
+
+            public const string Main = $"{Base}/materialReceipt";
+            public const string GetData = $"{Main}/getdata";
+            public const string GetFromWH = $"{Main}/fromWh";
+            public const string fillitems = $"{Main}/fillitems";
+            public const string FillMaster = $"{Main}/fillmaster";
+            public const string FillAccount = $"{Main}/fillAccount";
+            public const string FillById = $"{Main}/fillById";
+            public const string Save = $"{Main}/save";
+            public const string Update = $"{Main}/update";
+            public const string Delete = $"{Main}/delete";
+            public const string getSettings = $"{Main}/getSettings";
+            public const string sizeMasterPopup = $"{Main}/sizeMasterPopup";
+            public const string findQty = $"{Main}/findQty";
+            public const string latVoucherdate = $"{Main}/latVoucherdate";
+            public const string marPrice = $"{Main}/marPrice";
+        }
     }
 }
