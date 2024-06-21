@@ -196,6 +196,7 @@ namespace Dfinance.Shared.Routes
 
         public class MaterialReceipt
         {
+
             public const string Main = $"{Base}/materialReceipt";
             public const string GetData = $"{Main}/getdata";
             public const string GetFromWH = $"{Main}/fromWh";
