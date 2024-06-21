@@ -230,8 +230,18 @@ namespace Dfinance.Purchase.Services
                 {
                     //int VoucherId=_com.GetVoucherId(PageId);
                     string Status = "Approved";
-                    int TransId = (int)_transactionService.SaveTransaction(invTranseDto, PageId, voucherId, Status).Data;
-
+                    var transaction=_transactionService.SaveTransaction(invTranseDto, PageId, voucherId, Status).Data;
+                    int TransId = 0;
+                    
+                    var transType=transaction.GetType();
+                    if (transType.Name=="String") 
+                    { 
+                        return CommonResponse.Ok(transaction);
+                    }
+                    else
+                    {
+                        TransId = (int)transaction;
+                    }
                     int transpayId = (int)_transactionService.SaveTransactionPayment(invTranseDto, TransId, Status, 2).Data;
                     if (invTranseDto.FiTransactionAdditional != null)
                     {
@@ -257,16 +267,20 @@ namespace Dfinance.Purchase.Services
                             _transactionService.SaveVoucherAllocation(TransId, transpayId, invTranseDto.TransactionEntries);
                         }
                     }
-
+                    if (invTranseDto != null)
+                    {
+                        _transactionService.EntriesAmountValidation(TransId);
+                    }
                     transactionScope.Complete();
                     _logger.LogInformation("Purchase Saved Successfully");
                     return CommonResponse.Created("Created Successfully");
                 }
                 catch (Exception ex)
                 {
+                    transactionScope.Dispose();
                     _logger.LogError("Failed to Save Purchase");
                     transactionScope.Dispose();
-                    return CommonResponse.Error();
+                    return CommonResponse.Error(ex.Message);
                 }
             }
         }
@@ -319,6 +333,10 @@ namespace Dfinance.Purchase.Services
                             _transactionService.UpdateVoucherAllocation(TransId, transpayId, invTranseDto.TransactionEntries);
                         }
                     }
+                    if (invTranseDto != null)
+                    {
+                        _transactionService.EntriesAmountValidation(TransId);
+                    }
                     transactionScope.Complete();
                     _logger.LogInformation("Purchase Update Successfully");
                     return CommonResponse.Created("Prchase Update Successfully");
@@ -328,7 +346,7 @@ namespace Dfinance.Purchase.Services
                 {
                     _logger.LogError("Updation of Purchase Failed");
                     transactionScope.Dispose();
-                    return CommonResponse.Error("Updation of Purchase Failed");
+                    return CommonResponse.Error(ex.Message);
                 }
             }
         }
@@ -359,7 +377,7 @@ namespace Dfinance.Purchase.Services
             catch (Exception ex)
             {
                 _logger.LogError("Failed to Delete Purchase");
-                return CommonResponse.Error(ex);
+                return CommonResponse.Error(ex.Message);
             }
         }
         /// <summary>

@@ -62,8 +62,8 @@ namespace Dfinance.Purchase.Services
 
                     int TransId = (int)_transactionService.SaveTransaction(purchaseRtnDto, PageId, voucherId, Status).Data;
                     int transpayId=TransId;
-                    if (purchaseRtnDto.TransactionEntries.Cash.Any(c => c.AccountId > 0) ||
-                        purchaseRtnDto.TransactionEntries.Card.Any(c => c.AccountId > 0) ||
+                    if (purchaseRtnDto.TransactionEntries.Cash.Any(c => c.AccountCode.ID > 0) ||
+                        purchaseRtnDto.TransactionEntries.Card.Any(c => c.AccountCode.ID > 0) ||
                         purchaseRtnDto.TransactionEntries.Cheque.Any(c => c.PDCPayable.ID > 0))
                     {
                         transpayId = (int)_transactionService.SaveTransactionPayment(purchaseRtnDto, TransId, Status, 7).Data;
@@ -124,8 +124,8 @@ namespace Dfinance.Purchase.Services
 
                     int TransId = (int)_transactionService.SaveTransaction(purchaseRtnDto, PageId, voucherId, Status).Data;
                     int transpayId = TransId;
-                    if (purchaseRtnDto.TransactionEntries.Cash.Any(c => c.AccountId > 0) ||
-                         purchaseRtnDto.TransactionEntries.Card.Any(c => c.AccountId > 0) ||
+                    if (purchaseRtnDto.TransactionEntries.Cash.Any(c => c.AccountCode.ID > 0) ||
+                         purchaseRtnDto.TransactionEntries.Card.Any(c => c.AccountCode.ID > 0) ||
                          purchaseRtnDto.TransactionEntries.Cheque.Any(c => c.PDCPayable.ID > 0))
                     {
                         transpayId = (int)_transactionService.SaveTransactionPayment(purchaseRtnDto, TransId, Status, 7).Data;

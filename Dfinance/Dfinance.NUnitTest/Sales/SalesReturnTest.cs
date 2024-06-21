@@ -199,17 +199,17 @@ namespace Dfinance.NUnitTest.Sales
         {
             new InvAccountDetailsDto
             {
-                AccountId = 1381,
+                //AccountId = 1381,
                 AccountCode = new AccountNamePopUpDto
                 {
                     Alias = "string",
                     Name = "string",
-                    ID = 0
+                    ID = 1381
                 },
-                AccountName = "string",
+                //AccountName = "string",
                 Description = "taxdes",
                 Amount = 30,
-                TransType = "string",
+               // TransType = "string",
                 PayableAccount = new AccountNamePopUpDto
                 {
                     Alias = "string",
@@ -222,17 +222,17 @@ namespace Dfinance.NUnitTest.Sales
         {
             new InvAccountDetailsDto
             {
-                AccountId = 1047,
+               // AccountId = 1047,
                 AccountCode = new AccountNamePopUpDto
                 {
                     Alias = "string",
                     Name = "string",
-                    ID = 0
+                    ID = 1047
                 },
-                AccountName = "string",
+                //AccountName = "string",
                 Description = "saddc",
                 Amount = 10,
-                TransType = "string",
+               // TransType = "string",
                 PayableAccount = new AccountNamePopUpDto
                 {
                     Alias = "string",
@@ -245,17 +245,17 @@ namespace Dfinance.NUnitTest.Sales
         {
             new InvAccountDetailsDto
             {
-                AccountId = 61,
+               // AccountId = 61,
                 AccountCode = new AccountNamePopUpDto
                 {
                     Alias = "string",
                     Name = "string",
-                    ID = 0
+                    ID = 61
                 },
-                AccountName = "string",
+              //  AccountName = "string",
                 Description = "string",
                 Amount = 1010,
-                TransType = "string",
+               // TransType = "string",
                 PayableAccount = new AccountNamePopUpDto
                 {
                     Alias = "string",
@@ -456,17 +456,17 @@ namespace Dfinance.NUnitTest.Sales
         {
             new InvAccountDetailsDto
             {
-                AccountId = 1381,
+                //AccountId = 1381,
                 AccountCode = new AccountNamePopUpDto
                 {
                     Alias = "string",
                     Name = "string",
                     ID = 0
                 },
-                AccountName = "string",
+                //AccountName = "string",
                 Description = "taxdes",
                 Amount = 30,
-                TransType = "string",
+               // TransType = "string",
                 PayableAccount = new AccountNamePopUpDto
                 {
                     Alias = "string",
@@ -479,17 +479,17 @@ namespace Dfinance.NUnitTest.Sales
         {
             new InvAccountDetailsDto
             {
-                AccountId = 1047,
+               // AccountId = 1047,
                 AccountCode = new AccountNamePopUpDto
                 {
                     Alias = "string",
                     Name = "string",
                     ID = 0
                 },
-                AccountName = "string",
+             //   AccountName = "string",
                 Description = "saddc",
                 Amount = 10,
-                TransType = "string",
+              //  TransType = "string",
                 PayableAccount = new AccountNamePopUpDto
                 {
                     Alias = "string",
@@ -502,17 +502,17 @@ namespace Dfinance.NUnitTest.Sales
         {
             new InvAccountDetailsDto
             {
-                AccountId = 61,
+               // AccountId = 61,
                 AccountCode = new AccountNamePopUpDto
                 {
                     Alias = "string",
                     Name = "string",
                     ID = 0
                 },
-                AccountName = "string",
+               // AccountName = "string",
                 Description = "string",
                 Amount = 1010,
-                TransType = "string",
+               // TransType = "string",
                 PayableAccount = new AccountNamePopUpDto
                 {
                     Alias = "string",
