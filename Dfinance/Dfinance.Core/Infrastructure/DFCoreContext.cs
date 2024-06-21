@@ -268,6 +268,8 @@ public DbSet<TransItemsView> TransItemsView { get; set; }
     //Label&Grid
     public DbSet<FormLabelView> FormLabelView { get; set; }
     public DbSet<FormGridView> FormGridView { get; set; }
+    //voucher in finance
+    public DbSet<AccountCodesView> AccountCodesView { get; set; }
     //ReportsView
     public DbSet<PurchaseReportView> PurchaseReportView { get; set; }
     public DbSet<PurchaseReportViews> PurchaseReportViews { get; set; }
