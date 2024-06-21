@@ -170,6 +170,13 @@ namespace Dfinance.Shared.Routes
             public const string UpdatePurchaseRtn = $"{Main}/updatePR";
             public const string DeletePurchaseRtn = $"{Main}/deletePR";
         }
+ public class DeliveryIn
+        {
+            public const string Main = $"{Base}/deliveryIn";
+            public const string Save = $"{Main}/save";
+            public const string Update = $"{Main}/update";
+            public const string Delete = $"{Main}/delete";
+        }
 
     }
 }

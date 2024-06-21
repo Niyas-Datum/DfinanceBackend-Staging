@@ -190,9 +190,9 @@ namespace Dfinance.Inventory.Service
             {
                 if (VoucherId == 17 || VoucherId == 23 || VoucherId == 77 && VoucherId == 76)
                 {
-                    if (transactionDto.Reference.Count > 0 && transactionDto.Reference.Any(r => r.Id != null || r.Id != 0))
+                    if (transactionDto.References.Count > 0 && transactionDto.References.Any(r => r.Id != null || r.Id != 0))
                     {
-                        var refItemView = (List<RefItemsView>)FillReference(transactionDto.Reference).Data;
+                        var refItemView = (List<RefItemsView>)FillReference(transactionDto.References).Data;
                         if (refItemView != null)
                         {
                             foreach (var item in transactionDto.Items)
@@ -214,7 +214,7 @@ namespace Dfinance.Inventory.Service
                 int? RefTransId = null;
                 string? ApprovalStatus = "A";
 
-                string ReferencesId = string.Join(",", transactionDto.Reference.Select(popupDto => popupDto.VNo.ToString()));
+                string ReferencesId = string.Join(",", transactionDto.References.Select(popupDto => popupDto.VNo.ToString()));
 
                 string environmentname = _environment.EnvironmentName;
                 if (transactionDto.Id == null||transactionDto.Id==0)

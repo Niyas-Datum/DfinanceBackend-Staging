@@ -76,7 +76,7 @@ namespace Dfinance.Purchase.Services
                     if (invTranseDto.Items != null && invTranseDto.Items.Count > 0)
                     {
 
-                        _itemService.SaveInvTransItems(invTranseDto, voucherId, TransId);
+                        _itemService.SaveInvTransItems(invTranseDto.Items, voucherId, TransId, invTranseDto.ExchangeRate, invTranseDto.FiTransactionAdditional.Warehouse.Id);
                     }
                     //save TransactionExpense
                     if (invTranseDto.TransactionEntries != null)
@@ -135,7 +135,7 @@ namespace Dfinance.Purchase.Services
                     _additionalService.SaveTransactionAdditional(invTranseDto.FiTransactionAdditional, TransId, voucherId);
                     if (invTranseDto.Items != null && invTranseDto.Items.Count > 0)
                     {
-                        _itemService.UpdateInvTransItems(invTranseDto, voucherId, TransId);
+                        _itemService.UpdateInvTransItems(invTranseDto.Items, voucherId, TransId, invTranseDto.ExchangeRate, invTranseDto.FiTransactionAdditional.Warehouse.Id);
                     }
                     if (invTranseDto.TransactionEntries != null)
                     {

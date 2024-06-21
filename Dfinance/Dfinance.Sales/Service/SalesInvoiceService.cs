@@ -195,11 +195,12 @@ namespace Dfinance.Sales
 
         public CommonResponse GetData(int pageId, int voucherId)
         {
+            int branchId = _authService.GetBranchId().Value;
             var voucherNo1 = _transactionService.GetAutoVoucherNo(voucherId);
             var voucherNo = voucherNo1.Data;
             var costcentre1 = _costCentre.FillCostCentre();
             var costcentre = costcentre1.Data;
-            var warehouse1 = _warehouse.WarehouseDropdownUsingBranch();
+            var warehouse1 = _warehouse.WarehouseDropdownUsingBranch(branchId);
             var warehouse = warehouse1.Data;
             _logger.LogInformation("Successfully Get All DropDownFill");
             return CommonResponse.Ok(new { VNo = voucherNo, CostCentre = costcentre, WareHouse = warehouse });
@@ -251,15 +252,15 @@ namespace Dfinance.Sales
                     {
                         _additionalService.SaveTransactionAdditional(salesDto.FiTransactionAdditional, TransId, voucherId);
                     }
-                    if (salesDto.Reference.Count > 0 && salesDto.Reference.Select(x => x.Id).FirstOrDefault() != 0)
+                    if (salesDto.References.Count > 0 && salesDto.References.Select(x => x.Id).FirstOrDefault() != 0)
                     {
-                        List<int?> referIds = salesDto.Reference.Select(x => x.Id).ToList();
+                        List<int?> referIds = salesDto.References.Select(x => x.Id).ToList();
 
                         _transactionService.SaveTransReference(TransId, referIds);
                     }
                     if (salesDto.Items != null)
                     {
-                        _itemService.SaveInvTransItems(salesDto, voucherId, TransId);
+                        _itemService.SaveInvTransItems(salesDto.Items, voucherId, TransId,salesDto.ExchangeRate,salesDto.FiTransactionAdditional.Warehouse.Id);
                     }
                     if (salesDto.TransactionEntries != null)
                     {
@@ -314,16 +315,16 @@ namespace Dfinance.Sales
                     {
                         _additionalService.SaveTransactionAdditional(salesDto.FiTransactionAdditional, TransId, voucherId);
                     }
-                    if (salesDto.Reference.Count > 0 && salesDto.Reference.Select(x => x.Id).FirstOrDefault() != 0)
+                    if (salesDto.References.Count > 0 && salesDto.References.Select(x => x.Id).FirstOrDefault() != 0)
                     {
-                        List<int?> referIds = salesDto.Reference.Select(x => x.Id).ToList();
+                        List<int?> referIds = salesDto.References.Select(x => x.Id).ToList();
 
                         _transactionService.UpdateTransReference(TransId, referIds);
                     }
                     if (salesDto.Items != null)
 
                     {
-                        _itemService.UpdateInvTransItems(salesDto, voucherId, TransId);
+                        _itemService.UpdateInvTransItems(salesDto.Items, voucherId, TransId, salesDto.ExchangeRate, salesDto.FiTransactionAdditional.Warehouse.Id);
                     }
                     if (salesDto.TransactionEntries != null)
                     {
