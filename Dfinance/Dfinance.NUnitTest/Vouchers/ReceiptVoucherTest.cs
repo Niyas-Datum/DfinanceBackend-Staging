@@ -1,25 +1,23 @@
 ﻿using Dfinance.DataModels.Dto.Common;
 using Dfinance.DataModels.Dto.Finance;
-using Dfinance.DataModels.Dto.Inventory.Purchase;
 using Dfinance.Finance.Vouchers.Interface;
 using Dfinance.Shared.Domain;
 using Moq;
-using static Dfinance.Shared.Routes.InvRoute;
 
 namespace Dfinance.NUnitTest.Vouchers
 {
-    public class PaymentVoucherTest
+    public class ReceiptVoucherTest
     {
-        private Mock<IPaymentVoucherService> _payVoucher;
+        private Mock<IReceiptVoucherService> _receiptVoucher;
         [SetUp]
         public void Setup()
         {
-            _payVoucher = new Mock<IPaymentVoucherService>();
+            _receiptVoucher = new Mock<IReceiptVoucherService>();
         }
         [Test]
-        public void SavePayVoucher()
+        public void SavereceipVoucher()
         {
-            FinanceTransactionDto paymentVoucherDto = new FinanceTransactionDto
+            FinanceTransactionDto receiptvoucher = new FinanceTransactionDto
             {
                 Id = 0,
                 VoucherNo = "0043",
@@ -50,7 +48,7 @@ namespace Dfinance.NUnitTest.Vouchers
         {
             new AccountDetails
             {
-                
+
                 AccountCode = new PopUpDto
                 {
                     Id = 1538,
@@ -58,10 +56,10 @@ namespace Dfinance.NUnitTest.Vouchers
                     Code = "string",
                     Description = "string"
                 },
-                
+
                 Description = "string",
                 Amount = 500,
-               
+
                 DueDate = DateTime.Parse("2024-06-12T12:36:53.933Z")
             }
         },
@@ -89,33 +87,33 @@ namespace Dfinance.NUnitTest.Vouchers
         {
             new PaymentType
             {
-                
+
                 AccountCode = new AccountNamePopUpDto
                 {
                     Alias = "string",
                     Name = "string",
                     ID = 0
                 },
-                
+
                 Description = "string",
                 Amount = 200,
                 TransType = "cash",
-                
-                
+
+
             }
         },
                 Card = new List<PaymentType>
         {
             new PaymentType
             {
-                
+
                 AccountCode = new AccountNamePopUpDto
                 {
                     Alias = "string",
                     Name = "string",
                     ID = 0
                 },
-                
+
                 Description = "string",
                 Amount = 200,
                  TransType = "card",
@@ -126,14 +124,14 @@ namespace Dfinance.NUnitTest.Vouchers
         {
             new PaymentType
             {
-              
+
                 AccountCode = new AccountNamePopUpDto
                 {
                     Alias = "string",
                     Name = "string",
                     ID = 868
                 },
-             
+
                 Description = "string",
                 Amount = 100,
                 TransType = "Online",
@@ -171,10 +169,10 @@ namespace Dfinance.NUnitTest.Vouchers
             }
         }
             };
-            _payVoucher.Setup(x => x.SavePayVou(paymentVoucherDto, 69, 2)).Returns(new CommonResponse { Exception = null, Data = new FinanceTransactionDto() });
+            _receiptVoucher.Setup(x => x.SaveReceiptVou(receiptvoucher, 70, 7)).Returns(new CommonResponse { Exception = null, Data = new FinanceTransactionDto() });
 
             //Act
-            var result = _payVoucher.Object.SavePayVou(paymentVoucherDto, 69, 2);
+            var result = _receiptVoucher.Object.SaveReceiptVou(receiptvoucher, 70, 7);
             Assert.That(result, Is.Not.Null);
             //Assert.IsNotNull(result);
 
@@ -185,9 +183,9 @@ namespace Dfinance.NUnitTest.Vouchers
 
         [Test]
 
-        public void UpdatePayVoucher()
+        public void UpdatereceiptVoucher()
         {
-            FinanceTransactionDto paymentVoucherDto = new FinanceTransactionDto
+            FinanceTransactionDto receiptvoucher = new FinanceTransactionDto
             {
                 Id = 3216,
                 VoucherNo = "0043",
@@ -338,10 +336,10 @@ namespace Dfinance.NUnitTest.Vouchers
         }
             };
 
-            _payVoucher.Setup(x => x.UpdatePayVoucher(paymentVoucherDto, 69, 2)).Returns(new CommonResponse { Exception = null, Data = new FinanceTransactionDto() });
+            _receiptVoucher.Setup(x => x.UpdateReceiptVoucher(receiptvoucher, 70, 7)).Returns(new CommonResponse { Exception = null, Data = new FinanceTransactionDto() });
 
             //Act
-            var result = _payVoucher.Object.UpdatePayVoucher(paymentVoucherDto, 69, 2);
+            var result = _receiptVoucher.Object.UpdateReceiptVoucher(receiptvoucher, 70, 7);
             Assert.That(result, Is.Not.Null);
             //Assert.IsNotNull(result);
 
@@ -354,9 +352,9 @@ namespace Dfinance.NUnitTest.Vouchers
         public void DeletepayVoucher()
         {
             int transId = 3164;
-            int pageId = 69;
-            _payVoucher.Setup(x => x.DeletePayVoucher(transId, pageId)).Returns(new CommonResponse { Exception = null, Data = new FinanceTransactionDto() });
-            var result = _payVoucher.Object.DeletePayVoucher(transId, pageId);
+            int pageId = 70;
+            _receiptVoucher.Setup(x => x.DeleteReceiptVoucher(transId, pageId)).Returns(new CommonResponse { Exception = null, Data = new FinanceTransactionDto() });
+            var result = _receiptVoucher.Object.DeleteReceiptVoucher(transId, pageId);
 
             Assert.That(result, Is.Not.Null);
             Assert.That(result.IsValid, Is.True);
@@ -368,4 +366,3 @@ namespace Dfinance.NUnitTest.Vouchers
 
     }
 }
-

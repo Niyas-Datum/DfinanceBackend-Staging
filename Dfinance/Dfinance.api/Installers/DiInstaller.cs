@@ -138,8 +138,9 @@ public class DiInstaller : IInstaller
         service.AddScoped<IFinanceAdditional, FinanceAdditional>();
         service.AddScoped<IFinancePaymentService, FinancePaymentService>();
         service.AddScoped<IFinanceTransactionService, FinanceTransactionService>();
-        service.AddScoped<IPaymentVoucherService,PaymentVoucherService>();  
-       
+        service.AddScoped<IPaymentVoucherService,PaymentVoucherService>();
+        service.AddScoped<IReceiptVoucherService, ReceiptVoucherService>();
+
 
     }
 }

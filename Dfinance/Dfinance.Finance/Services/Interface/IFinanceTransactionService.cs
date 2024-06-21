@@ -15,12 +15,12 @@ namespace Dfinance.Finance.Services.Interface
         //CommonResponse GetSalesman();
         CommonResponse GetAutoVoucherNo(int voucherid);
         // CommonResponse GetReference(int voucherno, DateTime? date = null);
-        CommonResponse SaveTransaction(PaymentVoucherDto paymentVoucherDto, int PageId, int VoucherId, string Status);
+        CommonResponse SaveTransaction(FinanceTransactionDto paymentVoucherDto, int PageId, int VoucherId, string Status);
         CommonResponse SaveTransactionPayment(InventoryTransactionDto transactionDto, int TransId, string Status, int VoucherId);
         //CommonResponse SaveTransReference(int transId, List<int?> referIds);
         //CommonResponse UpdateTransReference(int? transId, List<int?> referIds);
-        CommonResponse SaveVoucherAllocation(int transId, int transpayId, PaymentVoucherDto paymentVoucherDto);
-        CommonResponse UpdateVoucherAllocation(int transId, int transpayId, PaymentVoucherDto paymentVoucherDto);
+        CommonResponse SaveVoucherAllocation(int transId, int transpayId, FinanceTransactionDto paymentVoucherDto);
+        CommonResponse UpdateVoucherAllocation(int transId, int transpayId, FinanceTransactionDto paymentVoucherDto);
         //CommonResponse DeletePurchase(int TransId);
 
         //CommonResponse FillVoucherType(int voucherId);

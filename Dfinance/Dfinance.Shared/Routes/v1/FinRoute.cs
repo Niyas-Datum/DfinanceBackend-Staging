@@ -123,6 +123,17 @@ namespace Dfinance.Shared.Routes.v1
 
 
         }
+        public static class ReceiptVoucher
+        {
+            public const string Main = $"{Base}/receiptvou";
+            public const string FillVoucher = $"{Main}/fill";
+            public const string FillMaster = $"{Main}/fillmaster";
+            public const string Save = $"{Main}/save";
+            public const string Update = $"{Main}/update";
+            public const string Delete = $"{Main}/delete";
+
+
+        }
 
     }
 }

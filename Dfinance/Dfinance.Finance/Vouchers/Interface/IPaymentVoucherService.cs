@@ -11,8 +11,8 @@ namespace Dfinance.Finance.Vouchers.Interface
     public interface IPaymentVoucherService
     {
         CommonResponse FillAccountCode();
-        CommonResponse SavePayVou(PaymentVoucherDto paymentVoucherDto, int PageId, int voucherId);
-        CommonResponse UpdatePayVoucher(PaymentVoucherDto paymentVoucherDto, int PageId, int voucherId);
+        CommonResponse SavePayVou(FinanceTransactionDto paymentVoucherDto, int PageId, int voucherId);
+        CommonResponse UpdatePayVoucher(FinanceTransactionDto paymentVoucherDto, int PageId, int voucherId);
         CommonResponse DeletePayVoucher(int TransId, int pageId);
         CommonResponse GetPayVocherSettings();
     }

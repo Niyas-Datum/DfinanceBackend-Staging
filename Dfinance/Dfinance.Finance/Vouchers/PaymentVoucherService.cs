@@ -90,7 +90,7 @@ namespace Dfinance.Finance.Vouchers
         }
 
 
-        public CommonResponse SavePayVou(PaymentVoucherDto paymentVoucherDto, int PageId, int voucherId)
+        public CommonResponse SavePayVou(FinanceTransactionDto paymentVoucherDto, int PageId, int voucherId)
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
@@ -183,7 +183,7 @@ namespace Dfinance.Finance.Vouchers
             }
         }
 
-        public CommonResponse UpdatePayVoucher(PaymentVoucherDto paymentVoucherDto, int PageId, int voucherId)
+        public CommonResponse UpdatePayVoucher(FinanceTransactionDto paymentVoucherDto, int PageId, int voucherId)
         {
             using (var transaction = _context.Database.BeginTransaction())
             {

@@ -275,6 +275,19 @@ public DbSet<TransItemsView> TransItemsView { get; set; }
     public DbSet<PurchaseReportViews> PurchaseReportViews { get; set; }
     public DbSet<ItemSearchView> ItemSearchView { get; set; }
 
+    //Receiptvoucher
+    public DbSet<VoucherView> VoucherView { get; set; }
+    public DbSet<FillVoucher> FillVoucher { get; set; }
+    public DbSet<FillVouTranId> FillVouTranId { get; set; }
+
+    
+
+
+
+
+
+
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     //  => optionsBuilder.UseSqlServer(@"Data Source=ip.datuminnovation.com,9600;TrustServerCertificate=true;Initial Catalog=DatumSystemMain;User ID=sa;pwd=Datum123!");
    // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -483,5 +496,11 @@ mb.ApplyConfiguration(new FiMaCardsConfiguration());
         mb.Entity<PurchaseReportViews>().HasNoKey().ToView(null);
         mb.Entity<ItemSearchView>().HasNoKey().ToView(null);
 		mb.Entity<ImportItemListView>().HasNoKey().ToView(null);
+
+        //receiptvoucher
+        mb.Entity<VoucherView>().HasNoKey().ToView(null);
+        mb.Entity<FillVoucher>().HasNoKey().ToView(null);
+        mb.Entity<FillVouTranId>().HasNoKey().ToView(null);
+        
     }
 }
