@@ -107,15 +107,15 @@ namespace Dfinance.Sales
                     {
                         _additionalService.SaveTransactionAdditional(salesRetunDto.FiTransactionAdditional, TransId, voucherId);
                     }
-                    if (salesRetunDto.Reference.Count > 0 && salesRetunDto.Reference.Select(x => x.Id).FirstOrDefault() != 0)
+                    if (salesRetunDto.References.Count > 0 && salesRetunDto.References.Select(x => x.Id).FirstOrDefault() != 0)
                     {
-                        List<int?> referIds = salesRetunDto.Reference.Select(x => x.Id).ToList();
+                        List<int?> referIds = salesRetunDto.References.Select(x => x.Id).ToList();
 
                          _transactionService.SaveTransReference(TransId, referIds);
                     }
                     if (salesRetunDto.Items != null)
                     {
-                        _itemService.SaveInvTransItems(salesRetunDto, voucherId, TransId);
+                        _itemService.SaveInvTransItems(salesRetunDto.Items, voucherId, TransId, salesRetunDto.ExchangeRate, salesRetunDto.FiTransactionAdditional.Warehouse.Id);
                     }
                     if (salesRetunDto.TransactionEntries != null)
                     {
@@ -172,16 +172,16 @@ namespace Dfinance.Sales
                     {
                         _additionalService.SaveTransactionAdditional(salesReturnDto.FiTransactionAdditional, TransId, voucherId);
                     }
-                    if (salesReturnDto.Reference.Count > 0 && salesReturnDto.Reference.Select(x => x.Id).FirstOrDefault() != 0)
+                    if (salesReturnDto.References.Count > 0 && salesReturnDto.References.Select(x => x.Id).FirstOrDefault() != 0)
                     {
-                        List<int?> referIds = salesReturnDto.Reference.Select(x => x.Id).ToList();
+                        List<int?> referIds = salesReturnDto.References.Select(x => x.Id).ToList();
 
                         _transactionService.UpdateTransReference(TransId, referIds);
                     }
                     if (salesReturnDto.Items != null)
 
                     {
-                        _itemService.UpdateInvTransItems(salesReturnDto, voucherId, TransId);
+                        _itemService.UpdateInvTransItems(salesReturnDto.Items, voucherId, TransId, salesReturnDto.ExchangeRate, salesReturnDto.FiTransactionAdditional.Warehouse.Id);
                     }
                     if (salesReturnDto.TransactionEntries != null)
                     {

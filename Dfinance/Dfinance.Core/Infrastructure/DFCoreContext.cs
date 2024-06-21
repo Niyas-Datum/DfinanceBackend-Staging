@@ -112,7 +112,8 @@ public DbSet<InvUniqueItems> InvUniqueItems { get; set; }
     public DbSet<FiTransactionEntry> FiTransactionEntries { get; set; }
     public DbSet<FiVoucherAllocation> FiVoucherAllocation { get; set; }
     public DbSet<TransExpense> TransExpense { get; set; }
-    public DbSet<TransItemExpense> TransItemExpenses { get; set; }
+    public DbSet<InvSizeMaster> InvSizeMaster { get; set; }
+   public DbSet<TransItemExpense> TransItemExpenses { get; set; }
     //view init
 
     // read- id, code name
@@ -191,6 +192,10 @@ public DbSet<InvUniqueItems> InvUniqueItems { get; set; }
 	
     //Vouchers
     public DbSet<FillVoucherView> FillVoucherView { get; set; }
+    public DbSet<FillMaVouchersUsingPageIDView> FillMaVouchersUsingPageIDView { get; set; }
+    public DbSet<FillVoucherWithTrnasId> FillVoucherWithTrnasId { get; set; }
+    
+
     public DbSet<Voucher> FiMaVouchers {  get; set; }
     public DbSet<NameView> NameView {  get; set; }  //  retun only name
 
@@ -274,6 +279,7 @@ public DbSet<TransItemsView> TransItemsView { get; set; }
     public DbSet<PurchaseReportView> PurchaseReportView { get; set; }
     public DbSet<PurchaseReportViews> PurchaseReportViews { get; set; }
     public DbSet<ItemSearchView> ItemSearchView { get; set; }
+    public DbSet<QtyView> QtyView { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     //  => optionsBuilder.UseSqlServer(@"Data Source=ip.datuminnovation.com,9600;TrustServerCertificate=true;Initial Catalog=DatumSystemMain;User ID=sa;pwd=Datum123!");
@@ -350,6 +356,12 @@ mb.ApplyConfiguration(new FiMaCardsConfiguration());
         //TransactionEntries
         mb.ApplyConfiguration(new FiTransactionEntryConfiguration());
         mb.ApplyConfiguration(new FiTransactionEntryConfiguration());
+
+        mb.ApplyConfiguration(new InvSizeMasterConfiguration());
+
+
+
+
         //View
 
         mb.Entity<CurrencyCode>().HasNoKey().ToView(null);
@@ -456,8 +468,11 @@ mb.ApplyConfiguration(new FiMaCardsConfiguration());
         mb.Entity<UserTrackView>().HasNoKey().ToView(null); 
  mb.Entity<FillAdvanceView>().HasNoKey().ToView(null);
           mb.Entity<Fillvoucherview>().HasNoKey().ToView(null);
-		  
-		   mb.Entity<FillCardMaster>().HasNoKey().ToView(null);
+        mb.Entity<FillMaVouchersUsingPageIDView>().HasNoKey().ToView(null);
+        mb.Entity<FillVoucherWithTrnasId>().HasNoKey().ToView(null);
+        
+
+           mb.Entity<FillCardMaster>().HasNoKey().ToView(null);
 		    mb.Entity<FillMaster>().HasNoKey().ToView(null);
 		//TransItems
 
@@ -482,6 +497,7 @@ mb.ApplyConfiguration(new FiMaCardsConfiguration());
         mb.Entity<PurchaseReportView>().HasNoKey().ToView(null);
         mb.Entity<PurchaseReportViews>().HasNoKey().ToView(null);
         mb.Entity<ItemSearchView>().HasNoKey().ToView(null);
-		mb.Entity<ImportItemListView>().HasNoKey().ToView(null);
+		 mb.Entity<ImportItemListView>().HasNoKey().ToView(null);
+        mb.Entity<QtyView>().HasNoKey().ToView(null);
     }
 }
