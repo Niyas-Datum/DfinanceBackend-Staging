@@ -72,15 +72,15 @@ namespace Dfinance.Purchase.Services
                     {
                         _additionalService.SaveTransactionAdditional(purchaseRtnDto.FiTransactionAdditional, TransId, voucherId);
                     }
-                    if (purchaseRtnDto.Reference.Count > 0 && purchaseRtnDto.Reference.Select(x => x.Id).FirstOrDefault() != 0)
+                    if (purchaseRtnDto.References.Count > 0 && purchaseRtnDto.References.Select(x => x.Id).FirstOrDefault() != 0)
                     {
-                        List<int?> referIds = purchaseRtnDto.Reference.Select(x => x.Id).ToList();
+                        List<int?> referIds = purchaseRtnDto.References.Select(x => x.Id).ToList();
                         _transactionService.SaveTransReference(TransId, referIds);
                     }
 
                    if (purchaseRtnDto.Items != null && purchaseRtnDto.Items.Count > 0)
                     {
-                        _itemService.SaveInvTransItems(purchaseRtnDto, voucherId, TransId);
+                        _itemService.SaveInvTransItems(purchaseRtnDto.Items, voucherId, TransId,purchaseRtnDto.ExchangeRate,purchaseRtnDto.FiTransactionAdditional.Warehouse.Id);
                     }
 
                     if (purchaseRtnDto.TransactionEntries != null)
@@ -134,15 +134,15 @@ namespace Dfinance.Purchase.Services
                     {
                         _additionalService.SaveTransactionAdditional(purchaseRtnDto.FiTransactionAdditional, TransId, voucherId);
                     }
-                    if (purchaseRtnDto.Reference.Count > 0 && purchaseRtnDto.Reference.Select(x => x.Id).FirstOrDefault() != 0)
+                    if (purchaseRtnDto.References.Count > 0 && purchaseRtnDto.References.Select(x => x.Id).FirstOrDefault() != 0)
                     {
-                        List<int?> referIds = purchaseRtnDto.Reference.Select(x => x.Id).ToList();
+                        List<int?> referIds = purchaseRtnDto.References.Select(x => x.Id).ToList();
                         _transactionService.UpdateTransReference(TransId, referIds);
                     }
 
                     if (purchaseRtnDto.Items != null && purchaseRtnDto.Items.Count > 0)
                     {
-                        _itemService.UpdateInvTransItems(purchaseRtnDto, voucherId, TransId);
+                        _itemService.UpdateInvTransItems(purchaseRtnDto.Items, voucherId, TransId, purchaseRtnDto.ExchangeRate, purchaseRtnDto.FiTransactionAdditional.Warehouse.Id);
                     }
 
                     if (purchaseRtnDto.TransactionEntries != null)
