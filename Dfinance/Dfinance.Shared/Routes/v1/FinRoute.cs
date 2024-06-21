@@ -111,6 +111,18 @@ namespace Dfinance.Shared.Routes.v1
             public const string FillMaster = $"{Main}/FillMaster";
 
         }
+		public static class PaymentVoucher
+        {
+            public const string Main = $"{Base}/paymentvou";
+            public const string FillAccCode = $"{Main}/Accpopup";
+            public const string Getsettings = $"{Main}/getsettings";
+            public const string Save = $"{Main}/save";
+            public const string Update = $"{Main}/update";
+            public const string Delete = $"{Main}/delete";
+            
+
+
+        }
 
     }
 }

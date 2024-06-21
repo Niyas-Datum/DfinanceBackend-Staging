@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Dfinance.Application\Dfinance.Application.csproj" />
+    <ProjectReference Include="..\Dfinance.Finance\Dfinance.Finance.csproj" />
     <ProjectReference Include="..\Dfinance.HR\Dfinance.HR.csproj" />
     <ProjectReference Include="..\Dfinance.Inventory\Dfinance.Inventory.csproj" />
     <ProjectReference Include="..\Dfinance.Item\Dfinance.Item.csproj" />
