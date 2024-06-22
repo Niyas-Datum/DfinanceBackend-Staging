@@ -10,7 +10,7 @@ namespace Dfinance.Finance.Services.Interface
         //CommonResponse GetSalesArea();
         //CommonResponse PopupVechicleNo();
         // CommonResponse PopupDelivaryLocations(int salesManId);
-        CommonResponse SaveTransactionAdditional(PaymentVoucherDto paymentVoucherDto, int TransId, int voucherId);
+        CommonResponse SaveTransactionAdditional(FinanceTransactionDto paymentVoucherDto, int TransId, int voucherId);
         // CommonResponse UpdateTransactionAdditional(InvTransactionAdditionalDto fiTransactionAdditionalDto, int TransId);
        // CommonResponse DeleteTransactionAdditional(int Id);
     }

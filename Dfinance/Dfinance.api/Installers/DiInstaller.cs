@@ -135,10 +135,20 @@ public class DiInstaller : IInstaller
         service.AddScoped<IInternationalPurchaseService, InternationalPurchaseService>();
         service.AddScoped<IGoodsInTransitService, GoodsInTransitService>();
 		service.AddScoped<ISalesReturnService, SalesReturnService>();
-		service.AddScoped<IPurchaseReturnService, PurchaseReturnService>();
+
+        service.AddScoped<IPurchaseReturnService, PurchaseReturnService>();
+
+        service.AddScoped<IFinanceAdditional, FinanceAdditional>();
+        service.AddScoped<IFinancePaymentService, FinancePaymentService>();
+        service.AddScoped<IFinanceTransactionService, FinanceTransactionService>();
+        service.AddScoped<IPaymentVoucherService,PaymentVoucherService>();
+        service.AddScoped<IReceiptVoucherService, ReceiptVoucherService>();
+
+
 	    service.AddScoped<IMaterialRequestService, MaterialRequestService>();
         service.AddScoped<IDeliveryInService, DeliveryInService>();
         service.AddScoped<IMaterialReceiptService, MaterialReceiptService>();
         service.AddScoped<IInvMatTransService, InvMatTransService>();
+
     }
 }

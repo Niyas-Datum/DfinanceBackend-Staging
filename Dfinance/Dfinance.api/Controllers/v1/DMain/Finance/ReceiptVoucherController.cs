@@ -1,6 +1,7 @@
 ﻿using Dfinance.api.Authorization;
 using Dfinance.api.Framework;
 using Dfinance.DataModels.Dto.Finance;
+using Dfinance.Finance.Vouchers;
 using Dfinance.Finance.Vouchers.Interface;
 using Dfinance.Shared.Routes.v1;
 using Microsoft.AspNetCore.Mvc;
@@ -9,36 +10,35 @@ namespace Dfinance.api.Controllers.v1.DMain.Finance
 {
     [ApiController]
     [Authorize]
-    public class PaymentVoucherController : BaseController
+    public class ReceiptVoucherController : BaseController
     {
-       
-        private readonly IPaymentVoucherService _paymentVoucherService;
-        public PaymentVoucherController(IPaymentVoucherService paymentVoucherService)
+        private readonly IReceiptVoucherService _receiptVoucherService;
+        public ReceiptVoucherController(IReceiptVoucherService receiptVoucherService)
         {
-            
-            _paymentVoucherService = paymentVoucherService;
-            
+
+            _receiptVoucherService = receiptVoucherService;
+
         }
-        [HttpGet(FinRoute.PaymentVoucher.FillAccCode)]
-        public IActionResult FillAccCode()
+        [HttpGet(FinRoute.ReceiptVoucher.FillVoucher)]
+        public IActionResult FillMaVoucher(int? VoucherId, int? PageId)
         {
             try
             {
-                var result = _paymentVoucherService.FillAccountCode();
+                var result = _receiptVoucherService.FillMaVoucher(VoucherId, PageId);
                 return Ok(result);
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-           
+
         }
-        [HttpGet(FinRoute.PaymentVoucher.Getsettings)]
-        public IActionResult GetPayVocherSettings()
+        [HttpGet(FinRoute.ReceiptVoucher.FillMaster)]
+        public IActionResult FillMaster(int? TransId, int? PageId)
         {
             try
             {
-                var result = _paymentVoucherService.GetPayVocherSettings();
+                var result = _receiptVoucherService.FillMaster(TransId, PageId);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -48,8 +48,8 @@ namespace Dfinance.api.Controllers.v1.DMain.Finance
 
         }
 
-        [HttpPost(FinRoute.PaymentVoucher.Save)]
-        public IActionResult SavePayVou(FinanceTransactionDto paymentVoucherDto, int PageId, int voucherId)
+        [HttpPost(FinRoute.ReceiptVoucher.Save)]
+        public IActionResult SaveReceiptVou(FinanceTransactionDto receiptVoucherDto, int PageId, int voucherId)
         {
             try
             {
@@ -57,7 +57,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Finance
                 {
                     return BadRequest(ModelState);
                 }
-                var result = _paymentVoucherService.SavePayVou(paymentVoucherDto, PageId, voucherId);
+                var result = _receiptVoucherService.SaveReceiptVou(receiptVoucherDto, PageId, voucherId);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -66,8 +66,8 @@ namespace Dfinance.api.Controllers.v1.DMain.Finance
             }
         }
 
-        [HttpPatch(FinRoute.PaymentVoucher.Update)]
-        public IActionResult UpdatePayVou(FinanceTransactionDto paymentVoucherDto, int PageId, int voucherId)
+        [HttpPatch(FinRoute.ReceiptVoucher.Update)]
+        public IActionResult UpdateReceiptVou(FinanceTransactionDto paymentVoucherDto, int PageId, int voucherId)
         {
             try
             {
@@ -75,7 +75,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Finance
                 {
                     return BadRequest(ModelState);
                 }
-                var result = _paymentVoucherService.UpdatePayVoucher(paymentVoucherDto, PageId, voucherId);
+                var result = _receiptVoucherService.UpdateReceiptVoucher(paymentVoucherDto, PageId, voucherId);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -84,13 +84,12 @@ namespace Dfinance.api.Controllers.v1.DMain.Finance
             }
         }
 
-       
-        [HttpDelete(FinRoute.PaymentVoucher.Delete)]
-        public IActionResult DeletePayVoucher(int TransId, int pageId)
+        [HttpDelete(FinRoute.ReceiptVoucher.Delete)]
+        public IActionResult DeleteReceiptVoucher(int TransId, int pageId)
         {
             try
             {
-                var result = _paymentVoucherService.DeletePayVoucher(TransId, pageId);
+                var result = _receiptVoucherService.DeleteReceiptVoucher(TransId, pageId);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -98,5 +97,12 @@ namespace Dfinance.api.Controllers.v1.DMain.Finance
                 return BadRequest(ex.Message);
             }
         }
+
+
+
+
+
+
+
     }
 }
