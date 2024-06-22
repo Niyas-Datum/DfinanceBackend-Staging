@@ -39,14 +39,14 @@ namespace Dfinance.Inventory.Service
         {
             try
             {
-                var unitData = _itemUnits.GetItemUnits(itemId);
-                var result = _itemMaster.GetUniqueExpiryItem(itemId);
+                //var unitData = _itemUnits.GetItemUnits(itemId);
+               // var result = _itemMaster.GetUniqueExpiryItem(itemId);
                 var batch = NextBatchNo();                
-                string criteria = "GetLastItemRate";
+                //string criteria = "GetLastItemRate";
                 int branch=_authService.GetBranchId().Value;
                 var PriceCat = PriceCategoryPopup(itemId);
-                var itemData = _context.ItemTransaction.FromSqlRaw($"Exec VoucherAdditionalsSP @Criteria='{criteria}',@BranchID='{branch}',@ItemID='{itemId}',@AccountID='{partyId}',@VoucherID='{voucherId}'").ToList();
-                var outdata = new { UniqueOrExpiry = result.Data, BatchNo = batch, TransData = itemData, ItemUnitData = unitData.Data, PriceCategory = PriceCat };
+               // var itemData = _context.ItemTransaction.FromSqlRaw($"Exec VoucherAdditionalsSP @Criteria='{criteria}',@BranchID='{branch}',@ItemID='{itemId}',@AccountID='{partyId}',@VoucherID='{voucherId}'").ToList();
+                var outdata = new {  BatchNo = batch,  PriceCategory = PriceCat };
 
 
                 return CommonResponse.Ok(outdata);

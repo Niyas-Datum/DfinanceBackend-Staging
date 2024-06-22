@@ -719,6 +719,8 @@ namespace Dfinance.Item.Services.Inventory
         /// <param name="locId"></param>
         /// <returns></returns>
         /// //used in item grid in inventory transaction pages
+        /// //return whether the item is Unique or not, expiry or not
+        /// //return tool tip data for each item(in transaction pages)
         public CommonResponse FillTransItems(int partyId, int PageID, int locId, int voucherId)
         {
             int? userId = _authService.GetId();
@@ -726,7 +728,8 @@ namespace Dfinance.Item.Services.Inventory
             int? branchId = _authService.GetBranchId();
             object PrimaryVoucherID = null, ItemID = null, ModeID = null, TransactionID = null;
             bool IsSizeItem = false, IsMargin = false, ISTransitLoc = false, IsFinishedGood = false, IsRawMaterial = false;
-
+            object uniqueExpiry = 0;
+            object units = 0;
             DateTime? VoucherDate = null;
 
             var result = _context.CommandTextView
@@ -735,22 +738,35 @@ namespace Dfinance.Item.Services.Inventory
 
             var res = result.FirstOrDefault();
             var data = _context.TransItemsView.FromSqlRaw(res.commandText).ToList();
-            return CommonResponse.Ok(data);
+            var itemsWithExpiry = new List<object>();
+            string criteria1 = "GetLastItemRate";
+            object toolTipData;
+            bool? uniqueItem=false, expireItem=false;
+            var uniqueNo = (bool)_settings.GetSettings("SetUniqueNo").Data;
+            var expiry = (bool)_settings.GetSettings("IsExpiryDate").Data;
+            foreach (var item in data)
+            {
+                if (uniqueNo)
+                    uniqueItem = _context.ItemMaster.Where(i => i.Id == item.ID).Select(i => i.IsUniqueItem).FirstOrDefault();//returns whether the item is uniqueItem 
+                if (expiry)
+                    expireItem = _context.ItemMaster.Where(i => i.Id == item.ID).Select(i => i.IsExpiry).FirstOrDefault();//returns whether the item is an expiry item
+
+                units = _itemunitService.GetItemUnits(item.ID).Data;//for unit popup in itemgrid
+
+                toolTipData = _context.ItemTransaction.FromSqlRaw($"Exec VoucherAdditionalsSP @Criteria='{criteria1}',@BranchID='{branchId}',@ItemID='{item.ID}',@AccountID='{partyId}',@VoucherID='{voucherId}'").ToList();
+                itemsWithExpiry.Add(new
+                {
+                    Item = item,
+                    UnitPopup = units,
+                    UniqueItem = uniqueItem,
+                    ExpiryItem= expireItem,
+                    ToolTipData = toolTipData
+                });
+            }
+            return CommonResponse.Ok(new { Items = itemsWithExpiry });
         }
 
-        //check whether the IsUnique and IsExpiry fields of an item is true or false
-        //used in item grid of inventory transaction pages
-        public CommonResponse GetUniqueExpiryItem(int itemId)
-        {
-            var result = _context.ItemMaster.Where(i => i.Id == itemId)
-               .Select(i => new
-               {
-                   isUnique = i.IsUniqueItem ?? false,
-                   isExpiry = i.IsExpiry ?? false
-               }).
-               FirstOrDefault();
-            return CommonResponse.Ok(result);
-        }
+       
         /// <summary>
         /// inv=>Report=>ItemSearch
         /// </summary>
