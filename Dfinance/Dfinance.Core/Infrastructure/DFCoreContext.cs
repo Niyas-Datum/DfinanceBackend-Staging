@@ -114,6 +114,13 @@ public DbSet<InvUniqueItems> InvUniqueItems { get; set; }
     public DbSet<TransExpense> TransExpense { get; set; }
     public DbSet<InvSizeMaster> InvSizeMaster { get; set; }
    public DbSet<TransItemExpense> TransItemExpenses { get; set; }
+    public DbSet<BudgetMonth> BudgetMonth { get; set; }
+
+
+
+
+
+
     //view init
 
     // read- id, code name
@@ -286,7 +293,13 @@ public DbSet<TransItemsView> TransItemsView { get; set; }
     public DbSet<FillVoucher> FillVoucher { get; set; }
     public DbSet<FillVouTranId> FillVouTranId { get; set; }
 
-    
+
+    //budgeting
+
+    //public DbSet<BudRegProfitAndLoss> BudRegProfitAndLoss { get; set; }
+   // public DbSet<BudRegBalSheet> BudRegBalSheet { get; set; }
+   // public DbSet<BudMonthwisePandL> BudMonthwisePand { get; set; }
+   // public DbSet<BudRegCommon> BudRegCommon { get; set; }
 
 
 
@@ -371,7 +384,7 @@ mb.ApplyConfiguration(new FiMaCardsConfiguration());
         mb.ApplyConfiguration(new FiTransactionEntryConfiguration());
 
         mb.ApplyConfiguration(new InvSizeMasterConfiguration());
-
+        mb.ApplyConfiguration(new BudgetMonthConfiguration());
 
 
 
@@ -519,5 +532,11 @@ mb.ApplyConfiguration(new FiMaCardsConfiguration());
         mb.Entity<FillVouTranId>().HasNoKey().ToView(null);
         mb.Entity<QtyView>().HasNoKey().ToView(null);
 
+        //budgeting
+
+        //mb.Entity<BudRegProfitAndLoss>().HasNoKey().ToView(null);
+       // mb.Entity<BudRegBalSheet>().HasNoKey().ToView(null);
+       // mb.Entity<BudMonthwisePandL>().HasNoKey().ToView(null);
+       // mb.Entity<BudRegCommon>().HasNoKey().ToView(null);
     }
 }

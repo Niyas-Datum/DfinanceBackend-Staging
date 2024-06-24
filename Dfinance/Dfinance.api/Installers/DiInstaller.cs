@@ -149,6 +149,8 @@ public class DiInstaller : IInstaller
         service.AddScoped<IDeliveryInService, DeliveryInService>();
         service.AddScoped<IMaterialReceiptService, MaterialReceiptService>();
         service.AddScoped<IInvMatTransService, InvMatTransService>();
-
+        service.AddScoped<IBudgetingService, BudgetingService>();
+        service.AddScoped<IBudgetRegisterService, BudgetRegisterService>();
+        service.AddScoped<IBudgetMonthwiseService, BudgetMonthwiseService>();
     }
 }
