@@ -29,20 +29,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Finance
             {
                 return BadRequest(ex.Message);
             }
-        }
-        //[HttpGet(FinRoute.Budgeting.accPopup)]
-        //public IActionResult AccountPopup()
-        //{
-        //    try
-        //    {
-        //        var data = _budgeting.AccountPopup();
-        //        return Ok(data);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
+        }        
         
         [HttpGet(FinRoute.Budgeting.plBalsheet)]
         public IActionResult FillProfitLossBalsheet(bool? profitLoss,bool? balSheet)
@@ -70,7 +57,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Finance
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost(FinRoute.Budgeting.Delete)]
+        [HttpPatch(FinRoute.Budgeting.Delete)]
         public IActionResult Delete(BudgetingDto budgetDto, int pageId, int voucherId, bool? cancel = false)
         {
             try

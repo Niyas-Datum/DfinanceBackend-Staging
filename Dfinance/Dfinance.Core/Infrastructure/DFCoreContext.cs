@@ -13,6 +13,8 @@ using Dfinance.Shared.Configuration.Service;
 using Dfinance.Core.Views.Finance;
 using Dfinance.Core.Views.Inventory.Purchase;
 using Dfinance.Core.Views.Item;
+using System.Reflection.Emit;
+using System;
 
 namespace Dfinance.Core.Infrastructure;
 
@@ -296,11 +298,10 @@ public DbSet<TransItemsView> TransItemsView { get; set; }
 
     //budgeting
 
-    //public DbSet<BudRegProfitAndLoss> BudRegProfitAndLoss { get; set; }
-   // public DbSet<BudRegBalSheet> BudRegBalSheet { get; set; }
-   // public DbSet<BudMonthwisePandL> BudMonthwisePand { get; set; }
-   // public DbSet<BudRegCommon> BudRegCommon { get; set; }
-
+    public DbSet<BudgetRegPandLView> BudRegProfitAndLoss { get; set; }
+    public DbSet<BalanceSheetView> BalanceSheetView { get; set; }
+    public DbSet<MonthwisePandLView> MonthwisePandLView { get; set; }
+    public DbSet<MonthwiseBalSheetView> MonthwiseBalSheetView { get; set; }
 
 
 
@@ -534,9 +535,16 @@ mb.ApplyConfiguration(new FiMaCardsConfiguration());
 
         //budgeting
 
-        //mb.Entity<BudRegProfitAndLoss>().HasNoKey().ToView(null);
-       // mb.Entity<BudRegBalSheet>().HasNoKey().ToView(null);
-       // mb.Entity<BudMonthwisePandL>().HasNoKey().ToView(null);
-       // mb.Entity<BudRegCommon>().HasNoKey().ToView(null);
+        mb.Entity<BudgetRegPandLView>().HasNoKey().ToView(null);
+        mb.Entity<BalanceSheetView>().HasNoKey().ToView(null);
+        mb.Entity<MonthwiseBalSheetView>().HasNoKey().ToView(null);
+        mb.Entity<MonthwisePandLView>().HasNoKey().ToView(null);
+
+
+        //mb.Entity<BudRegBalSheet>()
+        //    .HasKey(b => b.ID);
+        //mb.Entity<BudRegProfitAndLoss>()
+        //    .HasBaseType<BudRegBalSheet>();
+
     }
 }
