@@ -1,4 +1,5 @@
-﻿using Dfinance.AuthAppllication.Services.Interface;
+﻿using Dfinance.Application.Services.General.Interface;
+using Dfinance.AuthAppllication.Services.Interface;
 using Dfinance.Core.Infrastructure;
 using Dfinance.Core.Views.Finance;
 using Dfinance.DataModels.Dto.Finance;
@@ -7,10 +8,12 @@ using Dfinance.Shared.Domain;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.Identity.Client;
 using System;
 using System.Data;
+using System.Text.Json;
 using System.Transactions;
 
 namespace Dfinance.Finance.Services
@@ -20,11 +23,13 @@ namespace Dfinance.Finance.Services
         private readonly DFCoreContext _context;
         private readonly IAuthService _authService;
         private readonly ILogger<BudgetingService> _logger;
-        public BudgetingService(DFCoreContext context, IAuthService authService, ILogger<BudgetingService> logger)
+        private readonly IUserTrackService _userTrack;
+        public BudgetingService(DFCoreContext context, IAuthService authService, ILogger<BudgetingService> logger, IUserTrackService userTrack)
         {
             _context = context;
             _authService = authService;
             _logger = logger;
+            _userTrack = userTrack;
         }
         private CommonResponse PermissionDenied(string msg)
         {
@@ -119,8 +124,11 @@ namespace Dfinance.Finance.Services
             string criteria = "";
             var transId = 0;
             int? editedBy = null;
+            int actionId = 0;
+            string reason = "";
             if(budgetDto.TransactionId==0 || budgetDto.TransactionId==null)
             {
+                reason = "Added";
                 var voucherNoCheck = _context.FiTransaction.Any(t => t.VoucherId == voucherId && t.TransactionNo == budgetDto.VoucherNo);
                 if (voucherNoCheck)
                     return CommonResponse.Error("VoucherNo already exists");
@@ -144,7 +152,9 @@ namespace Dfinance.Finance.Services
                 transId = (int)newId.Value;
             }
             else
-            {
+            {               
+                actionId = 1;
+                reason = "Updated";
                 if(cancel==true)
                 {
                     Cancelled= true;
@@ -174,6 +184,8 @@ namespace Dfinance.Finance.Services
                 _context.SaveChanges();
 
             }
+            var jsonBudget = JsonSerializer.Serialize(budgetDto);
+            _userTrack.AddUserActivity(budgetDto.VoucherNo, transId, actionId, reason, "FiTransactions", "Budgeting", 0, jsonBudget);
             return CommonResponse.Ok(transId);
         }
 
@@ -208,8 +220,7 @@ namespace Dfinance.Finance.Services
             using (var transactionScope = new TransactionScope())
             {
                 try
-                {         
-                   
+                {                                       
                     if (budgetDto != null)                     
                     {     
                         int transId=(int)SaveTransactions(budgetDto,pageId,voucherId).Data;
@@ -237,8 +248,9 @@ namespace Dfinance.Finance.Services
             if (!_authService.UserPermCheck(pageId, 4))
             {
                 return PermissionDenied("Delete Budget");
-            }
+            }            
             var transid = _context.FiTransaction.Any(x => x.Id == budgetDto.TransactionId);
+            var jsonBudgetSave = JsonSerializer.Serialize(budgetDto);
             if (!transid)            
                 return CommonResponse.NotFound("Transaction Not Found");
             
@@ -248,9 +260,10 @@ namespace Dfinance.Finance.Services
                 return CommonResponse.Ok("Cancelled successfully");
             }
             else 
-            {
+            {                
                 string criteria = "DeleteTransactions";
                 _context.Database.ExecuteSqlRaw("EXEC VoucherSP @Criteria={0}, @ID={1}",criteria, budgetDto.TransactionId);
+                _userTrack.AddUserActivity(budgetDto.VoucherNo, budgetDto.TransactionId??0, 2, "Deleted", "FiTransactions", "Budgeting", 0, jsonBudgetSave);
                 _logger.LogError("Failed to Delete Budgeting");
                 return CommonResponse.Ok("Budget Deleted successfully");
             }
