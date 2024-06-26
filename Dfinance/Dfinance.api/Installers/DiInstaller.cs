@@ -41,6 +41,8 @@ using Dfinance.Finance.Services.Interface;
 using Dfinance.Finance.Services;
 using Dfinance.WareHouse.Services.Interface;
 using Dfinance.WareHouse.Services;
+using Dfinance.Finance.Statements.Interface;
+using Dfinance.Finance.Statements;
 
 
 namespace Dfinance.api.Installers;
@@ -152,5 +154,6 @@ public class DiInstaller : IInstaller
         service.AddScoped<IBudgetingService, BudgetingService>();
         service.AddScoped<IBudgetRegisterService, BudgetRegisterService>();
         service.AddScoped<IBudgetMonthwiseService, BudgetMonthwiseService>();
+        service.AddScoped<IDayBookService, DayBookService>();
     }
 }

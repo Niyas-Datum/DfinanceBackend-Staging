@@ -303,6 +303,9 @@ public DbSet<TransItemsView> TransItemsView { get; set; }
     public DbSet<MonthwisePandLView> MonthwisePandLView { get; set; }
     public DbSet<MonthwiseBalSheetView> MonthwiseBalSheetView { get; set; }
 
+    //daybook
+    public DbSet<DayBookView> DayBookView { get; set; }
+    
 
 
 
@@ -540,11 +543,8 @@ mb.ApplyConfiguration(new FiMaCardsConfiguration());
         mb.Entity<MonthwiseBalSheetView>().HasNoKey().ToView(null);
         mb.Entity<MonthwisePandLView>().HasNoKey().ToView(null);
 
-
-        //mb.Entity<BudRegBalSheet>()
-        //    .HasKey(b => b.ID);
-        //mb.Entity<BudRegProfitAndLoss>()
-        //    .HasBaseType<BudRegBalSheet>();
+        //daybook
+        mb.Entity<DayBookView>().HasNoKey().ToView(null);
 
     }
 }
