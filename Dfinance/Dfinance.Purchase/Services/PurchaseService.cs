@@ -1,6 +1,7 @@
 ﻿using Dfinance.Application.Services.General.Interface;
 using Dfinance.AuthAppllication.Services.Interface;
 using Dfinance.Core.Infrastructure;
+using Dfinance.DataModels.Dto.Finance;
 using Dfinance.DataModels.Dto.Inventory.Purchase;
 using Dfinance.Inventory;
 using Dfinance.Inventory.Service.Interface;
@@ -13,6 +14,9 @@ using Dfinance.Warehouse.Services.Interface;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Identity.Client;
+using Microsoft.IdentityModel.Tokens;
+using System.Diagnostics.Metrics;
 using System.Transactions;
 namespace Dfinance.Purchase.Services
 {
@@ -75,7 +79,7 @@ namespace Dfinance.Purchase.Services
             var voucherNo1 = _transactionService.GetAutoVoucherNo(voucherId);
             var voucherNo = voucherNo1.Data;
             var costcentre1 = _costCentre.FillCostCentre();
-            var costcentre= costcentre1.Data;
+            var costcentre = costcentre1.Data;
             var warehouse1 = _warehouse.WarehouseDropdownUsingBranch(branchId);
             var warehouse = warehouse1.Data;
             return CommonResponse.Ok(new { VNo = voucherNo, CostCentre = costcentre, WareHouse = warehouse });
@@ -91,7 +95,7 @@ namespace Dfinance.Purchase.Services
         /// <returns></returns>
         public CommonResponse FillTransItems(int partyId, int PageID, int locId, int voucherId)
         {
-            var res = _item.FillTransItems(partyId, PageID, locId, voucherId);            
+            var res = _item.FillTransItems(partyId, PageID, locId, voucherId);
             return CommonResponse.Ok(res);
         }
         /// <summary>
@@ -231,12 +235,12 @@ namespace Dfinance.Purchase.Services
                 {
                     //int VoucherId=_com.GetVoucherId(PageId);
                     string Status = "Approved";
-                    var transaction=_transactionService.SaveTransaction(invTranseDto, PageId, voucherId, Status).Data;
+                    var transaction = _transactionService.SaveTransaction(invTranseDto, PageId, voucherId, Status).Data;
                     int TransId = 0;
-                    
-                    var transType=transaction.GetType();
-                    if (transType.Name=="String") 
-                    { 
+
+                    var transType = transaction.GetType();
+                    if (transType.Name == "String")
+                    {
                         return CommonResponse.Ok(transaction);
                     }
                     else
@@ -388,39 +392,97 @@ namespace Dfinance.Purchase.Services
         /// <returns></returns>
         public CommonResponse GetPurchaseReport(PurchaseReportDto reportdto)
         {
-            string criteria = string.IsNullOrEmpty(reportdto.ViewBy) ? null : "Extract";
             object result = null;
 
             try
             {
-                var query = $@"
-                    EXEC InventoryRegisterSP 
-                    @Criteria = '{criteria}',
-                    @DateFrom = '{reportdto.From}',
-                    @DateUpto = '{reportdto.To}',
-                    @BranchID = '{reportdto.Branch}',
-                    @BasicVTypeID = '{reportdto.BaseType}',
-                    @VTypeID = '{reportdto.VoucherType}',
-                    @AccountID = '{reportdto.customerSupplier}',
-                    @PaymentTypeID = '{reportdto.PaymentType}',
-                    @ItemID = '{reportdto.Item}',
-                    @Inventory = '{reportdto.Inventory}',
-                    @CounterID = '{reportdto.Counter}',
-                    @PartyInvNo = '{reportdto.InvoiceNo}',
-                    @BatchNo = '{reportdto.BatchNo}',
-                    @UserID = '{reportdto.User}',
-                    @AreaID = '{reportdto.Area}',
-                    @StaffID = '{reportdto.Staff}'
-                ";
+                string query = $@"
+            EXEC InventoryRegisterSP 
+            @DateFrom = '{reportdto.From}',
+            @DateUpto = '{reportdto.To}',
+            @BranchID = '{reportdto.Branch?.Id ?? 0}'";
 
-                if (reportdto.ViewBy == null)
+                if (reportdto.BaseType?.Id != 0 && reportdto.BaseType.Id != -1)
                 {
-                    result = _context.PurchaseReportView.FromSqlRaw(query).ToList();
+                    query += $", @BasicVTypeID = '{reportdto.BaseType.Id}'";
                 }
-                else
+
+                if (reportdto.VoucherType?.Id != 0 && reportdto.VoucherType.Id != -1)
                 {
+                    query += $", @VTypeID = '{reportdto.VoucherType.Id}'";
+                }
+                if (reportdto.Detailed==true)
+                {
+                    query += $", @Detailed = '{reportdto.Detailed}'";
+                }
+                if (reportdto.Inventory == true)
+                {
+                    query += $", @Inventory = '{reportdto.Inventory}'";
+                }
+                if (reportdto.Columnar == true)
+                {
+                    query += $", @Columnar = '{reportdto.Columnar}'";
+                }
+                if (reportdto.GroupItem == true)
+                {
+                    query += $", @IsGroupItemReport = '{reportdto.GroupItem}'";
+                }
+
+                if (!string.IsNullOrEmpty(reportdto.InvoiceNo))
+                {
+                    query += $", @PartyInvNo = '{reportdto.InvoiceNo}'";
+                }
+
+                if (reportdto.customerSupplier?.Id != 0)
+                {
+                    query += $", @AccountID = '{reportdto.customerSupplier.Id}'";
+                }
+
+                if (reportdto.PaymentType?.Id != 0)
+                {
+                    query += $", @PaymentTypeID = '{reportdto.PaymentType.Id}'";
+                }
+
+                if (reportdto.Item?.Id != 0)
+                {
+                    query += $", @ItemID = '{reportdto.Item.Id}'";
+                }
+
+                if (reportdto.Counter?.Id != 0)
+                {
+                    query += $", @CounterID = '{reportdto.Counter.Id}'";
+                }
+
+                if (!string.IsNullOrEmpty(reportdto.BatchNo))
+                {
+                    query += $", @BatchNo = '{reportdto.BatchNo}'";
+                }
+
+                if (reportdto.User?.Id != 0)
+                {
+                    query += $", @UserID = '{reportdto.User.Id}'";
+                }
+
+                if (reportdto.Staff?.Id != 0)
+                {
+                    query += $", @StaffID = '{reportdto.Staff.Id}'";
+                }
+
+                if (reportdto.Area?.Id != 0)
+                {
+                    query += $", @AreaID = '{reportdto.Area.Id}'";
+                }
+
+                // Add criteria if provided
+                if (reportdto.ViewBy==false)
+                {
+                    query += $", @Criteria = 'Extract'";
                     result = _context.PurchaseReportViews.FromSqlRaw(query).ToList();
+                    return CommonResponse.Ok(result);
                 }
+               
+
+                result = _context.PurchaseReportView.FromSqlRaw(query).ToList();
 
                 return CommonResponse.Ok(result);
             }
@@ -430,5 +492,66 @@ namespace Dfinance.Purchase.Services
                 return CommonResponse.Error(ex.Message);
             }
         }
+
+        //public CommonResponse GetPurchaseReport(PurchaseReportDto reportdto)
+        //{
+
+        //    object result = null;
+
+        //    try
+        //    {
+        //        if (reportdto.ViewBy == true)
+        //        {
+
+        //            var inventory = $@"
+        //            EXEC InventoryRegisterSP 
+        //            @DateFrom = '{reportdto.From}',
+        //            @DateUpto = '{reportdto.To}',
+        //            @BranchID = '{reportdto.Branch.Id ?? 0}',
+        //            @BranchID = '{reportdto.Branch.Id ?? 0}',
+        //            @UserID = '{reportdto.User.Id ?? 0}'
+        //            @BasicVTypeID = '{reportdto.BaseType.Id ?? 0}'
+        //        ";
+        //            result = _context.PurchaseReportView.FromSqlRaw(inventory).ToList();
+        //            //var query = $@"EXEC InventoryRegisterSP @Criteria = '{criteria}'
+        //            //  @DateFrom = '01/01/1990',
+        //            //  @DateUpto = '06/06/2024',
+        //            //   @BranchID = '1'";
+        //            //@BasicVTypeID = '{reportdto.BaseType.Id??0}',
+        //            //@VTypeID = '{reportdto.VoucherType.Id ?? 0}',
+        //            //@AccountID = '{reportdto.customerSupplier.Id??0}',
+        //            //@PaymentTypeID = '{reportdto.PaymentType.Id ?? 0}',
+        //            //@ItemID = '{reportdto.Item.Id??0}',
+        //            //@Inventory = '{reportdto.Inventory}',
+        //            //@CounterID = '{reportdto.Counter}',
+        //            //@PartyInvNo = '{reportdto.InvoiceNo}',
+        //            //@BatchNo = '{reportdto.BatchNo}',
+        //            //@UserID = '{reportdto.User.Id ?? 0}',
+        //            //@AreaID = '{reportdto.Area.Id??0}',
+        //            //@StaffID = '{reportdto.Staff.Id??0}'
+        //        }
+        //        else
+        //        {
+        //            string criteria = "Extract";
+        //            var finance = $@"
+        //            EXEC InventoryRegisterSP 
+        //            @Criteria = '{criteria}',
+        //            @DateFrom = '{reportdto.From}',
+        //            @DateUpto = '{reportdto.To}',
+        //            @BranchID = '{reportdto.Branch.Id ?? 0}',
+        //            @UserID = '{reportdto.User.Id ?? 0}',
+        //            @BasicVTypeID = '{reportdto.BaseType.Id ?? 0}'
+        //                                                            ";
+        //            result = _context.PurchaseReportViews.FromSqlRaw(finance).ToList();
+        //        }
+
+        //        return CommonResponse.Ok(result);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex.Message);
+        //        return CommonResponse.Error(ex.Message);
+        //    }
     }
 }
+
