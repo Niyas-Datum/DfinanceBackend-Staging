@@ -87,6 +87,8 @@ public class DiInstaller : IInstaller
 
         //AccountList
         service.AddScoped<IAccountListService, AccountListService>();
+        //BranchAccounts
+        service.AddScoped<IBranchAccounts, BranchAccountsService>();
 
         //Customer supplier
         service.AddScoped<ICustomerSupplierService, CustomerSupplierService>();
@@ -152,5 +154,6 @@ public class DiInstaller : IInstaller
         service.AddScoped<IBudgetingService, BudgetingService>();
         service.AddScoped<IBudgetRegisterService, BudgetRegisterService>();
         service.AddScoped<IBudgetMonthwiseService, BudgetMonthwiseService>();
+        service.AddScoped<IDayBookService, DayBookService>();
     }
 }

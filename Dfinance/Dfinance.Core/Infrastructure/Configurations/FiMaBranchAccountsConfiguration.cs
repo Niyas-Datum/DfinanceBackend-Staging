@@ -17,6 +17,15 @@ namespace Dfinance.Core.Infrastructure.Configurations
             builder.Property(e => e.Id).HasColumnName("ID");
             builder.Property(e => e.AccountId).HasColumnName("AccountID");
             builder.Property(e => e.BranchId).HasColumnName("BranchID");
+            builder.HasOne(d => d.Account)
+                             .WithMany(p => p.FiMaBranchAccounts)
+                             .HasForeignKey(d => d.AccountId)
+                             .HasConstraintName("FK_FiMaBranchAccounts_FiMaAccounts");
+
+            builder.HasOne(d => d.Branch)
+                .WithMany(p => p.BranchAccounts)
+                .HasForeignKey(d => d.BranchId)
+                .HasConstraintName("FK_FiMaBranchAccounts_MaCompanies");
 
         }
     }

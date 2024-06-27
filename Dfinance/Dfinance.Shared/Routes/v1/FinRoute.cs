@@ -154,5 +154,19 @@ namespace Dfinance.Shared.Routes.v1
             public const string Main = $"{Base}/budgetMonthwise";
             public const string fill = $"{Main}/fill";           
         }
+		public static class  DayBook
+        {
+            public const string Main = $"{Base}/daybook";
+            public const string voucherUser = $"{Main}/voucher&User";
+            public const string fill = $"{Main}/fill";
+        }
+        public static class BranchAccounts
+        {
+            public const string Main = $"{Base}/branchaccounts";
+            public const string FillbrAcc = $"{Main}/fillBrAcc";
+            public const string update = $"{Main}/update";
+
+
+        }
     }
 }
