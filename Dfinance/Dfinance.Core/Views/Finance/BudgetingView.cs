@@ -36,10 +36,7 @@
         public bool? VoucherEntry { get; set; }
         public int? AccountID { get; set; }
         public string? AccountCode { get; set; }
-        public string? AccountName { get; set; }
-        public int? PandLGroup { get; set; }
-        public decimal? SortField { get; set; }
-        public decimal? BudgetAmount { get; set; }
+        public string? AccountName { get; set; }       
         public decimal? January { get; set; }
         public decimal? February { get; set; }
         public decimal? March { get; set; }
@@ -83,7 +80,7 @@
     }
     public partial class MonthwisePandLView:MonthwiseCommonView
     {
-        public decimal ActualAmount {  get; set; }
+        public decimal? ActualAmount {  get; set; }
         public int? PandLGroup { get; set; }
         public decimal? SortField { get; set; }
         public decimal? BudgetAmount { get; set; }
