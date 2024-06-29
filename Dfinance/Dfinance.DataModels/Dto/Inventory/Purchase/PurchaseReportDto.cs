@@ -4,7 +4,7 @@ namespace Dfinance.DataModels.Dto.Inventory.Purchase
 {
     public class PurchaseReportDto
     {
-        public string ViewBy { get; set; }
+        public bool ViewBy { get; set; }
 
         public DateTime? From { get; set; }
         public DateTime? To { get; set; }
@@ -17,11 +17,9 @@ namespace Dfinance.DataModels.Dto.Inventory.Purchase
         public PopUpDto? PaymentType { get; set; }
         public PopUpDto? Counter { get; set; }
         public PopUpDto? User { get; set; }
-        public PopUpDto? InvoiceNo { get; set; }
-        public PopUpDto? BatchNo { get; set; }
-        //public PopUpDto? OrderNo { get; set; }
+        public string? InvoiceNo { get; set; }
+        public string? BatchNo { get; set; }
         public DropdownDto? Branch { get; set; }
-
         public bool? Detailed { get; set; } = false;
         public bool? Columnar { get; set; } = false;
         public bool? GroupItem { get; set; } = false;

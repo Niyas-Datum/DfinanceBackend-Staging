@@ -120,6 +120,9 @@ namespace Dfinance.Application.Services.General
             try
             {
                 string msg = null;
+                var userDes = _context.MaEmployees.Any(m => m.DesignationId == Id);
+                if (userDes)
+                    return CommonResponse.Ok("Cannot Delete the Designation");
                 var desig = _context.MaDesignations.Where(i => i.Id == Id).
                     Select(i => i.Name).
                     SingleOrDefault();

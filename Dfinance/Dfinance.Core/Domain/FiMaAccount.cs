@@ -66,5 +66,7 @@ public partial class FiMaAccount
     public virtual ICollection<TransExpense> TransExpenseAccounts { get; set; }
     public virtual ICollection<TransExpense> TransExpensePayableAccounts { get; set; }
     public virtual ICollection<BudgetMonth> BudgetMonths { get; set; }
+    public virtual ICollection<FiMaBranchAccounts>? FiMaBranchAccounts { get; set; }
+
 
 }
