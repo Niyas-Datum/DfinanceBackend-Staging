@@ -16,6 +16,6 @@ namespace Dfinance.Item.Services.Inventory.Interface
         CommonResponse TaxDropDown();       
         CommonResponse FillTransItems(int partyId, int PageID, int locId, int voucherId);
         //CommonResponse GetUniqueExpiryItem(int itemId);
-        CommonResponse GetItemSearch(int? itemId,string? value);
+        CommonResponse GetItemSearch(int? itemId,string? value,string? criteria);
     }
 }
