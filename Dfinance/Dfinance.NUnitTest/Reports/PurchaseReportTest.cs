@@ -45,8 +45,10 @@ namespace Dfinance.NUnitTest.Reports
                 Item = new PopUpDto { Id = null },
                 Inventory = false,
                 Counter = new PopUpDto { Id = null },
+
                 InvoiceNo = null ,
                 BatchNo =  null ,
+
                 User = new PopUpDto { Id = 118 },
                 Area = new PopUpDto { Id = null },
                 Staff = new PopUpDto { Id = null }
