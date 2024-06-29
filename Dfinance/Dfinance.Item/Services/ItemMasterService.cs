@@ -806,6 +806,48 @@ namespace Dfinance.Item.Services.Inventory
             }
         }
 
+        /// <summary>
+        /// inv=>Report=>ItemRegister
+        /// </summary>
+        /// <param name="BranchID"></param>
+        /// <param name="WarehouseID"></param>
+        /// <param name="Less"></param>
+        /// <param name="Date"></param>
+        /// <returns></returns>
+        public CommonResponse GetItemRegister(int? branchId, int? warehouseId, bool less = false, DateTime? date = null)
+        {
+            try
+            {
+                object result = null;
+                var query = new StringBuilder();
+                query.Append("Exec ItemCatalogueSP ");
+                query.AppendFormat("@BranchID = {0}, ", branchId ?? 0);
+                query.AppendFormat("@WarehouseID = {0}, ", warehouseId ?? 0);
+                query.AppendFormat("@Less = {0}", less ? 1 : 0);
+
+                if (date.HasValue)
+                {
+                    query.AppendFormat(", @Date = '{0}'", date.Value.ToString("yyyy-MM-dd"));
+                }
+
+              
+                if (less==true)
+                {
+                    result = _context.ItemCatalogueViews.FromSqlRaw(query.ToString()).ToList();
+                }
+                else
+                {
+                    result = _context.ItemCatalogueView.FromSqlRaw(query.ToString()).ToList();
+                }
+
+                return CommonResponse.Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Error(ex.Message);
+            }
+        }
 
 
 

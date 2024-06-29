@@ -307,6 +307,9 @@ public DbSet<TransItemsView> TransItemsView { get; set; }
     public DbSet<DayBookView> DayBookView { get; set; }
     
 
+    //itemregister report
+    public DbSet<ItemCatalogueView> ItemCatalogueView {  get; set; }
+    public DbSet<ItemCatalogueViews> ItemCatalogueViews { get; set; }
 
 
 
@@ -527,8 +530,9 @@ mb.ApplyConfiguration(new FiMaCardsConfiguration());
         mb.Entity<PurchaseReportView>().HasNoKey().ToView(null);
         mb.Entity<PurchaseReportViews>().HasNoKey().ToView(null);
         mb.Entity<ItemSearchView>().HasNoKey().ToView(null);
-
-		mb.Entity<ImportItemListView>().HasNoKey().ToView(null);
+        mb.Entity<ItemCatalogueView>().HasNoKey().ToView(null);
+        mb.Entity<ItemCatalogueViews>().HasNoKey().ToView(null);
+        mb.Entity<ImportItemListView>().HasNoKey().ToView(null);
 
         //receiptvoucher
         mb.Entity<VoucherView>().HasNoKey().ToView(null);

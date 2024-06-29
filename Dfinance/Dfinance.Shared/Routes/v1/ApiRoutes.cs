@@ -279,7 +279,8 @@ namespace Dfinance.Shared.Routes.v1
             public const string Barcode = $"{Main}/GenBarcode";
 
             public const string TaxDropdown = $"{Main}/TaxDropdown";
-            public const string Itemsearch = $"{Main}/ itemsearch";
+            public const string Itemsearch = $"{Main}/ itemsearch"; 
+            public const string ItemRegister = $"{Main}/ itemregister";
         }
         public static class ItemUnits
         {
