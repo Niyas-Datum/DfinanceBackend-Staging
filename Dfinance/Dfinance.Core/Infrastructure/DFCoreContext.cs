@@ -284,6 +284,8 @@ public DbSet<TransItemsView> TransItemsView { get; set; }
     public DbSet<FormGridView> FormGridView { get; set; }
     //voucher in finance
     public DbSet<AccountCodesView> AccountCodesView { get; set; }
+    public DbSet<ContraAccCode> ContraAccCode { get; set; }
+    
     //ReportsView
     public DbSet<PurchaseReportView> PurchaseReportView { get; set; }
     public DbSet<PurchaseReportViews> PurchaseReportViews { get; set; }
