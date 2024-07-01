@@ -26,7 +26,7 @@ namespace Dfinance.NUnitTest.Purchase
                 Id = null,
                 VoucherNo = "0013",
                 Date = DateTime.Now,
-                Reference = null,
+                References = null,
                 Party = new PopUpDto
                 {
                     Id = 309,
@@ -38,8 +38,8 @@ namespace Dfinance.NUnitTest.Purchase
                 ExchangeRate = 0,
                 Project = null,
                 Description = "string",
-                Approve = true,
-                CloseVoucher = true,
+                //Approve = true,
+                //CloseVoucher = true,
                 GrossAmountEdit = true,
                 FiTransactionAdditional = new InvTransactionAdditionalDto
                 {
@@ -167,7 +167,13 @@ namespace Dfinance.NUnitTest.Purchase
             AvgCost = 0,
             IsReturn = true,
             ManufactureDate = DateTime.Now,
-            PriceCategory = 0,
+             PriceCategory = new PopUpDto
+            {
+                Id=0,
+                Name="",
+                Code="",
+                Description=""
+            },
             UniqueItems = new List<InvUniqueItemDto>
             {
                 new InvUniqueItemDto
@@ -179,7 +185,7 @@ namespace Dfinance.NUnitTest.Purchase
     },
                 TransactionEntries = new InvTransactionEntriesDto
                 {
-                    Terms = "string",
+                    //Terms = "string",
                     TotalDisc = 0,
                     Amt = 0,
                     Roundoff = 0,
@@ -281,7 +287,7 @@ namespace Dfinance.NUnitTest.Purchase
                 Id = 31,
                 VoucherNo = "0013",
                 Date = DateTime.Now,
-                Reference = null,
+                References = null,
                 Party = new PopUpDto
                 {
                     Id = 309,
@@ -293,8 +299,8 @@ namespace Dfinance.NUnitTest.Purchase
                 ExchangeRate = 0,
                 Project = null,
                 Description = "string",
-                Approve = true,
-                CloseVoucher = true,
+                //Approve = true,
+                //CloseVoucher = true,
                 GrossAmountEdit = true,
                 FiTransactionAdditional = new InvTransactionAdditionalDto
                 {
@@ -422,7 +428,13 @@ namespace Dfinance.NUnitTest.Purchase
             AvgCost = 0,
             IsReturn = true,
             ManufactureDate = DateTime.Now,
-            PriceCategory = 0,
+             PriceCategory = new PopUpDto
+            {
+                Id=0,
+                Name="",
+                Code="",
+                Description=""
+            },
             UniqueItems = new List<InvUniqueItemDto>
             {
                 new InvUniqueItemDto
@@ -434,7 +446,7 @@ namespace Dfinance.NUnitTest.Purchase
     },
                 TransactionEntries = new InvTransactionEntriesDto
                 {
-                    Terms = "string",
+                    //Terms = "string",
                     TotalDisc = 0,
                     Amt = 0,
                     Roundoff = 0,

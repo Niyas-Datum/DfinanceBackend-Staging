@@ -39,14 +39,14 @@ namespace Dfinance.Inventory.Service
         {
             try
             {
-                var unitData = _itemUnits.GetItemUnits(itemId);
-                var result = _itemMaster.GetUniqueExpiryItem(itemId);
+                //var unitData = _itemUnits.GetItemUnits(itemId);
+               // var result = _itemMaster.GetUniqueExpiryItem(itemId);
                 var batch = NextBatchNo();                
-                string criteria = "GetLastItemRate";
+                //string criteria = "GetLastItemRate";
                 int branch=_authService.GetBranchId().Value;
                 var PriceCat = PriceCategoryPopup(itemId);
-                var itemData = _context.ItemTransaction.FromSqlRaw($"Exec VoucherAdditionalsSP @Criteria='{criteria}',@BranchID='{branch}',@ItemID='{itemId}',@AccountID='{partyId}',@VoucherID='{voucherId}'").ToList();
-                var outdata = new { UniqueOrExpiry = result.Data, BatchNo = batch, TransData = itemData, ItemUnitData = unitData.Data, PriceCategory = PriceCat };
+               // var itemData = _context.ItemTransaction.FromSqlRaw($"Exec VoucherAdditionalsSP @Criteria='{criteria}',@BranchID='{branch}',@ItemID='{itemId}',@AccountID='{partyId}',@VoucherID='{voucherId}'").ToList();
+                var outdata = new {  BatchNo = batch,  PriceCategory = PriceCat };
 
 
                 return CommonResponse.Ok(outdata);
@@ -88,7 +88,7 @@ namespace Dfinance.Inventory.Service
         /// <param name="voucherId"></param>
         /// <param name="transId"></param>
         /// <returns></returns>
-        public CommonResponse SaveInvTransItems(InventoryTransactionDto invTransDto, int voucherId, int transId)
+        public CommonResponse SaveInvTransItems(List<InvTransItemDto> Items, int voucherId, int transId,decimal? exchangeRate,int? warehouse)
         {
             try
             {
@@ -96,7 +96,7 @@ namespace Dfinance.Inventory.Service
                 int slNo = 1;
                 int refTransId1 = 0;
                 string criteria = "InsertInvTransItems";
-                decimal factor = 1;
+                decimal factor = 1;               
                 string tranType = "Normal";
                 decimal tempRate = 0;
                 int rowType = 0;
@@ -109,33 +109,33 @@ namespace Dfinance.Inventory.Service
                 {
                     case VoucherType.Purchase:
                     case VoucherType.Purchase_Order:
-                        inLocId = invTransDto.FiTransactionAdditional.Warehouse.Id;
+                        inLocId = warehouse;
                         break;
                     case VoucherType.Sales_Invoice:
-                        outLocId = invTransDto.FiTransactionAdditional.Warehouse.Id;
+                        outLocId= warehouse;
                         break;
                 }
-                if (invTransDto.Items != null && invTransDto.Items.Count > 0)
+                if (Items != null && Items.Count>0)
                 {
-                    foreach (var item in invTransDto.Items)
+                    foreach (var item in Items)
                     {
-                        factor = _context.ItemUnits.Where(x => x.ItemId == item.ItemId && x.Unit == item.Unit.Unit).Select(x => x.Factor).SingleOrDefault();
+                        factor = _context.ItemUnits.Where(x => x.ItemId == item.ItemId && x.Unit == item.Unit.Unit).Select(x => x.Factor).SingleOrDefault();                      
                         var importItems = _context.InvTransItems.Where(i => i.TransactionId == item.TransactionId).Select(i => i.ItemId).ToList();
                         foreach (var i in importItems)
                         {
                             if (i == item.ItemId)
                                 refTransItemId = _context.InvTransItems.Where(t => t.TransactionId == item.TransactionId && t.ItemId == item.ItemId)
                                .Select(t => t.Id).SingleOrDefault();
-                        }
-
+                        }  
+                        
                         if (voucherId == 17)
                         {
-                            rowType = 1;
+                            rowType = 1;                            
                         }
                         else if (voucherId == 23)
                         {
-                            rowType = -1;
-
+                            rowType = -1;                       
+                          
                         }
                         SqlParameter newId = new SqlParameter("@NewID", SqlDbType.Int)
                         {
@@ -169,8 +169,8 @@ namespace Dfinance.Inventory.Service
                                     null,//4-refTransId1
                                     item.Unit.Unit,//5
                                     item.Qty,//6
-                                    item.FocQty == 0 ? null : item.FocQty,//7
-                                    item.BasicQty == 0 ? null : item.BasicQty,//8-BasicQty
+                                    item.FocQty==0?null:item.FocQty,//7
+                                    item.BasicQty==0?null:item.BasicQty,//8-BasicQty
                                     item.Rate,//9
                                     null,//10-advanceRate
                                     item.OtherRate == 0 ? null : item.OtherRate,//11
@@ -182,7 +182,7 @@ namespace Dfinance.Inventory.Service
                                     null,//17-InvavgCostId
                                     item.IsReturn,//18-IsReturn
                                     item.Discount == 0 ? null : item.Discount,//19
-                                    item.Additional == 0 ? null : item.Additional,//20-Additional
+                                    item.Additional==0?null:item.Additional,//20-Additional
                                     factor,//21
                                     null,//22-CommodityId
                                     null,//23-AccountId
@@ -208,7 +208,7 @@ namespace Dfinance.Inventory.Service
                                     inLocId,//43
                                     outLocId,
                                      item.BatchNo,//45
-                                    null,//46-sizeMasterId
+                                    item.SizeMaster.Id==0?null:item.SizeMaster.Id,//46-sizeMasterId
                                     item.DiscountPerc,//47
                                     item.TaxPerc,//48
                                     item.TaxValue,//49
@@ -218,29 +218,29 @@ namespace Dfinance.Inventory.Service
                                     null,//53-CostPerc
                                     item.ManufactureDate,//54
                                     item.ExpiryDate,//55
-                                    item.PriceCategory == 0 ? null : item.PriceCategory,//56
+                                    item.PriceCategory.Id==0?null:item.PriceCategory.Id,//56
                                     null,//57
                                     item.RateDisc == 0 ? null : item.RateDisc,//58
                                     null,//59-refId
                                     (item.Qty),//60-TempQty
                                     tempRate == 0 ? null : tempRate,//61
-                                    item.ReplaceQty == 0 ? null : item.ReplaceQty,//62
+                                    item.ReplaceQty==0?null : item.ReplaceQty,//62
                                     item.PrintedMRP == 0 ? null : item.PrintedMRP,//63-PrintedMRP
                                     item.PrintedRate == 0 ? null : item.PrintedRate,//64
                                     item.PtsRate == 0 ? null : item.PtsRate,//65-ptsRate
                                     item.PtrRate == 0 ? null : item.PtrRate,//66-ptrRate
                                     null,//67-tempBatchNo
                                     item.StockItemId == 0 ? null : item.StockItemId,//68
-                                    item.CostAccountId == 0 ? null : item.CostAccountId,//69
+                                    item.CostAccountId==0?null : item.CostAccountId,//69
                                     null, null, null, null,//70,71,72,73
                                     item.Hsn,
-                                    item.BrandId == 0 ? null : item.BrandId,//75
+                                    item.BrandId==0?null:item.BrandId,//75
                                     null, null, //76,77
-                                    string.IsNullOrEmpty(item.RepairsRequired) ? null : item.RepairsRequired,//78
-                                    invTransDto.ExchangeRate,//79
+                                    string.IsNullOrEmpty(item.RepairsRequired)?null: item.RepairsRequired,//78
+                                    exchangeRate,//79
                                     null, null, null, //80,81,82
                                     item.AvgCost == 0 ? null : item.AvgCost, //83-avgcost
-                                    item.Profit == 0 ? null : item.Profit, //84
+                                    item.Profit==0?null:item.Profit, //84
                                     null, null, null,//85 ,86,87
                                     item.Pcs == 0 ? null : item.Pcs,
                                     newId
@@ -253,9 +253,9 @@ namespace Dfinance.Inventory.Service
                         var uniqueItem = _context.ItemMaster.Where(i => i.Id == item.ItemId).Select(i => i.IsUniqueItem).SingleOrDefault();
                         if (uniqueItem == true)
                             if (item.Qty > 0 && item.UniqueItems.Count > 0)
-                            {
-                                SaveUniqueItems(transId, transItemId, item.ItemId, item.UniqueItems);
-                            }
+                                {                            
+                                     SaveUniqueItems(transId, transItemId, item.ItemId, item.UniqueItems);
+                                }
                     }
                     slNo++;
                 }
@@ -267,7 +267,7 @@ namespace Dfinance.Inventory.Service
             }
         }
 
-        public CommonResponse UpdateInvTransItems(InventoryTransactionDto invTransDto, int voucherId, int transId)
+        public CommonResponse UpdateInvTransItems(List<InvTransItemDto> Items, int voucherId, int transId, decimal? exchangeRate, int? warehouse)
         {
             try
             {
@@ -276,14 +276,14 @@ namespace Dfinance.Inventory.Service
                 {
                     _context.InvUniqueItems.RemoveRange(uniqueRemove);
                     _context.SaveChanges();
-                }
+                }               
                 var itemsRemove = _context.InvTransItems.Where(i => i.TransactionId == transId).ToList();
-                if (itemsRemove.Count > 0)
+                if (itemsRemove.Count>0)
                 {
                     _context.InvTransItems.RemoveRange(itemsRemove);
                     _context.SaveChanges();
-                    SaveInvTransItems(invTransDto, voucherId, transId);
-                }
+                    SaveInvTransItems(Items, voucherId, transId,exchangeRate,warehouse);
+                }              
 
                 return CommonResponse.Ok("TransItems Updated Successfully");
             }

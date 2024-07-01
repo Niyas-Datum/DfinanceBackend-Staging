@@ -38,7 +38,7 @@ namespace Dfinance.Finance.Services
       
 
         //save and update
-        public CommonResponse SaveTransaction(PaymentVoucherDto paymentVoucherDto, int PageId, int VoucherId, string Status)
+        public CommonResponse SaveTransaction(FinanceTransactionDto paymentVoucherDto, int PageId, int VoucherId, string Status)
         {
             try
             {
@@ -217,7 +217,7 @@ namespace Dfinance.Finance.Services
         }
       
 
-        public CommonResponse SaveVoucherAllocation(int transId, int transpayId, PaymentVoucherDto paymentVoucherDto)
+        public CommonResponse SaveVoucherAllocation(int transId, int transpayId, FinanceTransactionDto paymentVoucherDto)
         {
 
             // List<int> processedReferIds = new List<int>();
@@ -262,7 +262,7 @@ namespace Dfinance.Finance.Services
             }
         }
 
-        public CommonResponse UpdateVoucherAllocation(int transId, int transpayId, PaymentVoucherDto paymentVoucherDto)
+        public CommonResponse UpdateVoucherAllocation(int transId, int transpayId, FinanceTransactionDto paymentVoucherDto)
         {
 
             // List<int> processedReferIds = new List<int>();

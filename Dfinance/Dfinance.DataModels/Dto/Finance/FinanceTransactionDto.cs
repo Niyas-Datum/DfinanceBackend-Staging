@@ -4,7 +4,7 @@ using Dfinance.DataModels.Validation;
 
 namespace Dfinance.DataModels.Dto.Finance
 {
-    public class PaymentVoucherDto
+    public class FinanceTransactionDto
     {
         public int? Id { get; set; }
         public string? VoucherNo { get; set; }

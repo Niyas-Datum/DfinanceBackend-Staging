@@ -5,6 +5,7 @@ namespace Dfinance.DataModels.Dto.Inventory.Purchase
     public class PurchaseFillByIdDto
     {
       public FillTransactions? fillTransactions {  get; set; }
+        public FillTransactionAdditional? fillAdditionals {  get; set; }
       public  List<FillTransactionEntries>? fillTransactionEntries { get; set; }
       public  FillVoucherAllocationUsingRef? fillVoucherAllocationUsingRef { get; set; }
         public  List<FillCheques>? fillCheques { get; set; }

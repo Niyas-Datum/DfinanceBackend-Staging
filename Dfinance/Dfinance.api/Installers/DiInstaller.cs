@@ -39,6 +39,10 @@ using Dfinance.Finance.Vouchers.Interface;
 using Dfinance.Finance.Vouchers;
 using Dfinance.Finance.Services.Interface;
 using Dfinance.Finance.Services;
+using Dfinance.WareHouse.Services.Interface;
+using Dfinance.WareHouse.Services;
+using Dfinance.Finance.Statements.Interface;
+using Dfinance.Finance.Statements;
 
 
 namespace Dfinance.api.Installers;
@@ -133,13 +137,25 @@ public class DiInstaller : IInstaller
         service.AddScoped<IInternationalPurchaseService, InternationalPurchaseService>();
         service.AddScoped<IGoodsInTransitService, GoodsInTransitService>();
 		service.AddScoped<ISalesReturnService, SalesReturnService>();
+
         service.AddScoped<IPurchaseReturnService, PurchaseReturnService>();
 
         service.AddScoped<IFinanceAdditional, FinanceAdditional>();
         service.AddScoped<IFinancePaymentService, FinancePaymentService>();
         service.AddScoped<IFinanceTransactionService, FinanceTransactionService>();
-        service.AddScoped<IPaymentVoucherService,PaymentVoucherService>();  
-       
+        service.AddScoped<IPaymentVoucherService,PaymentVoucherService>();
+        service.AddScoped<IReceiptVoucherService, ReceiptVoucherService>();
 
+
+	    service.AddScoped<IMaterialRequestService, MaterialRequestService>();
+        service.AddScoped<IDeliveryInService, DeliveryInService>();
+        service.AddScoped<IMaterialReceiptService, MaterialReceiptService>();
+        service.AddScoped<IInvMatTransService, InvMatTransService>();
+        service.AddScoped<IBudgetingService, BudgetingService>();
+        service.AddScoped<IBudgetRegisterService, BudgetRegisterService>();
+        service.AddScoped<IBudgetMonthwiseService, BudgetMonthwiseService>();
+        service.AddScoped<IDayBookService, DayBookService>();
+        //BranchAccounts
+        service.AddScoped<IBranchAccounts, BranchAccountsService>();
     }
 }

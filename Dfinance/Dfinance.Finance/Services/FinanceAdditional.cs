@@ -26,7 +26,7 @@ namespace Dfinance.Finance.Services
 
 
         //save and update
-        public CommonResponse SaveTransactionAdditional(PaymentVoucherDto paymentVoucherDto, int TransId, int voucherId)
+        public CommonResponse SaveTransactionAdditional(FinanceTransactionDto paymentVoucherDto, int TransId, int voucherId)
         {
             //int? fromLocId = null, toLocId = null, inLocId = null, outLocId = null;
             string criteria = "";

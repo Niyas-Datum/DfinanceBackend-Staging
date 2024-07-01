@@ -49,7 +49,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Finance
         }
 
         [HttpPost(FinRoute.PaymentVoucher.Save)]
-        public IActionResult SavePayVou(PaymentVoucherDto paymentVoucherDto, int PageId, int voucherId)
+        public IActionResult SavePayVou(FinanceTransactionDto paymentVoucherDto, int PageId, int voucherId)
         {
             try
             {
@@ -67,7 +67,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Finance
         }
 
         [HttpPatch(FinRoute.PaymentVoucher.Update)]
-        public IActionResult UpdatePayVou(PaymentVoucherDto paymentVoucherDto, int PageId, int voucherId)
+        public IActionResult UpdatePayVou(FinanceTransactionDto paymentVoucherDto, int PageId, int voucherId)
         {
             try
             {
@@ -84,6 +84,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Finance
             }
         }
 
+       
         [HttpDelete(FinRoute.PaymentVoucher.Delete)]
         public IActionResult DeletePayVoucher(int TransId, int pageId)
         {

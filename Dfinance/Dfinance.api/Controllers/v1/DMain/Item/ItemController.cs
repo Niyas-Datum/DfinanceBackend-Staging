@@ -223,11 +223,12 @@ namespace Dfinance.api.Controllers.v1.DMain.Item
         /// <param name="value"></param>
         /// <returns></returns>
         [HttpGet(ApiRoutes.ItemMaster.Itemsearch)]
-        public IActionResult GetItemSearch(int? itemId, string? value)
+       
+        public IActionResult GetItemSearch(int? itemId, string? value,string? criteria)
         {
             try
             {
-                var result = _itemService.GetItemSearch(itemId,value);
+                var result = _itemService.GetItemSearch(itemId,value, criteria);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -236,6 +237,27 @@ namespace Dfinance.api.Controllers.v1.DMain.Item
                 return BadRequest(ex.Message);
             }
         }
-
+        /// <summary>
+        /// inv=>Report=>ItemRegister
+        /// </summary>
+        /// <param name="itemId"></param>
+        /// <param name="value"></param>
+        /// <param name="criteria"></param>
+        /// <returns></returns>
+        [HttpGet(ApiRoutes.ItemMaster.ItemRegister)]
+       
+        public IActionResult GetItemRegister(int? branchId, int? warehouseId, bool less = false, DateTime? date = null)
+        {
+            try
+            {
+                var result = _itemService.GetItemRegister(branchId,warehouseId,less,date);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

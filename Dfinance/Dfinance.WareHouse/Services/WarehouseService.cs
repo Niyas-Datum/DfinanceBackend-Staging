@@ -34,9 +34,9 @@ namespace Dfinance.Warehouse.Services
            /// DropDown Location type 
            /// </summary>
            /// <returns>Id,Name</returns>
-        public CommonResponse WarehouseDropdownUsingBranch()
+        public CommonResponse WarehouseDropdownUsingBranch(int createdBranchId)
         {
-            int createdBranchId = _authService.GetBranchId().Value;
+            //int createdBranchId = _authService.GetBranchId().Value;
             var data = _context.DropDownViewIsdeft.FromSqlRaw($"Exec spLocations @Criteria = 'FillLocationusingBranch',@BranchID='{createdBranchId}'").ToList();
             return CommonResponse.Ok(data);
         }
@@ -130,8 +130,9 @@ namespace Dfinance.Warehouse.Services
                          criteria, warehouseDto.Type.ID, warehouseDto.Code, warehouseDto.Name,
                          warehouseDto.Address, warehouseDto.Remarks, warehouseDto.ClearingChargePerCFT,
                          warehouseDto.GroundRentPerCFT, warehouseDto.LottingPerPiece, warehouseDto.LorryHirePerCFT, warehouseDto.Active, createdBranchId, createdBy, createdOn, newId);
-                    int newlocId = (int)newId.Value;
-                    var branchdetails = SaveLocationBranchList( newlocId, warehouseDto);
+                    //int newlocId = (int)newId.Value;
+                    warehouseDto.Id= (int)newId.Value;  
+                    var branchdetails = SaveLocationBranchList(warehouseDto);
                     return CommonResponse.Created(new { msg = "WareHouse " + warehouseDto.Name + " Created Successfully", data = 0 });
                 }
                 else
@@ -157,7 +158,9 @@ namespace Dfinance.Warehouse.Services
                                  mode, warehouseDto.Type.ID, warehouseDto.Code, warehouseDto.Name,
                                  warehouseDto.Address, warehouseDto.Remarks, warehouseDto.ClearingChargePerCFT,
                                  warehouseDto.GroundRentPerCFT, warehouseDto.LottingPerPiece, warehouseDto.LorryHirePerCFT, warehouseDto.Active, createdBranchId, createdBy, DateTime.Now, warehouseDto.Id);
-                            return CommonResponse.Created(new { msg = "WareHouse " + warehouseDto.Name + " Updated Successfully", data = 0 });
+
+                        var branchdetails = SaveLocationBranchList(warehouseDto);
+                        return CommonResponse.Created(new { msg = "WareHouse " + warehouseDto.Name + " Updated Successfully", data = 0 });
                         }
                     }
             }
@@ -172,11 +175,13 @@ namespace Dfinance.Warehouse.Services
         /// <param name="LocationId"></param>
         /// <param name="warehouseDto"></param>
         /// <returns></returns>
-        private int SaveLocationBranchList(int LocationId, WarehouseDto warehouseDto)
+        private int SaveLocationBranchList(WarehouseDto warehouseDto)
         {
             try
             {
-                if (warehouseDto.Id == null || warehouseDto.Id == 0)
+                var locBranchId = _context.LocationBranchList.Any(i => i.LocationId == warehouseDto.Id);
+                //if (warehouseDto.Id == null || warehouseDto.Id == 0)
+                if(!locBranchId)
                 {
                     int createdBy = _authService.GetId().Value;
                     int createdBranchId = _authService.GetBranchId().Value;
@@ -186,7 +191,7 @@ namespace Dfinance.Warehouse.Services
                         Direction = ParameterDirection.Output
                     };
                     _context.Database.ExecuteSqlRaw("EXEC SpLocations @Criteria={0},@LocationID={1},@BranchID={2},@IsDefault={3},@Active={4},@NewID={5} OUTPUT",
-                                                    criteria, LocationId, createdBranchId, warehouseDto.IsDefault, warehouseDto.Active, newId);
+                                                    criteria, warehouseDto.Id, createdBranchId, warehouseDto.IsDefault, warehouseDto.Active, newId);
                     int newlocationId = (int)newId.Value;
                     return 1;
                 }

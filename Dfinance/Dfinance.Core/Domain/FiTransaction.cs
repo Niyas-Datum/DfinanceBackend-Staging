@@ -62,7 +62,7 @@ namespace Dfinance.Core
         public virtual MaMisc? Status { get; set; }
        public virtual Voucher Voucher { get; set; } = null!;
        // public virtual FiTransactionAdditionals? FiTransactionAdditionalTransaction { get; set; }
-        //public virtual ICollection<BudgetMonth> BudgetMonths { get; set; }
+        public virtual ICollection<BudgetMonth> BudgetMonths { get; set; }
         //public virtual ICollection<DocumentReference> DocumentReferences { get; set; }
         //public virtual ICollection<DocumentRequest> DocumentRequests { get; set; }
         //public virtual ICollection<Document> Documents { get; set; }

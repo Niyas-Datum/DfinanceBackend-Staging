@@ -11,7 +11,7 @@ namespace Dfinance.Core.Domain
         public int Id { get; set; }
         public int AccountId { get; set; }
         public int BranchId { get; set; }
-       // public FiMaAccounts FiMaAccount { get; set; }
-       // public MaCompanies MaCompany { get; set; }
+        public virtual FiMaAccount Account { get; set; } = null!;
+        public virtual MaCompany Branch { get; set; } = null!;
     }
 }

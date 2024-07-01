@@ -19,7 +19,7 @@ namespace Dfinance.NUnitTest.Vouchers
         [Test]
         public void SavePayVoucher()
         {
-            PaymentVoucherDto paymentVoucherDto = new PaymentVoucherDto
+            FinanceTransactionDto paymentVoucherDto = new FinanceTransactionDto
             {
                 Id = 0,
                 VoucherNo = "0043",
@@ -171,7 +171,7 @@ namespace Dfinance.NUnitTest.Vouchers
             }
         }
             };
-            _payVoucher.Setup(x => x.SavePayVou(paymentVoucherDto, 69, 2)).Returns(new CommonResponse { Exception = null, Data = new InventoryTransactionDto() });
+            _payVoucher.Setup(x => x.SavePayVou(paymentVoucherDto, 69, 2)).Returns(new CommonResponse { Exception = null, Data = new FinanceTransactionDto() });
 
             //Act
             var result = _payVoucher.Object.SavePayVou(paymentVoucherDto, 69, 2);
@@ -187,7 +187,7 @@ namespace Dfinance.NUnitTest.Vouchers
 
         public void UpdatePayVoucher()
         {
-            PaymentVoucherDto paymentVoucherDto = new PaymentVoucherDto
+            FinanceTransactionDto paymentVoucherDto = new FinanceTransactionDto
             {
                 Id = 3216,
                 VoucherNo = "0043",
@@ -338,7 +338,7 @@ namespace Dfinance.NUnitTest.Vouchers
         }
             };
 
-            _payVoucher.Setup(x => x.UpdatePayVoucher(paymentVoucherDto, 69, 2)).Returns(new CommonResponse { Exception = null, Data = new InventoryTransactionDto() });
+            _payVoucher.Setup(x => x.UpdatePayVoucher(paymentVoucherDto, 69, 2)).Returns(new CommonResponse { Exception = null, Data = new FinanceTransactionDto() });
 
             //Act
             var result = _payVoucher.Object.UpdatePayVoucher(paymentVoucherDto, 69, 2);
@@ -355,7 +355,7 @@ namespace Dfinance.NUnitTest.Vouchers
         {
             int transId = 3164;
             int pageId = 69;
-            _payVoucher.Setup(x => x.DeletePayVoucher(transId, pageId)).Returns(new CommonResponse { Exception = null, Data = new InventoryTransactionDto() });
+            _payVoucher.Setup(x => x.DeletePayVoucher(transId, pageId)).Returns(new CommonResponse { Exception = null, Data = new FinanceTransactionDto() });
             var result = _payVoucher.Object.DeletePayVoucher(transId, pageId);
 
             Assert.That(result, Is.Not.Null);

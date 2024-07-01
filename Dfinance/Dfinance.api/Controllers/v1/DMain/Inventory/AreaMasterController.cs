@@ -19,7 +19,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Inventory
         }
 
         [HttpPost(ApiRoutes.AreaMaster.SaveAreaMaster)]
-        public IActionResult SaveAreaMaster([FromQuery]MaAreaDto maAreaDto)
+        public IActionResult SaveAreaMaster(MaAreaDto maAreaDto)
         {
             try
             {

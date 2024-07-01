@@ -15,7 +15,8 @@ namespace Dfinance.Item.Services.Inventory.Interface
         CommonResponse GenerateBarCode();
         CommonResponse TaxDropDown();       
         CommonResponse FillTransItems(int partyId, int PageID, int locId, int voucherId);
-        CommonResponse GetUniqueExpiryItem(int itemId);
-        CommonResponse GetItemSearch(int? itemId,string? value);
+        //CommonResponse GetUniqueExpiryItem(int itemId);
+        CommonResponse GetItemSearch(int? itemId,string? value,string? criteria);
+        CommonResponse GetItemRegister(int? branchId, int? warehouseId, bool less = false, DateTime? date = null);
     }
 }
