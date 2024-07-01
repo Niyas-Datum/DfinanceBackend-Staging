@@ -40,6 +40,7 @@ namespace Dfinance.DataModels.Dto.Inventory.Purchase
         public int ItemId { get; set; }
         public string? ItemCode { get; set; }//popup
         public string? ItemName { get; set; }
+        public string? Location { get; set; }
         public string? BatchNo { get; set; }//generated Batchno
         public UnitPopupDto? Unit { get; set; }//popup
         
