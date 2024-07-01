@@ -167,7 +167,7 @@ namespace Dfinance.Shared.Routes.v1
             public const string update = $"{Main}/update";
 
 
-
+        }
         public static class ContraVoucher
         {
             public const string Main = $"{Base}/contravou";
