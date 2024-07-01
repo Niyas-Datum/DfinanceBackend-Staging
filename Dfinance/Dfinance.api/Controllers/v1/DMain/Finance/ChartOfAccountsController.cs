@@ -196,5 +196,18 @@ namespace Dfinance.api.Controllers.v1.DMain.Finance
                 return BadRequest(ex.Message);
             }
         }
+        [HttpGet(FinRoute.Coa.AccountsGroup)]
+        public IActionResult FillAccountGroup()
+        {
+            try
+            {
+                var data = _chartofaccounts.FillAccountGroup();
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

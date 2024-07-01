@@ -25,6 +25,19 @@ namespace Dfinance.ChartOfAccount.Services.Finance
             _context = context;
             _authService = authService;
         }
+        //called by customer/supplier
+        public CommonResponse FillAccountGroup()
+        {
+            try
+            {
+                var result = _context.DropDownViewName.FromSqlRaw("exec DropDownListSP @Criteria='FillAccountGroup',@StrParam='CUSTOMER'").ToList();
+                return CommonResponse.Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return CommonResponse.Error(ex);
+            }
+        }
         //called by ChartOfAccountsController/DropdownAccounts
         public CommonResponse DropdownAccounts()
         {

@@ -134,12 +134,39 @@ namespace Dfinance.Shared.Routes.v1
 
 
         }
-
-        public static class JournalVoucher 
+        public static class Budgeting
         {
-            public const string Main = $"{Base}/journalvou";
+            public const string Main = $"{Base}/budgeting";
+            public const string fillMaster = $"{Main}/fillMaster";
+            public const string accPopup = $"{Main}/accPopup";
+            public const string plBalsheet = $"{Main}/plBalsheet";
             public const string Save = $"{Main}/save";
+            public const string Delete = $"{Main}/delete";
         }
+        public static class BudReg
+        {
+            public const string Main = $"{Base}/budgetReg";
+            public const string fill = $"{Main}/fill";
+            public const string budPopup = $"{Main}/budPopup";
+        }
+        public static class BudMonthwise
+        {
+            public const string Main = $"{Base}/budgetMonthwise";
+            public const string fill = $"{Main}/fill";           
+        }
+        public static class  DayBook
+        {
+            public const string Main = $"{Base}/daybook";
+            public const string voucherUser = $"{Main}/voucher&User";
+            public const string fill = $"{Main}/fill";
+        }
+        public static class BranchAccounts
+        {
+            public const string Main = $"{Base}/branchaccounts";
+            public const string FillbrAcc = $"{Main}/fillBrAcc";
+            public const string update = $"{Main}/update";
+
+
 
         public static class ContraVoucher
         {
@@ -154,5 +181,7 @@ namespace Dfinance.Shared.Routes.v1
 
 
         
+
+
     }
 }

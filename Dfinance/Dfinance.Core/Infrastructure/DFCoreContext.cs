@@ -13,6 +13,8 @@ using Dfinance.Shared.Configuration.Service;
 using Dfinance.Core.Views.Finance;
 using Dfinance.Core.Views.Inventory.Purchase;
 using Dfinance.Core.Views.Item;
+using System.Reflection.Emit;
+using System;
 
 namespace Dfinance.Core.Infrastructure;
 
@@ -114,6 +116,13 @@ public DbSet<InvUniqueItems> InvUniqueItems { get; set; }
     public DbSet<TransExpense> TransExpense { get; set; }
     public DbSet<InvSizeMaster> InvSizeMaster { get; set; }
    public DbSet<TransItemExpense> TransItemExpenses { get; set; }
+    public DbSet<BudgetMonth> BudgetMonth { get; set; }
+
+
+
+
+
+
     //view init
 
     // read- id, code name
@@ -288,10 +297,21 @@ public DbSet<TransItemsView> TransItemsView { get; set; }
     public DbSet<FillVoucher> FillVoucher { get; set; }
     public DbSet<FillVouTranId> FillVouTranId { get; set; }
 
+
+    //budgeting
+
+    public DbSet<BudgetRegPandLView> BudRegProfitAndLoss { get; set; }
+    public DbSet<BalanceSheetView> BalanceSheetView { get; set; }
+    public DbSet<MonthwisePandLView> MonthwisePandLView { get; set; }
+    public DbSet<MonthwiseBalSheetView> MonthwiseBalSheetView { get; set; }
+
+    //daybook
+    public DbSet<DayBookView> DayBookView { get; set; }
     
 
-
-
+    //itemregister report
+    public DbSet<ItemCatalogueView> ItemCatalogueView {  get; set; }
+    public DbSet<ItemCatalogueViews> ItemCatalogueViews { get; set; }
 
 
 
@@ -373,7 +393,7 @@ mb.ApplyConfiguration(new FiMaCardsConfiguration());
         mb.ApplyConfiguration(new FiTransactionEntryConfiguration());
 
         mb.ApplyConfiguration(new InvSizeMasterConfiguration());
-
+        mb.ApplyConfiguration(new BudgetMonthConfiguration());
 
 
 
@@ -512,14 +532,25 @@ mb.ApplyConfiguration(new FiMaCardsConfiguration());
         mb.Entity<PurchaseReportView>().HasNoKey().ToView(null);
         mb.Entity<PurchaseReportViews>().HasNoKey().ToView(null);
         mb.Entity<ItemSearchView>().HasNoKey().ToView(null);
-
-		mb.Entity<ImportItemListView>().HasNoKey().ToView(null);
+        mb.Entity<ItemCatalogueView>().HasNoKey().ToView(null);
+        mb.Entity<ItemCatalogueViews>().HasNoKey().ToView(null);
+        mb.Entity<ImportItemListView>().HasNoKey().ToView(null);
 
         //receiptvoucher
         mb.Entity<VoucherView>().HasNoKey().ToView(null);
         mb.Entity<FillVoucher>().HasNoKey().ToView(null);
         mb.Entity<FillVouTranId>().HasNoKey().ToView(null);
         mb.Entity<QtyView>().HasNoKey().ToView(null);
+
+        //budgeting
+
+        mb.Entity<BudgetRegPandLView>().HasNoKey().ToView(null);
+        mb.Entity<BalanceSheetView>().HasNoKey().ToView(null);
+        mb.Entity<MonthwiseBalSheetView>().HasNoKey().ToView(null);
+        mb.Entity<MonthwisePandLView>().HasNoKey().ToView(null);
+
+        //daybook
+        mb.Entity<DayBookView>().HasNoKey().ToView(null);
 
     }
 }
