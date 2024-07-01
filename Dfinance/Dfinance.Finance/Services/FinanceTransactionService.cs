@@ -7,9 +7,11 @@ using Dfinance.DataModels.Dto.Inventory.Purchase;
 using Dfinance.Finance.Services.Interface;
 using Dfinance.Shared;
 using Dfinance.Shared.Domain;
+using Dfinance.Shared.Enum;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Identity.Client;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -53,6 +55,24 @@ namespace Dfinance.Finance.Services
                 //string ReferencesId = string.Join(",", paymentVoucherDto.Reference.Select(popupDto => popupDto.VNo.ToString()));
 
                 string environmentname = _environment.EnvironmentName;
+                int? accId = null;
+
+                //  if (VoucherId == 6 || VoucherId == 1)
+
+                int? primaryVoucherID = (from v in _context.FiMaVouchers
+                                         join pm in _context.MaPageMenus on v.Id equals pm.VoucherId
+                                         where pm.Id == PageId
+                                         select v.PrimaryVoucherId).FirstOrDefault() ?? 0;
+
+
+                if((VoucherType)primaryVoucherID == VoucherType.Contra || (VoucherType)primaryVoucherID == VoucherType.Journal)
+                    accId = null;
+                else
+                    accId = paymentVoucherDto.AccountDetails.Select(a => a.AccountCode.Id).FirstOrDefault();
+
+
+
+
                 if (paymentVoucherDto.Id == null || paymentVoucherDto.Id == 0)
                 {
 
@@ -76,7 +96,7 @@ namespace Dfinance.Finance.Services
                         paymentVoucherDto.VoucherNo, false, paymentVoucherDto.Currency.Id, ExchangeRate, null, null,
                         paymentVoucherDto.ReferenceNo, branchId, null, null, null,
                         null, null, paymentVoucherDto.Narration, createdBy, null, DateTime.Now, null,
-                        ApprovalStatus, null, null, Status, Autoentry, true, true, false, paymentVoucherDto.AccountDetails.Select(a=>a.AccountCode.Id).FirstOrDefault(),
+                        ApprovalStatus, null, null, Status, Autoentry, true, true, false, accId,
                         null, RefTransId, paymentVoucherDto.CostCentre.Id, PageId, newId);
 
                     var NewId = (int)newId.Value;
@@ -219,23 +239,23 @@ namespace Dfinance.Finance.Services
 
         public CommonResponse SaveVoucherAllocation(int transId, int transpayId, FinanceTransactionDto paymentVoucherDto)
         {
-
+            
             // List<int> processedReferIds = new List<int>();
             try
             {
                 int? refTransId = null;
                 var transEntryId = _context.FiTransactionEntries.Where(e => e.TransactionId == transId && e.TranType == "Party").FirstOrDefault();
                 string criteria = "InsertVoucherAllocation";
-
-                
+             
                     if (paymentVoucherDto.BillandRef != null && paymentVoucherDto.BillandRef.Any(a => a.Amount > 0))
                     {
                         foreach (var adv in paymentVoucherDto.BillandRef)
                         {
-                            if (adv.VID != 0)
-                            {
+                        var veid = _context.FiTransactionEntries.Where(e => e.TransactionId == transId && e.AccountId == adv.AccountID).Select(e=>e.Id).FirstOrDefault();
+                        if (adv.VID != 0)
+                        {
                                 refTransId = adv.VID.Value;
-                            }
+                        }
                         else
                         {
                             refTransId = transpayId;
@@ -247,7 +267,7 @@ namespace Dfinance.Finance.Services
                             };
 
                             _context.Database.ExecuteSqlRaw("EXEC VoucherSP @Criteria={0}, @VID={1}, @VEID={2}, @AccountID={3},@Amount={4},@RefTransID={5}, @NewID={6} OUTPUT",
-                                criteria, adv.VID, adv.VEID, adv.AccountID, adv.Amount, transId, newId);
+                                criteria, adv.VID, veid, adv.AccountID, adv.Amount, transId, newId);
                         }
                     }
                    

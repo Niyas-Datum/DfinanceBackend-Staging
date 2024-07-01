@@ -21,10 +21,10 @@ namespace Dfinance.Finance.Services.Interface
         CommonResponse FillBankName();
         CommonResponse SaveCheque(ChequeDto chequeDto, int VEId, int? PartyId);
         CommonResponse SaveTransactionEntries(FinanceTransactionDto paymentVoucherDto, int pageId, int transactionId, int transPayId);
-       // CommonResponse SaveTransactionExpenses(List<InvAccountDetailsDto> accountDetailsDtos, int transactionId, string tranType);
-       // CommonResponse UpdateTransactionExpenses(List<InvAccountDetailsDto> accountDetailsDtos, int transactionId, string tranType);
-       // CommonResponse SaveTransCollections(InvTransactionEntriesDto transactionEntries, int transactionId);
-      //  CommonResponse SaveTransCollectionsAllocation(InvTransactionEntriesDto transactionEntries, int transCollectionId, int vAllocId);
-
+        // CommonResponse SaveTransactionExpenses(List<InvAccountDetailsDto> accountDetailsDtos, int transactionId, string tranType);
+        // CommonResponse UpdateTransactionExpenses(List<InvAccountDetailsDto> accountDetailsDtos, int transactionId, string tranType);
+        // CommonResponse SaveTransCollections(InvTransactionEntriesDto transactionEntries, int transactionId);
+        //  CommonResponse SaveTransCollectionsAllocation(InvTransactionEntriesDto transactionEntries, int transCollectionId, int vAllocId);
+       CommonResponse UpdateTransactionEntries(FinanceTransactionDto paymentVoucherDto, int pageId, int transactionId, int transPayId);
     }
 }
