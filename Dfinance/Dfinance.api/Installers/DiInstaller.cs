@@ -145,11 +145,10 @@ public class DiInstaller : IInstaller
         service.AddScoped<IFinanceTransactionService, FinanceTransactionService>();
         service.AddScoped<IPaymentVoucherService,PaymentVoucherService>();
         service.AddScoped<IReceiptVoucherService, ReceiptVoucherService>();
-        //journalVoucher
-        service.AddScoped<IJournalVoucherService,JournalVoucherService>();
+        
         //contravou
         service.AddScoped<IContraVoucherService, ContraVoucherService>();
-	    service.AddScoped<IMaterialRequestService, MaterialRequestService>();
+	service.AddScoped<IMaterialRequestService, MaterialRequestService>();
         service.AddScoped<IDeliveryInService, DeliveryInService>();
         service.AddScoped<IMaterialReceiptService, MaterialReceiptService>();
         service.AddScoped<IInvMatTransService, InvMatTransService>();
