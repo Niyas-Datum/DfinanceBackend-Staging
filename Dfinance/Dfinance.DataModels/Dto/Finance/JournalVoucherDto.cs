@@ -32,11 +32,3 @@ namespace Dfinance.DataModels.Dto.Finance
 
 
 
-//public class AccountInfo
-//{
-//    public PopUpDto? AccountCode { get; set; }
-//    public string? Description { get; set; }
-//    public DateTime? DueDate { get; set; }
-//    public decimal? Debit { get; set; }
-//    public decimal? Credit { get; set; }
-//}
