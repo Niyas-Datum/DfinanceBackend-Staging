@@ -41,6 +41,7 @@ namespace Dfinance.Shared.Routes
             public const string FillVoucherType = $"{Main}/fillVoucherType";
             public const string FillRefItems = $"{Main}/fillRefItems";
             public const string FillRef = $"{Main}/fillRef";
+            public const string GetInventoryTransactions = $"{Main}/getInvTrans"; 
         }
         public class Purchase
         {
