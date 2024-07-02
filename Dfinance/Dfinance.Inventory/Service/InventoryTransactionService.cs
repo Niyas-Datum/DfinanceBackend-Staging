@@ -1,4 +1,5 @@
 ﻿using Dfinance.AuthAppllication.Services.Interface;
+using Dfinance.Core.Domain;
 using Dfinance.Core.Infrastructure;
 using Dfinance.Core.Views.Inventory.Purchase;
 using Dfinance.DataModels.Dto.Common;
@@ -7,12 +8,16 @@ using Dfinance.DataModels.Dto.Inventory.Purchase;
 using Dfinance.Inventory.Service.Interface;
 using Dfinance.Shared;
 using Dfinance.Shared.Domain;
+using Dfinance.Shared.Enum;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
 using Microsoft.IdentityModel.Tokens;
 using System.Data;
+using static Dfinance.Shared.Routes.v1.FinRoute;
+using Voucher = Dfinance.Core.Domain.Voucher;
 using System.Text;
 
 namespace Dfinance.Inventory.Service
@@ -40,7 +45,7 @@ namespace Dfinance.Inventory.Service
         {
             try
             {
-                var voucher = _context.FiMaVouchers
+                Voucher? voucher = _context.FiMaVouchers
                     .Where(x => x.Id == voucherid)
                     .FirstOrDefault();
 
@@ -50,16 +55,11 @@ namespace Dfinance.Inventory.Service
                 }
 
                 int branchid = _authService.GetBranchId().Value;
+                //GetPrimaryVoucherID(voucherid);
 
-                var result = _context.AccountCodeView
-                    .FromSqlRaw($"EXEC GetNextAutoEntryVoucherNoSP @VoucherID={voucherid}, @BranchID={branchid}")
-                    .ToList();
-                VoucherNo voucherNo = new VoucherNo
-                {
-                    Code = voucher.Code,
-                    Result = result
-                };
+                var voucherNo = GetNextTransactionNo(voucherid, voucher, branchid);
                 return CommonResponse.Ok(voucherNo);
+
             }
             catch (Exception ex)
             {
@@ -68,6 +68,75 @@ namespace Dfinance.Inventory.Service
             }
         }
 
+        private int GetPrimaryVoucherID(int voucherid)
+        {
+            return (int)(_context.FiMaVouchers.Where(v => v.Id == voucherid).Select(v => v.PrimaryVoucherId).FirstOrDefault());
+        }
+
+        private VoucherNo GetNextTransactionNo(int voucherid, Voucher? voucher, int branchid)
+        {
+            var result = _context.AccountCodeView
+                .FromSqlRaw($"EXEC GetNextAutoEntryVoucherNoSP @VoucherID={voucherid}, @BranchID={branchid}")
+                .ToList();
+            VoucherNo voucherNo = new VoucherNo
+            {
+                Code = voucher.Code,
+                Result = result
+            };
+
+            return voucherNo;
+        }
+
+        public CommonResponse GetAutoVoucherNo(int voucherid, int? payTypeId)
+        {
+            try
+            {
+                var voucher = _context.FiMaVouchers
+                    .Where(x => x.Id == voucherid)
+                    .FirstOrDefault();
+
+                if (voucher == null)
+                {
+                    return CommonResponse.Error(new Exception("Voucher not found."));
+                }
+                int branchid = _authService.GetBranchId().Value;
+                var payType = _context.MaMisc.Where(m => m.Id == payTypeId).Select(m => m.Value).FirstOrDefault();
+
+                var primaryVoucherId = GetPrimaryVoucherID(voucherid);
+                if (partywiseVoucherNo && (VoucherType)primaryVoucherId == VoucherType.Sales_Invoice)
+                {
+                    if (payType != null)
+                    {
+                        var result = _context.AccountCodeView
+                        .FromSqlRaw($"EXEC GetPartywiseVoucherNoSP @VoucherID={voucherid}, @BranchID={branchid}, @PurchaseNumberPrefix=")
+                        .ToList();
+                        VoucherNo voucherNo = new VoucherNo
+                        {
+                            Code = voucher.Code,
+                            Result = result
+                        };
+
+                        return CommonResponse.Ok(voucherNo);
+                    }
+                    else
+                    {
+                        var voucherNo = GetNextTransactionNo(voucherid, voucher, branchid);
+                        return CommonResponse.Ok(voucherNo);
+                    }
+                }
+                else
+                {
+                    var voucherNo = GetNextTransactionNo(voucherid, voucher, branchid);
+                    return CommonResponse.Ok(voucherNo);
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                return CommonResponse.Error(ex);
+            }
+        }
 
         /// <summary>
         /// Get Saleman =>Purchase 
@@ -86,9 +155,30 @@ namespace Dfinance.Inventory.Service
                     ID = a.Id
                 })
                 .ToList();
-
                 return CommonResponse.Ok(result);
+            }
+            catch (Exception ex)
+            {
 
+                return CommonResponse.Error(ex);
+            }
+        }
+        public CommonResponse GetSalesman(string designationName)
+        {
+            try
+            {
+                var result = (from maAccount in _context.FiMaAccounts
+                              join employee in _context.MaEmployees on maAccount.Id equals employee.AccountId
+                              join designation in _context.MaDesignations on employee.DesignationId equals designation.Id
+                              where maAccount.AccountCategory == 3 && maAccount.Active && designation.Name == designationName
+                              select new
+                              {
+                                  Code = maAccount.Alias,
+                                  Name = maAccount.Name,
+                                  ID = maAccount.Id
+                              })
+                  .ToList();
+                return CommonResponse.Ok(result);
             }
             catch (Exception ex)
             {
@@ -191,7 +281,48 @@ namespace Dfinance.Inventory.Service
         {
             try
             {
-                if (VoucherId == 17 || VoucherId == 23 || VoucherId == 77 && VoucherId == 76)
+                SetSettings();
+                var primaryVoucherId = GetPrimaryVoucherID(VoucherId);
+                var totalAmt = transactionDto.Items.Sum(i => i.Total);
+                var grandTotal = Convert.ToDecimal(transactionDto.TransactionEntries.GrandTotal) + Convert.ToDecimal(transactionDto.TransactionEntries.TotalDisc) - Convert.ToDecimal(transactionDto.TransactionEntries.AddCharges.Sum(a => a.Amount));
+                if (grandTotalVerify && totalAmt - grandTotal >= 1 && grandTotal - totalAmt >= 1)// Grand Total Verify settings 
+                {
+                    return CommonResponse.Error("There is an error in GrandTotal");
+                }
+                //Set DueDate Settings
+                if (voucherDateAsDueDate)
+                {
+                    if (transactionDto.TransactionEntries.DueDate == null)
+                    {
+                        transactionDto.TransactionEntries.DueDate = transactionDto.Date;
+                    }
+                }
+                //Set AutoVoucher Next TransactionNo
+                if (autoUpdateNewVoucherNo)
+                {
+                    transactionDto.VoucherNo = (string?)GetAutoVoucherNo(VoucherId, transactionDto.FiTransactionAdditional.PayType.Id).Data;
+                }
+                //Set SerialNo
+                if (rackLocation)
+                {
+                    transactionDto.Items.OrderBy(i => i.Location);                    
+                }
+                //Set RoundOFF calculation
+                if(inventoryToFinanceRoundOff)
+                {
+                    int numeric = 0;
+                    if(numericFormat =="N2")
+                        numeric = 2;
+                    else if (numericFormat == "N3")
+                        numeric = 3;
+                    else if (numericFormat == "N4")
+                        numeric = 4;
+                    var round = transactionDto.TransactionEntries.GrandTotal;
+                    transactionDto.TransactionEntries.GrandTotal = Decimal.Round(transactionDto.TransactionEntries.GrandTotal??0, numeric);
+                    transactionDto.TransactionEntries.Roundoff = round- transactionDto.TransactionEntries.GrandTotal;
+                }
+
+                if ((VoucherType)primaryVoucherId == VoucherType.Purchase || (VoucherType)primaryVoucherId == VoucherType.Sales_Invoice || (VoucherType)primaryVoucherId == VoucherType.Purchase_Return && (VoucherType)primaryVoucherId == VoucherType.Sales_Return)
                 {
                     if (transactionDto.References.Count > 0 && transactionDto.References.Any(r => r.Id != null || r.Id != 0))
                     {
@@ -285,14 +416,45 @@ namespace Dfinance.Inventory.Service
 
                 return CommonResponse.Error(ex);
             }
-        }/// <summary>
-         /// 
-         /// </summary>
-         /// <param name="transactionDto"></param>
-         /// <param name="PageId"></param>
-         /// <param name="VoucherId"></param>
-         /// <param name="Status"></param>
-         /// <returns></returns>
+        }
+        private bool grandTotalVerify = false;
+        private bool voucherDateAsDueDate = false;
+        private bool autoUpdateNewVoucherNo = false;
+        private bool partywiseVoucherNo = false;
+        private bool rackLocation = false;
+        private bool inventoryToFinanceRoundOff = false;
+        private string numericFormat;
+        private void SetSettings()
+        {
+            string[] keys = new string[] {"TaxBasedInvoiceAccount","MethodofAdditionalExpenseAllocationToItemCost","GrandTotalVerify","VoucherDateAsDueDate","AutoUpdateNewVoucherNo",
+                    "PartywiseVoucherNo","CreditLimitCheck","CreditPeriodCheck","RackLocation","InventoryToFinanceRoundOff","ItemDiscountAccounting",
+                    "IsCSTApplicable","AdditionalExpenseAccountingInInvoice","ExpenseCSTAccountEntry","DiscountAccounting","CostCentreSystem",
+                    "CommonCostcenterAllocationWindow","DosageSystem","AutoApproval","SalesArabicPrint","PrintAfterSave","NumericFormat" };
+            var settings = _context.MaSettings
+        .Where(m => keys.Contains(m.Key))
+        .Select(m => new
+        {
+            Key = m.Key,
+            Value = m.Value,
+        }).ToList();
+            //var dicSettings = settings.ToDictionary(Key => Key, Value => Value);
+            grandTotalVerify = Convert.ToBoolean(settings.Where(s => s.Key == "GrandTotalVerify").Select(s => s.Value).FirstOrDefault());
+            voucherDateAsDueDate = Convert.ToBoolean(settings.Where(s => s.Key == "VoucherDateAsDueDate").Select(s => s.Value).FirstOrDefault());
+            autoUpdateNewVoucherNo = Convert.ToBoolean(settings.Where(s => s.Key == "AutoUpdateNewVoucherNo").Select(s => s.Value).FirstOrDefault());
+            partywiseVoucherNo = Convert.ToBoolean(settings.Where(s => s.Key == "PartywiseVoucherNo").Select(s => s.Value).FirstOrDefault());
+            rackLocation = Convert.ToBoolean(settings.Where(s => s.Key == "RackLocation").Select(s => s.Value).FirstOrDefault());
+            inventoryToFinanceRoundOff = Convert.ToBoolean(settings.Where(s => s.Key == "InventoryToFinanceRoundOff").Select(s => s.Value).FirstOrDefault());
+            numericFormat = settings.Where(s => s.Key == "NumericFormat").Select(s => s.Value).FirstOrDefault().ToString();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="transactionDto"></param>
+        /// <param name="PageId"></param>
+        /// <param name="VoucherId"></param>
+        /// <param name="Status"></param>
+        /// <returns></returns>
         public CommonResponse SaveTransactionPayment(InventoryTransactionDto transactionDto, int TransId, string Status, int VoucherId)
         {
 
