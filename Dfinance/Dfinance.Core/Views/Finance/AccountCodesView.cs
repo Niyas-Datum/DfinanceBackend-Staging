@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,5 +17,13 @@ namespace Dfinance.Core.Views.Finance
         public bool? IsBillWise { get; set; }
         public bool? IsCostCentre { get; set; }
 
+    }
+    public class ContraAccCode 
+    {
+        public string? AccountCode { get; set; }
+        public string? AccountName { get; set; }
+        public int? ID { get; set; }
+        public bool? IsBillWise { get; set; }
+        public bool? IsCostCentre { get; set; }
     }
 }

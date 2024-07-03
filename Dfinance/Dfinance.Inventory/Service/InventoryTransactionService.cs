@@ -3,6 +3,7 @@ using Dfinance.Core.Domain;
 using Dfinance.Core.Infrastructure;
 using Dfinance.Core.Views.Inventory.Purchase;
 using Dfinance.DataModels.Dto.Common;
+using Dfinance.DataModels.Dto.Inventory;
 using Dfinance.DataModels.Dto.Inventory.Purchase;
 using Dfinance.Inventory.Service.Interface;
 using Dfinance.Shared;
@@ -13,9 +14,11 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
+using Microsoft.IdentityModel.Tokens;
 using System.Data;
 using static Dfinance.Shared.Routes.v1.FinRoute;
 using Voucher = Dfinance.Core.Domain.Voucher;
+using System.Text;
 
 namespace Dfinance.Inventory.Service
 {
@@ -763,5 +766,54 @@ namespace Dfinance.Inventory.Service
 
             return CommonResponse.Ok();
         }
+
+        /// <summary>
+        /// Inv=>report=>InventoryTransactions
+        /// </summary>
+        /// <param name="inventoryTransactionDto"></param>
+        /// <returns></returns>
+
+        public CommonResponse InventoryTransactions(InventoryTransactionsDto inventoryTransactionDto, int? moduleid)
+        {
+            int branchid = 1; // Assuming a default value for branchid. This should be fetched from the context or passed as a parameter if required.
+            try
+            {
+                var query = new StringBuilder();
+                query.Append("Exec FinTransactionsSP ");
+                query.Append("@Criteria = 'FillInventoryVoucherSummary', ");
+                query.AppendFormat("@BranchID = {0}, ", branchid);
+                query.AppendFormat("@DateFrom = '{0}', ", inventoryTransactionDto.From.ToString("yyyy-MM-dd"));
+                query.AppendFormat("@DateUpto = '{0}', ", inventoryTransactionDto.To.ToString("yyyy-MM-dd"));
+                query.AppendFormat("@ModuleID = {0}, ", moduleid ?? 0);
+
+                if (inventoryTransactionDto.Mode.Id != 0)
+                {
+                    query.AppendFormat("@ModeID = {0}, ", inventoryTransactionDto.Mode.Id);
+                }
+
+                if (!string.IsNullOrEmpty(inventoryTransactionDto.Machine?.Value))
+                {
+                    query.AppendFormat("@MachineName = '{0}', ", inventoryTransactionDto.Machine.Value);
+                }
+
+                if (inventoryTransactionDto.VoucherType.Id != 0)
+                {
+                    query.AppendFormat("@VTypeID = {0}, ", inventoryTransactionDto.VoucherType.Id);
+                }
+
+                // Remove the trailing comma and space
+                var finalQuery = query.ToString().TrimEnd(' ', ',');
+
+                var result = _context.InventoryTransactionsView.FromSqlRaw(finalQuery).ToList();
+                return CommonResponse.Ok(result);
+            }
+            catch (Exception ex)
+            {
+                // _logger.LogError(ex.Message);
+                return CommonResponse.Error(ex.Message);
+            }
+        }
+
+
     }
 }

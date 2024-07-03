@@ -21,9 +21,6 @@ namespace Dfinance.DataModels.Dto.Inventory
         public decimal Factor { get; set; }
         [Required(ErrorMessage = "IsComplex is mandatory")]
         public bool IsComplex { get; set; }
-        [Required(ErrorMessage = "AllowDelete is mandatory")]
-        public bool AllowDelete { get; set; }
-        //public int pageid { get; set; }
-        //public int pagemethod { get; set; }
+        
     }
 }
