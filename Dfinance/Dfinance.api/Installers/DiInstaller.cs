@@ -43,6 +43,8 @@ using Dfinance.WareHouse.Services.Interface;
 using Dfinance.WareHouse.Services;
 using Dfinance.Finance.Statements.Interface;
 using Dfinance.Finance.Statements;
+using Dfinance.Restaurant.Interface;
+using Dfinance.Restaurant;
 
 
 namespace Dfinance.api.Installers;
@@ -157,5 +159,8 @@ public class DiInstaller : IInstaller
         service.AddScoped<IDayBookService, DayBookService>();
         //BranchAccounts
         service.AddScoped<IBranchAccounts, BranchAccountsService>();
+
+        //Restaurant
+        service.AddScoped<IRestaurantInvoice, RestaurantInvoice>();
     }
 }

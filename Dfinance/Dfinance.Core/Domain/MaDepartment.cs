@@ -25,7 +25,7 @@ namespace Dfinance.Core.Domain
 
         //get all employee datail in this department 
         public virtual ICollection<MaEmployeeDetail>? MaEmployeeDetails { get; set; } = new List<MaEmployeeDetail>();
-
+        //public virtual ICollection<HREmployee> Hremployees { get; set; }
 
         public virtual MaCompany? Branch { get; set; }
         public virtual ReDepartmentType? DepartmentType { get; set; }

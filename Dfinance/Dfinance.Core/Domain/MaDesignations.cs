@@ -19,6 +19,8 @@ namespace Dfinance.Core.Domain
         public DateTime CreatedOn { get; set; }
 
         public byte ActiveFlag { get; set; }
+       // public virtual ICollection<HREmployee> HremployeeDesiginationAtJoinings { get; set; }
+       // public virtual ICollection<HREmployee> HremployeeDesignations { get; set; }
 
         //public virtual MaCompany CreatedBranch { get; set; } = null!;
 

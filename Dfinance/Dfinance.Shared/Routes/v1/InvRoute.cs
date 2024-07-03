@@ -213,5 +213,19 @@ namespace Dfinance.Shared.Routes
             public const string latVoucherdate = $"{Main}/latVoucherdate";
             public const string marPrice = $"{Main}/marPrice";
         }
+        public class Restaurant
+        {
+            public const string Main = $"{Base}/restaurent";
+            public const string SaveRest = $"{Main}/save";
+            public const string UpdateRest = $"{Main}/update";
+            public const string FillRestbyid = $"{Main}/fillbyid";
+            public const string FillRest = $"{Main}/fill";
+            public const string DelRest = $"{Main}/delete";
+            public const string GetProducts = $"{Main}/fillitems";
+            public const string GetLoadData = $"{Main}/getdata";
+            public const string FillTable = $"{Main}/fillTable";
+            public const string GetKitchenCategory = $"{Main}/getKitCat";
+            public const string PrintKOT = $"{Main}/printKot";
+        }
     }
 }

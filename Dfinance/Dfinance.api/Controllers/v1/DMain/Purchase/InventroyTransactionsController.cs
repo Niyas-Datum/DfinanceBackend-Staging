@@ -85,7 +85,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
                 return BadRequest(ex.Message);
             }
         }
-        [HttpGet(InvRoute.InventroyTransactions.FillRefItems)]
+        [HttpPost(InvRoute.InventroyTransactions.FillRefItems)]
         public IActionResult FillRefItems(List<ReferenceDto> referenceDto)
         {
             try

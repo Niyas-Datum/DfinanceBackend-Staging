@@ -27,6 +27,7 @@ namespace Dfinance.Inventory.Service.Interface
         CommonResponse EntriesAmountValidation(int TransId);
 
         CommonResponse InventoryAmountValidation(int TransId);
+        int GetPrimaryVoucherID(int voucherid);
 
     }
 }

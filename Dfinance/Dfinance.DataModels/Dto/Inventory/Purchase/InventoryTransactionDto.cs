@@ -7,12 +7,12 @@ namespace Dfinance.DataModels.Dto.Inventory.Purchase
     public class InventoryTransactionDto
     {
         public int? Id { get; set; }
-       
+
         public string? VoucherNo { get; set; }//TransNo
 
         [NullValidation(ErrorMessage = "Voucher Date is Mandatory!!")]
         public DateTime Date { get; set; }
-        public string? Reference {  get; set; }
+        public string? Reference { get; set; }
         public List<ReferenceDto>? References { get; set; }
 
         [NullValidation(ErrorMessage = "Party is Mandatory!!")]
@@ -25,23 +25,23 @@ namespace Dfinance.DataModels.Dto.Inventory.Purchase
         //[NullValidation(ErrorMessage = "Warehouse is Mandatory!!")]
         //public DropdownDto Warehouse { get; set; }//dropdown
         public PopUpDto Project { get; set; }//POPUP
-        public string? Description { get; set; }        
+        public string? Description { get; set; }
         public bool? GrossAmountEdit { get; set; }
         public InvTransactionAdditionalDto? FiTransactionAdditional { get; set; }
         public List<InvTransItemDto> Items { get; set; }
-        public InvTransactionEntriesDto? TransactionEntries { get; set; }       
-        
+        public InvTransactionEntriesDto? TransactionEntries { get; set; }
+
     }
-   public class InvTransItemDto
+    public class InvTransItemDto
     {
-        public int? TransactionId {  get; set; }              
+        public int? TransactionId { get; set; }
         public int ItemId { get; set; }
         public string? ItemCode { get; set; }//popup
         public string? ItemName { get; set; }
         public string? Location { get; set; }
         public string? BatchNo { get; set; }//generated Batchno
         public UnitPopupDto? Unit { get; set; }//popup
-        
+
         [DecimalValidation(4, ErrorMessage = "Quantity is not valid!!")]
         public decimal Qty { get; set; }
         [DecimalValidation(4, ErrorMessage = "FOCQty is not valid!!")]
@@ -78,7 +78,7 @@ namespace Dfinance.DataModels.Dto.Inventory.Purchase
         public int? Pcs { get; set; }
         public int? StockItemId { get; set; }
         [DecimalValidation(4, ErrorMessage = "Total is not valid!!")]
-        public decimal? Total {  get; set; }
+        public decimal? Total { get; set; }
         public DateTime? ExpiryDate { get; set; }
         public string? Description { get; set; }
         [DecimalValidation(4, ErrorMessage = "LengthFt is not valid!!")]
@@ -100,12 +100,12 @@ namespace Dfinance.DataModels.Dto.Inventory.Purchase
         [DecimalValidation(4, ErrorMessage = "ThicknessCm is not valid!!")]
         public decimal? ThicknessCm { get; set; }
         public string? Remarks { get; set; }
-        public int? TaxTypeId { get;set; }
+        public int? TaxTypeId { get; set; }
         public int? TaxAccountId { get; set; }
         public int? CostAccountId { get; set; }
-        public int? BrandId {  get; set; }
+        public int? BrandId { get; set; }
         public decimal? Profit { get; set; }
-        public string? RepairsRequired {  get; set; }
+        public string? RepairsRequired { get; set; }
         public DateTime? FinishDate { get; set; }
         public DateTime? UpdateDate { get; set; }
         [DecimalValidation(4, ErrorMessage = "ReplaceQty is not valid!!")]
@@ -115,7 +115,7 @@ namespace Dfinance.DataModels.Dto.Inventory.Purchase
         public string? Hsn { get; set; }
         [DecimalValidation(4, ErrorMessage = "AvgCost is not valid!!")]
         public decimal? AvgCost { get; set; }
-        public bool? IsReturn {  get; set; }
+        public bool? IsReturn { get; set; }
         public DateTime? ManufactureDate { get; set; }
         public PopUpDto? PriceCategory { get; set; }//popup
         public PopUpDto? SizeMaster { get; set; }//popup according to settings
@@ -124,12 +124,12 @@ namespace Dfinance.DataModels.Dto.Inventory.Purchase
 
     public class InvUniqueItemDto
     {
-        
-        public string? UniqueNumber {  get; set; }
+
+        public string? UniqueNumber { get; set; }
     }
     public class InvTransactionEntriesDto
-    {       
-       // public string? Terms { get; set; }
+    {
+        // public string? Terms { get; set; }
         [DecimalValidation(4, ErrorMessage = "TotalDisc is not valid!!")]
         public decimal? TotalDisc { get; set; }
         [DecimalValidation(4, ErrorMessage = "Amount is not valid!!")]
@@ -138,14 +138,14 @@ namespace Dfinance.DataModels.Dto.Inventory.Purchase
         public decimal? Roundoff { get; set; }
         [DecimalValidation(4, ErrorMessage = "NetAmount is not valid!!")]
         public decimal? NetAmount { get; set; }
-       
+
         [DecimalValidation(4, ErrorMessage = "GrandTotal is not valid!!")]
         public decimal? GrandTotal { get; set; }
         public DropdownDto PayType { get; set; }
         public DateTime? DueDate { get; set; }
         [DecimalValidation(4, ErrorMessage = "TotalPaid is not valid!!")]
         public decimal? TotalPaid { get; set; }
-      
+
         [DecimalValidation(4, ErrorMessage = "Balance is not valid!!")]
         public decimal Balance { get; set; }
         public List<InvAdvanceDto>? Advance { get; set; }
@@ -154,24 +154,24 @@ namespace Dfinance.DataModels.Dto.Inventory.Purchase
         public List<InvChequesDto>? Cheque { get; set; }
         public List<InvAccountDetailsDto>? Tax { get; set; }
         public List<InvAccountDetailsDto>? AddCharges { get; set; }
-        
-       
+
+
     }
     public class InvAccountDetailsDto
     {
-       
-       // public int AccountId { get; set; }
+
+        // public int AccountId { get; set; }
         public AccountNamePopUpDto? AccountCode { get; set; }
         //public string? AccountName { get; set; }
         public string? Description { get; set; }
         [DecimalValidation(4, ErrorMessage = "Amount is not valid!!")]
         public decimal? Amount { get; set; }
-       // public string? TransType { get; set; }
+        // public string? TransType { get; set; }
         public AccountNamePopUpDto? PayableAccount { get; set; }
     }
     public class InvChequesDto
     {
-      
+
         public AccountNamePopUpDto? PDCPayable { get; set; }
         public int VEID { get; set; }
         public string? CardType { get; set; }
@@ -187,33 +187,33 @@ namespace Dfinance.DataModels.Dto.Inventory.Purchase
         public string? Description { get; set; }
         [DecimalValidation(4, ErrorMessage = "Amount is not valid!!")]
         public decimal? Amount { get; set; }
-       
+
     }
     public class InvAdvanceDto
 
-    {       
-        public int? VID { get; set; }    
-        public int? VEID { get; set; }   
-        public string? VNo { get; set; }  
-        public DateTime? VDate { get; set; } 
+    {
+        public int? VID { get; set; }
+        public int? VEID { get; set; }
+        public string? VNo { get; set; }
+        public DateTime? VDate { get; set; }
         public string? Description { get; set; }
         [DecimalValidation(4, ErrorMessage = "BillAmount is not valid!!")]
         public decimal? BillAmount { get; set; }
         [DecimalValidation(4, ErrorMessage = "Amount is not valid!!")]
-        public decimal? Amount { get; set; }    
-        public int? AccountID { get; set; }   
+        public decimal? Amount { get; set; }
+        public int? AccountID { get; set; }
         public bool? Selection { get; set; }
         [DecimalValidation(4, ErrorMessage = "Allocated is not valid!!")]
         public decimal? Allocated { get; set; }
         public string? Account { get; set; }
-        public string? DrCr { get; set; }   
-        public int? PartyInvNo { get; set; }  
-        public DateTime? PartyInvDate { get; set; } 
+        public string? DrCr { get; set; }
+        public int? PartyInvNo { get; set; }
+        public DateTime? PartyInvDate { get; set; }
     }
     public class InvTransactionAdditionalDto
     {
-        public int TransactionId {  get; set; }
-        public string? Terms { get; set; }        
+        public int TransactionId { get; set; }
+        public string? Terms { get; set; }
         [NullValidation(ErrorMessage = "Warehouse is Mandatory!!")]
         public DropdownDto? Warehouse { get; set; }//dropdown for purchase,sales
         public string? PartyInvoiceNo { get; set; }
@@ -240,9 +240,12 @@ namespace Dfinance.DataModels.Dto.Inventory.Purchase
         public PopUpDto? DelivaryLocation { get; set; }
         public string? TermsOfDelivery { get; set; }
         public DropdownDto PayType { get; set; }
-        public bool? Approve {  get; set; }
-        public bool? CloseVoucher {  get; set; }
-
+        public bool? Approve { get; set; }
+        //public int? Period { get; set; }        
+        //public string PassNo { get; set; }
+        public int? Days { get; set; }
+       // public string? ReferenceNo { get; set; }
+        public bool? CloseVoucher { get; set; }
     }
 }
 

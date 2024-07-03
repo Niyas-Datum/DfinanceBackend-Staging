@@ -311,7 +311,15 @@ public DbSet<TransItemsView> TransItemsView { get; set; }
     public DbSet<ItemCatalogueView> ItemCatalogueView {  get; set; }
     public DbSet<ItemCatalogueViews> ItemCatalogueViews { get; set; }
 
+    //HR
+    public DbSet<HREmployee> Hremployees { get; set; }
 
+    //Restaurent
+    public DbSet<CommodityView> CommodityViews { get; set; }
+    public DbSet<TableView> TableViews { get; set; }
+    public DbSet<KitchenCategoryView> KitchenCategoryViews { get; set; }
+    public DbSet<PrintKotView> PrintKotViews { get; set; }
+    public DbSet<ProductVew> ProductVews { get; set; }
 
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -392,7 +400,10 @@ mb.ApplyConfiguration(new FiMaCardsConfiguration());
 
         mb.ApplyConfiguration(new InvSizeMasterConfiguration());
         mb.ApplyConfiguration(new BudgetMonthConfiguration());
-
+        //HR
+        mb.ApplyConfiguration(new MaEmployeeConfiguration());
+        mb.ApplyConfiguration(new MaEmployeeDetailConfiguration());
+        mb.ApplyConfiguration(new HREmployeeConfiguration());
 
 
         //View
@@ -549,6 +560,14 @@ mb.ApplyConfiguration(new FiMaCardsConfiguration());
 
         //daybook
         mb.Entity<DayBookView>().HasNoKey().ToView(null);
+
+        //HR
+        mb.Entity<HREmployee>().HasNoKey().ToView(null);
+
+        //Restaurant
+        mb.Entity<PrintKotView>().HasNoKey().ToView(null);
+        mb.Entity<KitchenCategoryView>().HasNoKey().ToView(null);
+        mb.Entity<ProductVew>().HasNoKey().ToView(null);
 
     }
 }

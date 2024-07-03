@@ -357,6 +357,8 @@ namespace Dfinance.Inventory.Service
                 case VoucherType.Delivery:
                 case VoucherType.Service_Invoice:
                 case VoucherType.Service_Delivery_Out:
+                case VoucherType.RestaurantInvoice:
+                case VoucherType.RestaurantKOT:
                     purchaseVoucherCredit = "D";
                     purchaseVoucherDebit = "C";
                     break;
@@ -423,7 +425,7 @@ namespace Dfinance.Inventory.Service
         /// 
         /// </summary>
         /// <returns></returns>
-        public CommonResponse FillPaymentDetails(string discription)
+        public CommonResponse FillPaymentDetails(string description)
         {
             try
             {

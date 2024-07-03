@@ -24,7 +24,7 @@ namespace Dfinance.Core.Infrastructure.Configurations
 
 
             //builder.HasOne(c => c.FimaAccountClient)
-            //    .WithMany(f => f.CostCentreClientAccount)
+            //    .WithMany(f => f.CostCentreClients)
             //    .HasForeignKey(c => c.ClientId)
             //    .HasConstraintName("FK_CostCentre_FiMaAccounts");
 

@@ -38,9 +38,9 @@ public partial class FiMaAccount
     public string? AlternateName { get; set; }
 
     //Relationships
-   public  ICollection<CostCentre>? CostCentreAccount { get; set; } = new List<CostCentre>();
-
-    // public  ICollection<CostCentre>? CostCentreSupplierAccount { get; set; } = new List<CostCentre>();
+   public  ICollection<CostCentre>? CostCentreAccount { get; set; }
+   // public virtual ICollection<CostCentre> CostCentreClients { get; set; }
+   // public ICollection<CostCentre>? CostCentreSupplierAccount { get; set; } 
     //selfReference
     public virtual FiMaAccountCategory AccountCategoryNavigation { get; set; }
     public virtual FiMaAccount ParentNavigation { get; set; }
@@ -65,8 +65,12 @@ public partial class FiMaAccount
     public virtual ICollection<MaChargeType>? MaChargeTypePayableAccounts { get; set; }
     public virtual ICollection<TransExpense> TransExpenseAccounts { get; set; }
     public virtual ICollection<TransExpense> TransExpensePayableAccounts { get; set; }
-    public virtual ICollection<BudgetMonth> BudgetMonths { get; set; }
+   // public virtual ICollection<BudgetMonth> BudgetMonths { get; set; }
     public virtual ICollection<FiMaBranchAccounts>? FiMaBranchAccounts { get; set; }
-
-
+    //public virtual HREmployee? HremployeeAccount { get; set; }
+    //public virtual ICollection<HREmployee> HremployeeCreditAccounts { get; set; }
+    //public virtual ICollection<HREmployee> HremployeeGratuityAccounts { get; set; }
+    //public virtual ICollection<HREmployee> HremployeeLeaveSalaryAccounts { get; set; }
+    //public virtual ICollection<HREmployee> HremployeeLoanAccounts { get; set; }
+    //public virtual ICollection<HREmployee> HremployeeTicketAccounts { get; set; }
 }

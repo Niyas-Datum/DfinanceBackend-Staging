@@ -40,9 +40,10 @@ namespace Dfinance.Core.Domain
 
         //Relationships
 
-        // public virtual FiMaAccount FimaAccountClient { get; set; }
-        // public virtual FiMaAccount FiMaAccountSupplier {  get; set; }
+       // public virtual FiMaAccount FimaAccountClient { get; set; }
+        //public virtual FiMaAccount FiMaAccountSupplier { get; set; }
         public virtual ICollection<FiTransaction> FiTransactions { get; set; }
-        
+        //public virtual ICollection<HREmployee> Hremployees { get; set; }
+
     }
 }

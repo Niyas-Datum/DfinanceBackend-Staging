@@ -26,5 +26,8 @@ namespace Dfinance.Core.Domain
         public virtual ICollection<FiTransactionAdditionals> FiTransactionAdditionalCountryOfOrigins { get; set; }
         public virtual ICollection<FiTransactionAdditionals> FiTransactionAdditionalModes { get; set; }
         public virtual ICollection<FiTransactionAdditionals> FiTransactionAdditionalTypes { get; set; }
+        //public virtual ICollection<HREmployee> HremployeePaymentModes { get; set; }
+        //public virtual ICollection<HREmployee> HremployeeSpouseNationalityNavigations { get; set; }
+       // public virtual ICollection<HREmployee> HremployeeStatuses { get; set; }
     }
 }
