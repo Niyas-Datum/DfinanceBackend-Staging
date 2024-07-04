@@ -311,7 +311,9 @@ public DbSet<TransItemsView> TransItemsView { get; set; }
     public DbSet<ItemCatalogueView> ItemCatalogueView {  get; set; }
     public DbSet<ItemCatalogueViews> ItemCatalogueViews { get; set; }
 
-
+    //inventoryAgen
+    public DbSet<InventoryAgeingView> InventoryAgeingView {  get; set; }    
+    public DbSet<InventoryAgeingViews> InventoryAgeingViews {  get; set; }
 
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -532,6 +534,8 @@ mb.ApplyConfiguration(new FiMaCardsConfiguration());
         mb.Entity<ItemSearchView>().HasNoKey().ToView(null);
         mb.Entity<ItemCatalogueView>().HasNoKey().ToView(null);
         mb.Entity<ItemCatalogueViews>().HasNoKey().ToView(null);
+        mb.Entity<InventoryAgeingView>().HasNoKey().ToView(null);
+        mb.Entity<InventoryAgeingViews>().HasNoKey().ToView(null);
         mb.Entity<ImportItemListView>().HasNoKey().ToView(null);
 
         //receiptvoucher

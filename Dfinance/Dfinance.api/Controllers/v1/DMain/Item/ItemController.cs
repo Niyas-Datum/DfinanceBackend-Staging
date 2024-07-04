@@ -259,5 +259,32 @@ namespace Dfinance.api.Controllers.v1.DMain.Item
                 return BadRequest(ex.Message);
             }
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="AccountID"></param>
+        /// <param name="FromDate"></param>
+        /// <param name="ToDate"></param>
+        /// <param name="BranchID"></param>
+        /// <param name="OpeningBalance"></param>
+        /// <param name="VoucherID"></param>
+        /// <param name="UserID"></param>
+        /// <param name="Nature"></param>
+        /// <returns></returns>
+        [HttpGet(ApiRoutes.ItemMaster.InventoryAgeing)]
+
+        public IActionResult GetInventoryAgeing(int? AccountID, DateTime? FromDate, DateTime? ToDate, int? BranchID, bool? OpeningBalance, int? VoucherID, int? UserID, string? Nature)
+        {
+            try
+            {
+                var result = _itemService.GetInventoryAgeing(AccountID,  FromDate, ToDate, BranchID, OpeningBalance, VoucherID, UserID, Nature);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
