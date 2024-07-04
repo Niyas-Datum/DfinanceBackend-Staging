@@ -160,5 +160,7 @@ public class DiInstaller : IInstaller
         //BranchAccounts
         service.AddScoped<IBranchAccounts, BranchAccountsService>();
 
+        //AccountReconciliation
+        service.AddScoped<IAccountReconciliationService, AccountReconciliationService>();
     }
 }

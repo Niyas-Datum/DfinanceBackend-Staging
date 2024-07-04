@@ -178,9 +178,18 @@ namespace Dfinance.Shared.Routes.v1
 
 
         }
+        public static class AccountReconciliation
+        {
+            public const string Main = $"{Base}/Accountrec";
+            public const string AccPopup = $"{Main}/fillAccpop";
+            public const string FillAccountReconcilation = $"{Main}/fillAccReco";
+            public const string UpdateAccountReconcilation = $"{Main}/updateAccReco";
 
-
+            
+        }
         
+
+
 
 
     }
