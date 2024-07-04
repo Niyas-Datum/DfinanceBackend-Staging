@@ -29,6 +29,13 @@ namespace Dfinance.Inventory.Service
            
             
         }
+
+        //Fill Pay Type dropdown
+        public CommonResponse FillPayType()
+        {
+            var payType = _context.DropDownViewName.FromSqlRaw("exec DropDownListSP @Criteria='FillPartyCollection'").ToList();
+            return CommonResponse.Ok(payType);
+        }
         /// <summary>
          /// Purchase Frm  auto TransNo:
          /// </summary>

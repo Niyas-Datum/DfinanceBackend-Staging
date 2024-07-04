@@ -2,6 +2,7 @@
 using Dfinance.DataModels.Dto.Common;
 using Dfinance.Inventory.Service;
 using Dfinance.Inventory.Service.Interface;
+using Dfinance.Shared.Domain;
 using Dfinance.Shared.Routes;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,6 +18,19 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
         {
          
             _transactionService = transactionService;
+        }
+        [HttpGet(InvRoute.InventroyTransactions.payType)]
+        public IActionResult FillPayType()
+        {
+            try
+            {
+                var data = _transactionService.FillPayType();
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [HttpGet(InvRoute.InventroyTransactions.getvoucherno)]
         public IActionResult GetAutoVoucherNo(int voucherid)
@@ -71,7 +85,19 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
                 return BadRequest(ex.Message);
             }
         }
-
+        [HttpGet(InvRoute.InventroyTransactions.refItemList)]
+        public IActionResult FillImportItemList(int? transId, int? voucherId)
+        {
+            try
+            {
+                var data = _transactionService.FillImportItemList(transId,voucherId);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         [HttpGet(InvRoute.InventroyTransactions.FillVoucherType)]
         public IActionResult FillVoucherType(int voucherId)
         {

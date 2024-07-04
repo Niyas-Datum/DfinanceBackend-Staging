@@ -87,11 +87,11 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
 
 
         [HttpGet(InvRoute.InventoryPaymentTransaction.FillAdvance)]
-        public IActionResult FillAdvance(int AccountId, string Drcr, DateTime? date)
+        public IActionResult FillAdvance(int AccountId, int voucherId, DateTime? date)
         {
             try
             {
-                var result = _payservice.FillAdvance(AccountId, Drcr, date);
+                var result = _payservice.FillAdvance(AccountId,voucherId, date);
                 return Ok(result);
             }
             catch (Exception ex)

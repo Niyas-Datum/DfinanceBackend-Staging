@@ -15,6 +15,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Data;
 using System.Data.Common;
+using static Dfinance.Shared.Routes.v1.FinRoute;
 
 namespace Dfinance.Inventory.Service
 {
@@ -431,7 +432,7 @@ namespace Dfinance.Inventory.Service
                            join al in _context.FiAccountsList on fa.Id equals al.AccountId
                            join mal in _context.FiMaAccountsLists on al.ListId equals mal.Id
                            where fa.IsGroup == false && fa.Active == true &&
-                           mal.Description == description
+                           mal.Description == discription
                            select new AccountNamePopUpDto
                            {
                                Alias = fa.Alias,
@@ -447,16 +448,42 @@ namespace Dfinance.Inventory.Service
                 return CommonResponse.Error(ex);
             }
         }
-       
+        // Debit entry and Credit entry. Used in Accounting Finance entries.
+        public const string DB_CREDIT_ENTRY = "C";
+        public const string DB_DEBIT_ENTRY = "D";
+        private string DrCr = ""; 
+        private void SetDrCr(int voucherId)
+        {
+            int? PrimaryVoucherID=_context.FiMaVouchers.Where(v => v.Id == voucherId).Select(v => v.PrimaryVoucherId).FirstOrDefault();
+            switch ((VoucherType)PrimaryVoucherID)
+            {
+                case VoucherType.Purchase:
+                case VoucherType.Sales_Return:
+                case VoucherType.Service:
+                    DrCr = "C";
+                    break;
+                case VoucherType.Sales_Invoice:
+                case VoucherType.Purchase_Return:
+                case VoucherType.Delivery:
+                    DrCr = "D";
+                    break;
+                case VoucherType.Opening_Stock:
+                    DrCr = string.Empty;
+                    break;
+            }
 
-        public CommonResponse FillAdvance(int AccountId, string Drcr, DateTime? date)
+        }
+
+        public CommonResponse FillAdvance(int AccountId, int voucherId, DateTime? date)
         {
             try
             {
+                SetDrCr(voucherId);
+                var drcr = DrCr == DB_DEBIT_ENTRY ? DB_CREDIT_ENTRY : DB_DEBIT_ENTRY;
                 int branchId = _authService.GetBranchId().Value;
                 string Criteria = "GetBillsAndRefs";
                 var data = _context.FillAdvanceView
-                    .FromSqlRaw($"Exec VoucherSP @Criteria='{Criteria}', @AccountID='{AccountId}',@BranchID='{branchId}',@DrCr='{Drcr}',@Date='{date}'")
+                    .FromSqlRaw($"Exec VoucherSP @Criteria='{Criteria}', @AccountID='{AccountId}',@BranchID='{branchId}',@DrCr='{drcr}',@Date='{date}'")
                     .ToList();
                 return CommonResponse.Ok(data);
             }

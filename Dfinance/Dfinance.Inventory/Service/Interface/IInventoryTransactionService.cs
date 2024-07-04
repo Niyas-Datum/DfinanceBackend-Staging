@@ -8,6 +8,7 @@ namespace Dfinance.Inventory.Service.Interface
     public interface IInventoryTransactionService
     {
         //Emplo
+        CommonResponse FillPayType();
         CommonResponse GetSalesman();
         CommonResponse GetAutoVoucherNo(int voucherid);
         CommonResponse GetReference(int voucherno, DateTime? date = null);
