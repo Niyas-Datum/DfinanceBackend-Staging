@@ -32,6 +32,8 @@ namespace Dfinance.DataModels.Dto.Finance
         public string? Description { get; set; }
         public DateTime? DueDate { get; set; }
         public decimal? Amount { get; set; }  //Debit(PayVou)   //Credit(ReceiptVou)
+        public decimal? Debit { get; set; }   //(journalvou)
+        public decimal? Credit { get; set; }   //(journalvou)
 
     }
     public class PaymentDetails

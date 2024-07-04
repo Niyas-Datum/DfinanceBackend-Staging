@@ -29,6 +29,10 @@ namespace Dfinance.Shared.Routes
             public const string Update=$"{Main}/update";
             public const string Delete = $"{Main}/delete";
             public const string GetByTransactionId = $"{Main}/getByTrnId";
+            public const string transpType = $"{Main}/transpType";
+            public const string salesArea = $"{Main}/salesArea";
+            public const string vehicleNo = $"{Main}/vehicleNo";
+            public const string delLoc = $"{Main}/delLoc";
         }
 		
 		  public class InventroyTransactions
@@ -40,7 +44,11 @@ namespace Dfinance.Shared.Routes
             public const string DeletePurchase = $"{Main}/delete";
             public const string FillVoucherType = $"{Main}/fillVoucherType";
             public const string FillRefItems = $"{Main}/fillRefItems";
+            public const string refItemList = $"{Main}/refItemList";
             public const string FillRef = $"{Main}/fillRef";
+            public const string payType = $"{Main}/payType";
+            public const string GetInventoryTransactions = $"{Main}/getInvTrans"; 
+
         }
         public class Purchase
         {

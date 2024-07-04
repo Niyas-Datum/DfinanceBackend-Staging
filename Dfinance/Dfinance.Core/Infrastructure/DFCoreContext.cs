@@ -28,15 +28,15 @@ public partial class DFCoreContext : DbContext
 
     }
 
-    private IConnectionServices _connectionServices; 
+    private IConnectionServices _connectionServices;
     public DFCoreContext(DbContextOptions<DFCoreContext> options,
         IConnectionServices connectionServices) : base(options)
     {
         _connectionServices = connectionServices;
         con = _connectionServices.getcon();
     }
-    
-    public DbSet<ItemMultiRate> ItemMultiRate { get; set; }   
+
+    public DbSet<ItemMultiRate> ItemMultiRate { get; set; }
     public DbSet<BranchItems> BranchItems { get; set; }
     public DbSet<TaxType> TaxType { get; set; }
     public DbSet<UnitMaster> UnitMaster { get; set; }
@@ -54,7 +54,7 @@ public partial class DFCoreContext : DbContext
     public DbSet<FiMaAccount> FiMaAccounts { get; set; }
     public DbSet<FiMaSubGroup> FiMaSubGroups { get; set; }
     public DbSet<FiMaAccountGroup> FiMaAccountGroup { get; set; }
-	
+
     public DbSet<MaDepartment> MaDepartments { get; set; }
     public DbSet<ReDepartmentType> ReDepartmentTypes { get; set; }
     public DbSet<MaMisc> MaMisc { get; set; }
@@ -68,9 +68,9 @@ public partial class DFCoreContext : DbContext
     public DbSet<FiMaBranchAccounts> FiMaBranchAccounts { get; set; }
     public DbSet<CategoryType> CategoryType { get; set; }
     //General(Perties(C&S)
-    public DbSet<Parties> Parties { get; set; } 
-	public DbSet<FillPartyView> FillPartyView { get; set; }
-    public DbSet<FillSideBar>FillSideBars { get; set; }
+    public DbSet<Parties> Parties { get; set; }
+    public DbSet<FillPartyView> FillPartyView { get; set; }
+    public DbSet<FillSideBar> FillSideBars { get; set; }
     public DbSet<FillPartyById> FillPartyById { get; set; }
     public DbSet<FillCustdetails> FillCustdetails { get; set; }
     public DbSet<FillDeldetails> FillDeldetails { get; set; }
@@ -78,19 +78,19 @@ public partial class DFCoreContext : DbContext
 
     //MaSettings
     public DbSet<MaSettings> MaSettings { get; set; }
-   
+
     //Fin=>Currency
     public DbSet<Currency> Currency { get; set; }
     public DbSet<CurrencyCode> CurrencyCode { get; set; }
-   //Fin=>AccountsList
-   public DbSet<FiAccountsList> FiAccountsList { get; set; }
+    //Fin=>AccountsList
+    public DbSet<FiAccountsList> FiAccountsList { get; set; }
     public DbSet<FiMaAccountsList> FiMaAccountsLists { get; set; }
     public DbSet<TblMaFinYear> TblMaFinYear { get; set; }
     public DbSet<MaCustomerDetails> MaCustomerDetails { get; set; }
     public DbSet<MaCustomerCategories> MaCustomerCategories { get; set; }
     public DbSet<MaCustomerItems> MaCustomerItems { get; set; }
-public DbSet<FiMaCards> FiMaCards { get; set; }
-    public DbSet<DeliveryDetails>DeliveryDetails { get; set; }
+    public DbSet<FiMaCards> FiMaCards { get; set; }
+    public DbSet<DeliveryDetails> DeliveryDetails { get; set; }
     public DbSet<MaPriceCategory> MaPriceCategory { get; set; }
 
     //Inv=>Warehouse
@@ -102,12 +102,12 @@ public DbSet<FiMaCards> FiMaCards { get; set; }
     public DbSet<FiTransaction> FiTransaction { get; set; }
     public DbSet<FiTransactionAdditionals> FiTransactionAdditionals { get; set; }
     public DbSet<TransReference> TransReference { get; set; }
- //InvTransItems
+    //InvTransItems
     public DbSet<InvTransItems> InvTransItems { get; set; }
-    public DbSet<InvAvgCost> InvAvgCost {  get; set; }
-public DbSet<InvUniqueItems> InvUniqueItems { get; set; }
-   // public DbSet<InvBatchWiseItem> InvBatchWiseItem { get; set; }
-  
+    public DbSet<InvAvgCost> InvAvgCost { get; set; }
+    public DbSet<InvUniqueItems> InvUniqueItems { get; set; }
+    // public DbSet<InvBatchWiseItem> InvBatchWiseItem { get; set; }
+
     //MaVehicle
     public DbSet<MaVehicles> MaVehicles { get; set; }
 
@@ -115,7 +115,7 @@ public DbSet<InvUniqueItems> InvUniqueItems { get; set; }
     public DbSet<FiVoucherAllocation> FiVoucherAllocation { get; set; }
     public DbSet<TransExpense> TransExpense { get; set; }
     public DbSet<InvSizeMaster> InvSizeMaster { get; set; }
-   public DbSet<TransItemExpense> TransItemExpenses { get; set; }
+    public DbSet<TransItemExpense> TransItemExpenses { get; set; }
     public DbSet<BudgetMonth> BudgetMonth { get; set; }
 
 
@@ -128,19 +128,19 @@ public DbSet<InvUniqueItems> InvUniqueItems { get; set; }
     // read- id, code name
     public DbSet<ReadView> ReadView { get; set; }
     // read- id, code description
-    public DbSet<ReadViewDesc> ReadViewDesc { get; set; } 
+    public DbSet<ReadViewDesc> ReadViewDesc { get; set; }
     //nextCodeView id,descripition
-  //read category id,code,category,categorytype
+    //read category id,code,category,categorytype
     public DbSet<CategoryPopupView> CategoryPopupView { get; set; }
 
     //nextcode in cat type
-    
+
     public DbSet<NextCodeCat> NextCodeCat { get; set; }
     public DbSet<NextCategoryCode> NextCategoryCode { get; set; }
     public DbSet<DropDownViewDesc> DropDownViewDesc { get; set; }
 
     public DbSet<SpFillCategoryTypeById> SpFillCategoryTypeById { get; set; }
-    public DbSet<NextCodeView> NextCodeView { get; set; }    
+    public DbSet<NextCodeView> NextCodeView { get; set; }
     public DbSet<DropDownViewValue> DropDownViewValue { get; set; }
     public DbSet<DropDownViewName> DropDownViewName { get; set; }
     public DbSet<SpFillAreaMasterByIdG> SpFillAreaMasterByIdG { get; set; }
@@ -154,12 +154,12 @@ public DbSet<InvUniqueItems> InvUniqueItems { get; set; }
     public DbSet<SpFillAllBranchByIdG> SpFillAllBranchByIdG { get; set; }
     public DbSet<SpFillAllBranchG> SpFillAllBranch { get; set; }
     public DbSet<SpFillEmployees> SpFillEmployees { get; set; }
-    public DbSet<SpMacompanyFillallbranch> SpMacompanyFillallbranch { get; set; }  
+    public DbSet<SpMacompanyFillallbranch> SpMacompanyFillallbranch { get; set; }
     public DbSet<SpReDepartmentTypeFillAllDepartment> SpReDepartmentTypeFillAllDepartment { get; set; }
     public DbSet<spMaDepartmentsFillDepartmentById> spMaDepartmentsFillDepartmentById { get; set; }
     public DbSet<spDepartmentTypesFillAllDepartmentTypes> spDepartmentTypesFillAllDepartmentTypes { get; set; }
     public DbSet<SpUserGById> SpUserGById { get; set; }
-   
+
     public DbSet<SpDesignationMasterG> SpFillDesignationMaster { get; set; }
     public DbSet<SpDesignationMasterByIdG> SpDesignationMasterByIdG { get; set; }
     public DbSet<spDepartmentTypesGetById> spDepartmentTypesGetById { get; set; }
@@ -169,15 +169,15 @@ public DbSet<InvUniqueItems> InvUniqueItems { get; set; }
     public DbSet<RoleRightsModel> RoleRightsModel { get; set; }
     public DbSet<GetRole> GetRole { get; set; }
     public DbSet<UserPageListView> UserPageListView { get; set; }
-	//Currency 
+    //Currency 
     public DbSet<FillcurrencyCode> FillcurrencyCode { get; set; }
     public DbSet<FillCurrencyCodeById> FillCurrencyCodeById { get; set; }
     public DbSet<FillCurrency> FillCurrency { get; set; }
     public DbSet<FillCurrencyById> FillCurrencyById { get; set; }
- public DbSet<FillCardMaster> FillCardMaster { get; set; }
- public DbSet<FillMaster> FillMaster { get; set; }
- //-------------ItemMaster  ------------------------------------------ 
-    
+    public DbSet<FillCardMaster> FillCardMaster { get; set; }
+    public DbSet<FillMaster> FillMaster { get; set; }
+    //-------------ItemMaster  ------------------------------------------ 
+
     public DbSet<TaxDropDownView> TaxDropDownView { get; set; }
     public DbSet<SpFillItemMasterById> SpFillItemMasterById { get; set; }
     public DbSet<SpFillItemMaster> SpFillItemMaster { get; set; }
@@ -194,49 +194,49 @@ public DbSet<InvUniqueItems> InvUniqueItems { get; set; }
     public DbSet<FillLedgers> FillLedgers { get; set; }
     public DbSet<ChartofAccViewById> ChartofAccViewById { get; set; }
     public DbSet<AccountCodeView> AccountCodeView { get; set; }
-	//AccountList
-	
+    //AccountList
+
     public DbSet<FillAccountList> FillAccountList { get; set; }
     public DbSet<ReadViewAlias> ReadViewAlias { get; set; }
-	
+
     //Vouchers
     public DbSet<FillVoucherView> FillVoucherView { get; set; }
     public DbSet<FillMaVouchersUsingPageIDView> FillMaVouchersUsingPageIDView { get; set; }
     public DbSet<FillVoucherWithTrnasId> FillVoucherWithTrnasId { get; set; }
-    
 
-    public DbSet<Voucher> FiMaVouchers {  get; set; }
-    public DbSet<NameView> NameView {  get; set; }  //  retun only name
+
+    public DbSet<Voucher> FiMaVouchers { get; set; }
+    public DbSet<NameView> NameView { get; set; }  //  retun only name
 
     //MaNumbering
     public DbSet<MaNumbering> MaNumbering { get; set; }
-//UserTrack
-public DbSet <UserTrack> UserTrack { get; set; }
+    //UserTrack
+    public DbSet<UserTrack> UserTrack { get; set; }
     public DbSet<UserTrackView> UserTrackView { get; set; }
     //password 
     public DbSet<PasswordCheckResult> PasswordCheckResult { get; set; }
     //SettingView 
     public DbSet<FillSettingById> FillSettingById { get; set; }
-  //----------------ItemUnits------------------------------------------------     
+    //----------------ItemUnits------------------------------------------------     
     public DbSet<FillItemUnitsView> FillItemUnitsView { get; set; }
     public DbSet<TransItemUnits> TransItemUnits { get; set; }
-    
+
 
     //--------------UnitMaster----------------------------------------
     public DbSet<UnitPopupView> UnitPopupView { get; set; }
- //fillcustomeritem=>Customer&supplier
-    public DbSet<FillCustomeritem> FillCustomeritem { get;set; }
+    //fillcustomeritem=>Customer&supplier
+    public DbSet<FillCustomeritem> FillCustomeritem { get; set; }
     public DbSet<CrdtCollView> CrdtCollView { get; set; }
-	//UnitMaster
+    //UnitMaster
     //public DbSet<UnitMaster> UnitMaster { get; set; }
     public DbSet<SpFillUnitMaster> SpFillUnitMaster { get; set; }
     public DbSet<SpFillByUnit> SpFillByUnit { get; set; }
-    public DbSet<DropDownView> DropDownView { get; set; } 
+    public DbSet<DropDownView> DropDownView { get; set; }
     //------------------------------------------------------------------
     public DbSet<FillSetting> FillSetting { get; set; }
-   
 
- 
+
+
     //Fillwarehouse=>Warehousemaster
     public DbSet<WareHouseView> WareHouseView { get; set; }
     //public DbSet<WarehouseBranchView> WarehouseBranchView { get; set; }
@@ -245,38 +245,38 @@ public DbSet <UserTrack> UserTrack { get; set; }
 
     //FitransactionAdditonals
     public DbSet<SpGetTransactionAdditionals> SpGetTransactionAdditionals { get; set; }
-public DbSet<ReferenceView> ReferenceView {  get; set; }
+    public DbSet<ReferenceView> ReferenceView { get; set; }
     public DbSet<RefItemsView> RefItemsView { get; set; }
     public DbSet<ImportItemListView> ImportItemListView { get; set; }
-    
-public DbSet<NextBatchNoView> NextBatchNoView { get; set; }
-public DbSet<TransItemsView> TransItemsView { get; set; }
+
+    public DbSet<NextBatchNoView> NextBatchNoView { get; set; }
+    public DbSet<TransItemsView> TransItemsView { get; set; }
     public DbSet<CommandTextView> CommandTextView { get; set; }
     public DbSet<ItemTransaction> ItemTransaction { get; set; }
     public DbSet<DropDownViewIsdeft> DropDownViewIsdeft { get; set; }
 
     //purchase
     public DbSet<FillAdvanceView> FillAdvanceView { get; set; }
-    public DbSet<Fillvoucherview> Fillvoucherview {  get; set; }
+    public DbSet<Fillvoucherview> Fillvoucherview { get; set; }
     public DbSet<PriceCategoryPopUp> PriceCategoryPopUp { get; set; }
 
- //Roles
+    //Roles
 
     public DbSet<MaRoles> UserRoles { get; set; }
     public DbSet<MaRoleRight> MaRoleRights { get; set; }
 
- //Cheque
+    //Cheque
     public DbSet<FiCheques> fiCheques { get; set; }
- //FimaUniqueAccounts
+    //FimaUniqueAccounts
     public DbSet<FimaUniqueAccount> FimaUniqueAccount { get; set; }
     //ChargeType
     public DbSet<MaChargeType> MaChargeType { get; set; }
-	 public DbSet<TransCollection> TransCollections { get; set; }
+    public DbSet<TransCollection> TransCollections { get; set; }
     public DbSet<TransCollnAllocation> TransCollnAllocations { get; set; }
     public DbSet<FillRole> FillRole { get; set; }
     public DbSet<FillRoleRight> FillRoleRight { get; set; }
     public DbSet<SpFillRoles> SpFillRoles { get; set; }
- //Grid and Label
+    //Grid and Label
     public DbSet<FormGridSetting> FormGridSettings { get; set; }
     public DbSet<FormLabelSetting> FormLabelSettings { get; set; }
     //Label&Grid
@@ -284,6 +284,8 @@ public DbSet<TransItemsView> TransItemsView { get; set; }
     public DbSet<FormGridView> FormGridView { get; set; }
     //voucher in finance
     public DbSet<AccountCodesView> AccountCodesView { get; set; }
+    public DbSet<ContraAccCode> ContraAccCode { get; set; }
+    
     //ReportsView
     public DbSet<PurchaseReportView> PurchaseReportView { get; set; }
     public DbSet<PurchaseReportViews> PurchaseReportViews { get; set; }
@@ -305,20 +307,36 @@ public DbSet<TransItemsView> TransItemsView { get; set; }
 
     //daybook
     public DbSet<DayBookView> DayBookView { get; set; }
-    
+
 
     //itemregister report
-    public DbSet<ItemCatalogueView> ItemCatalogueView {  get; set; }
+    public DbSet<ItemCatalogueView> ItemCatalogueView { get; set; }
     public DbSet<ItemCatalogueViews> ItemCatalogueViews { get; set; }
+
 
     //inventoryAgen
     public DbSet<InventoryAgeingView> InventoryAgeingView {  get; set; }    
     public DbSet<InventoryAgeingViews> InventoryAgeingViews {  get; set; }
 
 
+    //HR
+    public DbSet<HREmployee> Hremployees { get; set; }
+
+    public DbSet<InventoryTransactionsView> InventoryTransactionsView { get; set; }
+
+
+    //Restaurent
+    public DbSet<CommodityView> CommodityViews { get; set; }
+    public DbSet<TableView> TableViews { get; set; }
+    public DbSet<KitchenCategoryView> KitchenCategoryViews { get; set; }
+    public DbSet<PrintKotView> PrintKotViews { get; set; }
+    public DbSet<ProductVew> ProductVews { get; set; }
+
+
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     //  => optionsBuilder.UseSqlServer(@"Data Source=ip.datuminnovation.com,9600;TrustServerCertificate=true;Initial Catalog=DatumSystemMain;User ID=sa;pwd=Datum123!");
-   // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 
     => optionsBuilder.UseSqlServer(con);
 
@@ -354,20 +372,20 @@ public DbSet<TransItemsView> TransItemsView { get; set; }
         mb.ApplyConfiguration(new FiVoucherAllocationsConfiguration());
         //settings
         mb.ApplyConfiguration(new MaSettingsConfiguration());
-		//currency 
-		 mb.ApplyConfiguration(new CurrencyConfigurations());
+        //currency 
+        mb.ApplyConfiguration(new CurrencyConfigurations());
         //Financeyear
         mb.ApplyConfiguration(new TblMaFinYearConfigurations());
-    //AccountList
+        //AccountList
         mb.ApplyConfiguration(new FiAccountsListConfiguration());
         mb.ApplyConfiguration(new FiMaAccountsListConfiguration());
 
-mb.ApplyConfiguration(new FiMaCardsConfiguration());
- //InvTransItems
+        mb.ApplyConfiguration(new FiMaCardsConfiguration());
+        //InvTransItems
         mb.ApplyConfiguration(new InvTransItemConfiguration());
         mb.ApplyConfiguration(new InvUniqueItemConfiguration());
-      //  mb.ApplyConfiguration(new InvBatwiseItemConfiguration());
- //Warehouse
+        //  mb.ApplyConfiguration(new InvBatwiseItemConfiguration());
+        //Warehouse
         mb.ApplyConfiguration(new LocationsConfiguration());
         mb.ApplyConfiguration(new LocationTypesConfiguration());
         mb.ApplyConfiguration(new LocationBranchListConfiguration());
@@ -375,7 +393,7 @@ mb.ApplyConfiguration(new FiMaCardsConfiguration());
         mb.ApplyConfiguration(new UserTrackConfiguration());
         //warehouse
         mb.Entity<Warehousebranchfill>().HasNoKey().ToView(null);
- mb.Entity<WareHouseView>().HasNoKey().ToView(null);
+        mb.Entity<WareHouseView>().HasNoKey().ToView(null);
 
         //TransactionAddition
         mb.ApplyConfiguration(new FiTransactionAdditionalConfiguration());
@@ -394,7 +412,10 @@ mb.ApplyConfiguration(new FiMaCardsConfiguration());
 
         mb.ApplyConfiguration(new InvSizeMasterConfiguration());
         mb.ApplyConfiguration(new BudgetMonthConfiguration());
-
+        //HR
+        mb.ApplyConfiguration(new MaEmployeeConfiguration());
+        mb.ApplyConfiguration(new MaEmployeeDetailConfiguration());
+        mb.ApplyConfiguration(new HREmployeeConfiguration());
 
 
         //View
@@ -404,16 +425,16 @@ mb.ApplyConfiguration(new FiMaCardsConfiguration());
         mb.Entity<UserInfo>().HasNoKey().ToView(null);
         mb.Entity<SpUser>().HasNoKey().ToView(null);
 
-        
+
         mb.Entity<spDepartmentTypesFillAllDepartmentTypes>().HasNoKey().ToView(null);
 
         mb.Entity<RoleRightsModel>().HasNoKey().ToView(null);
-            mb.Entity<spDepartmentTypesFillAllDepartmentTypes>().HasNoKey().ToView(null);
+        mb.Entity<spDepartmentTypesFillAllDepartmentTypes>().HasNoKey().ToView(null);
 
         mb.Entity<spMaDepartmentsFillDepartmentById>().HasNoKey().ToView(null);
         mb.Entity<spMaDepartmentsFillAllDepartment>().HasNoKey().ToView(null);
-        mb.Entity<SpMacompanyFillallbranch>().HasNoKey().ToView(null);       
-        mb.Entity<SpFillEmployees>().HasNoKey().ToView(null);       
+        mb.Entity<SpMacompanyFillallbranch>().HasNoKey().ToView(null);
+        mb.Entity<SpFillEmployees>().HasNoKey().ToView(null);
         mb.Entity<SpReDepartmentTypeFillAllDepartment>().HasNoKey().ToView(null);
         mb.Entity<SpUserGById>().HasNoKey().ToView(null);
         mb.Entity<spDepartmentTypesGetById>().HasNoKey().ToView(null);
@@ -422,7 +443,7 @@ mb.ApplyConfiguration(new FiMaCardsConfiguration());
         mb.Entity<SpFillCostCategoryG>().HasNoKey().ToView(null);
         mb.Entity<SpFillCostCategoryByIdG>().HasNoKey().ToView(null);
         mb.Entity<SpFillCostCentreG>().HasNoKey().ToView(null);
-        mb.Entity<SpFillCostCentreByIdG>().HasNoKey().ToView(null);      
+        mb.Entity<SpFillCostCentreByIdG>().HasNoKey().ToView(null);
         mb.Entity<SpFillCategoryG>().HasNoKey().ToView(null);
         mb.Entity<SpFillCategoryByIdG>().HasNoKey().ToView(null);
         mb.Entity<SpFillAreaMasterG>().HasNoKey().ToView(null);
@@ -431,7 +452,7 @@ mb.ApplyConfiguration(new FiMaCardsConfiguration());
         mb.Entity<SpFillCategoryTypeById>().HasNoKey().ToView(null);
         mb.Entity<NextCodeCat>().HasNoKey().ToView(null);
         mb.Entity<NextCategoryCode>().HasNoKey().ToView(null);
-        
+
 
         mb.Entity<SpGetTransactionAdditionals>().HasNoKey().ToView(null);
 
@@ -461,8 +482,8 @@ mb.ApplyConfiguration(new FiMaCardsConfiguration());
         //read data : id, code description
         mb.Entity<ReadViewDesc>().HasNoKey().ToView(null);
         mb.Entity<DropDownViewDesc>().HasNoKey().ToView(null);
-		//Currency 
-		mb.Entity<FillcurrencyCode>().HasNoKey().ToView(null);
+        //Currency 
+        mb.Entity<FillcurrencyCode>().HasNoKey().ToView(null);
         mb.Entity<FillCurrencyCodeById>().HasNoKey().ToView(null);
         mb.Entity<FillCurrency>().HasNoKey().ToView(null);
         mb.Entity<FillCurrencyById>().HasNoKey().ToView(null);
@@ -482,34 +503,34 @@ mb.ApplyConfiguration(new FiMaCardsConfiguration());
         //Password
         mb.Entity<PasswordCheckResult>().HasNoKey().ToView(null);
         mb.Entity<FillAccountList>().HasNoKey().ToView(null);
-		//Customer Supplier
-			  mb.ApplyConfiguration(new PartiesConfiguration());
-             mb.ApplyConfiguration(new MaCustomerCategoresConfiguration());
-             mb.ApplyConfiguration(new MaCustomerDetailsConfiguration());
-            mb.ApplyConfiguration(new DeliveryDetailsConfiguration());
+        //Customer Supplier
+        mb.ApplyConfiguration(new PartiesConfiguration());
+        mb.ApplyConfiguration(new MaCustomerCategoresConfiguration());
+        mb.ApplyConfiguration(new MaCustomerDetailsConfiguration());
+        mb.ApplyConfiguration(new DeliveryDetailsConfiguration());
 
         mb.Entity<TransItemsView>().HasNoKey().ToView(null);
         mb.Entity<CommandTextView>().HasNoKey().ToView(null);
-//Role
+        //Role
         mb.Entity<SpFillRoles>().HasNoKey().ToView(null);
         mb.Entity<FillRoleRight>().HasNoKey().ToView(null);
         mb.Entity<SpFillRoles>().HasNoKey().ToView(null);
-       
-//UnitMaster
+
+        //UnitMaster
         mb.Entity<SpFillUnitMaster>().HasNoKey().ToView(null);
         mb.Entity<SpFillByUnit>().HasNoKey().ToView(null);
         mb.Entity<DropDownView>().HasNoKey().ToView(null);
-//UserTrack
-        mb.Entity<UserTrackView>().HasNoKey().ToView(null); 
- mb.Entity<FillAdvanceView>().HasNoKey().ToView(null);
-          mb.Entity<Fillvoucherview>().HasNoKey().ToView(null);
+        //UserTrack
+        mb.Entity<UserTrackView>().HasNoKey().ToView(null);
+        mb.Entity<FillAdvanceView>().HasNoKey().ToView(null);
+        mb.Entity<Fillvoucherview>().HasNoKey().ToView(null);
         mb.Entity<FillMaVouchersUsingPageIDView>().HasNoKey().ToView(null);
         mb.Entity<FillVoucherWithTrnasId>().HasNoKey().ToView(null);
-        
 
-           mb.Entity<FillCardMaster>().HasNoKey().ToView(null);
-		    mb.Entity<FillMaster>().HasNoKey().ToView(null);
-		//TransItems
+
+        mb.Entity<FillCardMaster>().HasNoKey().ToView(null);
+        mb.Entity<FillMaster>().HasNoKey().ToView(null);
+        //TransItems
 
 
         mb.Entity<TransItemsView>().HasNoKey().ToView(null);
@@ -518,11 +539,11 @@ mb.ApplyConfiguration(new FiMaCardsConfiguration());
         mb.Entity<ItemTransaction>().HasNoKey().ToView(null);
         mb.ApplyConfiguration(new TransCollectionConfiguration());
         mb.ApplyConfiguration(new TransCollnAllocationConfiguration());
-		  mb.ApplyConfiguration(new MaChargeTypeConfiguration());
+        mb.ApplyConfiguration(new MaChargeTypeConfiguration());
         mb.ApplyConfiguration(new FimaUniqueAccountConfiguration());
-	 mb.Entity<ReferenceView>().HasNoKey().ToView(null);
+        mb.Entity<ReferenceView>().HasNoKey().ToView(null);
         mb.Entity<DropDownViewIsdeft>().HasNoKey().ToView(null);
-     mb.Entity<FillPartyView>().HasNoKey().ToView(null);//inventory=>Customer/supplier dropdown
+        mb.Entity<FillPartyView>().HasNoKey().ToView(null);//inventory=>Customer/supplier dropdown
         mb.Entity<FillPartyById>().HasNoKey().ToView(null);
         mb.Entity<FillCustdetails>().HasNoKey().ToView(null);
         mb.Entity<FillDeldetails>().HasNoKey().ToView(null);
@@ -537,7 +558,7 @@ mb.ApplyConfiguration(new FiMaCardsConfiguration());
         mb.Entity<InventoryAgeingView>().HasNoKey().ToView(null);
         mb.Entity<InventoryAgeingViews>().HasNoKey().ToView(null);
         mb.Entity<ImportItemListView>().HasNoKey().ToView(null);
-
+        mb.Entity<InventoryTransactionsView>().HasNoKey().ToView(null);
         //receiptvoucher
         mb.Entity<VoucherView>().HasNoKey().ToView(null);
         mb.Entity<FillVoucher>().HasNoKey().ToView(null);
@@ -553,6 +574,14 @@ mb.ApplyConfiguration(new FiMaCardsConfiguration());
 
         //daybook
         mb.Entity<DayBookView>().HasNoKey().ToView(null);
+
+        //HR
+        mb.Entity<HREmployee>().HasNoKey().ToView(null);
+
+        //Restaurant
+        mb.Entity<PrintKotView>().HasNoKey().ToView(null);
+        mb.Entity<KitchenCategoryView>().HasNoKey().ToView(null);
+        mb.Entity<ProductVew>().HasNoKey().ToView(null);
 
     }
 }

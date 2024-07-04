@@ -80,6 +80,9 @@ namespace Dfinance.Core.Views.General
         public long? SalesManID { get; set; }
         public string? SalesMan {  get; set; }
         public int? PartyCategoryID { get; set; }
+        public string? DistrictArabic {  get; set; }
+        public string? CityArabic { get; set; }
+        public string? ProvinceArabic { get; set; }
     }
     public class FillCustdetails
     {
