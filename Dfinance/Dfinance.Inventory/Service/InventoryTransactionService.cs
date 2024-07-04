@@ -68,7 +68,7 @@ namespace Dfinance.Inventory.Service
             }
         }
 
-        private int GetPrimaryVoucherID(int voucherid)
+        public int GetPrimaryVoucherID(int voucherid)
         {
             return (int)(_context.FiMaVouchers.Where(v => v.Id == voucherid).Select(v => v.PrimaryVoucherId).FirstOrDefault());
         }
@@ -127,7 +127,7 @@ namespace Dfinance.Inventory.Service
                 else
                 {
                     var voucherNo = GetNextTransactionNo(voucherid, voucher, branchid);
-                    return CommonResponse.Ok(voucherNo);
+                    return CommonResponse.Ok(voucherNo.Result[0].AccountCode);
                 }
 
             }
@@ -443,7 +443,11 @@ namespace Dfinance.Inventory.Service
             autoUpdateNewVoucherNo = Convert.ToBoolean(settings.Where(s => s.Key == "AutoUpdateNewVoucherNo").Select(s => s.Value).FirstOrDefault());
             partywiseVoucherNo = Convert.ToBoolean(settings.Where(s => s.Key == "PartywiseVoucherNo").Select(s => s.Value).FirstOrDefault());
             rackLocation = Convert.ToBoolean(settings.Where(s => s.Key == "RackLocation").Select(s => s.Value).FirstOrDefault());
-            inventoryToFinanceRoundOff = Convert.ToBoolean(settings.Where(s => s.Key == "InventoryToFinanceRoundOff").Select(s => s.Value).FirstOrDefault());
+            var round = settings.Where(s => s.Key == "InventoryToFinanceRoundOff").Select(s => s.Value).FirstOrDefault();
+            if (round == "1")
+                round = "true";
+            else round = "false";
+            inventoryToFinanceRoundOff = Convert.ToBoolean(round);
             numericFormat = settings.Where(s => s.Key == "NumericFormat").Select(s => s.Value).FirstOrDefault().ToString();
         }
 
