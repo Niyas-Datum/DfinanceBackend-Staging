@@ -14,6 +14,30 @@ namespace Dfinance.Application.Configuration
             CreateMap<InventoryTransactionDto, FiTransaction>().ReverseMap();
             CreateMap<TblMaFinYear, FinanceYearDto>()
                 .ForMember(tb=>tb.FinanceYear , f=>f.MapFrom(fi=>fi.FinYearCode));
+
+
+            CreateMap<FinanceTransactionDto, JournalVoucherDto>().ReverseMap();
+
+            CreateMap<FinanceTransactionDto,ContraDto>().ReverseMap();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             //CreateMap<BranchDto, MaCompany>()
             //    .ForMember(b => b.ContactPersonId, ma => ma.MapFrom(mac => mac.ContactPerson.Id))
             //    .ForMember(b => b.Nature, ma => ma.MapFrom(mac => mac.BranchType.Value))

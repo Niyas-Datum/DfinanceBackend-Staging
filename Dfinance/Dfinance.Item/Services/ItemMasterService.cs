@@ -12,7 +12,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Data;
+using System.Text;
 using System.Text.Json;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 
 namespace Dfinance.Item.Services.Inventory
@@ -766,32 +768,91 @@ namespace Dfinance.Item.Services.Inventory
             return CommonResponse.Ok(new { Items = itemsWithExpiry });
         }
 
-       
+
         /// <summary>
         /// inv=>Report=>ItemSearch
         /// </summary>
         /// <param name="itemId"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public CommonResponse GetItemSearch(int? itemId, string? value)
+        public CommonResponse GetItemSearch(int? itemId, string? value, string? criteria)
         {
             try
             {
-                string Criteria = null;
-                      int branchid = _authService.GetBranchId().Value;
-                var data = _context.ItemSearchView.FromSqlRaw($"Exec ItemSearchItemSP @Criteria='{Criteria}',@BranchID='{branchid}',@ItemID={itemId},@Value={value}").ToList();
-                return CommonResponse.Ok(data);
+                int branchId = _authService.GetBranchId().Value;
 
-             
+                var query = new StringBuilder();
+                query.Append("Exec ItemSearchItemSP ");
+                query.AppendFormat("@BranchID = {0}, ", branchId);
+                query.AppendFormat("@Value = '{0}'", value ?? string.Empty);
+
+                if (itemId.HasValue && itemId != 0)
+                {
+                    query.AppendFormat(", @ItemID = {0}", itemId.Value);
+                }
+
+                if (!string.IsNullOrEmpty(criteria))
+                {
+                    query.AppendFormat(", @Criteria = '{0}'", criteria);
+                }
+
+                var result = _context.ItemSearchView.FromSqlRaw(query.ToString()).ToList();
+                return CommonResponse.Ok(result);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
                 return CommonResponse.Error(ex.Message);
             }
-
         }
+
+        /// <summary>
+        /// inv=>Report=>ItemRegister
+        /// </summary>
+        /// <param name="BranchID"></param>
+        /// <param name="WarehouseID"></param>
+        /// <param name="Less"></param>
+        /// <param name="Date"></param>
+        /// <returns></returns>
+        public CommonResponse GetItemRegister(int? branchId, int? warehouseId, bool less = false, DateTime? date = null)
+        {
+            try
+            {
+                object result = null;
+                var query = new StringBuilder();
+                query.Append("Exec ItemCatalogueSP ");
+                query.AppendFormat("@BranchID = {0}, ", branchId ?? 0);
+                query.AppendFormat("@WarehouseID = {0}, ", warehouseId ?? 0);
+                query.AppendFormat("@Less = {0}", less ? 1 : 0);
+
+                if (date.HasValue)
+                {
+                    query.AppendFormat(", @Date = '{0}'", date.Value.ToString("yyyy-MM-dd"));
+                }
+
+              
+                if (less==true)
+                {
+                    result = _context.ItemCatalogueViews.FromSqlRaw(query.ToString()).ToList();
+                }
+                else
+                {
+                    result = _context.ItemCatalogueView.FromSqlRaw(query.ToString()).ToList();
+                }
+
+                return CommonResponse.Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Error(ex.Message);
+            }
+        }
+
+
+
     }
 }
+
 
 
