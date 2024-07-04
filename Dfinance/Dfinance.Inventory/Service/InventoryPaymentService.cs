@@ -426,7 +426,7 @@ namespace Dfinance.Inventory.Service
         /// 
         /// </summary>
         /// <returns></returns>
-        public CommonResponse FillPaymentDetails(string description)
+        public CommonResponse FillPaymentDetails(string discription)
         {
             try
             {
