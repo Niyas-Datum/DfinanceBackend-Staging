@@ -314,6 +314,11 @@ public partial class DFCoreContext : DbContext
     public DbSet<ItemCatalogueViews> ItemCatalogueViews { get; set; }
 
 
+    //inventoryAgen
+    public DbSet<InventoryAgeingView> InventoryAgeingView {  get; set; }    
+    public DbSet<InventoryAgeingViews> InventoryAgeingViews {  get; set; }
+
+
     //HR
     public DbSet<HREmployee> Hremployees { get; set; }
 
@@ -326,6 +331,7 @@ public partial class DFCoreContext : DbContext
     public DbSet<KitchenCategoryView> KitchenCategoryViews { get; set; }
     public DbSet<PrintKotView> PrintKotViews { get; set; }
     public DbSet<ProductVew> ProductVews { get; set; }
+
 
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -549,6 +555,8 @@ public partial class DFCoreContext : DbContext
         mb.Entity<ItemSearchView>().HasNoKey().ToView(null);
         mb.Entity<ItemCatalogueView>().HasNoKey().ToView(null);
         mb.Entity<ItemCatalogueViews>().HasNoKey().ToView(null);
+        mb.Entity<InventoryAgeingView>().HasNoKey().ToView(null);
+        mb.Entity<InventoryAgeingViews>().HasNoKey().ToView(null);
         mb.Entity<ImportItemListView>().HasNoKey().ToView(null);
         mb.Entity<InventoryTransactionsView>().HasNoKey().ToView(null);
         //receiptvoucher
