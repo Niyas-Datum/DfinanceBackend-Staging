@@ -28,7 +28,7 @@ namespace Dfinance.Sales
         private readonly DFCoreContext _context;
         private readonly IAuthService _authService;
         private readonly IHostEnvironment _environment;
-        private readonly ILogger<PurchaseService> _logger;
+        private readonly ILogger<SalesReturnService> _logger;
         private readonly IInventoryTransactionService _transactionService;
         private readonly IInventoryAdditional _additionalService;
         private readonly IInventoryItemService _itemService;
@@ -40,7 +40,7 @@ namespace Dfinance.Sales
         private readonly ICostCentreService _costCentre;
         private readonly CommonService _com;
         private readonly ISettingsService _settings;
-        public SalesReturnService(DFCoreContext context, IAuthService authService, IHostEnvironment environment, ILogger<PurchaseService> logger, IInventoryTransactionService transactionService, IInventoryAdditional additionalService, IInventoryItemService itemService, IInventoryPaymentService paymentService, DataRederToObj rederToObj, IItemMasterService item, IWarehouseService warehouse, ICustomerSupplierService party, ICostCentreService costCentre, CommonService com, ISettingsService settings)
+        public SalesReturnService(DFCoreContext context, IAuthService authService, IHostEnvironment environment, ILogger<SalesReturnService> logger, IInventoryTransactionService transactionService, IInventoryAdditional additionalService, IInventoryItemService itemService, IInventoryPaymentService paymentService, DataRederToObj rederToObj, IItemMasterService item, IWarehouseService warehouse, ICustomerSupplierService party, ICostCentreService costCentre, CommonService com, ISettingsService settings)
         {
             _context = context;
             _authService = authService;

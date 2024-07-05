@@ -29,7 +29,7 @@ namespace Dfinance.Restaurant
         private readonly DFCoreContext _context;
         private readonly IAuthService _authService;
         private readonly IHostEnvironment _environment;
-        private readonly ILogger<PurchaseService> _logger;
+        private readonly ILogger<RestaurantInvoice> _logger;
         private readonly IInventoryTransactionService _transactionService;
         private readonly IInventoryAdditional _additionalService;
         private readonly IInventoryItemService _itemService;
@@ -41,7 +41,7 @@ namespace Dfinance.Restaurant
         private readonly ICostCentreService _costCentre;
         private readonly CommonService _com;
         private readonly ISettingsService _settings;
-        public RestaurantInvoice(DFCoreContext context, IAuthService authService, IHostEnvironment environment, ILogger<PurchaseService> logger, IInventoryTransactionService transactionService, IInventoryAdditional inventoryAdditional,
+        public RestaurantInvoice(DFCoreContext context, IAuthService authService, IHostEnvironment environment, ILogger<RestaurantInvoice> logger, IInventoryTransactionService transactionService, IInventoryAdditional inventoryAdditional,
             IInventoryItemService inventoryItemService, IInventoryPaymentService inventoryPaymentService, DataRederToObj rederToObj, IItemMasterService item,
             IWarehouseService warehouse, ICostCentreService costCentre, ICustomerSupplierService party, CommonService com, ISettingsService settings)
         {
