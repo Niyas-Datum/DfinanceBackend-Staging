@@ -307,11 +307,30 @@ public partial class DFCoreContext : DbContext
 
     //daybook
     public DbSet<DayBookView> DayBookView { get; set; }
+    //finance-statements
+    public DbSet<TrialBalanceView> TrialBalanceView { get; set; }
+    public DbSet<CashBankBookView> CashBankBookView { get; set; }
+    public DbSet<AccStatementView> AccStatementView { get; set; }
+    public DbSet<GroupStatementView> GroupStatementView { get; set; }
+    public DbSet<BillwiseStatementView> BillwiseStatementView { get; set; }
+    public DbSet<BalSheetView3> BalSheetView3 { get; set; }
+    public DbSet<ConsolMonthwiseView> ConsolMonthwiseView { get; set; }
+    public DbSet<PaymentAnalysisView> PaymentAnalysisView { get; set; }
+    public DbSet<PartyOutstandingView> PartyOutstandingView { get; set; }
+    public DbSet<DebitCreditView> DebitCreditView { get; set; }
+    public DbSet<ProfitAndLossView3> ProfitAndLossView3 { get; set; }
+    public DbSet<eReturnView> eReturnView { get; set; }
+   
 
 
     //itemregister report
     public DbSet<ItemCatalogueView> ItemCatalogueView { get; set; }
     public DbSet<ItemCatalogueViews> ItemCatalogueViews { get; set; }
+
+
+    //inventoryAgen
+    public DbSet<InventoryAgeingView> InventoryAgeingView {  get; set; }    
+    public DbSet<InventoryAgeingViews> InventoryAgeingViews {  get; set; }
 
 
     //HR
@@ -329,6 +348,7 @@ public partial class DFCoreContext : DbContext
 
     //RecallVoucher
     public DbSet<RecallVoucherView> RecallVoucherViews { get; set; }
+
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     //  => optionsBuilder.UseSqlServer(@"Data Source=ip.datuminnovation.com,9600;TrustServerCertificate=true;Initial Catalog=DatumSystemMain;User ID=sa;pwd=Datum123!");
@@ -551,6 +571,8 @@ public partial class DFCoreContext : DbContext
         mb.Entity<ItemSearchView>().HasNoKey().ToView(null);
         mb.Entity<ItemCatalogueView>().HasNoKey().ToView(null);
         mb.Entity<ItemCatalogueViews>().HasNoKey().ToView(null);
+        mb.Entity<InventoryAgeingView>().HasNoKey().ToView(null);
+        mb.Entity<InventoryAgeingViews>().HasNoKey().ToView(null);
         mb.Entity<ImportItemListView>().HasNoKey().ToView(null);
         mb.Entity<InventoryTransactionsView>().HasNoKey().ToView(null);
         //receiptvoucher
@@ -580,5 +602,24 @@ public partial class DFCoreContext : DbContext
         //RecallVoucher
         mb.Entity<RecallVoucherView>().HasNoKey().ToView(null);
 
-    }
+
+        //finance-statements
+        mb.Entity<TrialBalanceView>().HasNoKey().ToView(null);
+        mb.Entity<TrialBalanceView>().HasNoKey().ToView(null);
+        mb.Entity<AccStatementView>().HasNoKey().ToView(null);
+        mb.Entity<GroupStatementView>().HasNoKey().ToView(null);
+        mb.Entity<BillwiseStatementView>().HasNoKey().ToView(null);
+        mb.Entity<BalSheetView3>().HasNoKey().ToView(null);
+        mb.Entity<ConsolMonthwiseView>().HasNoKey().ToView(null);
+        mb.Entity<PaymentAnalysisView>().HasNoKey().ToView(null);
+        mb.Entity<PartyOutstandingView>().HasNoKey().ToView(null);
+        mb.Entity<DebitCreditView>().HasNoKey().ToView(null);
+        mb.Entity<ProfitAndLossView3>().HasNoKey().ToView(null);
+        mb.Entity<eReturnView>().HasNoKey().ToView(null);
+
+   
+    
+    
+}
+
 }
