@@ -38,6 +38,9 @@ namespace Dfinance.Shared.Enum
         Payment_Analysis=263,
         ProfitAndLoss=81,
         AccountBreakup=214,
-        CostCenter_Breakup=213
+        CostCenter_Breakup=213,
+        CostCentre_AccountStatement=536,
+        Aging_Report=281
+
     }
 }
