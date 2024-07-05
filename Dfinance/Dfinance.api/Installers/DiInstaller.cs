@@ -158,13 +158,15 @@ public class DiInstaller : IInstaller
         service.AddScoped<IBudgetingService, BudgetingService>();
         service.AddScoped<IBudgetRegisterService, BudgetRegisterService>();
         service.AddScoped<IBudgetMonthwiseService, BudgetMonthwiseService>();
-        service.AddScoped<IDayBookService, DayBookService>();
+       
         //BranchAccounts
         service.AddScoped<IBranchAccounts, BranchAccountsService>();
 
 
         //Restaurant
         service.AddScoped<IRestaurantInvoice, RestaurantInvoice>();
+        //finance-statements
 
+        service.AddScoped<IFinStatementService, FinStatementService>();
     }
 }
