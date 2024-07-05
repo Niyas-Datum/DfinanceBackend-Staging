@@ -162,5 +162,7 @@ public class DiInstaller : IInstaller
 
         //AccountReconciliation
         service.AddScoped<IAccountReconciliationService, AccountReconciliationService>();
+        //openingvoucher
+        service.AddScoped<IOpeningVoucherService, OpeningVoucherService>();
     }
 }
