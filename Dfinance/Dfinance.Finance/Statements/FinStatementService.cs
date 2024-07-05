@@ -8,6 +8,7 @@ using Dfinance.Shared.Domain;
 using Dfinance.Shared.Enum;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Identity.Client;
 using System.Data;
 using static Dfinance.Shared.Routes.InvRoute;
 
@@ -116,7 +117,7 @@ namespace Dfinance.Finance.Statements
             }
         }
 
-        //fill Account Statement
+        //fill Account Statement and CostCentre account statement
         public CommonResponse FillAccStatement(FinStmtCommonDto commonDto, int pageId, int? voucherId)
         {
             if (!_authService.IsPageValid(pageId))
@@ -130,20 +131,61 @@ namespace Dfinance.Finance.Statements
             object result = "";
             try
             {
-                if ((Page)pageId == Page.AccountStatement)
+                if ((Page)pageId == Page.AccountStatement || (Page)pageId == Page.CostCentre_AccountStatement)
                 {
-                    result = _context.AccStatementView.FromSqlRaw("Exec AccountStatementSP @DateFrom={0},@DateUpTo={1},@AccountID={2},@VTypeID={3},@BranchID={4}," +
-              "@Opening={5},@UserID={6}",
-              commonDto.DateFrom, commonDto.DateUpto, commonDto.Account.Id, voucherId, commonDto.Branch.Id, true, commonDto.User.Id).ToList();
+                    if(commonDto.CostCentre.Id==null)
+                    {
+                        result = _context.AccStatementView.FromSqlRaw("Exec AccountStatementSP @DateFrom={0},@DateUpTo={1},@AccountID={2},@VTypeID={3},@BranchID={4}," +
+              "@Opening={5},@UserID={6}", commonDto.DateFrom, commonDto.DateUpto, commonDto.Account.Id, voucherId, commonDto.Branch.Id, true, commonDto.User.Id).ToList();
+                        
+                    }
+                    else
+                    {
+                        result = _context.AccStatementView.FromSqlRaw("Exec CostCentreAccountStatementSP @DateFrom={0},@DateUpTo={1},@AccountID={2},@VTypeID={3},@BranchID={4}," +
+              "@Opening={5},@CostCenterID={6}", commonDto.DateFrom, commonDto.DateUpto, commonDto.Account.Id, voucherId, commonDto.Branch.Id, true, commonDto.CostCentre.Id).ToList();
+                    }                   
 
                 }
                 else if ((Page)pageId == Page.GroupStatement)
                 {
-                    result = _context.GroupStatementView.FromSqlRaw("Exec GroupSummarySP @DateFrom={0},@DateUpTo={1},@AccountID={2},@BranchID={3},@UserID={4}," +
-                        "@AllGroup={5}", commonDto.DateFrom, commonDto.DateUpto, commonDto.Account.Id, commonDto.Branch.Id, commonDto.User.Id,
-                        commonDto.Account.Id == null ? true : false).ToList();
+                    var cmd = _context.Database.GetDbConnection().CreateCommand();
+                    cmd.CommandType = CommandType.Text;
+                    bool allGroup = commonDto.Account.Id == null ? true : false;
+                    var accountID = commonDto.Account?.Id.HasValue ?? false ? commonDto.Account.Id.ToString() : "NULL";
+                    var branchID = commonDto.Account?.Id.HasValue ?? false ? commonDto.Account.Id.ToString() : "NULL";
+                    var userId = commonDto.Account?.Id.HasValue ?? false ? commonDto.Account.Id.ToString() : "NULL";
+                    cmd.CommandText = $"Exec GroupSummarySP @DateFrom='{commonDto.DateFrom}',@DateUpTo='{commonDto.DateUpto}',@AccountID={accountID},@BranchID={branchID},@UserID={userId},@AllGroup='{allGroup}'";
+                   _context.Database.GetDbConnection().Open();
+                    
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            var tb = new DataTable();
+                            tb.Load(reader);
 
+                            List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+                            Dictionary<string, object> row;
+                            foreach (DataRow dr in tb.Rows)
+                            {
+                                row = new Dictionary<string, object>();
+                                foreach (DataColumn col in tb.Columns)
+                                {
+                                    row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
+                                }
+                                rows.Add(row);
+                            }
+                            return CommonResponse.Ok(rows);
+                        }
+                        return CommonResponse.NoContent();
+                    }
                 }
+                //{
+                //    result = _context.GroupStatementView.FromSqlRaw("Exec GroupSummarySP @DateFrom={0},@DateUpTo={1},@AccountID={2},@BranchID={3},@UserID={4}," +
+                //        "@AllGroup={5}", commonDto.DateFrom, commonDto.DateUpto, commonDto.Account.Id, commonDto.Branch.Id, commonDto.User.Id,
+                //        commonDto.Account.Id == null ? true : false).ToList();
+                //}                
+
                 return CommonResponse.Ok(result);
             }
             catch
@@ -475,8 +517,7 @@ namespace Dfinance.Finance.Statements
 
                 cmd.CommandText = $"Exec AgingSP @DateFrom='{agingRepDto.DateFrom}',@DateUpto='{agingRepDto.DateUpto}',@Branchid={agingRepDto.Branch.Id},@Nature='{agingRepDto.ViewBy}',@AccountID={accountID},@StaffID={staffID},@AreaID={areaID},@PartyCategoryID={partyCategoryID}";
 
-                // cmd.CommandText = $"Exec AgingSP @DateFrom='{agingRepDto.DateFrom}',@DateUpto='{agingRepDto.DateUpto}',@Branchid={agingRepDto.Branch.Id},@Nature='{agingRepDto.ViewBy}',@AccountID={agingRepDto.Account.Id},@StaffID={agingRepDto.Staff.Id},@AreaID={agingRepDto.SalesArea.Id},@PartyCategoryID={agingRepDto.PartyCategory.Id}";
-                _context.Database.GetDbConnection().Open();
+                 _context.Database.GetDbConnection().Open();
                 using (var reader = cmd.ExecuteReader())
                 {
                     if (reader.Read())

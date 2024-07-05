@@ -6,6 +6,7 @@ namespace Dfinance.DataModels.Dto.Finance
     {       
         //public PopUpDto? User { get; set; }       
         public PopUpDto? AccountGroup { get; set; }
+        public PopUpDto? CostCentre { get; set; }
     }
     public class CommonDto
     {
