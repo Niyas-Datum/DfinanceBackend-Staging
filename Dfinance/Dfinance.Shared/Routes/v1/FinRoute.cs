@@ -60,6 +60,7 @@ namespace Dfinance.Shared.Routes.v1
             public const string Main = $"{Base}/vchr";
 
             public const string FillVouchers = $"{Main}/getall";
+            public const string popup = $"{Main}/popup";
 
          //   public const string SaveVouchers = $"{Main}/save";
 

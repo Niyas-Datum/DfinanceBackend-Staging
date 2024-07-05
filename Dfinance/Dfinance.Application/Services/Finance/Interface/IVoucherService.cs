@@ -5,6 +5,7 @@ namespace Dfinance.Application.Services.Finance.Interface
 {
     public interface IVoucherService
     {
+        CommonResponse VoucherPopup();
         CommonResponse FillVoucher();
        // CommonResponse SaveVoucher(VoucherDto voucherDto);
        // CommonResponse Deletevoucher(int ID);

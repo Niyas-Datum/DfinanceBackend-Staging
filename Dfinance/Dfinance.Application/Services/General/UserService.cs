@@ -46,6 +46,21 @@ namespace Dfinance.Application.Services.General
             var cahsAcc = _accountList.FillAccountList(15).Data;
             return CommonResponse.Ok(cahsAcc);
         }
+        //user pop up -used in finance statements
+        public CommonResponse UserPopup()
+        {
+            var users = _context.MaEmployees.Where(e => e.Active)
+                                   .Select(e => new
+                                   {
+                                       e.Id,
+                                       e.Username,
+                                       e.FirstName,
+                                       e.LastName,
+                                       e.EmailId,
+                                       e.MobileNumber
+                                   }).ToList();
+            return CommonResponse.Ok(users);
+        }
         public CommonResponse UserDropDown()
         {
             try

@@ -5,6 +5,7 @@ namespace Dfinance.Application.Services.General.Interface
 {
     public interface IUserService
     {
+        CommonResponse UserPopup();
         CommonResponse UserDropDown();
         CommonResponse FillUser();
         CommonResponse FillUserById(int Id);

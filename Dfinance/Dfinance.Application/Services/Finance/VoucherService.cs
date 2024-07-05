@@ -19,6 +19,19 @@ namespace Dfinance.Application.Services.Finance
             _context = context;
             _authService = authService;
         }
+        //fill voucher popup-used in finance statements
+        public CommonResponse VoucherPopup()
+        {
+            var result = _context.FiMaVouchers
+                .Where(v => (v.ModuleType == 2 || v.ModuleType == 3) && v.Active==true)
+                .Join(_context.MaPageMenus.Where(pm => pm.Active==true),
+                      v => v.Id,
+                      pm => pm.VoucherId,
+                      (v, pm) => new { v.Id, v.Name })
+                .Distinct()
+                .ToList();
+            return CommonResponse.Ok(result);
+        }
 
         //called by VoucherController/FillVoucher
         //****************************FillFiMaVoucher****************************************

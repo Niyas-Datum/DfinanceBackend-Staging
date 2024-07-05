@@ -22,6 +22,19 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
 
             _transactionService = transactionService;
         }
+        [HttpGet(InvRoute.InventroyTransactions.partyBal)]
+        public IActionResult FillPartyBal(int partyId)
+        {
+            try
+            {
+                var data = _transactionService.FillPartyBal(partyId);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         [HttpGet(InvRoute.InventroyTransactions.payType)]
         public IActionResult FillPayType()
         {
