@@ -47,7 +47,8 @@ namespace Dfinance.Shared.Routes
             public const string refItemList = $"{Main}/refItemList";
             public const string FillRef = $"{Main}/fillRef";
             public const string payType = $"{Main}/payType";
-            public const string GetInventoryTransactions = $"{Main}/getInvTrans"; 
+            public const string GetInventoryTransactions = $"{Main}/getInvTrans";
+            public const string partyBal = $"{Main}/partyBal";
 
         }
         public class Purchase

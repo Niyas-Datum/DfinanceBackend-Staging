@@ -64,7 +64,7 @@ namespace Dfinance.Shared.Routes.v1
             public const string FillUser= $"{Main}/FillUser";
             public const string FillPettyCash = $"{Main}/fillPettyCash";
             public const string FillUserById = $"{Main}/FillUserById";
-
+            public const string popup = $"{Main}/popup";
             public const string SaveUser = $"{Main}/Save";
 
             public const string UpdateUser = $"{Main}/update";

@@ -9,6 +9,7 @@ namespace Dfinance.Inventory.Service.Interface
     public interface IInventoryTransactionService
     {
         //Emplo
+        CommonResponse FillPartyBal(int partyId);
         CommonResponse FillPayType();
         CommonResponse GetSalesman();
         CommonResponse GetAutoVoucherNo(int voucherid);
