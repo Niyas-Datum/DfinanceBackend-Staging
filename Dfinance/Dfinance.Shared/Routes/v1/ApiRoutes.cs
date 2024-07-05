@@ -326,5 +326,12 @@ namespace Dfinance.Shared.Routes.v1
             public const string labelGridpopup = $"{Main}/labelGridpopup";
 
         }
+        public static class RecallVoucher
+        {
+            public const string Main = $"{Base}/RecallVch";
+            public const string GatData = $"{Main}/getData";
+            public const string GetCancelVch = $"{Main}/canclVch";
+            public const string UpdateVch = $"{Main}/updateVch";
+        }
     }
 }

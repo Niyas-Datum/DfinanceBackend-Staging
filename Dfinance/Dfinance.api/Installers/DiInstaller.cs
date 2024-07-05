@@ -167,6 +167,12 @@ public class DiInstaller : IInstaller
         service.AddScoped<IRestaurantInvoice, RestaurantInvoice>();
         //finance-statements
 
+
+        //RecallVoucher
+        service.AddScoped<IRecallVoucherService, RecallVoucherService>();
+
+
         service.AddScoped<IFinStatementService, FinStatementService>();
+
     }
 }
