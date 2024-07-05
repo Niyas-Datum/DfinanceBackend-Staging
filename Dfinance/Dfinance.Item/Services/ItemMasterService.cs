@@ -875,7 +875,28 @@ namespace Dfinance.Item.Services.Inventory
                 return CommonResponse.Error(ex.Message);
             }
         }
+     //   /// <summary>
+     //   /// 
+     //   /// </summary>
+     //   /// <param name="itemExpiryReportDto"></param>
+     //   /// <returns></returns>
+     //public CommonResponse GetItemExpiryReport(ItemExpiryReportDto itemExpiryReportDto)
+     //   {
+     //       try
+     //       {
+     //           object result = null;
+     //           var query = new StringBuilder();
+     //           query.Append("Exec ItemCatalogueSP ");
+     //           query.AppendFormat("@BranchID = {0}, ", branchId ?? 0);
 
+     //       }
+     //       catch (Exception ex)
+     //       {
+     //           _logger.LogError(ex.Message);
+     //           return CommonResponse.Error(ex.Message);
+     //       }
+
+     //   }
     }
 }
 
