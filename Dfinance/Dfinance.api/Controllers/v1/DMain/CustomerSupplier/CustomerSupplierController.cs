@@ -114,11 +114,11 @@ namespace Dfinance.api.Controllers.v1.DMain.CustomerSupplier
         }
         [HttpGet(ApiRoutes.Parties.supplier)]
 
-        public IActionResult GetSupplier(int locId, int pageId, int voucherId)
+        public IActionResult GetSupplier(int locId, int pageId, int voucherId, string criteria)
         {
             try
             {
-                var result = _custSuppService.FillSupplier(locId, pageId, voucherId);
+                var result = _custSuppService.FillSupplier(locId, pageId, voucherId,criteria);
                 return Ok(result);
             }
             catch (Exception ex)

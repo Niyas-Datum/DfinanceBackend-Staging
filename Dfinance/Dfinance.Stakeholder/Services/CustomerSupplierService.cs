@@ -115,21 +115,14 @@ namespace Dfinance.Stakeholder.Services
         /// Fill SUPPLIER(Purchase Form)
         /// </summary>
         /// <returns>acccode, accname, address, id, mobileno, vatno</returns>
-        public CommonResponse FillSupplier(int locId, int pageId, int voucherId)
+        public CommonResponse FillSupplier(int locId, int pageId, int voucherId,string criteria)
         {
             int? userId = _authService.GetId();
             int? branchId = _authService.GetBranchId();
             object PrimaryVoucherID = null, ItemID = null, ModeID = null, TransactionID = null, partyId = null;
             bool IsSizeItem = false, IsMargin = false, ISTransitLoc = false, IsFinishedGood = false, IsRawMaterial = false;
 
-            DateTime? VoucherDate = null;
-            string criteria = "";
-            if (voucherId == 17)
-                criteria = "SUPPLIER";
-            else if (voucherId == 23)
-                criteria = "CUSTOMER";
-            else
-                criteria = "PARTY";
+            DateTime? VoucherDate = null;            
 
             var result = _context.CommandTextView.FromSqlRaw($"select dbo.GetCommandText('{criteria}','{PrimaryVoucherID}','{branchId}','{partyId}','{locId}','{IsSizeItem}','{IsMargin}','{voucherId}','{ItemID}','{ISTransitLoc}','{IsFinishedGood}','{IsRawMaterial}','{ModeID}','{pageId}','{VoucherDate}','{TransactionID}','{userId}')")
                          .ToList();
