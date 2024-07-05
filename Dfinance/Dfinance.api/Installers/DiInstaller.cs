@@ -166,5 +166,8 @@ public class DiInstaller : IInstaller
         //Restaurant
         service.AddScoped<IRestaurantInvoice, RestaurantInvoice>();
 
+        //RecallVoucher
+        service.AddScoped<IRecallVoucherService, RecallVoucherService>();
+
     }
 }

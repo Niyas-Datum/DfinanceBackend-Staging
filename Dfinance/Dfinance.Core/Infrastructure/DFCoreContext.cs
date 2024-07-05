@@ -327,6 +327,8 @@ public partial class DFCoreContext : DbContext
     public DbSet<PrintKotView> PrintKotViews { get; set; }
     public DbSet<ProductVew> ProductVews { get; set; }
 
+    //RecallVoucher
+    public DbSet<RecallVoucherView> RecallVoucherViews { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     //  => optionsBuilder.UseSqlServer(@"Data Source=ip.datuminnovation.com,9600;TrustServerCertificate=true;Initial Catalog=DatumSystemMain;User ID=sa;pwd=Datum123!");
@@ -574,6 +576,9 @@ public partial class DFCoreContext : DbContext
         mb.Entity<PrintKotView>().HasNoKey().ToView(null);
         mb.Entity<KitchenCategoryView>().HasNoKey().ToView(null);
         mb.Entity<ProductVew>().HasNoKey().ToView(null);
+
+        //RecallVoucher
+        mb.Entity<RecallVoucherView>().HasNoKey().ToView(null);
 
     }
 }
