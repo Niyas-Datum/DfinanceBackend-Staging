@@ -1,4 +1,5 @@
-﻿using Dfinance.Shared.Domain;
+﻿using Dfinance.DataModels.Dto.Item;
+using Dfinance.Shared.Domain;
 
 namespace Dfinance.Item.Services.Inventory.Interface
 {
@@ -17,7 +18,9 @@ namespace Dfinance.Item.Services.Inventory.Interface
         CommonResponse FillTransItems(int partyId, int PageID, int locId, int voucherId);
         //CommonResponse GetUniqueExpiryItem(int itemId);
         CommonResponse GetItemSearch(int? itemId,string? value,string? criteria);
-        CommonResponse GetItemRegister(int? branchId, int? warehouseId, bool less = false, DateTime? date = null);
-        CommonResponse GetInventoryAgeing(int? AccountID, DateTime? FromDate, DateTime? ToDate, int? BranchID, bool? OpeningBalance, int? VoucherID, int? UserID, string? Nature);
+        CommonResponse GetItemRegister(int? branchId, int? warehouseId, bool less = false, DateTime? date = null) 
+     CommonResponse GetInventoryAgeing(int? AccountID, DateTime? FromDate, DateTime? ToDate, bool? OpeningBalance, int? VoucherID, string? Nature);
+   //  CommonResponse GetItemExpiryReport(ItemExpiryReportDto itemExpiryReportDto);
+    
     }
 }

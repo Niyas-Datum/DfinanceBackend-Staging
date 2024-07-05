@@ -875,28 +875,28 @@ namespace Dfinance.Item.Services.Inventory
                 return CommonResponse.Error(ex.Message);
             }
         }
-     //   /// <summary>
-     //   /// 
-     //   /// </summary>
-     //   /// <param name="itemExpiryReportDto"></param>
-     //   /// <returns></returns>
-     //public CommonResponse GetItemExpiryReport(ItemExpiryReportDto itemExpiryReportDto)
-     //   {
-     //       try
-     //       {
-     //           object result = null;
-     //           var query = new StringBuilder();
-     //           query.Append("Exec ItemCatalogueSP ");
-     //           query.AppendFormat("@BranchID = {0}, ", branchId ?? 0);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="itemExpiryReportDto"></param>
+        /// <returns></returns>
+        public CommonResponse GetItemExpiryReport(ItemExpiryReportDto itemExpiryReportDto)
+        {
+            try
+            {
+                object result = null;
+                var query = new StringBuilder();
+                query.Append("Exec ItemExpiryReportSP ");
+                query.AppendFormat("@BranchID = {0}, ", branchId ?? 0);
+                result = _context.ItemExpiryReportView.FromSqlRaw(query.ToString()).ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Error(ex.Message);
+            }
 
-     //       }
-     //       catch (Exception ex)
-     //       {
-     //           _logger.LogError(ex.Message);
-     //           return CommonResponse.Error(ex.Message);
-     //       }
-
-     //   }
+        }
     }
 }
 

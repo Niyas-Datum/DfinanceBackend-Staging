@@ -260,7 +260,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Item
             }
         }
         /// <summary>
-        /// 
+        /// GetInventoryAgeing
         /// </summary>
         /// <param name="AccountID"></param>
         /// <param name="FromDate"></param>
@@ -273,11 +273,11 @@ namespace Dfinance.api.Controllers.v1.DMain.Item
         /// <returns></returns>
         [HttpGet(ApiRoutes.ItemMaster.InventoryAgeing)]
 
-        public IActionResult GetInventoryAgeing(int? AccountID, DateTime? FromDate, DateTime? ToDate, int? BranchID, bool? OpeningBalance, int? VoucherID, int? UserID, string? Nature)
+        public IActionResult GetInventoryAgeing(int? AccountID, DateTime? FromDate, DateTime? ToDate, bool? OpeningBalance, int? VoucherID, string? Nature)
         {
             try
             {
-                var result = _itemService.GetInventoryAgeing(AccountID,  FromDate, ToDate, BranchID, OpeningBalance, VoucherID, UserID, Nature);
+                var result = _itemService.GetInventoryAgeing(AccountID,  FromDate, ToDate, OpeningBalance, VoucherID, Nature);
                 return Ok(result);
             }
             catch (Exception ex)
