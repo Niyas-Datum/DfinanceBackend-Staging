@@ -307,5 +307,32 @@ namespace Dfinance.api.Controllers.v1.DMain.Item
                 return BadRequest(ex.Message);
             }
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ViewBy"></param>
+        /// <param name="StartDate"></param>
+        /// <param name="EndDate"></param>
+        /// <param name="Customer"></param>
+        /// <param name="Detailed"></param>
+        /// <param name="Item"></param>
+        /// <param name="Salesman"></param>
+        /// <param name="accountid"></param>
+        /// <returns></returns>
+        [HttpGet(ApiRoutes.ItemMaster.InventoryProfitSP)]
+        [AllowAnonymous]
+        public IActionResult GetInventoryProfitSP(string? ViewBy, DateTime StartDate, DateTime EndDate, int? Customer, bool? Detailed, int Item, string? Salesman, int? accountid)
+        {
+            try
+            {
+                var result = _itemService.GetInventoryProfitSP(ViewBy,  StartDate,  EndDate, Customer,Detailed,Item,Salesman,accountid);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

@@ -942,7 +942,6 @@ namespace Dfinance.Item.Services.Inventory
                     query.AppendFormat("@Days = {0}, ", itemExpiryReportDto.ExpiryDays);
                 }
 
-                // Remove the trailing comma and space
                 if (query.ToString().EndsWith(", "))
                 {
                     query.Length -= 2;
@@ -958,7 +957,89 @@ namespace Dfinance.Item.Services.Inventory
                 return CommonResponse.Error(ex.Message);
             }
         }
+        /// <summary>
+        /// GetInventoryProfitSP
+        /// </summary>
+        /// <param name="ViewBy"></param>
+        /// <param name="StartDate"></param>
+        /// <param name="EndDate"></param>
+        /// <param name="Customer"></param>
+        /// <param name="Detailed"></param>
+        /// <param name="Item"></param>
+        /// <param name="Salesman"></param>
+        /// <returns></returns>
+        public CommonResponse GetInventoryProfitSP(string? ViewBy, DateTime StartDate, DateTime EndDate, int? Customer, bool? Detailed, int Item, string? Salesman, int? AccountId)
+        {
+            try
+            {
+                object result = null;
+                int? branchid = 1;
+                var query = new StringBuilder();
+                query.Append("Exec InventoryProfitSP "); 
+                query.AppendFormat("@Criteria = {0}, ", ViewBy );
+                query.AppendFormat("@BranchID = {0}, ", branchid ?? 0);
+                query.AppendFormat("@DateFrom = '{0}', ", StartDate.ToString("yyyy-MM-dd"));
+                query.AppendFormat("@DateUpto = '{0}', ", EndDate.ToString("yyyy-MM-dd"));
+                query.AppendFormat("@Detailed = {0}, ", Detailed.HasValue ? (Detailed.Value ? 1 : 0) : 1);
 
+                if (Item != 0)
+                {
+                    query.AppendFormat("@ItemID = {0}, ", Item);
+                }
+
+                if (Customer.HasValue && Customer.Value != 0)
+                {
+                    query.AppendFormat("@SalesManID = {0}, ", Customer.Value);
+                }
+
+                if (AccountId.HasValue && AccountId.Value != 0)
+                {
+                    query.AppendFormat("@AccountID = {0}, ", AccountId.Value);
+                }
+
+                if (query.ToString().EndsWith(", "))
+                {
+                    query.Length -= 2;
+                }
+
+                if (ViewBy == "Item")
+                {
+                    result = _context.InventoryProfitItemView.FromSqlRaw(query.ToString()).ToList();
+                }
+                else if (ViewBy == "Voucher")
+                {
+                    if (Detailed == false)
+                    {
+                        result = _context.InventoryProfitVoucherViews.FromSqlRaw(query.ToString()).ToList();
+                    }
+                    else
+                    {
+                        result = _context.InventoryProfitVoucherView.FromSqlRaw(query.ToString()).ToList();
+
+                    }
+                    
+                }
+                else if (ViewBy == "Party")
+                {
+                    if (Detailed == false)
+                    {
+                        result = _context.InventoryProfitPartyViews.FromSqlRaw(query.ToString()).ToList();
+                    }
+                    result = _context.InventoryProfitPartyView.FromSqlRaw(query.ToString()).ToList();
+                }
+                else
+                {
+                    return CommonResponse.Error("Invalid ViewBy parameter.");
+                }
+
+                return CommonResponse.Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Error(ex.Message);
+            }
+        }
     }
 }
 
