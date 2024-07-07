@@ -10,7 +10,7 @@ namespace Dfinance.Inventory.Service.Interface
         CommonResponse FillPaymentDetails(string description);
         //CommonResponse FillCard();
         //CommonResponse FillEpay();
-        CommonResponse FillAdvance(int AccountId, string Drcr, DateTime? date);
+        CommonResponse FillAdvance(int AccountId, int voucherId, DateTime? date);
         CommonResponse FillCheque();
         CommonResponse FillBankName();
         CommonResponse SaveCheque(InvChequesDto chequeDto, int VEId, int? PartyId);

@@ -3,6 +3,7 @@ using Dfinance.ChartOfAccount.Services.Finance.Interface;
 using Dfinance.Core.Infrastructure;
 using Dfinance.DataModels.Dto.Finance;
 using Dfinance.Shared.Domain;
+using Dfinance.Shared.Enum;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
@@ -421,11 +422,32 @@ namespace Dfinance.ChartOfAccount.Services.Finance
                 return CommonResponse.Error(ex);
             }
         }
-        public CommonResponse AccountPopUp()
+        public CommonResponse AccountPopUp(int? pageId=null)
         {
             try
             {
-                var accounts = _context.FiMaAccounts
+                if (pageId!=null && (Page)pageId == Page.Aging_Report)
+                {
+                    var result = _context.FiMaAccounts
+                .Join(_context.FiMaBranchAccounts,
+                      a => a.Id,
+                      ba => ba.AccountId,
+                      (a, ba) => new { a, ba })
+                .Join(_context.FiMaAccountCategory,
+                      aba => aba.a.AccountCategory,
+                      ac => ac.Id,
+                      (aba, ac) => new { aba.a, aba.ba, ac })
+                .Where(x => (x.ac.Description == "CUSTOMER" || x.ac.Description == "SUPPLIER") && x.ba.BranchId == 1)
+                .Select(x => new
+                {
+                    AccountCode = x.a.Alias,
+                    AccountName = x.a.Name,
+                    x.a.Id
+                })
+                .ToList();
+                    return CommonResponse.Ok(result);
+                }
+                    var accounts = _context.FiMaAccounts
                     .Where(a => a.Active == true && a.IsGroup == false)
                     .Select(a => new AccountDto
                     {

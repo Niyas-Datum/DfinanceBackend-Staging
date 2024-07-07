@@ -26,4 +26,21 @@ namespace Dfinance.Shared.Enum
 
 
     }
+    public enum Page
+    {
+        Purchase=15,
+        ConsolidatedMonthwise=83,
+        TrialBalance=80,
+        CostCentre_TrialBalance=535,
+        AccountStatement=77,
+        GroupStatement=79,
+        BalanceSheet=82,
+        Payment_Analysis=263,
+        ProfitAndLoss=81,
+        AccountBreakup=214,
+        CostCenter_Breakup=213,
+        CostCentre_AccountStatement=536,
+        Aging_Report=281
+
+    }
 }

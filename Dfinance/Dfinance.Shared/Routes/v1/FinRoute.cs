@@ -60,6 +60,7 @@ namespace Dfinance.Shared.Routes.v1
             public const string Main = $"{Base}/vchr";
 
             public const string FillVouchers = $"{Main}/getall";
+            public const string popup = $"{Main}/popup";
 
          //   public const string SaveVouchers = $"{Main}/save";
 
@@ -168,5 +169,40 @@ namespace Dfinance.Shared.Routes.v1
 
 
         }
+        public static class ContraVoucher
+        {
+            public const string Main = $"{Base}/contravou";
+            public const string Fill = $"{Main}/fillAccCode";
+            public const string Save = $"{Main}/save";
+            public const string Update = $"{Main}/update";
+            public const string Delete = $"{Main}/delete";
+
+
+        }
+        public static class FinStmt
+        {
+            public const string Main = $"{Base}/FinStmt";
+            public const string DayBook = $"{Main}/DayBook";
+            public const string TrialBal = $"{Main}/TrialBal";
+            public const string CashBankBook = $"{Main}/CashBankBook";
+            public const string accStmt = $"{Main}/accStmt";
+            public const string billWiseStmt = $"{Main}/billWiseStmt";
+            public const string balSheetStmt = $"{Main}/balSheetStmt";
+            public const string consolMonth = $"{Main}/consolMonth";
+            public const string partyOutstd = $"{Main}/partyOutstd";
+            public const string salesManCol = $"{Main}/salesManCol";
+            public const string CrDrBal = $"{Main}/CrDrBal";
+            public const string profitLoss = $"{Main}/profitLoss";
+            public const string cashFlow = $"{Main}/cashFlow";
+            public const string agingRep = $"{Main}/agingRep";
+            public const string eReturn = $"{Main}/eReturn";
+            public const string costCentrRep = $"{Main}/costCentrRep";
+            public const string accBrkup = $"{Main}/accBrkup";
+        }
+
+
+
+
+
     }
 }

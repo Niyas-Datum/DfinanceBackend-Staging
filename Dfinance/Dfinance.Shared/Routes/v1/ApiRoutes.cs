@@ -64,7 +64,7 @@ namespace Dfinance.Shared.Routes.v1
             public const string FillUser= $"{Main}/FillUser";
             public const string FillPettyCash = $"{Main}/fillPettyCash";
             public const string FillUserById = $"{Main}/FillUserById";
-
+            public const string popup = $"{Main}/popup";
             public const string SaveUser = $"{Main}/Save";
 
             public const string UpdateUser = $"{Main}/update";
@@ -326,6 +326,13 @@ namespace Dfinance.Shared.Routes.v1
             public const string Updategrid = $"{Main}/Updategrid";
             public const string labelGridpopup = $"{Main}/labelGridpopup";
 
+        }
+        public static class RecallVoucher
+        {
+            public const string Main = $"{Base}/RecallVch";
+            public const string GatData = $"{Main}/getData";
+            public const string GetCancelVch = $"{Main}/canclVch";
+            public const string UpdateVch = $"{Main}/updateVch";
         }
     }
 }

@@ -13,13 +13,13 @@ namespace Dfinance.Purchase.Services
     {
         private readonly DFCoreContext _context;
         private readonly IAuthService _authService;
-        private readonly ILogger<PurchaseService> _logger;
+        private readonly ILogger<PurchaseQuotationService> _logger;
         private readonly IInventoryTransactionService _transactionService;
         private readonly IInventoryAdditional _additionalService;
         private readonly IInventoryItemService _itemService;
         private readonly IInventoryPaymentService _paymentService;
         private readonly IUserTrackService _userTrack;
-        public PurchaseQuotationService(DFCoreContext context, IAuthService authService, ILogger<PurchaseService> logger, IInventoryTransactionService transactionService, IInventoryAdditional inventoryAdditional,
+        public PurchaseQuotationService(DFCoreContext context, IAuthService authService, ILogger<PurchaseQuotationService> logger, IInventoryTransactionService transactionService, IInventoryAdditional inventoryAdditional,
              IInventoryItemService inventoryItemService, IInventoryPaymentService inventoryPaymentService,
              IUserTrackService userTrack)
         {

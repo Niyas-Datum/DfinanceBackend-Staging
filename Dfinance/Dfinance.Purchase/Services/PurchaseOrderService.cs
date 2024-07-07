@@ -26,7 +26,7 @@ namespace Dfinance.Purchase.Services
     {
         private readonly DFCoreContext _context;
         private readonly IAuthService _authService;
-        private readonly ILogger<PurchaseService> _logger;
+        private readonly ILogger<PurchaseOrderService> _logger;
         private readonly IInventoryTransactionService _transactionService;
         private readonly IInventoryAdditional _additionalService;
         private readonly IInventoryItemService _itemService;
@@ -36,7 +36,7 @@ namespace Dfinance.Purchase.Services
         private readonly IWarehouseService _warehouse;
         private readonly ICostCentreService _costCentre;
         private readonly IUserTrackService _userTrack;
-        public PurchaseOrderService(DFCoreContext context, IAuthService authService, ILogger<PurchaseService> logger, IInventoryTransactionService transactionService, IInventoryAdditional inventoryAdditional,
+        public PurchaseOrderService(DFCoreContext context, IAuthService authService, ILogger<PurchaseOrderService> logger, IInventoryTransactionService transactionService, IInventoryAdditional inventoryAdditional,
              IInventoryItemService inventoryItemService, IInventoryPaymentService inventoryPaymentService, DataRederToObj rederToObj, IItemMasterService item,
              IWarehouseService warehouse, ICostCentreService costCentre, IUserTrackService userTrack)
         {
