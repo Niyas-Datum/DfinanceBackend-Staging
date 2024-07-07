@@ -1,5 +1,6 @@
 ﻿using Dfinance.api.Authorization;
 using Dfinance.api.Framework;
+using Dfinance.DataModels.Dto.Item;
 using Dfinance.Item.Services.Inventory;
 using Dfinance.Item.Services.Inventory.Interface;
 using Dfinance.Shared.Routes.v1;
@@ -278,6 +279,26 @@ namespace Dfinance.api.Controllers.v1.DMain.Item
             try
             {
                 var result = _itemService.GetInventoryAgeing(AccountID,  FromDate, ToDate, OpeningBalance, VoucherID, Nature);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
+        /// GetItemExpiryReport
+        /// </summary>
+        /// <param name="itemExpiryReportDto"></param>
+        /// <returns></returns>
+        [HttpPost(ApiRoutes.ItemMaster.ItemExpiryReport)]
+        [AllowAnonymous]
+        public IActionResult GetItemExpiryReport(ItemExpiryReportDto itemExpiryReportDto)
+        {
+            try
+            {
+                var result = _itemService.GetItemExpiryReport( itemExpiryReportDto);
                 return Ok(result);
             }
             catch (Exception ex)

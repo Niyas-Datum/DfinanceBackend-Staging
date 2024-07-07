@@ -314,7 +314,7 @@ public DbSet<TransItemsView> TransItemsView { get; set; }
     //inventoryAgen
     public DbSet<InventoryAgeingView> InventoryAgeingView {  get; set; }    
     public DbSet<InventoryAgeingViews> InventoryAgeingViews {  get; set; }
-
+    public DbSet<ItemExpiryReportView> ItemExpiryReportView {  get; set; }      
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     //  => optionsBuilder.UseSqlServer(@"Data Source=ip.datuminnovation.com,9600;TrustServerCertificate=true;Initial Catalog=DatumSystemMain;User ID=sa;pwd=Datum123!");
@@ -537,7 +537,7 @@ mb.ApplyConfiguration(new FiMaCardsConfiguration());
         mb.Entity<InventoryAgeingView>().HasNoKey().ToView(null);
         mb.Entity<InventoryAgeingViews>().HasNoKey().ToView(null);
         mb.Entity<ImportItemListView>().HasNoKey().ToView(null);
-
+        mb.Entity <ItemExpiryReportView>().HasNoKey().ToView(null);
         //receiptvoucher
         mb.Entity<VoucherView>().HasNoKey().ToView(null);
         mb.Entity<FillVoucher>().HasNoKey().ToView(null);

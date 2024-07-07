@@ -281,7 +281,8 @@ namespace Dfinance.Shared.Routes.v1
             public const string TaxDropdown = $"{Main}/TaxDropdown";
             public const string Itemsearch = $"{Main}/ itemsearch"; 
             public const string ItemRegister = $"{Main}/ itemregister";
-            public const string InventoryAgeing = $"{Main}/ invageing"; 
+            public const string InventoryAgeing = $"{Main}/ invageing";
+            public const string ItemExpiryReport = $"{Main}/ itemexprep"; 
         }
         public static class ItemUnits
         {

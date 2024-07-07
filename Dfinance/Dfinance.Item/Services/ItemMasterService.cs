@@ -3,6 +3,7 @@ using Dfinance.AuthAppllication.Services.Interface;
 using Dfinance.Core.Infrastructure;
 using Dfinance.Core.Views.Inventory;
 using Dfinance.Core.Views.Item;
+using Dfinance.DataModels.Dto.Item;
 using Dfinance.Item.Services.Inventory.Interface;
 using Dfinance.Shared.Domain;
 using JsonDiffPatchDotNet;
@@ -11,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using System.Data;
 using System.Text;
 using System.Text.Json;
@@ -89,8 +91,8 @@ namespace Dfinance.Item.Services.Inventory
             string criteria = "FillItemByID";
             var itemdata = _context.SpFillItemMasterById.FromSqlRaw($"Exec ItemMasterSP @Criteria='{criteria}',@ID='{Id}'").AsEnumerable().FirstOrDefault();
             string? imagePath = null;
-            if (itemdata.Imagepath!=null)
-                 imagePath = uploadPath + itemdata?.Imagepath;
+            if (itemdata.Imagepath != null)
+                imagePath = uploadPath + itemdata?.Imagepath;
 
             string imageBase64 = null;
 
@@ -588,8 +590,8 @@ namespace Dfinance.Item.Services.Inventory
                     branch.Add(BranchId);
 
                 var bi = _context.BranchItems.Where(b => b.ItemId == ItemId).ToList();//updating branchItems
-                if (bi!=null)
-                {                    
+                if (bi != null)
+                {
                     _context.BranchItems.RemoveRange(bi);
                     _context.SaveChanges();
                     foreach (var b in branch)
@@ -743,7 +745,7 @@ namespace Dfinance.Item.Services.Inventory
             var itemsWithExpiry = new List<object>();
             string criteria1 = "GetLastItemRate";
             object toolTipData;
-            bool? uniqueItem=false, expireItem=false;
+            bool? uniqueItem = false, expireItem = false;
             var uniqueNo = (bool)_settings.GetSettings("SetUniqueNo").Data;
             var expiry = (bool)_settings.GetSettings("IsExpiryDate").Data;
             foreach (var item in data)
@@ -761,7 +763,7 @@ namespace Dfinance.Item.Services.Inventory
                     Item = item,
                     UnitPopup = units,
                     UniqueItem = uniqueItem,
-                    ExpiryItem= expireItem,
+                    ExpiryItem = expireItem,
                     ToolTipData = toolTipData
                 });
             }
@@ -830,8 +832,8 @@ namespace Dfinance.Item.Services.Inventory
                     query.AppendFormat(", @Date = '{0}'", date.Value.ToString("yyyy-MM-dd"));
                 }
 
-              
-                if (less==true)
+
+                if (less == true)
                 {
                     result = _context.ItemCatalogueViews.FromSqlRaw(query.ToString()).ToList();
                 }
@@ -875,28 +877,88 @@ namespace Dfinance.Item.Services.Inventory
                 return CommonResponse.Error(ex.Message);
             }
         }
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="itemExpiryReportDto"></param>
-        ///// <returns></returns>
-        //public CommonResponse GetItemExpiryReport(ItemExpiryReportDto itemExpiryReportDto)
-        //{
-        //    try
-        //    {
-        //        object result = null;
-        //        var query = new StringBuilder();
-        //        query.Append("Exec ItemExpiryReportSP ");
-        //        query.AppendFormat("@BranchID = {0}, ", branchId ?? 0);
-        //        result = _context.ItemExpiryReportView.FromSqlRaw(query.ToString()).ToList();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError(ex.Message);
-        //        return CommonResponse.Error(ex.Message);
-        //    }
+        /// <summary>
+        /// GetItemExpiryReport
+        /// </summary>
+        /// <param name="itemExpiryReportDto"></param>
+        /// <returns></returns>
+        public CommonResponse GetItemExpiryReport(ItemExpiryReportDto itemExpiryReportDto)
+        {
+            try
+            {
+                int? branchid = 1;
+                var query = new StringBuilder();
+                query.Append("Exec ItemExpiryReportSP ");
 
-        //}
+                query.AppendFormat("@BranchID = {0}, ", branchid ?? 0);
+
+                if (itemExpiryReportDto.StartDate != null && itemExpiryReportDto.StartDate != DateTime.MinValue)
+                {
+                    query.AppendFormat("@DateFrom = '{0}', ", itemExpiryReportDto.StartDate.ToString("yyyy-MM-dd"));
+                }
+
+                if (itemExpiryReportDto.EndDate != null && itemExpiryReportDto.EndDate != DateTime.MinValue)
+                {
+                    query.AppendFormat("@DateUpto = '{0}', ", itemExpiryReportDto.EndDate.ToString("yyyy-MM-dd"));
+                }
+
+                if (itemExpiryReportDto.ExpiryDate != null && itemExpiryReportDto.ExpiryDate != DateTime.MinValue)
+                {
+                    query.AppendFormat("@ExpiryDate = '{0}', ", itemExpiryReportDto.ExpiryDate.ToString("yyyy-MM-dd"));
+                }
+
+                if (itemExpiryReportDto.Item.Id != 0)
+                {
+                    query.AppendFormat("@ItemID = {0}, ", itemExpiryReportDto.Item.Id);
+                }
+
+                if (itemExpiryReportDto.Barcode.Id != 0)
+                {
+                    query.AppendFormat("@Barcode = '{0}', ", itemExpiryReportDto.Barcode?.Id);
+                }
+
+                if (itemExpiryReportDto.Origin.Id != 0)
+                {
+                    query.AppendFormat("@OriginID = {0}, ", itemExpiryReportDto.Origin.Id);
+                }
+
+                if (itemExpiryReportDto.Brand.Id!=0)
+                {
+                    query.AppendFormat("@BrandID = {0}, ", itemExpiryReportDto.Brand.Id);
+                }
+
+                if (itemExpiryReportDto.Commodity.Id != 0)
+                {
+                    query.AppendFormat("@CommodityID = {0}, ", itemExpiryReportDto.Commodity.Id);
+                }
+
+                if (itemExpiryReportDto.Color.Id!=0)
+                {
+                    query.AppendFormat("@ColorID = {0}, ", itemExpiryReportDto.Color.Id);
+                }
+
+                if (itemExpiryReportDto.ExpiryDays!=0)
+                {
+                    query.AppendFormat("@Days = {0}, ", itemExpiryReportDto.ExpiryDays);
+                }
+
+                // Remove the trailing comma and space
+                if (query.ToString().EndsWith(", "))
+                {
+                    query.Length -= 2;
+                }
+
+                var result = _context.ItemExpiryReportView.FromSqlRaw(query.ToString()).ToList();
+
+                return CommonResponse.Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Error(ex.Message);
+            }
+        }
+
     }
 }
 
