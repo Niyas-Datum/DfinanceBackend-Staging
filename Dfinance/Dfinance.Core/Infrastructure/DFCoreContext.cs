@@ -331,7 +331,7 @@ public partial class DFCoreContext : DbContext
     //inventoryAgen
     public DbSet<InventoryAgeingView> InventoryAgeingView {  get; set; }    
     public DbSet<InventoryAgeingViews> InventoryAgeingViews {  get; set; }
-
+    public DbSet<ItemExpiryReportView> ItemExpiryReportView {  get; set; }      
 
     //HR
     public DbSet<HREmployee> Hremployees { get; set; }
@@ -348,7 +348,11 @@ public partial class DFCoreContext : DbContext
 
     //RecallVoucher
     public DbSet<RecallVoucherView> RecallVoucherViews { get; set; }
-
+    public DbSet<InventoryProfitItemView> InventoryProfitItemView { get; set; }
+    public DbSet<InventoryProfitVoucherView> InventoryProfitVoucherView { get; set; }
+    public DbSet<InventoryProfitVoucherViews> InventoryProfitVoucherViews { get; set; }
+    public DbSet<InventoryProfitPartyView> InventoryProfitPartyView { get; set; }
+    public DbSet<InventoryProfitPartyViews> InventoryProfitPartyViews { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     //  => optionsBuilder.UseSqlServer(@"Data Source=ip.datuminnovation.com,9600;TrustServerCertificate=true;Initial Catalog=DatumSystemMain;User ID=sa;pwd=Datum123!");
@@ -574,7 +578,11 @@ public partial class DFCoreContext : DbContext
         mb.Entity<InventoryAgeingView>().HasNoKey().ToView(null);
         mb.Entity<InventoryAgeingViews>().HasNoKey().ToView(null);
         mb.Entity<ImportItemListView>().HasNoKey().ToView(null);
+
+        mb.Entity <ItemExpiryReportView>().HasNoKey().ToView(null);
+
         mb.Entity<InventoryTransactionsView>().HasNoKey().ToView(null);
+
         //receiptvoucher
         mb.Entity<VoucherView>().HasNoKey().ToView(null);
         mb.Entity<FillVoucher>().HasNoKey().ToView(null);
@@ -617,9 +625,15 @@ public partial class DFCoreContext : DbContext
         mb.Entity<ProfitAndLossView3>().HasNoKey().ToView(null);
         mb.Entity<eReturnView>().HasNoKey().ToView(null);
 
-   
-    
-    
-}
+        mb.Entity<InventoryProfitItemView>().HasNoKey().ToView(null);
+        mb.Entity<InventoryProfitVoucherView>().HasNoKey().ToView(null);
+        mb.Entity<InventoryProfitVoucherViews>().HasNoKey().ToView(null);
+        mb.Entity<InventoryProfitPartyView>().HasNoKey().ToView(null);
+        mb.Entity<InventoryProfitPartyViews>().HasNoKey().ToView(null);
+
+
+
+
+    }
 
 }
