@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.Contracts;
-
-namespace Dfinance.Core.Views.Finance
+﻿namespace Dfinance.Core.Views.Finance
 {
     public class CommonView1
     {
@@ -11,7 +9,6 @@ namespace Dfinance.Core.Views.Finance
         public decimal? Debit { get; set; }
         public decimal? Credit { get; set; }
     }
-
 
     public class DayBookView : CommonView1
     {
@@ -33,20 +30,7 @@ namespace Dfinance.Core.Views.Finance
         public string? AccountCode { get; set; }
         public string? AccountName { get; set; }
     }
-    public partial class TrialBalanceView : CommonView2
-    {       
-        public bool? VoucherEntry { get; set; }        
-        public decimal? OpenDebit { get; set; }
-        public decimal? OpenCredit { get; set; }        
-        public decimal? ClosDebit { get; set; }
-        public decimal? ClosCredit { get; set; }
-    }
-    public partial class CashBankBookView : CommonView2
-    {       
-        public decimal? Debit { get; set; }
-        public decimal? Credit { get; set; }
-        public decimal? Balance { get; set; }
-    }
+    
     public class AccStatementView : CommonView1
     {
         public int? VID { get; set; }
@@ -84,35 +68,7 @@ namespace Dfinance.Core.Views.Finance
         public string? ReferenceNo { get; set; }
         public string? DeliveryLocation { get; set; }
     }
-    public class GroupStatementView
-    {
-        public int? ID { get; set; }
-        public int? ParentID { get; set; }
-        public string? AccountCode { get; set; }
-        public string? AccountName { get; set; }
-        public int? ParentLevel { get; set; }
-        public int? VoucherEntry { get; set; }
-        public int? SortField { get; set; }
-        public decimal? PrevDebit { get; set; }
-        public decimal? PrevCredit { get; set; }
-        public decimal? Opening { get; set; }
-        public decimal? Debit { get; set; }
-        public decimal? Credit { get; set; }
-        public decimal? Balance { get; set; }
-        public int? Count { get; set; }
-    }
-    public class PaymentAnalysisView
-    {
-        public int? VID { get; set; }
-        public DateTime? VDate { get; set; }
-        public string? VNo { get; set; }
-        public int? AccountID { get; set; }
-        public string? AccountName { get; set; }
-        public DateTime? ClearedOn { get; set; }
-        public int? NoOfDays { get; set; }
-        public DateTime? DueOn { get; set; }
-        public int? NoOfDaysFromDueDate { get; set; }
-    }
+    
     public class BalanceSheetStmtView
     {
         public List<BalSheetView1> balSheet1 { get; set; }
@@ -139,53 +95,8 @@ namespace Dfinance.Core.Views.Finance
     {
         public decimal? SortField { get; set; }
     }
-    //fill consolidated monthwise statement
-    public class ConsolMonthwiseView
-    {
-        public int? ID { get; set; }
-        public bool? IsGroup { get; set; }
-        public string? AccountName { get; set; }
-        public decimal? Balance { get; set; }
-        public decimal? JanDr { get; set; }
-        public decimal? JanCr { get; set; }
-        public decimal? FebDr { get; set; }
-        public decimal? FebCr { get; set; }
-        public decimal? MarDr { get; set; }
-        public decimal? MarCr { get; set; }
-        public decimal? AprDr { get; set; }
-        public decimal? AprCr { get; set; }
-        public decimal? MayDr { get; set; }
-        public decimal? MayCr { get; set; }
-        public decimal? JunDr { get; set; }
-        public decimal? JunCr { get; set; }
-        public decimal? JulDr { get; set; }
-        public decimal? JulCr { get; set; }
-        public decimal? AugDr { get; set; }
-        public decimal? AugCr { get; set; }
-        public decimal? SepDr { get; set; }
-        public decimal? SepCr { get; set; }
-        public decimal? OctDr { get; set; }
-        public decimal? OctCr { get; set; }
-        public decimal? NovDr { get; set; }
-        public decimal? NovCr { get; set; }
-        public decimal? DecDr { get; set; }
-        public decimal? DecCr { get; set; }
+ 
 
-    }
-    public class PartyOutstandingView
-    {
-        public int? AccountID { get; set; }
-        public string? AccountName { get; set; }
-        public string? AccountCode { get; set; }
-        public string? Category { get; set; }
-        public DateTime? CustomerSince { get; set; }
-        public decimal? CreditLimit { get; set; }
-        public decimal? AccountBalance { get; set; }
-        public decimal? DueAmount { get; set; }
-        public DateTime? DueDate { get; set; }
-        public int? DueDays { get; set; }
-        public decimal? CrLimitBalance { get; set; }
-    }
     public class SalesmanCollectionView
     {
         public List<SalesmanColView1> salesManView1 { get; set; }
@@ -209,15 +120,7 @@ namespace Dfinance.Core.Views.Finance
         public decimal? Sales { get; set; }
         public decimal? SalesReturn { get; set; }
     }
-    public class DebitCreditView
-    {
-        public int? ID { get; set; }
-        public string? Code { get; set; }
-        public string? AccountName { get; set; }
-        public decimal? Amount { get; set; }
-        public decimal? Paid { get; set; }
-        public decimal? Balance { get; set; }
-    }
+   
     public class ProfitAndLossStmtView
     {
         public List<ProfitAndLossView1> profitAndLossView1 { get; set; }
@@ -278,24 +181,7 @@ namespace Dfinance.Core.Views.Finance
         public string? AccountName { get; set; }
 
     }
-    public class eReturnView
-    {
-        public int ID { get; set; }
-        public string? VNo { get; set; }
-        public string? ReferenceNo { get; set; }
-        public DateTime? Date { get; set; }
-        public string? Particular { get; set; }
-        public string? VatNo { get; }
-        public decimal? InputVAT { get; set; }
-        public decimal? OutputVAT { get; set; }
-        public decimal? InPutTaxableAmount { get; set; }
-        public decimal? OutPutTaxableAmount { get; set; }
-        public decimal? InputNoneTaxableAmount { get; set; }
-        public decimal? OutPutNoneTaxableAmount { get; set; }
-        public decimal? InvoiceAmount { get; set; }
-        public int? PrimaryVoucherID { get; set; }
-        public int? VoucherID { get; set; }
-    }
+    
     public class CostCentreStmtView
     {
         public List<CostCentreView1> costCentreView1 {  get; set; }

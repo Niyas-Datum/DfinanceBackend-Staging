@@ -8,9 +8,8 @@ using Dfinance.Shared.Domain;
 using Dfinance.Shared.Enum;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Microsoft.Identity.Client;
 using System.Data;
-using static Dfinance.Shared.Routes.InvRoute;
+using System.Text.Json;
 
 namespace Dfinance.Finance.Statements
 {
@@ -37,87 +36,169 @@ namespace Dfinance.Finance.Statements
             _logger.LogInformation("Page not Exists :" + pageId);
             return CommonResponse.Error("Page not Exists");
         }
-        //fill Day book
-        public CommonResponse FillDayBook(DayBookDto dayBookDto, int pageId)
-        {
-            if (!_authService.IsPageValid(pageId))
-            {
-                return PageNotValid(pageId);
-            }
-            if (!_authService.UserPermCheck(pageId, 1))
-            {
-                return PermissionDenied("Fill Day Book");
-            }
-            try
-            {
-                string criteria = "FillFinanceVoucherSummary";
-                var dayBookData = _context.DayBookView.FromSqlRaw("Exec FinTransactionsSP @Criteria={0},@DateFrom={1},@DateUpto={2},@BranchID={3},@VoucherID={4}," +
-                    "@UserID={5},@Detailed={6},@AutoEntry={7}",
-                    criteria, dayBookDto.DateFrom, dayBookDto.DateUpto, dayBookDto.Branch.Id, dayBookDto.VoucherType.Id, dayBookDto.User.Id, dayBookDto.Detailed, false).ToList();
-                return CommonResponse.Ok(dayBookData);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("Failed to fill DayBook");
-                return CommonResponse.Error("Failed to fill DayBook");
-            }
-        }
-        //fill trial balance
-        public CommonResponse FillTrialBalance(TrialBalanceDto trialBalanceDto, int pageId)
-        {
-            if (!_authService.IsPageValid(pageId))
-            {
-                return PageNotValid(pageId);
-            }
-            if (!_authService.UserPermCheck(pageId, 1))
-            {
-                return PermissionDenied("Fill TrialBalance");
-            }
 
+        public CommonResponse FillFinStatements(string jsonDto, int pageId)
+        {
+            if (!_authService.IsPageValid(pageId))
+            {
+                return PageNotValid(pageId);
+            }
+            if (!_authService.UserPermCheck(pageId, 1))
+            {
+                return PermissionDenied("Fill the Statement");
+            }
             try
             {
-                string sp = "";
-                if ((Page)pageId == Page.TrialBalance)
-                    sp = "TrialBalanceSP";
-                else if ((Page)pageId == Page.CostCentre_TrialBalance)
-                    sp = "CostCentreTrialBalanceSP";
-                var trialBalance = _context.TrialBalanceView.FromSqlRaw("Exec " + sp + " @DateFrom={0},@DateUpto={1},@BranchID={2},@Opening={3}," +
-               "@OpeningBalance={4},@ClosingBalance={5},@TransactionType={6}",
-               trialBalanceDto.DateFrom, trialBalanceDto.DateUpto, trialBalanceDto.Branch.Id, trialBalanceDto.OpeningVouchersOnly,
-               trialBalanceDto.ShowOpening, trialBalanceDto.ShowClosing, trialBalanceDto.Transactions.Id).ToList();
-                return CommonResponse.Ok(trialBalance);
+                DayBookDto dayBookDto;
+                TrialBalanceDto trialBalanceDto;
+                CommonDto commonDto;
+                var cmd = _context.Database.GetDbConnection().CreateCommand();
+                cmd.CommandType = CommandType.Text;
+                _context.Database.GetDbConnection().Open();
+                object userId = null, branchId = null, voucherId = null;
+                object detailed = null;
+
+                //fills DayBook
+                if ((Page)pageId == Page.DayBook)
+                {
+                    dayBookDto = JsonSerializer.Deserialize<DayBookDto>(jsonDto);
+                    userId = dayBookDto.User?.Id.HasValue ?? false ? dayBookDto.User.Id.ToString() : "NULL";
+                    branchId = dayBookDto.Branch?.Id.HasValue ?? false ? dayBookDto.Branch.Id.ToString() : "NULL";
+                    voucherId = dayBookDto.VoucherType?.Id.HasValue ?? false ? dayBookDto.VoucherType.Id.ToString() : "NULL";
+                    detailed = dayBookDto.Detailed == true ? 1 : 0;
+                    string criteria = "FillFinanceVoucherSummary";
+                    cmd.CommandText = $"Exec FinTransactionsSP @Criteria='{criteria}',@DateFrom='{dayBookDto.DateFrom}',@DateUpto='{dayBookDto.DateUpto}',@BranchID={branchId},@VoucherID={voucherId},@UserID={userId},@Detailed={detailed},@AutoEntry='{false}'";
+                }
+
+                //trial balance and CostCentre trial balance
+                else if ((Page)pageId == Page.TrialBalance || (Page)pageId == Page.CostCentre_TrialBalance)
+                {
+                    trialBalanceDto = JsonSerializer.Deserialize<TrialBalanceDto>(jsonDto);
+                    string sp = "";
+                    object openig = trialBalanceDto.OpeningVouchersOnly == true ? 1 : 0;
+                    object showOpening = trialBalanceDto.ShowOpening == true ? 1 : 0;
+                    object showClosing = trialBalanceDto.ShowClosing == true ? 1 : 0;
+                    object transaction = trialBalanceDto.Transactions?.Id.HasValue ?? false ? trialBalanceDto.Transactions.Id.ToString() : "NULL";
+                    if (((Page)pageId == Page.TrialBalance))
+                        sp = "TrialBalanceSP";
+                    else
+                        sp = "CostCentreTrialBalanceSP";
+
+                    branchId = trialBalanceDto.Branch?.Id.HasValue ?? false ? trialBalanceDto.Branch.Id.ToString() : "NULL";
+                    cmd.CommandText = $"Exec {sp} @DateFrom='{trialBalanceDto.DateFrom}',@DateUpto='{trialBalanceDto.DateUpto}',@BranchID={branchId},@Opening={openig},@OpeningBalance={showOpening},@ClosingBalance={showClosing},@TransactionType={transaction}";
+                }
+
+                //Cash or Bank book
+                else if ((Page)pageId == Page.CashOrBank_Book)
+                {
+                    CashBankBookDto cashBankDto;
+                    cashBankDto = JsonSerializer.Deserialize<CashBankBookDto>(jsonDto);
+                    branchId = cashBankDto.Branch?.Id.HasValue ?? false ? cashBankDto.Branch.Id.ToString() : "NULL";
+                    cmd.CommandText = $"Exec CashBankBookSP @DateFrom='{cashBankDto.DateFrom}',@DateUpto='{cashBankDto.DateUpto}',@BranchID={branchId},@GroupAccount='{cashBankDto.CashOrBank.Value}'";
+                }
+
+                //Consolidated monthwise
+                else if ((Page)pageId == Page.ConsolidatedMonthwise)
+                {
+                    commonDto = JsonSerializer.Deserialize<CommonDto>(jsonDto);
+                    branchId = _authService.GetBranchId().Value;
+                    cmd.CommandText = $"Exec ConsolidatedMonthwiseSP @FromDate='{commonDto.DateFrom}',@ToDate='{commonDto.DateUpto}',@BranchID={branchId}";
+                }
+                //payment analysis
+                else if ((Page)pageId == Page.Payment_Analysis)
+                {
+                    commonDto = JsonSerializer.Deserialize<CommonDto>(jsonDto);
+                    object accountId = commonDto.Account?.Id.HasValue ?? false ? commonDto.Account.Id.ToString() : "NULL";
+                    branchId = _authService.GetBranchId().Value;
+                    cmd.CommandText = $"Exec PerfomanceAnalysisSP @DateFrom ='{commonDto.DateFrom}',@DateUpto='{commonDto.DateUpto}',@BranchID = {branchId},@AccountID={accountId}";
+                }
+                //party outstanding
+                else if ((Page)pageId == Page.PartyOutStanding)
+                {
+                    PartyOutStandingDto partyDto;
+                    partyDto = JsonSerializer.Deserialize<PartyOutStandingDto>(jsonDto);
+                    object AccountId = partyDto.Party?.Id.HasValue ?? false ? partyDto.Party.Id.ToString() : "NULL";
+                    object SalesmanId = partyDto.Salesman?.Id.HasValue ?? false ? partyDto.Salesman.Id.ToString() : "NULL";
+                    branchId = partyDto.Branch?.Id.HasValue ?? false ? partyDto.Branch.Id.ToString() : "NULL";
+                    cmd.CommandText = $"Exec PartyOutstandingSP @DateFrom='{partyDto.DateFrom}',@DateUpto='{partyDto.DateUpto}',@BranchID={branchId},@Nature='{partyDto.ViewBy}',@AccountID={AccountId},@SalesManID={SalesmanId}";
+
+                }
+                //Debitor creditor balance pageId=480
+                else if ((Page)pageId == Page.Creditor_Debitor_Balance)
+                {
+                    commonDto = JsonSerializer.Deserialize<CommonDto>(jsonDto);
+                    branchId = _authService.GetBranchId().Value;
+                    object accountId = commonDto.Account?.Id.HasValue ?? false ? commonDto.Account.Id.ToString() : "NULL";
+                    string criteria = "CreditorDebitorBalance";
+                    cmd.CommandText = $"Exec BillWiseStmtSP @Criteria='{criteria}',@AccountID={accountId},@BranchID={branchId},@DateFrom='{commonDto.DateFrom}',@DateUpto='{commonDto.DateUpto}'";
+                }
+                //aging report
+                else if ((Page)pageId == Page.Aging_Report)
+                {
+                    AgingReportDto agingRepDto;
+                    agingRepDto = JsonSerializer.Deserialize<AgingReportDto>(jsonDto);
+                    var accountID = agingRepDto.Account?.Id.HasValue ?? false ? agingRepDto.Account.Id.ToString() : "NULL";
+                    string staffID = agingRepDto.Staff?.Id.HasValue ?? false ? agingRepDto.Staff.Id.ToString() : "NULL";
+                    string areaID = agingRepDto.SalesArea?.Id.HasValue ?? false ? agingRepDto.SalesArea.Id.ToString() : "NULL";
+                    string partyCategoryID = agingRepDto.PartyCategory?.Id.HasValue ?? false ? agingRepDto.PartyCategory.Id.ToString() : "NULL";
+                    cmd.CommandText = $"Exec AgingSP @DateFrom='{agingRepDto.DateFrom}',@DateUpto='{agingRepDto.DateUpto}',@Branchid={agingRepDto.Branch.Id},@Nature='{agingRepDto.ViewBy}',@AccountID={accountID},@StaffID={staffID},@AreaID={areaID},@PartyCategoryID={partyCategoryID}";
+
+                }
+                //e-Return
+                else if ((Page)pageId == Page.eReturn)
+                {
+                    eReturnsDto eReturnsDto;
+                    eReturnsDto = JsonSerializer.Deserialize<eReturnsDto>(jsonDto);
+                    string viewBy = "FinanceVoucherwise";
+                    branchId = eReturnsDto.Branch?.Id.HasValue ?? false ? eReturnsDto.Branch.Id.ToString() : "NULL";
+                    cmd.CommandText = $"Exec eReturnsSP @DateFrom='{eReturnsDto.DateFrom}',@DateUpto='{eReturnsDto.DateUpto}',@Branchid={branchId},@ViewBy='{viewBy}'";
+                }
+                //Account breakup and CostCentre breakup
+                else if ((Page)pageId == Page.AccountBreakup || (Page)pageId == Page.CostCenter_Breakup)
+                {
+                    CostCentreReportDto dto;
+                    dto = JsonSerializer.Deserialize<CostCentreReportDto>(jsonDto);
+                    string criteria = "";
+                    branchId = _authService.GetBranchId().Value;
+                    if ((Page)pageId == Page.AccountBreakup)
+                        criteria = "ProjectwiseCashBook";
+                    else if ((Page)pageId == Page.CostCenter_Breakup)
+                        criteria = "ProjectDetails";
+                    cmd.CommandText = $"Exec CostCentreSP @DateFrom='{dto.StartDate}',@Criteria='{criteria}',@DateUpto='{dto.EndDate}',@BranchID={branchId}";
+                }
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        var tb = new DataTable();
+                        tb.Load(reader);
+
+                        List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+                        Dictionary<string, object> row;
+                        foreach (DataRow dr in tb.Rows)
+                        {
+                            row = new Dictionary<string, object>();
+                            foreach (DataColumn col in tb.Columns)
+                            {
+                                row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
+                            }
+                            rows.Add(row);
+                        }
+                        return CommonResponse.Ok(rows);
+
+                    }
+                    return CommonResponse.NoContent("No Data");
+                }
             }
             catch
             {
-                _logger.LogError("Failed to fill TrialBalance");
-                return CommonResponse.Error("Failed to fill TrialBalance");
-            }
-        }
-        //Cash or Bank book
-        public CommonResponse FillCashOrBankBook(CashBankBookDto cashBank, int pageId)
-        {
-            if (!_authService.IsPageValid(pageId))
-            {
-                return PageNotValid(pageId);
-            }
-            if (!_authService.UserPermCheck(pageId, 1))
-            {
-                return PermissionDenied("Fill Cash/ Bank Book");
-            }
-            try
-            {
-                var data = _context.CashBankBookView.FromSqlRaw("Exec CashBankBookSP @DateFrom={0},@DateUpto={1},@BranchID={2},@GroupAccount={3}",
-                                                            cashBank.DateFrom, cashBank.DateUpto, cashBank.Branch.Id, cashBank.CashOrBank.Value).ToList();
-                return CommonResponse.Ok(data);
-            }
-            catch
-            {
-                _logger.LogError("Failed to fill Cash/ Bank Book");
-                return CommonResponse.Error("Failed to fill Cash/ Bank Book");
+                _logger.LogError("Failed to fill Finance Statement");
+                return CommonResponse.Error("Failed to Load");
             }
         }
 
-        //fill Account Statement and CostCentre account statement
+        //fill Account Statement, CostCentre account statement and group statement
         public CommonResponse FillAccStatement(FinStmtCommonDto commonDto, int pageId, int? voucherId)
         {
             if (!_authService.IsPageValid(pageId))
@@ -133,17 +214,17 @@ namespace Dfinance.Finance.Statements
             {
                 if ((Page)pageId == Page.AccountStatement || (Page)pageId == Page.CostCentre_AccountStatement)
                 {
-                    if(commonDto.CostCentre.Id==null)
+                    if (commonDto.CostCentre.Id == null)
                     {
                         result = _context.AccStatementView.FromSqlRaw("Exec AccountStatementSP @DateFrom={0},@DateUpTo={1},@AccountID={2},@VTypeID={3},@BranchID={4}," +
               "@Opening={5},@UserID={6}", commonDto.DateFrom, commonDto.DateUpto, commonDto.Account.Id, voucherId, commonDto.Branch.Id, true, commonDto.User.Id).ToList();
-                        
+
                     }
                     else
                     {
                         result = _context.AccStatementView.FromSqlRaw("Exec CostCentreAccountStatementSP @DateFrom={0},@DateUpTo={1},@AccountID={2},@VTypeID={3},@BranchID={4}," +
               "@Opening={5},@CostCenterID={6}", commonDto.DateFrom, commonDto.DateUpto, commonDto.Account.Id, voucherId, commonDto.Branch.Id, true, commonDto.CostCentre.Id).ToList();
-                    }                   
+                    }
 
                 }
                 else if ((Page)pageId == Page.GroupStatement)
@@ -155,8 +236,8 @@ namespace Dfinance.Finance.Statements
                     var branchID = commonDto.Account?.Id.HasValue ?? false ? commonDto.Account.Id.ToString() : "NULL";
                     var userId = commonDto.Account?.Id.HasValue ?? false ? commonDto.Account.Id.ToString() : "NULL";
                     cmd.CommandText = $"Exec GroupSummarySP @DateFrom='{commonDto.DateFrom}',@DateUpTo='{commonDto.DateUpto}',@AccountID={accountID},@BranchID={branchID},@UserID={userId},@AllGroup='{allGroup}'";
-                   _context.Database.GetDbConnection().Open();
-                    
+                    _context.Database.GetDbConnection().Open();
+
                     using (var reader = cmd.ExecuteReader())
                     {
                         if (reader.Read())
@@ -179,12 +260,7 @@ namespace Dfinance.Finance.Statements
                         }
                         return CommonResponse.NoContent();
                     }
-                }
-                //{
-                //    result = _context.GroupStatementView.FromSqlRaw("Exec GroupSummarySP @DateFrom={0},@DateUpTo={1},@AccountID={2},@BranchID={3},@UserID={4}," +
-                //        "@AllGroup={5}", commonDto.DateFrom, commonDto.DateUpto, commonDto.Account.Id, commonDto.Branch.Id, commonDto.User.Id,
-                //        commonDto.Account.Id == null ? true : false).ToList();
-                //}                
+                }                             
 
                 return CommonResponse.Ok(result);
             }
@@ -288,68 +364,8 @@ namespace Dfinance.Finance.Statements
                 _logger.LogError("Failed to fill Balance Sheet");
                 return CommonResponse.Error("Failed to fill Balance Sheet");
             }
-        }
-
-
-        //fills consolidated monthwise statement and payment analysis
-        public CommonResponse FillConsolMonthwise(CommonDto commonDto, int pageId)
-        {
-            if (!_authService.IsPageValid(pageId))
-            {
-                return PageNotValid(pageId);
-            }
-            if (!_authService.UserPermCheck(pageId, 1))
-            {
-                return PermissionDenied("Fill Consolidated Monthwise statement");
-            }
-            int branchId = _authService.GetBranchId().Value;
-            object data = null;
-            try
-            {
-
-                if ((Page)pageId == Page.ConsolidatedMonthwise)
-                {
-                    data = _context.ConsolMonthwiseView.FromSqlRaw("exec ConsolidatedMonthwiseSP @FromDate={0},@ToDate={1},@BranchID={2}",
-                    commonDto.DateFrom, commonDto.DateUpto, branchId).ToList();
-                }
-                else if ((Page)pageId == Page.Payment_Analysis)
-                {
-                    data = _context.PaymentAnalysisView.FromSqlRaw("exec PerfomanceAnalysisSP @DateFrom = {0},@DateUpto = {1},@BranchID = {2},@AccountID = {3}",
-                       commonDto.DateFrom, commonDto.DateUpto, branchId, commonDto.Account.Id).ToList();
-                }
-                return CommonResponse.Ok(data);
-            }
-            catch
-            {
-                _logger.LogError("Failed to fill Consolidated Monthwise statement or Payment analysis");
-                return CommonResponse.Error("Failed to load Statement");
-            }
-        }
-        public CommonResponse FillPartyOutStanding(PartyOutStandingDto partyDto, int pageId)
-        {
-            if (!_authService.IsPageValid(pageId))
-            {
-                return PageNotValid(pageId);
-            }
-            if (!_authService.UserPermCheck(pageId, 1))
-            {
-                return PermissionDenied("Fill Party Outstanding statement");
-            }
-            int? AccountId = null, SalesmanId = null;
-            try
-            {
-                AccountId = partyDto.Party.Id;
-                SalesmanId = partyDto.Salesman.Id;
-                var data = _context.PartyOutstandingView.FromSqlRaw("exec PartyOutstandingSP @DateFrom={0},@DateUpto={1},@BranchID={2},@Nature={3},@AccountID={4}," +
-                    "@SalesManID={5}", partyDto.DateFrom, partyDto.DateUpto, partyDto.Branch.Id, partyDto.ViewBy, AccountId, SalesmanId).ToList();
-                return CommonResponse.Ok(data);
-            }
-            catch
-            {
-                _logger.LogError("Failed to fill Party Outstanding statement");
-                return CommonResponse.Error("Failed to fill Party Outstanding statement");
-            }
-        }
+        }               
+       
         //fills salesman-collection report
         public CommonResponse FillSalesmanColReport(SalesmanColDto dto, int pageId)
         {
@@ -386,31 +402,7 @@ namespace Dfinance.Finance.Statements
                 return CommonResponse.Error("Failed to fill Salesman Collection Report ");
             }
         }
-        //fills creditor-debitor balance statement
-        public CommonResponse FillCreditDebitBal(CommonDto commonDto, int pageId)
-        {
-            if (!_authService.IsPageValid(pageId))
-            {
-                return PageNotValid(pageId);
-            }
-            if (!_authService.UserPermCheck(pageId, 1))
-            {
-                return PermissionDenied("Fill Creditor Debitor Balance ");
-            }
-            try
-            {
-                string criteria = "CreditorDebitorBalance";
-                int branchId = _authService.GetBranchId().Value;
-                var data = _context.DebitCreditView.FromSqlRaw("exec BillWiseStmtSP @Criteria={0},@AccountID={1},@BranchID={2},@DateFrom={3},@DateUpto={4}",
-                    criteria, commonDto.Account.Id, branchId, commonDto.DateFrom, commonDto.DateUpto).ToList();
-                return CommonResponse.Ok(data);
-            }
-            catch
-            {
-                _logger.LogError("Failed to fill Creditor Debitor Balance ");
-                return CommonResponse.Error("Failed to fill Creditor Debitor Balance ");
-            }
-        }
+        
         //fills profit and loss statement
         //fills cost centre wise profit and loss
         public CommonResponse FillProfitAndLoss(BalanceSheetDto balSheetDto, int pageId)
@@ -494,86 +486,7 @@ namespace Dfinance.Finance.Statements
                 return CommonResponse.Error("Failed to fill Cash Flow Statement ");
             }
         }
-        //fills Aging report
-        public CommonResponse FillAgingReport(AgingReportDto agingRepDto, int pageId)
-        {
-
-            if (!_authService.IsPageValid(pageId))
-            {
-                return PageNotValid(pageId);
-            }
-            if (!_authService.UserPermCheck(pageId, 1))
-            {
-                return PermissionDenied("Fill AgingReport ");
-            }
-            try
-            {
-                var cmd = _context.Database.GetDbConnection().CreateCommand();
-                cmd.CommandType = CommandType.Text;
-                var accountID = agingRepDto.Account?.Id.HasValue ?? false ? agingRepDto.Account.Id.ToString() : "NULL";
-                string staffID = agingRepDto.Staff?.Id.HasValue ?? false ? agingRepDto.Staff.Id.ToString() : "NULL";
-                string areaID = agingRepDto.SalesArea?.Id.HasValue ?? false ? agingRepDto.SalesArea.Id.ToString() : "NULL";
-                string partyCategoryID = agingRepDto.PartyCategory?.Id.HasValue ?? false ? agingRepDto.PartyCategory.Id.ToString() : "NULL";
-
-                cmd.CommandText = $"Exec AgingSP @DateFrom='{agingRepDto.DateFrom}',@DateUpto='{agingRepDto.DateUpto}',@Branchid={agingRepDto.Branch.Id},@Nature='{agingRepDto.ViewBy}',@AccountID={accountID},@StaffID={staffID},@AreaID={areaID},@PartyCategoryID={partyCategoryID}";
-
-                 _context.Database.GetDbConnection().Open();
-                using (var reader = cmd.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        var tb = new DataTable();
-                        tb.Load(reader);
-
-                        List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
-                        Dictionary<string, object> row;
-                        foreach (DataRow dr in tb.Rows)
-                        {
-                            row = new Dictionary<string, object>();
-                            foreach (DataColumn col in tb.Columns)
-                            {
-                                row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
-                            }
-                            rows.Add(row);
-                        }
-                        return CommonResponse.Ok(rows);
-
-                    }
-                    return CommonResponse.NoContent();
-                }
-            }
-            catch
-            {
-                _logger.LogError("Failed to fill Aging Report ");
-                return CommonResponse.Error("Failed to fill Aging Report ");
-            }
-        }
-
-        //fills e return
-        public CommonResponse FilleReturn(eReturnsDto eReturnsDto, int pageId)
-        {
-            if (!_authService.IsPageValid(pageId))
-            {
-                return PageNotValid(pageId);
-            }
-            if (!_authService.UserPermCheck(pageId, 1))
-            {
-                return PermissionDenied("Fill eReturn ");
-            }
-            try
-            {
-                string viewBy = "FinanceVoucherwise";
-                var data = _context.eReturnView.FromSqlRaw("exec eReturnsSP @DateFrom={0},@DateUpto={1},@Branchid={2},@ViewBy={3}," +
-                    "@VATType={4},@VoucherID={5},@UserID={6}",
-                    eReturnsDto.DateFrom, eReturnsDto.DateUpto, eReturnsDto.Branch.Id, viewBy, eReturnsDto.VatType.Value, eReturnsDto.Voucher.Id, eReturnsDto.User.Id).ToList();
-                return CommonResponse.Ok(data);
-            }
-            catch
-            {
-                _logger.LogError("Failed to fill eReturn ");
-                return CommonResponse.Error("Failed to fill eReturn ");
-            }
-        }
+      
         //fills costcentre report
         public CommonResponse FillCostCentreRep(CostCentreReportDto dto, int pageId)
         {
@@ -611,58 +524,6 @@ namespace Dfinance.Finance.Statements
                 return CommonResponse.Error("Failed to fill CostCentre report ");
             }
         }
-        //fills Account Breakup and CostCentre Breakup
-        public CommonResponse FillAccountBreakUp(CostCentreReportDto dto, int pageId)
-        {
-            if (!_authService.IsPageValid(pageId))
-            {
-                return PageNotValid(pageId);
-            }
-            if (!_authService.UserPermCheck(pageId, 1))
-            {
-                return PermissionDenied("Fill the data ");
-            }
-            try
-            {
-                int branchId = _authService.GetBranchId().Value;
-                string criteria = "";
-                if ((Page)pageId == Page.AccountBreakup)
-                    criteria = "ProjectwiseCashBook";
-                else if ((Page)pageId == Page.CostCenter_Breakup)
-                    criteria = "ProjectDetails";
-
-                var cmd = _context.Database.GetDbConnection().CreateCommand();
-                cmd.CommandType = CommandType.Text;
-                cmd.CommandText = $"Exec CostCentreSP @DateFrom='{dto.StartDate}',@Criteria='{criteria}',@DateUpto='{dto.EndDate}',@BranchID={branchId}";
-                _context.Database.GetDbConnection().Open();
-                using (var reader = cmd.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        var tb = new DataTable();
-                        tb.Load(reader);
-
-                        List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
-                        Dictionary<string, object> row;
-                        foreach (DataRow dr in tb.Rows)
-                        {
-                            row = new Dictionary<string, object>();
-                            foreach (DataColumn col in tb.Columns)
-                            {
-                                row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
-                            }
-                            rows.Add(row);
-                        }
-                        return CommonResponse.Ok(rows);
-                    }
-                    return CommonResponse.NoContent();
-                }
-            }
-            catch
-            {
-                _logger.LogError("Failed to fill Account Breakup/CostCentre Breakup ");
-                return CommonResponse.Error("Failed to fill the data ");
-            }
-        }
+      
     }
 }

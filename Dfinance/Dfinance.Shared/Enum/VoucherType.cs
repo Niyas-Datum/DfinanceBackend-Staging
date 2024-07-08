@@ -40,7 +40,13 @@ namespace Dfinance.Shared.Enum
         AccountBreakup=214,
         CostCenter_Breakup=213,
         CostCentre_AccountStatement=536,
-        Aging_Report=281
+        Aging_Report=281,
+        DayBook=76,
+        CashOrBank_Book=250,
+        PartyOutStanding= 282,
+        Salesman_Collection_Report=527,
+        Creditor_Debitor_Balance=480,
+        eReturn=284
 
     }
 }
