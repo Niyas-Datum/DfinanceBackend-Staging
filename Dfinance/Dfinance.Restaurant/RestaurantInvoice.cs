@@ -3,6 +3,7 @@ using Dfinance.AuthAppllication.Services.Interface;
 using Dfinance.Core.Domain;
 using Dfinance.Core.Infrastructure;
 using Dfinance.Core.Views;
+using Dfinance.DataModels.Dto;
 using Dfinance.DataModels.Dto.Finance;
 using Dfinance.DataModels.Dto.Inventory.Purchase;
 using Dfinance.Inventory;
@@ -20,6 +21,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Transactions;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using static System.Collections.Specialized.BitVector32;
 
 namespace Dfinance.Restaurant
@@ -157,6 +159,7 @@ namespace Dfinance.Restaurant
             {
                 try
                 {
+                    SetSettings();
                     RestaurentDto.FiTransactionAdditional.CreditPeriod = table.Id;
                     RestaurentDto.FiTransactionAdditional.AddressLine1 = table.TableName;
                     RestaurentDto.FiTransactionAdditional.OrderNo = tokenId;
@@ -172,6 +175,7 @@ namespace Dfinance.Restaurant
                     }
                     //int VoucherId=_com.GetVoucherId(PageId);
                     string Status = "Approved";
+                    RestaurentDto.FiTransactionAdditional.Code=GetAutoVoucherNo(voucherId);
                     var transaction = _transactionService.SaveTransaction(RestaurentDto, PageId, voucherId, Status).Data;
                     int TransId = 0;
                     var transType = transaction.GetType();
@@ -248,6 +252,7 @@ namespace Dfinance.Restaurant
                     }
                     //int VoucherId=_com.GetVoucherId(PageId);
                     string Status = "Approved";
+
                     var transaction = _transactionService.SaveTransaction(RestaurentDto, PageId, voucherId, Status).Data;
                     int TransId = 0;
                     var transType = transaction.GetType();
@@ -337,16 +342,75 @@ namespace Dfinance.Restaurant
             {
                 string? catId=null;
                 if (categoryId == null)
-                {
                     catId = "NULL ";
-                }
                 else
-                    catId = categoryId.ToString();
-                
-
+                    catId = categoryId.ToString();       
                 var priceCategoryId = _context.MaPriceCategory.Where(p => p.Name == "Dine In").Select(p => p.Id).FirstOrDefault();
                 var data = _context.ProductVews.FromSqlRaw($"Exec RestKitchenCategorySP @Criteria='GetProducts',@CategoryID={catId},@PriceCategoryID={priceCategoryId}").ToList();
+                List<ItemOptionsListView>? itemOptions = new List<ItemOptionsListView>();
+                foreach ( var item in data)
+                {
+                    var options = FillItemOptions(item.ID).Data as List<ItemOptionsView>;
+
+                    if (options != null)
+                    {
+                        itemOptions.Add(new ItemOptionsListView { ItemId = (int)item.ID, ItemOptions = options });
+                    }
+                }
                 _logger.LogInformation("GetProducts successfully");
+                return CommonResponse.Ok(new { Product = data, ItemOptions= itemOptions });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Error(ex);
+            }
+        }
+        private string GetAutoVoucherNo(int voucherId)
+        {
+            int branchid = _authService.GetBranchId().Value;           
+            int lastTransNo = Convert.ToInt32(_context.FiTransaction.Where(x => x.VoucherId == voucherId && x.Date == DateTime.Now.AddHours(-1 * dayCloseLagHours).Date && x.CompanyId==branchid).Max(x => x.DailyTransactionNo));
+            lastTransNo++;
+            return lastTransNo.ToString();
+        }
+        private int dayCloseLagHours = 0;
+        private void SetSettings()
+        {
+            string[] keys = new string[] { "DayCloseLagHours" };
+            var settings = _context.MaSettings
+        .Where(m => keys.Contains(m.Key))
+        .Select(m => new
+        {
+            Key = m.Key,
+            Value = m.Value,
+        }).ToList();
+            dayCloseLagHours = Convert.ToInt32(settings.Where(s => s.Key == "DayCloseLagHours").Select(s => s.Value).FirstOrDefault());
+
+        }
+
+        //ItemOptions
+
+        private CommonResponse FillItemOptions(int? itemId)
+        {
+            try
+            {
+                var data = _context.ItemOptionsViews.FromSqlRaw($"Exec InvItemOptionsSP @Criteria=2,@ItemId={itemId}").ToList();
+                if(data.Count == 0) data=null;
+                _logger.LogInformation("FillItemOptions successfully");
+                return CommonResponse.Ok(data);
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Error(ex);
+            }
+        }
+        public CommonResponse FillItemOptionsMaster()
+        {
+            try
+            {
+                var data = _context.ItemOptionsViews.FromSqlRaw($"Exec InvItemOptionsSP @Criteria=1").ToList();
+                _logger.LogInformation("FillItemOptionsMaster successfully");
                 return CommonResponse.Ok(data);
             }
             catch (Exception ex)
@@ -355,6 +419,33 @@ namespace Dfinance.Restaurant
                 return CommonResponse.Error(ex);
             }
         }
-
+        public CommonResponse SaveItemOptions(ItemOptionsDto itemOptionsDto)
+        {
+            try
+            {
+                var data = _context.Database.ExecuteSqlRaw($"Exec InvItemOptionsSP @Criteria=3,@ItemID={itemOptionsDto.ItemId},@Options='{itemOptionsDto.Options}'");
+                _logger.LogInformation("InsertItemOptions successfully");
+                return CommonResponse.Ok("Save Successfully" );
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Error(ex);
+            }
+        }
+        public CommonResponse UpdateItemOptions(ItemOptionsDto itemOptionsDto)
+        {
+            try
+            {
+                var data = _context.Database.ExecuteSqlRaw($"Exec InvItemOptionsSP @Criteria=4,@ItemID={itemOptionsDto.ItemId},@Options='{itemOptionsDto.Options}',@ID={itemOptionsDto.Id}");
+                _logger.LogInformation("InsertItemOptions successfully");
+                return CommonResponse.Ok("Update Successfully");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Error(ex);
+            }
+        }
     }
 }

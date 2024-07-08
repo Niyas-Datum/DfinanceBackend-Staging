@@ -1,4 +1,5 @@
 ﻿using Dfinance.Core.Views;
+using Dfinance.DataModels.Dto;
 using Dfinance.DataModels.Dto.Inventory.Purchase;
 using Dfinance.Shared.Domain;
 using System;
@@ -18,5 +19,8 @@ namespace Dfinance.Restaurant.Interface
         CommonResponse GetKitchenCategory(int transactionId);
         CommonResponse PrintKOT(int transactionId, int kitchenCatId);
         CommonResponse GetProducts(int? categoryId);
+        CommonResponse SaveItemOptions(ItemOptionsDto itemOptionsDto);
+        CommonResponse UpdateItemOptions(ItemOptionsDto itemOptionsDto);
+        CommonResponse FillItemOptionsMaster();
     }
 }

@@ -29,8 +29,9 @@ namespace Dfinance.DataModels.Dto.Inventory.Purchase
         public bool? GrossAmountEdit { get; set; }
         public InvTransactionAdditionalDto? FiTransactionAdditional { get; set; }
         public List<InvTransItemDto> Items { get; set; }
-        public InvTransactionEntriesDto? TransactionEntries { get; set; }       
-        
+        public InvTransactionEntriesDto? TransactionEntries { get; set; }   
+
+
     }
    public class InvTransItemDto
     {
@@ -243,6 +244,7 @@ namespace Dfinance.DataModels.Dto.Inventory.Purchase
         public bool? Approve {  get; set; }
  public int? Days { get; set; }
         public bool? CloseVoucher {  get; set; }
+        public string? Code { get; set; }
 
     }
 }

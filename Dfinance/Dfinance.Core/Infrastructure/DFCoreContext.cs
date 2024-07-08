@@ -348,6 +348,7 @@ public partial class DFCoreContext : DbContext
 
     //RecallVoucher
     public DbSet<RecallVoucherView> RecallVoucherViews { get; set; }
+    public DbSet<ItemOptionsView> ItemOptionsViews { get; set; }
 
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -598,6 +599,7 @@ public partial class DFCoreContext : DbContext
         mb.Entity<PrintKotView>().HasNoKey().ToView(null);
         mb.Entity<KitchenCategoryView>().HasNoKey().ToView(null);
         mb.Entity<ProductVew>().HasNoKey().ToView(null);
+        mb.Entity<ItemOptionsView>().HasNoKey().ToView(null);
 
         //RecallVoucher
         mb.Entity<RecallVoucherView>().HasNoKey().ToView(null);
