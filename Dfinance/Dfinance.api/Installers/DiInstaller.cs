@@ -171,8 +171,9 @@ public class DiInstaller : IInstaller
         //RecallVoucher
         service.AddScoped<IRecallVoucherService, RecallVoucherService>();
 
-
+        //finance-statements
         service.AddScoped<IFinStatementService, FinStatementService>();
-
+        //AccountConfiguration
+        service.AddScoped<IAccountConfigurationService, AccountConfigurationService>();
     }
 }

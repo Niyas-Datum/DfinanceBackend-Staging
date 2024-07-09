@@ -196,9 +196,12 @@ namespace Dfinance.Shared.Routes.v1
             public const string costCentrRep = $"{Main}/costCentrRep";
             public const string accBrkup = $"{Main}/accBrkup";
         }
-
-
-
+        public static class AccConfig
+        {
+            public const string Main = $"{Base}/AccConfig";
+            public const string fill = $"{Main}/fill";
+            public const string update = $"{Main}/update";
+        }
 
 
     }
