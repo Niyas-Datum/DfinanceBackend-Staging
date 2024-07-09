@@ -353,6 +353,8 @@ public partial class DFCoreContext : DbContext
     public DbSet<InventoryProfitVoucherViews> InventoryProfitVoucherViews { get; set; }
     public DbSet<InventoryProfitPartyView> InventoryProfitPartyView { get; set; }
     public DbSet<InventoryProfitPartyViews> InventoryProfitPartyViews { get; set; }
+    public DbSet<ItemsHistoryReportView> ItemsHistoryReportView { get; set; }
+    
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     //  => optionsBuilder.UseSqlServer(@"Data Source=ip.datuminnovation.com,9600;TrustServerCertificate=true;Initial Catalog=DatumSystemMain;User ID=sa;pwd=Datum123!");
@@ -629,8 +631,8 @@ public partial class DFCoreContext : DbContext
         mb.Entity<InventoryProfitVoucherView>().HasNoKey().ToView(null);
         mb.Entity<InventoryProfitVoucherViews>().HasNoKey().ToView(null);
         mb.Entity<InventoryProfitPartyView>().HasNoKey().ToView(null);
-        mb.Entity<InventoryProfitPartyViews>().HasNoKey().ToView(null);
-
+        mb.Entity<InventoryProfitPartyViews>().HasNoKey().ToView(null); 
+        mb.Entity<ItemsHistoryReportView>().HasNoKey().ToView(null);
 
 
 

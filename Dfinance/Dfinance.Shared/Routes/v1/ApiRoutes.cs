@@ -284,6 +284,7 @@ namespace Dfinance.Shared.Routes.v1
             public const string InventoryAgeing = $"{Main}/ invageing";
             public const string ItemExpiryReport = $"{Main}/ itemexprep"; 
             public const string InventoryProfitSP = $"{Main}/ invprofit";
+            public const string ItemHistory = $"{Main}/ invhis";
         }
         public static class ItemUnits
         {

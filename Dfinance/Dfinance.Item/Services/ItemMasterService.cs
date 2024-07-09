@@ -9,6 +9,7 @@ using Dfinance.Shared.Domain;
 using JsonDiffPatchDotNet;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -1040,6 +1041,99 @@ namespace Dfinance.Item.Services.Inventory
                 return CommonResponse.Error(ex.Message);
             }
         }
+        /// <summary>
+        /// report ItemHistory
+        /// </summary>
+        /// <param name="viewby"></param>
+        /// <param name="startdate"></param>
+        /// <param name="enddate"></param>
+        /// <param name="warehouse"></param>
+        /// <param name="customersupplier"></param>
+        /// <param name="item"></param>
+        /// <param name="unit"></param>
+        /// <param name="barcode"></param>
+        /// <param name="orgin"></param>
+        /// <param name="brand"></param>
+        /// <param name="commodity"></param>
+        /// <param name="branch"></param>
+        /// <param name="vouchertype"></param>
+        /// <param name="serialno"></param>
+        /// <returns></returns>
+        public CommonResponse GetItemHistory(string? viewby, DateTime startdate, DateTime enddate, int? warehouse, int? customersupplier, int? item, int? unit, string? barcode, int orgin, int? brand, int? commodity, int? branch, int? vouchertype, string? serialno)
+        {
+            try
+            {
+                object result = null;
+                int? branchid = 1;
+                var query = new StringBuilder();
+                query.Append("Exec ItemsHistorySP ");
+
+                // Add a conditionally appended parameters to a list
+                var parameters = new List<string>
+        {
+            $"@BranchID = {branchid ?? 0}",
+            $"@DateFrom = '{startdate:yyyy-MM-dd}'",
+            $"@DateUpto = '{enddate:yyyy-MM-dd}'"
+        };
+
+                if (viewby != null)
+                {
+                    parameters.Add($"@Nature = '{viewby}'");
+                }
+                if (item.HasValue && item.Value != 0)
+                {
+                    parameters.Add($"@ItemID = {item}");
+                }
+                if (customersupplier.HasValue && customersupplier.Value != 0)
+                {
+                    parameters.Add($"@AccountID = {customersupplier}");
+                }
+                if (!string.IsNullOrEmpty(barcode))
+                {
+                    parameters.Add($"@Barcode = '{barcode}'");
+                }
+                if (orgin != 0)
+                {
+                    parameters.Add($"@OriginID = {orgin}");
+                }
+                if (brand.HasValue && brand.Value != 0)
+                {
+                    parameters.Add($"@BrandID = {brand}");
+                }
+                if (commodity.HasValue && commodity.Value != 0)
+                {
+                    parameters.Add($"@CommodityID = {commodity}");
+                }
+                if (unit.HasValue && unit.Value != 0)
+                {
+                    parameters.Add($"@Unit = {unit}");
+                }
+                if (warehouse.HasValue && warehouse.Value != 0)
+                {
+                    parameters.Add($"@WarehouseID = {warehouse}");
+                }
+                if (vouchertype.HasValue && vouchertype.Value != 0)
+                {
+                    parameters.Add($"@VoucherID = {vouchertype}");
+                }
+                if (!string.IsNullOrEmpty(serialno))
+                {
+                    parameters.Add($"@UniqueID = '{serialno}'");
+                }
+
+                // Join parameters with commas
+                query.Append(string.Join(", ", parameters));
+
+                result = _context.ItemsHistoryReportView.FromSqlRaw(query.ToString()).ToList();
+                return CommonResponse.Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Error(ex.Message);
+            }
+        }
+
     }
 }
 
