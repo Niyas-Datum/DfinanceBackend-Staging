@@ -23,6 +23,8 @@ namespace Dfinance.Item.Services.Inventory.Interface
         CommonResponse GetInventoryAgeing(int? AccountID, DateTime? FromDate, DateTime? ToDate, bool? OpeningBalance, int? VoucherID, string? Nature);
         CommonResponse GetItemExpiryReport(ItemExpiryReportDto itemExpiryReportDto);
         CommonResponse GetInventoryProfitSP(string? ViewBy, DateTime StartDate, DateTime EndDate, int? Customer, bool? Detailed, int Item, string? Salesman, int? AccountId);
-        CommonResponse GetItemHistory(string? viewby,DateTime startdate,DateTime enddate,int? warehouse,int? customersupplier,int? item,int? unit,string? barcode,int orgin,int? brand,int? commodity,int? branch,int? vouchertype,string? serialno);
-        }
+         CommonResponse GetItemHistory(string? viewby, DateTime startdate, DateTime enddate, int? warehouse, int? customersupplier, int? item, int? unit, string? barcode, int orgin, int? brand, int? commodity, int? branch, int? vouchertype, string? serialno);
+
+        CommonResponse GetROLReport(int? warehouse, int? type, int? commodity, int? item);
+    }
 }

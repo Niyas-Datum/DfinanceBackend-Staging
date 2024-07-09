@@ -353,12 +353,35 @@ namespace Dfinance.api.Controllers.v1.DMain.Item
         /// <param name="serialno"></param>
         /// <returns></returns>
         [HttpGet(ApiRoutes.ItemMaster.ItemHistory)]
-        [AllowAnonymous]
+
         public IActionResult GetItemHistory(string? viewby, DateTime startdate, DateTime enddate, int? warehouse, int? customersupplier, int? item, int? unit, string? barcode, int orgin, int? brand, int? commodity, int? branch, int? vouchertype, string? serialno)
         {
             try
             {
                 var result = _itemService.GetItemHistory(viewby, startdate, enddate, warehouse, customersupplier, item, unit, barcode, orgin, brand, commodity, branch, vouchertype, serialno);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="warehouse"></param>
+        /// <param name="type"></param>
+        /// <param name="commodity"></param>
+        /// <param name="item"></param>
+        /// <returns></returns>
+          [HttpGet(ApiRoutes.ItemMaster.ROLReport)]
+       
+        public IActionResult GetROLReport(int? warehouse, int? type, int? commodity, int? item)
+        {
+            try
+            {
+                var result = _itemService.GetROLReport(warehouse, type, commodity, item);
                 return Ok(result);
             }
             catch (Exception ex)

@@ -868,7 +868,7 @@ namespace Dfinance.Item.Services.Inventory
             try
             {
                 int userId = _authService.GetId().Value;
-                int? branchId = _authService.GetBranchId();
+                int? branchId = _authService.GetBranchId().Value;
                 var result = _context.InventoryAgeingView.FromSqlRaw($"Exec AccountStatementAgingSP @DateFrom='{FromDate}',@BranchID='{branchId}',@AccountID='{AccountID}',@UserID='{userId}',@Nature='{Nature}'").ToList();
                 return CommonResponse.Ok(result);
             }
@@ -887,7 +887,7 @@ namespace Dfinance.Item.Services.Inventory
         {
             try
             {
-                int? branchid = 1;
+                int? branchid = _authService.GetBranchId().Value;
                 var query = new StringBuilder();
                 query.Append("Exec ItemExpiryReportSP ");
 
@@ -923,7 +923,7 @@ namespace Dfinance.Item.Services.Inventory
                     query.AppendFormat("@OriginID = {0}, ", itemExpiryReportDto.Origin.Id);
                 }
 
-                if (itemExpiryReportDto.Brand.Id!=0)
+                if (itemExpiryReportDto.Brand.Id != 0)
                 {
                     query.AppendFormat("@BrandID = {0}, ", itemExpiryReportDto.Brand.Id);
                 }
@@ -933,12 +933,12 @@ namespace Dfinance.Item.Services.Inventory
                     query.AppendFormat("@CommodityID = {0}, ", itemExpiryReportDto.Commodity.Id);
                 }
 
-                if (itemExpiryReportDto.Color.Id!=0)
+                if (itemExpiryReportDto.Color.Id != 0)
                 {
                     query.AppendFormat("@ColorID = {0}, ", itemExpiryReportDto.Color.Id);
                 }
 
-                if (itemExpiryReportDto.ExpiryDays!=0)
+                if (itemExpiryReportDto.ExpiryDays != 0)
                 {
                     query.AppendFormat("@Days = {0}, ", itemExpiryReportDto.ExpiryDays);
                 }
@@ -974,10 +974,10 @@ namespace Dfinance.Item.Services.Inventory
             try
             {
                 object result = null;
-                int? branchid = 1;
+                int? branchid = _authService.GetBranchId().Value;
                 var query = new StringBuilder();
-                query.Append("Exec InventoryProfitSP "); 
-                query.AppendFormat("@Criteria = {0}, ", ViewBy );
+                query.Append("Exec InventoryProfitSP ");
+                query.AppendFormat("@Criteria = {0}, ", ViewBy);
                 query.AppendFormat("@BranchID = {0}, ", branchid ?? 0);
                 query.AppendFormat("@DateFrom = '{0}', ", StartDate.ToString("yyyy-MM-dd"));
                 query.AppendFormat("@DateUpto = '{0}', ", EndDate.ToString("yyyy-MM-dd"));
@@ -1018,7 +1018,7 @@ namespace Dfinance.Item.Services.Inventory
                         result = _context.InventoryProfitVoucherView.FromSqlRaw(query.ToString()).ToList();
 
                     }
-                    
+
                 }
                 else if (ViewBy == "Party")
                 {
@@ -1064,7 +1064,7 @@ namespace Dfinance.Item.Services.Inventory
             try
             {
                 object result = null;
-                int? branchid = 1;
+                int? branchid = _authService.GetBranchId().Value; 
                 var query = new StringBuilder();
                 query.Append("Exec ItemsHistorySP ");
 
@@ -1125,6 +1125,55 @@ namespace Dfinance.Item.Services.Inventory
                 query.Append(string.Join(", ", parameters));
 
                 result = _context.ItemsHistoryReportView.FromSqlRaw(query.ToString()).ToList();
+                return CommonResponse.Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Error(ex.Message);
+            }
+        }
+        /// <summary>
+        /// Report=>ROL
+        /// </summary>
+        /// <param name="warehouse"></param>
+        /// <param name="type"></param>
+        /// <param name="commodity"></param>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public CommonResponse GetROLReport(int? warehouse, int? type, int? commodity, int? item)
+        {
+            try
+            {
+                object result = null;
+                int? branchid = _authService.GetBranchId().Value; 
+                string Criteria = "FillROLInfo";
+                var query = new StringBuilder();
+                query.Append("Exec ItemMasterSP ");
+                query.AppendFormat("@Criteria = {0}, ", Criteria);
+                query.AppendFormat("@BranchID = {0}, ", branchid ?? 0);
+
+                if (item != 0 && item != null)
+                {
+                    query.AppendFormat(", @ID = {0}", item);
+                }
+                if (warehouse != 0 && warehouse != null)
+                {
+                    query.AppendFormat(", @LocID = {0}", warehouse);
+                }
+                if (type !=  0 && type != null)
+                {
+                    query.AppendFormat(", @TypeofWoodID = {0}", type);
+                }
+                if (commodity != 0 && commodity != null)
+                {
+                    query.AppendFormat(", @CommodityID = {0}", commodity);
+                }
+                if (query.ToString().EndsWith(", "))
+                {
+                    query.Length -= 2;
+                }
+                result = _context.ROLView.FromSqlRaw(query.ToString()).ToList();
                 return CommonResponse.Ok(result);
             }
             catch (Exception ex)

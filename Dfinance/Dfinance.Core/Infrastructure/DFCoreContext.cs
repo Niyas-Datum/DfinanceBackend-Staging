@@ -338,7 +338,7 @@ public partial class DFCoreContext : DbContext
 
     public DbSet<InventoryTransactionsView> InventoryTransactionsView { get; set; }
     public DbSet<MonthlyInvSummaryView> MonthlyInvSummaryView { get; set; }
-
+    public DbSet<ROLView> ROLView { get; set; }
     //Restaurent
     public DbSet<CommodityView> CommodityViews { get; set; }
     public DbSet<TableView> TableViews { get; set; }
@@ -633,8 +633,9 @@ public partial class DFCoreContext : DbContext
         mb.Entity<InventoryProfitPartyView>().HasNoKey().ToView(null);
         mb.Entity<InventoryProfitPartyViews>().HasNoKey().ToView(null); 
         mb.Entity<ItemsHistoryReportView>().HasNoKey().ToView(null); 
-  mb.Entity<MonthlyInvSummaryView>().HasNoKey().ToView(null);
-
+        mb.Entity<MonthlyInvSummaryView>().HasNoKey().ToView(null);
+        mb.Entity<ROLView>().HasNoKey().ToView(null);
+        
 
     }
 
