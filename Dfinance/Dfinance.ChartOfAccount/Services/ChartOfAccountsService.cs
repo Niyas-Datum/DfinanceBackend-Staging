@@ -422,10 +422,29 @@ namespace Dfinance.ChartOfAccount.Services.Finance
                 return CommonResponse.Error(ex);
             }
         }
+        
         public CommonResponse AccountPopUp(int? pageId=null)
         {
             try
             {
+                //for account popup in AccountConfiguration
+                int branchId = _authService.GetBranchId().Value;
+                if (pageId!=null && (Page)pageId == Page.Account_Configuration)
+                {
+                    var result = (from account in _context.FiMaAccounts
+                                       join branchAccount in _context.FiMaBranchAccounts
+                                       on account.Id equals branchAccount.AccountId
+                                       where account.Active && branchAccount.BranchId == branchId
+                                       select new AccountDto
+                                       {
+                                           AccountCode = account.Alias,
+                                           AccountName = account.Name,
+                                           ID = account.Id
+                                       }).ToList();
+
+                    return CommonResponse.Ok(result);
+                }
+                //for account popup in AgingReport in Finance Statements
                 if (pageId!=null && (Page)pageId == Page.Aging_Report)
                 {
                     var result = _context.FiMaAccounts

@@ -312,9 +312,11 @@ public partial class DFCoreContext : DbContext
     public DbSet<AccStatementView> AccStatementView { get; set; }   
     public DbSet<BillwiseStatementView> BillwiseStatementView { get; set; }
     public DbSet<BalSheetView3> BalSheetView3 { get; set; }  
-    public DbSet<ProfitAndLossView3> ProfitAndLossView3 { get; set; }  
-   
+    public DbSet<ProfitAndLossView3> ProfitAndLossView3 { get; set; }
 
+    //Account Configuration
+    public DbSet<AccountConfigView> AccountConfigView { get; set; }
+    
 
     //itemregister report
     public DbSet<ItemCatalogueView> ItemCatalogueView { get; set; }
@@ -605,13 +607,16 @@ public partial class DFCoreContext : DbContext
 
         //finance-statements
        
-        mb.Entity<AccStatementView>().HasNoKey().ToView(null);
-       
+        mb.Entity<AccStatementView>().HasNoKey().ToView(null);       
         mb.Entity<BillwiseStatementView>().HasNoKey().ToView(null);
-        mb.Entity<BalSheetView3>().HasNoKey().ToView(null);
-       
+        mb.Entity<BalSheetView3>().HasNoKey().ToView(null);       
         mb.Entity<ProfitAndLossView3>().HasNoKey().ToView(null);
-       
+
+        //Account Configuration
+        mb.Entity<AccountConfigView>().HasNoKey().ToView(null);
+        
+
+
 
         mb.Entity<InventoryProfitItemView>().HasNoKey().ToView(null);
         mb.Entity<InventoryProfitVoucherView>().HasNoKey().ToView(null);

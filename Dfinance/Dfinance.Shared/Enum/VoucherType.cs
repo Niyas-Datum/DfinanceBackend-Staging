@@ -46,7 +46,9 @@ namespace Dfinance.Shared.Enum
         PartyOutStanding= 282,
         Salesman_Collection_Report=527,
         Creditor_Debitor_Balance=480,
-        eReturn=284
+        eReturn=284,
+
+        Account_Configuration=92
 
     }
 }
