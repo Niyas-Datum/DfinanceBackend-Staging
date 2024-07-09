@@ -285,7 +285,7 @@ public partial class DFCoreContext : DbContext
     //voucher in finance
     public DbSet<AccountCodesView> AccountCodesView { get; set; }
     public DbSet<ContraAccCode> ContraAccCode { get; set; }
-    
+
     //ReportsView
     public DbSet<PurchaseReportView> PurchaseReportView { get; set; }
     public DbSet<PurchaseReportViews> PurchaseReportViews { get; set; }
@@ -320,7 +320,7 @@ public partial class DFCoreContext : DbContext
     public DbSet<DebitCreditView> DebitCreditView { get; set; }
     public DbSet<ProfitAndLossView3> ProfitAndLossView3 { get; set; }
     public DbSet<eReturnView> eReturnView { get; set; }
-   
+
 
 
     //itemregister report
@@ -329,9 +329,9 @@ public partial class DFCoreContext : DbContext
 
 
     //inventoryAgen
-    public DbSet<InventoryAgeingView> InventoryAgeingView {  get; set; }    
-    public DbSet<InventoryAgeingViews> InventoryAgeingViews {  get; set; }
-    public DbSet<ItemExpiryReportView> ItemExpiryReportView {  get; set; }      
+    public DbSet<InventoryAgeingView> InventoryAgeingView { get; set; }
+    public DbSet<InventoryAgeingViews> InventoryAgeingViews { get; set; }
+    public DbSet<ItemExpiryReportView> ItemExpiryReportView { get; set; }
 
     //HR
     public DbSet<HREmployee> Hremployees { get; set; }
@@ -354,7 +354,9 @@ public partial class DFCoreContext : DbContext
     public DbSet<InventoryProfitPartyView> InventoryProfitPartyView { get; set; }
     public DbSet<InventoryProfitPartyViews> InventoryProfitPartyViews { get; set; }
     public DbSet<ItemsHistoryReportView> ItemsHistoryReportView { get; set; }
-    
+    public DbSet<QuotationStatusReportView> QuotationStatusReportView { get; set; }
+    public DbSet<QuotationComparisonView> QuotationComparisonView { get; set; }
+
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     //  => optionsBuilder.UseSqlServer(@"Data Source=ip.datuminnovation.com,9600;TrustServerCertificate=true;Initial Catalog=DatumSystemMain;User ID=sa;pwd=Datum123!");
@@ -581,7 +583,7 @@ public partial class DFCoreContext : DbContext
         mb.Entity<InventoryAgeingViews>().HasNoKey().ToView(null);
         mb.Entity<ImportItemListView>().HasNoKey().ToView(null);
 
-        mb.Entity <ItemExpiryReportView>().HasNoKey().ToView(null);
+        mb.Entity<ItemExpiryReportView>().HasNoKey().ToView(null);
 
         mb.Entity<InventoryTransactionsView>().HasNoKey().ToView(null);
 
@@ -631,11 +633,12 @@ public partial class DFCoreContext : DbContext
         mb.Entity<InventoryProfitVoucherView>().HasNoKey().ToView(null);
         mb.Entity<InventoryProfitVoucherViews>().HasNoKey().ToView(null);
         mb.Entity<InventoryProfitPartyView>().HasNoKey().ToView(null);
-        mb.Entity<InventoryProfitPartyViews>().HasNoKey().ToView(null); 
-        mb.Entity<ItemsHistoryReportView>().HasNoKey().ToView(null); 
+        mb.Entity<InventoryProfitPartyViews>().HasNoKey().ToView(null);
+        mb.Entity<ItemsHistoryReportView>().HasNoKey().ToView(null);
         mb.Entity<MonthlyInvSummaryView>().HasNoKey().ToView(null);
         mb.Entity<ROLView>().HasNoKey().ToView(null);
-        
+        mb.Entity<QuotationStatusReportView>().HasNoKey().ToView(null);
+        mb.Entity<QuotationComparisonView>().HasNoKey().ToView(null);
 
     }
 

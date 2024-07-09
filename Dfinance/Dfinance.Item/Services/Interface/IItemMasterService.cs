@@ -1,6 +1,7 @@
 ﻿using Dfinance.DataModels.Dto.Item;
 using Dfinance.DataModels.Dto.Common;
 using Dfinance.Shared.Domain;
+using System.Data;
 
 namespace Dfinance.Item.Services.Inventory.Interface
 {
@@ -26,5 +27,8 @@ namespace Dfinance.Item.Services.Inventory.Interface
          CommonResponse GetItemHistory(string? viewby, DateTime startdate, DateTime enddate, int? warehouse, int? customersupplier, int? item, int? unit, string? barcode, int orgin, int? brand, int? commodity, int? branch, int? vouchertype, string? serialno);
 
         CommonResponse GetROLReport(int? warehouse, int? type, int? commodity, int? item);
+        CommonResponse GetQuotationStatusReport(int? VoucherId, string? VoucherNo);
+        CommonResponse GetQuotationComparisonView(DateTime DateFrom, DateTime DateUpto, int BranchID, string? TransactionNo, int? AccountID, int? ItemID, int? VoucherID);
+
     }
 }

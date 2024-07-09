@@ -286,6 +286,8 @@ namespace Dfinance.Shared.Routes.v1
             public const string InventoryProfitSP = $"{Main}/ invprofit";
             public const string ItemHistory = $"{Main}/ invhis";
             public const string ROLReport= $"{Main}/ rolreport";
+            public const string GetQuotationStatusReport = $"{Main}/ getQusrep";
+            public const string GetQuotationComparisonReport = $"{Main}/ getQusComprep"; 
         }
         public static class ItemUnits
         {

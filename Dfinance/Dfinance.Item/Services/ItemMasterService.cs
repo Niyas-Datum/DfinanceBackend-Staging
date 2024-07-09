@@ -17,6 +17,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Data;
 using System.Text;
 using System.Text.Json;
+using static Dfinance.Shared.Routes.InvRoute;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 
@@ -1064,7 +1065,7 @@ namespace Dfinance.Item.Services.Inventory
             try
             {
                 object result = null;
-                int? branchid = _authService.GetBranchId().Value; 
+                int? branchid = _authService.GetBranchId().Value;
                 var query = new StringBuilder();
                 query.Append("Exec ItemsHistorySP ");
 
@@ -1146,7 +1147,7 @@ namespace Dfinance.Item.Services.Inventory
             try
             {
                 object result = null;
-                int? branchid = _authService.GetBranchId().Value; 
+                int? branchid = _authService.GetBranchId().Value;
                 string Criteria = "FillROLInfo";
                 var query = new StringBuilder();
                 query.Append("Exec ItemMasterSP ");
@@ -1161,7 +1162,7 @@ namespace Dfinance.Item.Services.Inventory
                 {
                     query.AppendFormat(", @LocID = {0}", warehouse);
                 }
-                if (type !=  0 && type != null)
+                if (type != 0 && type != null)
                 {
                     query.AppendFormat(", @TypeofWoodID = {0}", type);
                 }
@@ -1182,9 +1183,85 @@ namespace Dfinance.Item.Services.Inventory
                 return CommonResponse.Error(ex.Message);
             }
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="VoucherId"></param>
+        /// <param name="VoucherNo"></param>
+        /// <returns></returns>
+        public CommonResponse GetQuotationStatusReport(int? VoucherId, string? VoucherNo)
+        {
+            try
+            {
+                object result = null;
+                string cri = "ReferenceReport";
+                result = _context.QuotationStatusReportView
+                   .FromSql($"exec VoucherAdditionalsSP @Criteria='{cri}', @VoucherID={VoucherId}, @ReferenceNo='{VoucherNo}'")
+                   .ToList();
 
+                return CommonResponse.Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Error(ex.Message);
+            }
+        }
+        /// <summary>
+        /// QuotationComparison
+        /// </summary>
+        /// <param name="DateFrom"></param>
+        /// <param name="DateUpto"></param>
+        /// <param name="BranchID"></param>
+        /// <param name="TransactionNo"></param>
+        /// <param name="AccountID"></param>
+        /// <param name="ItemID"></param>
+        /// <param name="VoucherID"></param>
+        /// <returns></returns>
+        public CommonResponse GetQuotationComparisonView(DateTime DateFrom, DateTime DateUpto, int BranchID, string? TransactionNo, int? AccountID, int? ItemID, int? VoucherID)
+        {
+            try
+            {
+                object result = null;
+                string Criteria = "QuotationDetails";
+                var query = new StringBuilder();
+                query.Append("Exec DeliveryReportSP ");
+                query.AppendFormat("@Criteria = {0}, ", Criteria);
+                query.AppendFormat("@DateFrom = '{0}', ", DateFrom.ToString("yyyy-MM-dd"));
+                query.AppendFormat("@DateUpto = '{0}', ", DateUpto.ToString("yyyy-MM-dd"));
+                query.AppendFormat("@BranchID = {0}, ", BranchID );
+                if (TransactionNo  != null)
+                {
+                    query.AppendFormat(", @TransactionNo = {0}", TransactionNo);
+                }
+                if (AccountID != 0 && AccountID != null)
+                {
+                    query.AppendFormat(", @AccountID = {0}", AccountID);
+                }
+                if (ItemID != 0 && ItemID != null)
+                {
+                    query.AppendFormat(", @ItemID = {0}", ItemID);
+                }
+                if (VoucherID != 0 && VoucherID != null)
+                {
+                    query.AppendFormat(", @VTypeID = {0}", VoucherID);
+                }
+                if (query.ToString().EndsWith(", "))
+                {
+                    query.Length -= 2;
+                }
+                result = _context.QuotationComparisonView.FromSqlRaw(query.ToString()).ToList();
+                return CommonResponse.Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Error(ex.Message);
+            }
+        }
     }
 }
+
 
 
 

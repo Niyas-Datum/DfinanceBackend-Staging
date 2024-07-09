@@ -1,8 +1,10 @@
 ﻿using Dfinance.api.Authorization;
 using Dfinance.api.Framework;
+using Dfinance.DataModels.Dto.Common;
 using Dfinance.DataModels.Dto.Item;
 using Dfinance.Item.Services.Inventory;
 using Dfinance.Item.Services.Inventory.Interface;
+using Dfinance.Shared.Domain;
 using Dfinance.Shared.Routes.v1;
 using Microsoft.AspNetCore.Mvc;
 
@@ -375,13 +377,44 @@ namespace Dfinance.api.Controllers.v1.DMain.Item
         /// <param name="commodity"></param>
         /// <param name="item"></param>
         /// <returns></returns>
-          [HttpGet(ApiRoutes.ItemMaster.ROLReport)]
-       
+        [HttpGet(ApiRoutes.ItemMaster.ROLReport)]
+
         public IActionResult GetROLReport(int? warehouse, int? type, int? commodity, int? item)
         {
             try
             {
                 var result = _itemService.GetROLReport(warehouse, type, commodity, item);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet(ApiRoutes.ItemMaster.GetQuotationStatusReport)]
+        [AllowAnonymous]
+        public IActionResult GetQuotationStatusReport(int? VoucherId, string? VoucherNo)
+        {
+            try
+            {
+                var result = _itemService.GetQuotationStatusReport(VoucherId, VoucherNo);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet(ApiRoutes.ItemMaster.GetQuotationComparisonReport)]
+        [AllowAnonymous]
+        public IActionResult GetQuotationComparisonView(DateTime DateFrom, DateTime DateUpto, int BranchID, string? TransactionNo, int? AccountID, int? ItemID, int? VoucherID)
+        {
+            try
+            {
+                var result = _itemService.GetQuotationComparisonView(DateFrom, DateUpto, BranchID, TransactionNo,AccountID, ItemID, VoucherID);
                 return Ok(result);
             }
             catch (Exception ex)
