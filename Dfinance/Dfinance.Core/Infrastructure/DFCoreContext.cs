@@ -307,19 +307,12 @@ public partial class DFCoreContext : DbContext
 
     //daybook
     public DbSet<DayBookView> DayBookView { get; set; }
-    //finance-statements
-    public DbSet<TrialBalanceView> TrialBalanceView { get; set; }
-    public DbSet<CashBankBookView> CashBankBookView { get; set; }
-    public DbSet<AccStatementView> AccStatementView { get; set; }
-    public DbSet<GroupStatementView> GroupStatementView { get; set; }
+
+    //finance-statements   
+    public DbSet<AccStatementView> AccStatementView { get; set; }   
     public DbSet<BillwiseStatementView> BillwiseStatementView { get; set; }
-    public DbSet<BalSheetView3> BalSheetView3 { get; set; }
-    public DbSet<ConsolMonthwiseView> ConsolMonthwiseView { get; set; }
-    public DbSet<PaymentAnalysisView> PaymentAnalysisView { get; set; }
-    public DbSet<PartyOutstandingView> PartyOutstandingView { get; set; }
-    public DbSet<DebitCreditView> DebitCreditView { get; set; }
-    public DbSet<ProfitAndLossView3> ProfitAndLossView3 { get; set; }
-    public DbSet<eReturnView> eReturnView { get; set; }
+    public DbSet<BalSheetView3> BalSheetView3 { get; set; }  
+    public DbSet<ProfitAndLossView3> ProfitAndLossView3 { get; set; }  
    
 
 
@@ -596,8 +589,7 @@ public partial class DFCoreContext : DbContext
         mb.Entity<MonthwiseBalSheetView>().HasNoKey().ToView(null);
         mb.Entity<MonthwisePandLView>().HasNoKey().ToView(null);
 
-        //daybook
-        mb.Entity<DayBookView>().HasNoKey().ToView(null);
+       
 
         //HR
         mb.Entity<HREmployee>().HasNoKey().ToView(null);
@@ -612,18 +604,14 @@ public partial class DFCoreContext : DbContext
 
 
         //finance-statements
-        mb.Entity<TrialBalanceView>().HasNoKey().ToView(null);
-        mb.Entity<TrialBalanceView>().HasNoKey().ToView(null);
+       
         mb.Entity<AccStatementView>().HasNoKey().ToView(null);
-        mb.Entity<GroupStatementView>().HasNoKey().ToView(null);
+       
         mb.Entity<BillwiseStatementView>().HasNoKey().ToView(null);
         mb.Entity<BalSheetView3>().HasNoKey().ToView(null);
-        mb.Entity<ConsolMonthwiseView>().HasNoKey().ToView(null);
-        mb.Entity<PaymentAnalysisView>().HasNoKey().ToView(null);
-        mb.Entity<PartyOutstandingView>().HasNoKey().ToView(null);
-        mb.Entity<DebitCreditView>().HasNoKey().ToView(null);
+       
         mb.Entity<ProfitAndLossView3>().HasNoKey().ToView(null);
-        mb.Entity<eReturnView>().HasNoKey().ToView(null);
+       
 
         mb.Entity<InventoryProfitItemView>().HasNoKey().ToView(null);
         mb.Entity<InventoryProfitVoucherView>().HasNoKey().ToView(null);
@@ -631,7 +619,7 @@ public partial class DFCoreContext : DbContext
         mb.Entity<InventoryProfitPartyView>().HasNoKey().ToView(null);
         mb.Entity<InventoryProfitPartyViews>().HasNoKey().ToView(null);
 
-
+ 
 
 
     }
