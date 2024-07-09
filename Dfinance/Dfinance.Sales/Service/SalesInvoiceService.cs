@@ -17,6 +17,7 @@ using System;
 using Dfinance.Shared.Domain;
 using Dfinance.DataModels.Dto.Inventory.Purchase;
 using System.Transactions;
+using System.Text;
 
 namespace Dfinance.Sales
 {    
@@ -355,7 +356,42 @@ namespace Dfinance.Sales
             }
 
         }
-       
-       
+        /// <summary>
+        /// GetMonthlySalesSummary
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public CommonResponse GetMonthlySalesSummary(DateTime? startDate, DateTime? endDate)
+        {
+            try
+            {
+                object result = null;
+                int? branchid = _authService.GetBranchId().Value;
+                var query = new StringBuilder();
+                query.Append("Exec MonthlyInventorySummarySP ");
+
+             
+                var parameters = new List<string>
+        {
+            $"@BranchID = {branchid ?? 0}",
+            $"@DateFrom = '{startDate:yyyy-MM-dd}'",
+            $"@DateUpto = '{endDate:yyyy-MM-dd}'"
+        };
+                query.Append(string.Join(", ", parameters));
+
+                result = _context.MonthlyInvSummaryView.FromSqlRaw(query.ToString()).ToList();
+                return CommonResponse.Ok(result);
+
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                
+                return CommonResponse.Error();
+            }
+        }
     }
 }

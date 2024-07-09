@@ -337,7 +337,7 @@ public partial class DFCoreContext : DbContext
     public DbSet<HREmployee> Hremployees { get; set; }
 
     public DbSet<InventoryTransactionsView> InventoryTransactionsView { get; set; }
-
+    public DbSet<MonthlyInvSummaryView> MonthlyInvSummaryView { get; set; }
 
     //Restaurent
     public DbSet<CommodityView> CommodityViews { get; set; }
@@ -632,8 +632,8 @@ public partial class DFCoreContext : DbContext
         mb.Entity<InventoryProfitVoucherViews>().HasNoKey().ToView(null);
         mb.Entity<InventoryProfitPartyView>().HasNoKey().ToView(null);
         mb.Entity<InventoryProfitPartyViews>().HasNoKey().ToView(null); 
-        mb.Entity<ItemsHistoryReportView>().HasNoKey().ToView(null);
-
+        mb.Entity<ItemsHistoryReportView>().HasNoKey().ToView(null); 
+  mb.Entity<MonthlyInvSummaryView>().HasNoKey().ToView(null);
 
 
     }

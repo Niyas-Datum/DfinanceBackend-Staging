@@ -1,4 +1,5 @@
-﻿using Dfinance.api.Framework;
+﻿using Dfinance.api.Authorization;
+using Dfinance.api.Framework;
 using Dfinance.DataModels.Dto.Inventory.Purchase;
 using Dfinance.Sales;
 using Dfinance.Shared.Routes;
@@ -124,5 +125,20 @@ namespace Dfinance.api.Controllers.v1.DMain.Sales
                 return BadRequest(ex.Message);
             }
         }
+        [HttpGet(InvRoute.Sales.getsalessummary)]
+       
+        public IActionResult GetMonthlySalesSummary(DateTime? startDate, DateTime? endDate)
+        {
+            try
+            {
+                var data = _salesService.GetMonthlySalesSummary(startDate,endDate);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
-}
+    }
+

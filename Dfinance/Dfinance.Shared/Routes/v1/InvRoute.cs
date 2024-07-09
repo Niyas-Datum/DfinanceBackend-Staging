@@ -122,7 +122,7 @@ namespace Dfinance.Shared.Routes
             public const string fillitems = $"{Main}/fillitems";
             public const string GetData = $"{Main}/getdata";
             public const string GetCustomer = $"{Main}/getCustomer";
-
+            public const string getsalessummary = $"{Main}/getsalessummary";
         }
 		  public class PurchaseEnquiry
         {
