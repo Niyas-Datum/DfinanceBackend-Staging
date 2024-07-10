@@ -184,11 +184,11 @@ namespace Dfinance.api.Controllers.v1.DMain.Finance
             }
         }
         [HttpGet(FinRoute.Coa.Accountspopup)]
-        public IActionResult AccountPopUp()
+        public IActionResult AccountPopUp(int? pageId = null)
         {
             try
             {                
-                var data = _chartofaccounts.AccountPopUp();
+                var data = _chartofaccounts.AccountPopUp(pageId);
                 return Ok(data);
             }
             catch (Exception ex)

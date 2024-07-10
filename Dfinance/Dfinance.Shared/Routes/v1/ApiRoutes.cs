@@ -64,7 +64,7 @@ namespace Dfinance.Shared.Routes.v1
             public const string FillUser= $"{Main}/FillUser";
             public const string FillPettyCash = $"{Main}/fillPettyCash";
             public const string FillUserById = $"{Main}/FillUserById";
-
+            public const string popup = $"{Main}/popup";
             public const string SaveUser = $"{Main}/Save";
 
             public const string UpdateUser = $"{Main}/update";
@@ -281,6 +281,9 @@ namespace Dfinance.Shared.Routes.v1
             public const string TaxDropdown = $"{Main}/TaxDropdown";
             public const string Itemsearch = $"{Main}/ itemsearch"; 
             public const string ItemRegister = $"{Main}/ itemregister";
+            public const string InventoryAgeing = $"{Main}/ invageing";
+            public const string ItemExpiryReport = $"{Main}/ itemexprep"; 
+            public const string InventoryProfitSP = $"{Main}/ invprofit";
         }
         public static class ItemUnits
         {
@@ -324,6 +327,13 @@ namespace Dfinance.Shared.Routes.v1
             public const string Updategrid = $"{Main}/Updategrid";
             public const string labelGridpopup = $"{Main}/labelGridpopup";
 
+        }
+        public static class RecallVoucher
+        {
+            public const string Main = $"{Base}/RecallVch";
+            public const string GatData = $"{Main}/getData";
+            public const string GetCancelVch = $"{Main}/canclVch";
+            public const string UpdateVch = $"{Main}/updateVch";
         }
     }
 }

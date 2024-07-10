@@ -14,7 +14,7 @@ namespace Dfinance.ChartOfAccount.Services.Finance.Interface
         CommonResponse SaveAccount(ChartOfAccountsDto accountsDto);
         CommonResponse UpdateAccounts(ChartOfAccountsDto accountsDto,int Id);
         CommonResponse DeleteAccount(int Id);
-        CommonResponse AccountPopUp();
+        CommonResponse AccountPopUp(int? pageId = null);
         CommonResponse FillAccountGroup();
 
 

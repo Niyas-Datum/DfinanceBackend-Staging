@@ -27,4 +27,29 @@ namespace Dfinance.Shared.Enum
     PDC_Clearing = 67
 
     }
+    public enum Page
+    {
+        Purchase=15,
+        ConsolidatedMonthwise=83,
+        TrialBalance=80,
+        CostCentre_TrialBalance=535,
+        AccountStatement=77,
+        GroupStatement=79,
+        BalanceSheet=82,
+        Payment_Analysis=263,
+        ProfitAndLoss=81,
+        AccountBreakup=214,
+        CostCenter_Breakup=213,
+        CostCentre_AccountStatement=536,
+        Aging_Report=281,
+        DayBook=76,
+        CashOrBank_Book=250,
+        PartyOutStanding= 282,
+        Salesman_Collection_Report=527,
+        Creditor_Debitor_Balance=480,
+        eReturn=284,
+
+        Account_Configuration=92
+
+    }
 }

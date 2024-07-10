@@ -241,6 +241,7 @@ namespace Dfinance.DataModels.Dto.Inventory.Purchase
         public string? TermsOfDelivery { get; set; }
         public DropdownDto PayType { get; set; }
         public bool? Approve {  get; set; }
+ public int? Days { get; set; }
         public bool? CloseVoucher {  get; set; }
 
     }

@@ -1,4 +1,5 @@
 ﻿using Dfinance.DataModels.Dto.Common;
+using Dfinance.DataModels.Dto.Inventory;
 using Dfinance.DataModels.Dto.Inventory.Purchase;
 using Dfinance.Shared.Domain;
 
@@ -8,6 +9,8 @@ namespace Dfinance.Inventory.Service.Interface
     public interface IInventoryTransactionService
     {
         //Emplo
+        CommonResponse FillPartyBal(int partyId);
+        CommonResponse FillPayType();
         CommonResponse GetSalesman();
         CommonResponse GetAutoVoucherNo(int voucherid);
         CommonResponse GetReference(int voucherno, DateTime? date = null);
@@ -27,6 +30,10 @@ namespace Dfinance.Inventory.Service.Interface
         CommonResponse EntriesAmountValidation(int TransId);
 
         CommonResponse InventoryAmountValidation(int TransId);
+
+        int GetPrimaryVoucherID(int voucherid);
+
+        CommonResponse InventoryTransactions(InventoryTransactionsDto inventoryTransactionDto ,int? ModuleID);
 
     }
 }

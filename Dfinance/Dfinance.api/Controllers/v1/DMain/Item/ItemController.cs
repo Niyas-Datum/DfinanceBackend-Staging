@@ -1,5 +1,6 @@
 ﻿using Dfinance.api.Authorization;
 using Dfinance.api.Framework;
+using Dfinance.DataModels.Dto.Item;
 using Dfinance.Item.Services.Inventory;
 using Dfinance.Item.Services.Inventory.Interface;
 using Dfinance.Shared.Routes.v1;
@@ -251,6 +252,80 @@ namespace Dfinance.api.Controllers.v1.DMain.Item
             try
             {
                 var result = _itemService.GetItemRegister(branchId,warehouseId,less,date);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
+        /// GetInventoryAgeing
+        /// </summary>
+        /// <param name="AccountID"></param>
+        /// <param name="FromDate"></param>
+        /// <param name="ToDate"></param>
+        /// <param name="BranchID"></param>
+        /// <param name="OpeningBalance"></param>
+        /// <param name="VoucherID"></param>
+        /// <param name="UserID"></param>
+        /// <param name="Nature"></param>
+        /// <returns></returns>
+        [HttpGet(ApiRoutes.ItemMaster.InventoryAgeing)]
+
+        public IActionResult GetInventoryAgeing(int? AccountID, DateTime? FromDate, DateTime? ToDate, bool? OpeningBalance, int? VoucherID, string? Nature)
+        {
+            try
+            {
+                var result = _itemService.GetInventoryAgeing(AccountID,  FromDate, ToDate, OpeningBalance, VoucherID, Nature);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
+        /// GetItemExpiryReport
+        /// </summary>
+        /// <param name="itemExpiryReportDto"></param>
+        /// <returns></returns>
+        [HttpPost(ApiRoutes.ItemMaster.ItemExpiryReport)]
+        [AllowAnonymous]
+        public IActionResult GetItemExpiryReport(ItemExpiryReportDto itemExpiryReportDto)
+        {
+            try
+            {
+                var result = _itemService.GetItemExpiryReport( itemExpiryReportDto);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ViewBy"></param>
+        /// <param name="StartDate"></param>
+        /// <param name="EndDate"></param>
+        /// <param name="Customer"></param>
+        /// <param name="Detailed"></param>
+        /// <param name="Item"></param>
+        /// <param name="Salesman"></param>
+        /// <param name="accountid"></param>
+        /// <returns></returns>
+        [HttpGet(ApiRoutes.ItemMaster.InventoryProfitSP)]
+        [AllowAnonymous]
+        public IActionResult GetInventoryProfitSP(string? ViewBy, DateTime StartDate, DateTime EndDate, int? Customer, bool? Detailed, int Item, string? Salesman, int? accountid)
+        {
+            try
+            {
+                var result = _itemService.GetInventoryProfitSP(ViewBy,  StartDate,  EndDate, Customer,Detailed,Item,Salesman,accountid);
                 return Ok(result);
             }
             catch (Exception ex)

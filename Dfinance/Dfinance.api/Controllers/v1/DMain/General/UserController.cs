@@ -17,6 +17,19 @@ namespace Dfinance.api.Controllers.v1.DMain
         {
             _userService = userService;
         }
+        [HttpGet(ApiRoutes.User.popup)]
+        public IActionResult UserPopup()
+        {
+            try
+            {
+                var user = _userService.UserPopup();
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         [HttpGet(ApiRoutes.User.FillPettyCash)]
         public IActionResult FillPettyCashAccount()
         {

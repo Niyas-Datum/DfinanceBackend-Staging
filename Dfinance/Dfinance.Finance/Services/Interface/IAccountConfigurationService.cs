@@ -6,11 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dfinance.Finance.Statements.Interface
+namespace Dfinance.Finance.Services.Interface
 {
-    public interface IDayBookService
+    public interface IAccountConfigurationService
     {
-        CommonResponse FillVoucherAndUser();
-        CommonResponse FillDayBook(DayBookDto dayBookDto, int pageId);
+        CommonResponse FillAccConfig();
+        CommonResponse SaveAccConfig(List<AccConfigDto> accConfig);
     }
 }

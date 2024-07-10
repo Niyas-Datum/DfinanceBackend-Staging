@@ -60,6 +60,7 @@ namespace Dfinance.Shared.Routes.v1
             public const string Main = $"{Base}/vchr";
 
             public const string FillVouchers = $"{Main}/getall";
+            public const string popup = $"{Main}/popup";
 
             //   public const string SaveVouchers = $"{Main}/save";
 
@@ -193,6 +194,30 @@ namespace Dfinance.Shared.Routes.v1
             public const string Update = $"{Main}/update";
             public const string Delete = $"{Main}/delete";
 
+
+        public static class FinStmt
+        {
+            public const string Main = $"{Base}/FinStmt";
+            public const string finStmt = $"{Main}/finStmt";         
+            public const string accStmt = $"{Main}/accStmt";
+            public const string billWiseStmt = $"{Main}/billWiseStmt";
+            public const string balSheetStmt = $"{Main}/balSheetStmt";
+            public const string consolMonth = $"{Main}/consolMonth";
+            public const string partyOutstd = $"{Main}/partyOutstd";
+            public const string salesManCol = $"{Main}/salesManCol";
+            public const string CrDrBal = $"{Main}/CrDrBal";
+            public const string profitLoss = $"{Main}/profitLoss";
+            public const string cashFlow = $"{Main}/cashFlow";
+           
+            public const string costCentrRep = $"{Main}/costCentrRep";
+            public const string accBrkup = $"{Main}/accBrkup";
+        }
+        public static class AccConfig
+        {
+            public const string Main = $"{Base}/AccConfig";
+            public const string fill = $"{Main}/fill";
+            public const string update = $"{Main}/update";
+        }
 
 
         }

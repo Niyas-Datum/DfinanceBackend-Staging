@@ -13,7 +13,7 @@ namespace Dfinance.Stakeholder.Services.Interface
         CommonResponse GetCode();
 
         //customer supplier- general form
-        CommonResponse FillSupplier(int locId, int pageId, int voucherId);
+        CommonResponse FillSupplier(int locId, int pageId, int voucherId, string criteria);
         CommonResponse FillCategory(); // customer supplier category 
         CommonResponse SaveGen(GeneralDto generalDto,int pageId);
 		CommonResponse FillPartyType();

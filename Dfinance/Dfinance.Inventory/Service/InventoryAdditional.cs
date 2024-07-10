@@ -78,7 +78,7 @@ namespace Dfinance.Inventory.Service
 
                 string criteria = "FillMaMisc";
                 string key = "Transportation Mode";
-                var result = _context.SpFillAreaMasterByIdG.FromSqlRaw($"EXEC DropDownListSP @Criteria='{criteria}',@StrParam='{key}'").ToList();
+                var result = _context.DropDownViewValue.FromSqlRaw($"EXEC DropDownListSP @Criteria='{criteria}',@StrParam='{key}'").ToList();
                 return CommonResponse.Ok(result);
             }
             catch (Exception ex)
@@ -94,7 +94,7 @@ namespace Dfinance.Inventory.Service
             {
 
                 string criteria = "FillArea";
-                var result = _context.SpFillAreaMasterByIdG.FromSqlRaw($"EXEC DropDownListSP @Criteria='{criteria}'").ToList();
+                var result = _context.DropDownViewName.FromSqlRaw($"EXEC DropDownListSP @Criteria='{criteria}'").ToList();
                 return CommonResponse.Ok(result);
             }
             catch (Exception ex)
@@ -122,6 +122,8 @@ namespace Dfinance.Inventory.Service
                     break;
                 case VoucherType.Sales_Invoice:
                 case VoucherType.Purchase_Return:
+                case VoucherType.RestaurantInvoice:
+                case VoucherType.RestaurantKOT:
                     fromLocId = fiTransactionAdditionalDto.Warehouse.Id;
                     outLocId = fiTransactionAdditionalDto.Warehouse.Id;
                     break;
@@ -159,7 +161,7 @@ namespace Dfinance.Inventory.Service
                 fiTransactionAdditionalDto.TermsOfDelivery,//21
                 null, null,//22,23
                 fiTransactionAdditionalDto.CreditPeriod,//24
-                null, null,
+                fiTransactionAdditionalDto.Days, null,
                 fiTransactionAdditionalDto.MobileNo,//27
                 null, null, null, null,
                 fiTransactionAdditionalDto.StaffIncentives,//32

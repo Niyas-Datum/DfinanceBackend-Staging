@@ -43,6 +43,8 @@ using Dfinance.WareHouse.Services.Interface;
 using Dfinance.WareHouse.Services;
 using Dfinance.Finance.Statements.Interface;
 using Dfinance.Finance.Statements;
+using Dfinance.Restaurant.Interface;
+using Dfinance.Restaurant;
 
 
 namespace Dfinance.api.Installers;
@@ -156,9 +158,10 @@ public class DiInstaller : IInstaller
         service.AddScoped<IBudgetingService, BudgetingService>();
         service.AddScoped<IBudgetRegisterService, BudgetRegisterService>();
         service.AddScoped<IBudgetMonthwiseService, BudgetMonthwiseService>();
-        service.AddScoped<IDayBookService, DayBookService>();
+       
         //BranchAccounts
         service.AddScoped<IBranchAccounts, BranchAccountsService>();
+
 
         //AccountReconciliation
         service.AddScoped<IAccountReconciliationService, AccountReconciliationService>();
@@ -168,5 +171,20 @@ public class DiInstaller : IInstaller
         service.AddScoped<IPdcClearingService,PdcClearingService>();
         //creditdebitnote
         service.AddScoped<ICreditDebitNoteService, CreditDebitNoteService>();
+
+
+        //Restaurant
+        service.AddScoped<IRestaurantInvoice, RestaurantInvoice>();
+        //finance-statements
+
+
+        //RecallVoucher
+        service.AddScoped<IRecallVoucherService, RecallVoucherService>();
+
+        //finance-statements
+        service.AddScoped<IFinStatementService, FinStatementService>();
+        //AccountConfiguration
+        service.AddScoped<IAccountConfigurationService, AccountConfigurationService>();
+
     }
 }
