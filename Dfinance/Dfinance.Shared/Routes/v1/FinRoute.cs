@@ -196,5 +196,27 @@ namespace Dfinance.Shared.Routes.v1
 
 
         }
+        public static class PdcClearing
+        {
+            public const string Main = $"{Base}/pdcclearing";
+            public const string Fill = $"{Main}/fillCheqdet";
+            public const string Save = $"{Main}/save";
+            public const string Update = $"{Main}/update";
+            public const string Delete = $"{Main}/delete";
+
+        }
+        public static class CreditNote
+        {
+            public const string Main = $"{Base}/creditnote";
+            public const string Fill = $"{Main}/fill";
+            public const string SaveDebitCredit = $"{Main}/save";
+            public const string UpdateDebitCredit = $"{Main}/update";
+            public const string DeleteDebitCredit = $"{Main}/delete";
+            public const string Cancel = $"{Main}/cancel";
+
+
+
+        }
     }
+
 }

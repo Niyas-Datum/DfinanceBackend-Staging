@@ -164,5 +164,9 @@ public class DiInstaller : IInstaller
         service.AddScoped<IAccountReconciliationService, AccountReconciliationService>();
         //openingvoucher
         service.AddScoped<IOpeningVoucherService, OpeningVoucherService>();
+        //PDC
+        service.AddScoped<IPdcClearingService,PdcClearingService>();
+        //creditdebitnote
+        service.AddScoped<ICreditDebitNoteService, CreditDebitNoteService>();
     }
 }

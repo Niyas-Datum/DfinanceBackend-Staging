@@ -316,7 +316,8 @@ public DbSet<TransItemsView> TransItemsView { get; set; }
     //AccountRecon
     public DbSet<AccountReconcilationView> AccountReconcilationView { get; set; }
     
-
+    //PDC
+    public DbSet<CheqDetailView> CheqDetailView { get; set; }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     //  => optionsBuilder.UseSqlServer(@"Data Source=ip.datuminnovation.com,9600;TrustServerCertificate=true;Initial Catalog=DatumSystemMain;User ID=sa;pwd=Datum123!");
    // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -556,5 +557,8 @@ mb.ApplyConfiguration(new FiMaCardsConfiguration());
         //AccountRecno
         mb.Entity<AccountReconcilationView>().HasNoKey().ToView(null);
         mb.Entity<AccountRecoView>().HasNoKey().ToView(null);
+
+        //PDC
+        mb.Entity<CheqDetailView>().HasNoKey().ToView(null);
     }
 }
