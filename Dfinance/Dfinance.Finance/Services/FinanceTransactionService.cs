@@ -51,11 +51,14 @@ namespace Dfinance.Finance.Services
                 int? RefTransId = null;
                 string? ApprovalStatus = "A";
                 decimal? ExchangeRate = 1;
+                int? CurrencyId = null;
+                int? CostCenterID = null;
 
                 //string ReferencesId = string.Join(",", paymentVoucherDto.Reference.Select(popupDto => popupDto.VNo.ToString()));
 
                 string environmentname = _environment.EnvironmentName;
                 int? accId = null;
+                DateTime? effectivedate = null;
 
                 //  if (VoucherId == 6 || VoucherId == 1)
 
@@ -65,12 +68,30 @@ namespace Dfinance.Finance.Services
                                          select v.PrimaryVoucherId).FirstOrDefault() ?? 0;
 
 
-                if((VoucherType)primaryVoucherID == VoucherType.Contra || (VoucherType)primaryVoucherID == VoucherType.Journal)
+                if((VoucherType)primaryVoucherID == VoucherType.Contra || (VoucherType)primaryVoucherID == VoucherType.Journal )
                     accId = null;
                 else
                     accId = paymentVoucherDto.AccountDetails.Select(a => a.AccountCode.Id).FirstOrDefault();
+                   
+                //openingvoucher
+                if((VoucherType)primaryVoucherID == VoucherType.Opening_Balance)
+                {
+                    accId = null;
+                    var date = _context.TblMaFinYear
+                                .Where(d => d.Status == "R")
+                                .Select(d => d.StartDate)
+                                .FirstOrDefault();
+                    paymentVoucherDto.VoucherDate = date;
+                    CurrencyId = 1; 
+                    effectivedate = date;
+                    CostCenterID = null;
+                }
+                else { 
+                    effectivedate = DateTime.Now;
+                    CurrencyId = paymentVoucherDto.Currency.Id;
+                    CostCenterID = paymentVoucherDto.CostCentre.Id;
 
-
+                }
 
 
                 if (paymentVoucherDto.Id == null || paymentVoucherDto.Id == 0)
@@ -92,12 +113,12 @@ namespace Dfinance.Finance.Services
                         "@ApproveNote={24}, @Action={25}, @Status={26}, @IsAutoEntry={27}, " +
                         "@Posted={28}, @Active={29}, @Cancelled={30}, @AccountID={31}, @Description={32}, " +
                         "@RefTransID={33}, @CostCentreID={34}, @PageID={35}, @NewID={36} OUTPUT",
-                        criteria, paymentVoucherDto.VoucherDate, DateTime.Now, VoucherId, environmentname,
-                        paymentVoucherDto.VoucherNo, false, paymentVoucherDto.Currency.Id, ExchangeRate, null, null,
+                        criteria, paymentVoucherDto.VoucherDate, effectivedate, VoucherId, environmentname,
+                        paymentVoucherDto.VoucherNo, false, CurrencyId, ExchangeRate, null, null,
                         paymentVoucherDto.ReferenceNo, branchId, null, null, null,
                         null, null, paymentVoucherDto.Narration, createdBy, null, DateTime.Now, null,
                         ApprovalStatus, null, null, Status, Autoentry, true, true, false, accId,
-                        null, RefTransId, paymentVoucherDto.CostCentre.Id, PageId, newId);
+                        null, RefTransId, CostCenterID, PageId, newId);
 
                     var NewId = (int)newId.Value;
                     // transactionDto.Id = NewId;
@@ -122,12 +143,12 @@ namespace Dfinance.Finance.Services
                         "@ApproveNote={24}, @Action={25}, @Status={26}, @IsAutoEntry={27}, " +
                         "@Posted={28}, @Active={29}, @Cancelled={30}, @AccountID={31}, @Description={32}, " +
                         "@RefTransID={33}, @CostCentreID={34}, @PageID={35}, @ID={36}",
-                        criteria, paymentVoucherDto.VoucherDate, DateTime.Now, VoucherId, environmentname,
-                        paymentVoucherDto.VoucherNo, false, paymentVoucherDto.Currency.Id, ExchangeRate, null, null,
+                        criteria, paymentVoucherDto.VoucherDate, effectivedate, VoucherId, environmentname,
+                        paymentVoucherDto.VoucherNo, false, CurrencyId, ExchangeRate, null, null,
                         paymentVoucherDto.ReferenceNo, branchId, null, null, null,
                         null, null, paymentVoucherDto.Narration, createdBy, null, DateTime.Now, null,
-                        ApprovalStatus, null, null, Status, Autoentry, true, true, false, paymentVoucherDto.AccountDetails.Select(a => a.AccountCode.Id).FirstOrDefault(),
-                        null, RefTransId, paymentVoucherDto.CostCentre.Id, PageId, paymentVoucherDto.Id);
+                        ApprovalStatus, null, null, Status, Autoentry, true, true, false, accId,
+                        null, RefTransId, CostCenterID, PageId, paymentVoucherDto.Id);
 
                     return CommonResponse.Ok(paymentVoucherDto.Id);
 

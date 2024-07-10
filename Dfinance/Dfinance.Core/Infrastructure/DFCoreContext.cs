@@ -323,6 +323,13 @@ public partial class DFCoreContext : DbContext
     public DbSet<ItemCatalogueViews> ItemCatalogueViews { get; set; }
 
 
+    //AccountRecon
+    public DbSet<AccountReconcilationView> AccountReconcilationView { get; set; }
+    
+    //PDC
+    public DbSet<CheqDetailView> CheqDetailView { get; set; }
+
+
     //inventoryAgen
     public DbSet<InventoryAgeingView> InventoryAgeingView {  get; set; }    
     public DbSet<InventoryAgeingViews> InventoryAgeingViews {  get; set; }
@@ -348,6 +355,7 @@ public partial class DFCoreContext : DbContext
     public DbSet<InventoryProfitVoucherViews> InventoryProfitVoucherViews { get; set; }
     public DbSet<InventoryProfitPartyView> InventoryProfitPartyView { get; set; }
     public DbSet<InventoryProfitPartyViews> InventoryProfitPartyViews { get; set; }
+
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     //  => optionsBuilder.UseSqlServer(@"Data Source=ip.datuminnovation.com,9600;TrustServerCertificate=true;Initial Catalog=DatumSystemMain;User ID=sa;pwd=Datum123!");
@@ -627,6 +635,12 @@ public partial class DFCoreContext : DbContext
  
 
 
+        //AccountRecno
+        mb.Entity<AccountReconcilationView>().HasNoKey().ToView(null);
+        mb.Entity<AccountRecoView>().HasNoKey().ToView(null);
+
+        //PDC
+        mb.Entity<CheqDetailView>().HasNoKey().ToView(null);
     }
 
 }

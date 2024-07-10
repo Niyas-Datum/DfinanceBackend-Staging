@@ -20,14 +20,14 @@ namespace Dfinance.Shared.Routes.v1
             public const string Main = $"{Base}/coa";
             public const string SaveAccount = $"{Main}/saveacc";
             public const string UpdateAccount = $"{Main}/upacc";
-            public const string Accountlist= $"{Main}/getall";
+            public const string Accountlist = $"{Main}/getall";
             public const string AccountsById = $"{Main}/getbyid";
             public const string SubGroup = $"{Main}/accsubgrps";
             public const string AccountGroup = $"{Main}/accgrps";
             public const string AccountCategory = $"{Main}/acccat";
             public const string DeleteAccount = $"{Main}/delacc";
             public const string Accounts = $"{Main}/getacc";
-            public const string AccountsGroup = $"{Main}/getaccgrp"; 
+            public const string AccountsGroup = $"{Main}/getaccgrp";
             public const string Accountspopup = $"{Main}/accpopup";
 
         }
@@ -62,11 +62,11 @@ namespace Dfinance.Shared.Routes.v1
             public const string FillVouchers = $"{Main}/getall";
             public const string popup = $"{Main}/popup";
 
-         //   public const string SaveVouchers = $"{Main}/save";
+            //   public const string SaveVouchers = $"{Main}/save";
 
             public const string UpdateVouchers = $"{Main}/update";
 
-           // public const string DeleteVouchers = $"{Main}/delete";
+            // public const string DeleteVouchers = $"{Main}/delete";
 
             public const string FillPrimaryVoucherName = $"{Main}/getnamebyid";
 
@@ -92,15 +92,15 @@ namespace Dfinance.Shared.Routes.v1
 
             public const string FillAllFinanceYearById = $"{Main}/getbyid";
         }
-		public static class AccountsList
+        public static class AccountsList
         {
             public const string Main = $"{Base}/acclist";
             public const string SaveAccountsList = $"{Main}/Save";
-           
+
             public const string FillAccountList = $"{Main}/get";
             public const string FillAccountListByID = $"{Main}/getbyid";
             public const string AccountListPopUP = $"{Main}/PopUp";
-            
+
         }
         public static class CardMaster
         {
@@ -112,7 +112,7 @@ namespace Dfinance.Shared.Routes.v1
             public const string FillMaster = $"{Main}/FillMaster";
 
         }
-		public static class PaymentVoucher
+        public static class PaymentVoucher
         {
             public const string Main = $"{Base}/paymentvou";
             public const string FillAccCode = $"{Main}/Accpopup";
@@ -120,7 +120,7 @@ namespace Dfinance.Shared.Routes.v1
             public const string Save = $"{Main}/save";
             public const string Update = $"{Main}/update";
             public const string Delete = $"{Main}/delete";
-            
+
 
 
         }
@@ -153,9 +153,9 @@ namespace Dfinance.Shared.Routes.v1
         public static class BudMonthwise
         {
             public const string Main = $"{Base}/budgetMonthwise";
-            public const string fill = $"{Main}/fill";           
+            public const string fill = $"{Main}/fill";
         }
-        public static class  DayBook
+        public static class DayBook
         {
             public const string Main = $"{Base}/daybook";
             public const string voucherUser = $"{Main}/voucher&User";
@@ -179,6 +179,22 @@ namespace Dfinance.Shared.Routes.v1
 
 
         }
+        public static class AccountReconciliation
+        {
+            public const string Main = $"{Base}/Accountrec";
+            public const string AccPopup = $"{Main}/fillAccpop";
+            public const string FillAccountReconcilation = $"{Main}/fillAccReco";
+            public const string UpdateAccountReconcilation = $"{Main}/updateAccReco";
+
+        }
+        public static class OpeningVoucher
+        {
+            public const string Main = $"{Base}/Openingvou";
+            public const string Save = $"{Main}/save";
+            public const string Update = $"{Main}/update";
+            public const string Delete = $"{Main}/delete";
+
+
         public static class FinStmt
         {
             public const string Main = $"{Base}/FinStmt";
@@ -204,5 +220,28 @@ namespace Dfinance.Shared.Routes.v1
         }
 
 
+        }
+        public static class PdcClearing
+        {
+            public const string Main = $"{Base}/pdcclearing";
+            public const string Fill = $"{Main}/fillCheqdet";
+            public const string Save = $"{Main}/save";
+            public const string Update = $"{Main}/update";
+            public const string Delete = $"{Main}/delete";
+
+        }
+        public static class CreditNote
+        {
+            public const string Main = $"{Base}/creditnote";
+            public const string Fill = $"{Main}/fill";
+            public const string SaveDebitCredit = $"{Main}/save";
+            public const string UpdateDebitCredit = $"{Main}/update";
+            public const string DeleteDebitCredit = $"{Main}/delete";
+            public const string Cancel = $"{Main}/cancel";
+
+
+
+        }
     }
+
 }

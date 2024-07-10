@@ -2,10 +2,7 @@
 using Dfinance.Core.Infrastructure;
 using Dfinance.DataModels.Dto.Common;
 using Dfinance.DataModels.Dto.Finance;
-using Dfinance.DataModels.Dto.General;
-using Dfinance.DataModels.Dto.Inventory.Purchase;
 using Dfinance.Finance.Services.Interface;
-using Dfinance.Shared;
 using Dfinance.Shared.Deserialize;
 using Dfinance.Shared.Domain;
 using Dfinance.Shared.Enum;
@@ -13,12 +10,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Dfinance.Finance.Services
 {
@@ -75,19 +67,28 @@ namespace Dfinance.Finance.Services
 
                 var partyID = paymentVoucherDto.AccountDetails.Select(a => a.AccountCode.Id).FirstOrDefault();
                 decimal? ExchangeRate = 1;
+                int? CostCenterID = null;
 
-               // Accountdetails
-                if (paymentVoucherDto.AccountDetails.Count > 0 && (paymentVoucherDto.AccountDetails.Any(a => a.AccountCode.Id != 0)))
+                //openingvoucher
+                if ((VoucherType)voucherName.primaryvoucherId == VoucherType.Opening_Balance)
                 {
+                    CostCenterID = null;
+                }
+                else 
+                { 
+                    CostCenterID = paymentVoucherDto.Currency.Id;
+                }
+
+                    // Accountdetails
+                    if (paymentVoucherDto.AccountDetails.Count > 0 && (paymentVoucherDto.AccountDetails.Any(a => a.AccountCode.Id != 0)))
+                    {
                     tranType = null;
                     nature = "M";
                     string? purchaseVoucherDC = null;
                     decimal? amt = null;
 
-                        //if (voucherName.VoucherId == 6 || voucherName.VoucherId == 1)
-
-
-                    if((VoucherType)voucherName.primaryvoucherId == VoucherType.Contra || (VoucherType)voucherName.primaryvoucherId == VoucherType.Journal)
+                    //contra,openingvou
+                    if((VoucherType)voucherName.primaryvoucherId == VoucherType.Contra || (VoucherType)voucherName.primaryvoucherId == VoucherType.Opening_Balance)
                     {
                         foreach (var acc in paymentVoucherDto.AccountDetails.Where(a => a.AccountCode.Id != 0 && a?.AccountCode.Id != null).ToList())
                         {
@@ -103,21 +104,23 @@ namespace Dfinance.Finance.Services
                                 purchaseVoucherDC = "C";
                                 amt = acc.Credit.Value;
                             }
+                           
+                                SaveTransactionEntry(transPayId, purchaseVoucherDC, nature, acc.AccountCode.Id,
+                               amt, bankDate ?? null, refPageTypeId, CostCenterID, ExchangeRate,
+                               refPageTableId, Reference, acc.Description, tranType, acc.DueDate, null, null);
 
-                           SaveTransactionEntry(transPayId, purchaseVoucherDC, nature, acc.AccountCode.Id,
-                           amt, bankDate ?? null, refPageTypeId, paymentVoucherDto.Currency.Id, ExchangeRate,
-                           refPageTableId, Reference, description, tranType, null, null, null);
-
+                            
                         }
 
                     }
+                    //payvou,recpvou
                     else
                     {
                         foreach (var acc in paymentVoucherDto.AccountDetails.Where(a => a.AccountCode.Id != 0 && a?.AccountCode.Id != null).ToList())
                         {
                             SaveTransactionEntries(transPayId, purchaseVoucherDebit, nature, acc.AccountCode.Id,
                            acc.Amount, bankDate ?? null, refPageTypeId, paymentVoucherDto.Currency.Id, ExchangeRate,
-                           refPageTableId, Reference, description, tranType, null, null, null);
+                           refPageTableId, Reference, acc.Description, tranType, acc.DueDate, null, null);
 
                         }
                     }
@@ -277,10 +280,10 @@ namespace Dfinance.Finance.Services
 
         }
 
-        private int SaveTransactionEntry(int transactionId, string drCr, string? nature, int? accountId, decimal? amt, DateTime? bankDate,
+            private int SaveTransactionEntry(int transactionId, string drCr, string? nature, int? accountId, decimal? amt, DateTime? bankDate,
             int? refPageTypeId, int? currencyId, decimal? exchangeRate, int? refPageTableID, string? referenceCode, string? description,
             string? tranType, DateTime? dueDate, int? refTransID, decimal? taxPerc)
-        {
+            {
             //var transEntryID = _context.FiTransactionEntries.Where(t => t.TransactionId == transactionId).Select(t => t.Id).ToList();
             //if (transEntryID.Count == 0)
             //{
@@ -314,7 +317,7 @@ namespace Dfinance.Finance.Services
                 var newId = newIdParameter.Value;
                 return (int)newId;
            
-        }
+            }
 
 
 
@@ -351,11 +354,18 @@ namespace Dfinance.Finance.Services
                     nature = "M";
                     string? purchaseVoucherDC = null;
                     decimal? amt = null;
+                    int? CostCenterID = null;
 
-                    //if (voucherName.VoucherId == 6 || voucherName.VoucherId == 1)
+                    if ((VoucherType)primaryvoucherId == VoucherType.Opening_Balance)
+                    {
+                        CostCenterID = null;
+                    }
+                    else
+                    {
+                        CostCenterID = paymentVoucherDto.Currency.Id;
+                    }
 
-
-                    if ((VoucherType)primaryvoucherId == VoucherType.Contra || (VoucherType)primaryvoucherId == VoucherType.Journal)
+                    if ((VoucherType)primaryvoucherId == VoucherType.Contra || (VoucherType)primaryvoucherId == VoucherType.Opening_Balance)
                     {
                         foreach (var acc in paymentVoucherDto.AccountDetails.Where(a => a.AccountCode.Id != 0 && a?.AccountCode.Id != null).ToList())
                         {
@@ -373,8 +383,8 @@ namespace Dfinance.Finance.Services
                             }
 
                             UpdateTransactionEntry(transPayId, purchaseVoucherDC, nature, acc.AccountCode.Id,
-                            amt, bankDate ?? null, refPageTypeId, paymentVoucherDto.Currency.Id, ExchangeRate,
-                            refPageTableId, Reference, description, tranType, null, null, null, transEntryID);
+                            amt, bankDate ?? null, refPageTypeId, CostCenterID, ExchangeRate,
+                            refPageTableId, Reference, acc.Description, tranType, acc.DueDate, null, null, transEntryID);
 
                         }
 
@@ -410,22 +420,6 @@ namespace Dfinance.Finance.Services
             
 
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         private int? GetVoucherID(int pageId)
         {
@@ -681,154 +675,3 @@ namespace Dfinance.Finance.Services
 
 
 
-//int? netAmtAcId = null;
-////var voucherName = (from pageMenu in _context.MaPageMenus
-//join voucher in _context.FiMaVouchers on pageMenu.VoucherId equals voucher.Id
-//                   where pageMenu.Id == pageId
-//                   select new
-//                          {
-//                              VoucherId = voucher.Id,
-//                              VoucherName = voucher.Name
-//                          }).FirstOrDefault();
-
-//int? discountId = null;
-//netAmtAcId = null;
-//int? roundOffId = null;
-//_context.Database.OpenConnection();
-
-//using (var dbCommand = _context.Database.GetDbConnection().CreateCommand())
-//{
-//    dbCommand.CommandText = $"EXEC FillPartyDetailsSP @BranchID={BranchID},@VoucherName='{voucherName.VoucherName}'";
-//    SqlDataAdapter da = new SqlDataAdapter((SqlCommand)dbCommand);
-//    DataSet dataSet = new DataSet();
-//    da.Fill(dataSet);
-//    var disc = dataSet.Tables[0].Rows[0];
-//    discountId = Convert.ToInt32(disc["ID"]);
-//    var net = dataSet.Tables[2].Rows[0];
-//    netAmtAcId = Convert.ToInt32(net["ID"]);//_rederToObj.Deserialize<TransAccount>((DbDataReader)reader[2]).Select(d => d.ID).FirstOrDefault();
-//    var round = dataSet.Tables[4].Rows[0];                                  //var table4 = _rederToObj.Deserialize<TransAccount>(reader).Select(d => d.ID).FirstOrDefault();
-//    roundOffId = Convert.ToInt32(round["ID"]);
-//}
-
-
-
-
-
-
-////RoundOff
-//if (transactionDto.TransactionEntries.Roundoff > 0)
-//{
-//    tranType = "RoundOff";
-//    nature = null;
-//    // var roundOffId = _context.FiMaAccounts.Where(a => a.Name == ROUNDOFF).Select(a => a.Id).FirstOrDefault();
-//    SaveTransactionEntries(transactionId, purchaseVoucherDebit, nature, roundOffId,
-//        transactionDto.TransactionEntries.Roundoff ?? null, bankDate ?? null, refPageTypeId, transactionDto.Currency.Id, transactionDto.ExchangeRate,
-//        refPageTableId, Reference, description, tranType, transactionDto.TransactionEntries.DueDate, null, null);
-//}
-////RoundOff
-//if (transactionDto.TransactionEntries.TotalDisc > 0)
-//{
-//    tranType = null;
-//    nature = null;
-//    //var discountId = _context.FiMaAccounts.Where(a => a.Name == DISCOUNT).Select(a => a.Id).FirstOrDefault();
-//    discId = SaveTransactionEntries(transactionId, purchaseVoucherDebit, nature, discountId,
-//        transactionDto.TransactionEntries.TotalDisc ?? null, bankDate ?? null, refPageTypeId, transactionDto.Currency.Id, transactionDto.ExchangeRate,
-//        refPageTableId, Reference, description, tranType, transactionDto.TransactionEntries.DueDate, null, null);
-//}
-////Tax
-//if (transactionDto.TransactionEntries.Tax.Count > 0)
-//{
-//    tranType = "Tax";
-//    nature = null;
-//    foreach (var tax in transactionDto.TransactionEntries.Tax.Where(a => a.AccountCode.ID != 0 && a?.AccountCode.ID != null).ToList())
-//    {
-//        SaveTransactionEntries(transactionId, purchaseVoucherDebit, nature, tax.AccountCode.ID,
-//            tax.Amount ?? null, bankDate ?? null, refPageTypeId, transactionDto.Currency.Id, transactionDto.ExchangeRate,
-//            refPageTableId, Reference, description, tranType, transactionDto.TransactionEntries.DueDate, null, null);
-//    }
-//}
-////AddCharges
-//if (transactionDto.TransactionEntries != null && transactionDto.TransactionEntries.AddCharges != null && transactionDto.TransactionEntries.AddCharges.Count > 0)
-//{
-//    tranType = "Expense";
-//    nature = null;
-//    foreach (var expanse in transactionDto.TransactionEntries.AddCharges.Where(a => a.AccountCode.ID != 0 && a?.AccountCode.ID != null).ToList())
-//    {
-//        SaveTransactionEntries(transactionId, purchaseVoucherDebit, nature, expanse.AccountCode.ID,
-//        expanse.Amount ?? null, bankDate ?? null, refPageTypeId, transactionDto.Currency.Id, transactionDto.ExchangeRate,
-//        refPageTableId, Reference, description, tranType, transactionDto.TransactionEntries.DueDate, null, null);
-//    }
-//}
-//if (transactionDto.Items.Count > 0)
-//{
-//    tranType = null;
-//    nature = "M";
-//    var grossAmount = transactionDto.Items.Sum(a => a.GrossAmt);
-//    SaveTransactionEntries(transactionId, purchaseVoucherDebit, nature, netAmtAcId,
-//        grossAmount ?? null, bankDate ?? null, refPageTypeId, transactionDto.Currency.Id, transactionDto.ExchangeRate,
-//        refPageTableId, Reference, description, tranType, transactionDto.TransactionEntries.DueDate, null, null);
-
-//}
-//var payType = _context.MaMisc.Where(p => p.Id == transactionDto.FiTransactionAdditional.PayType.Id).Select(p => p.Value).FirstOrDefault();
-//transactionDto.Party.Name = _context.FiMaAccounts.Where(a => a.Id == transactionDto.Party.Id).Select(a => a.Name).FirstOrDefault();
-//if (transactionDto.Party.Name != Constants.CASHCUSTOMER && transactionDto.Party.Name != Constants.CASHSUPPLIER || payType == Constants.CREDIT)
-//{
-//    //GrandTotal - PartyEntry
-//    if (transactionDto.TransactionEntries.GrandTotal > 0)
-//    {
-//        tranType = "Party";
-//        nature = "M";
-//        insertedId = SaveTransactionEntries(transactionId, purchaseVoucherCredit, nature, transactionDto.Party.Id,
-//         transactionDto.TransactionEntries.GrandTotal ?? null, bankDate ?? null, refPageTypeId, transactionDto.Currency.Id, transactionDto.ExchangeRate,
-//         refPageTableId, Reference, description, tranType, transactionDto.TransactionEntries.DueDate, null, null);
-
-//    }
-//    //Payment Transaction
-//    if (transactionDto.TransactionEntries.Cash.Count > 0 || transactionDto.TransactionEntries.Cheque.Count > 0 || transactionDto.TransactionEntries.Card.Count > 0)
-//    {
-//        tranType = "Normal";
-//        nature = "M";
-//        //var normalAmount = Convert.ToDecimal(transactionDto.TransactionEntries.Cash.Sum(x => x.Amount) ?? 0) + Convert.ToDecimal(transactionDto?.TransactionEntries?.Cheque?.Sum(x => x.Amount) ?? 0) + Convert.ToDecimal(transactionDto?.TransactionEntries?.Card?.Sum(x => x.Amount) ?? 0);
-//        if (transactionDto.TransactionEntries.TotalPaid > 0)
-//            SaveTransactionEntries(transPayId, purchaseVoucherDebit, nature, transactionDto.Party.Id,
-//                           transactionDto.TransactionEntries.TotalPaid, bankDate ?? null, refPageTypeId, transactionDto.Currency.Id, transactionDto.ExchangeRate,
-//                           refPageTableId, Reference, description, tranType, transactionDto.TransactionEntries.DueDate, null, null);
-//    }
-//}
-
-//JournalVoucherCase
-
-//if (paymentVoucherDto.AccountDetails.Count > 0 && (paymentVoucherDto.AccountDetails.Any(a => a.AccountCode.Id != 0)))
-//{
-//    tranType = null;
-//    nature = "M";
-//    //paymentVoucherDto.AccountDetails.Where(a=>a.Credit || a?.Debit)
-//    foreach (var acc in paymentVoucherDto.AccountDetails.Where(a => a.AccountCode.Id != 0 && a?.AccountCode.Id != null).ToList())
-//    {
-//        string? purchaseVoucherDC = null;
-//        if (acc.Debit.HasValue)
-//        {
-//            purchaseVoucherDC = "D";
-//        }
-//        else if (acc.Credit.HasValue)
-//        {
-//            purchaseVoucherDC = "C";
-//        }
-
-//        SaveTransactionEntries(transPayId, purchaseVoucherDC, nature, acc.AccountCode.Id,
-//       acc.Amount, bankDate ?? null, refPageTypeId, paymentVoucherDto.Currency.Id, ExchangeRate,
-//       refPageTableId, Reference, description, tranType, null, null, null);
-
-//    }
-//}
-
-//            //else
-                    //            //{
-                    //            //    foreach (var acc in paymentVoucherDto.AccountDetails.Where(a => a.AccountCode.Id != 0 && a?.AccountCode.Id != null).ToList())
-                    //            //    {
-                    //            //        UpdateTransactionEntries(transPayId, purchaseVoucherDebit, nature, acc.AccountCode.Id,
-                    //            //       acc.Amount, bankDate ?? null, refPageTypeId, paymentVoucherDto.Currency.Id, ExchangeRate,
-                    //            //       refPageTableId, Reference, description, tranType, null, null, null);
-
-//            //    }
-//            //}
