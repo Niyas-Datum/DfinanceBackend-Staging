@@ -4,7 +4,7 @@ using Dfinance.Finance.Services.Interface;
 using Dfinance.Shared.Routes.v1;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using static Dfinance.Shared.Routes.v1.FinRoute;
+
 
 namespace Dfinance.api.Controllers.v1.DMain.Finance
 {
@@ -17,7 +17,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Finance
         {
             _account = account;
         }
-        [HttpPost(FinRoute.AccConfig.fill)]
+        [HttpGet( FinRoute.AccConfig.fill)]
         public IActionResult FillAccConfig()
         {
             try
@@ -30,7 +30,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Finance
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost(FinRoute.AccConfig.update)]
+        [HttpPatch(FinRoute.AccConfig.update)]
         public IActionResult SaveAccConfig(List<AccConfigDto> accConfig)
         {
             var result = _account.SaveAccConfig(accConfig);
