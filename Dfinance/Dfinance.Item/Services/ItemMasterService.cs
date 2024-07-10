@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Tokens;
 using System.Data;
 using System.Text;
@@ -1256,6 +1257,52 @@ namespace Dfinance.Item.Services.Inventory
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
+                return CommonResponse.Error(ex.Message);
+            }
+        }
+        public CommonResponse GetPartialDelivery(DateTime DateFrom, DateTime DateUpto, int branchid,
+           bool Detailed, int? customersupplier,
+           int? item, int? voucher, string? Criteria)
+        {
+            try
+            {
+                object result = null;
+               
+                var query = new StringBuilder();
+                query.Append("Exec InventoryRegisterSP ");
+                
+                query.AppendFormat("@DateFrom = '{0}', ", DateFrom.ToString("yyyy-MM-dd"));
+                query.AppendFormat("@DateUpto = '{0}', ", DateUpto.ToString("yyyy-MM-dd"));
+                query.AppendFormat("@BranchID = {0}, ", branchid);
+                query.AppendFormat("@Detailed = {0}, ", Detailed);
+                if (Criteria != null)
+                {
+                    query.AppendFormat("@Criteria = {0}, ", Criteria);
+                }
+                
+                if (customersupplier != 0 && customersupplier != null)
+                {
+                    query.AppendFormat(", @AccountID = {0}", customersupplier);
+                }
+                if (item != 0 && item != null)
+                {
+                    query.AppendFormat(", @ItemID = {0}", item);
+                }
+                if (voucher != 0 && voucher != null)
+                {
+                    query.AppendFormat(", @VTypeID = {0}", voucher);
+                }
+                
+                if (query.ToString().EndsWith(", "))
+                {
+                    query.Length -= 2;
+                }
+                result = _context.PurchaseReportView.FromSqlRaw(query.ToString()).ToList();
+                return CommonResponse.Ok(result);
+            }
+            catch (Exception ex)
+            {
+                // _logger.LogError(ex.Message);
                 return CommonResponse.Error(ex.Message);
             }
         }

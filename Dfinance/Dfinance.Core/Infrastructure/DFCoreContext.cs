@@ -356,7 +356,8 @@ public partial class DFCoreContext : DbContext
     public DbSet<ItemsHistoryReportView> ItemsHistoryReportView { get; set; }
     public DbSet<QuotationStatusReportView> QuotationStatusReportView { get; set; }
     public DbSet<QuotationComparisonView> QuotationComparisonView { get; set; }
-
+    public DbSet<VoucherHistoryView> VoucherHistoryView { get; set; }
+    
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     //  => optionsBuilder.UseSqlServer(@"Data Source=ip.datuminnovation.com,9600;TrustServerCertificate=true;Initial Catalog=DatumSystemMain;User ID=sa;pwd=Datum123!");
@@ -638,8 +639,8 @@ public partial class DFCoreContext : DbContext
         mb.Entity<MonthlyInvSummaryView>().HasNoKey().ToView(null);
         mb.Entity<ROLView>().HasNoKey().ToView(null);
         mb.Entity<QuotationStatusReportView>().HasNoKey().ToView(null);
-        mb.Entity<QuotationComparisonView>().HasNoKey().ToView(null);
-
+        mb.Entity<QuotationComparisonView>().HasNoKey().ToView(null); 
+        mb.Entity<VoucherHistoryView>().HasNoKey().ToView(null);
     }
 
 }

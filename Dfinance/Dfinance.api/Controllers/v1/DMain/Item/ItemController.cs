@@ -423,5 +423,20 @@ namespace Dfinance.api.Controllers.v1.DMain.Item
                 return BadRequest(ex.Message);
             }
         }
+        [HttpGet(ApiRoutes.ItemMaster.GetPartialDelivery)]
+        [AllowAnonymous]
+        public IActionResult GetPartialDelivery(DateTime DateFrom, DateTime DateUpto, int branchid, bool Detailed, int? customersupplier, int? item, int? voucher, string? Criteria)
+        {
+            try
+            {
+                var result = _itemService.GetPartialDelivery(DateFrom, DateUpto, branchid, Detailed,customersupplier, item, voucher, Criteria);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
     }
 }

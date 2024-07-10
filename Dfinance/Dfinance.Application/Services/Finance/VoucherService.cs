@@ -7,6 +7,7 @@ using Dfinance.Shared.Domain;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
+using System.Text;
 
 namespace Dfinance.Application.Services.Finance
 {
@@ -287,7 +288,67 @@ namespace Dfinance.Application.Services.Finance
                 return CommonResponse.Error(ex);
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="DateFrom"></param>
+        /// <param name="DateUpto"></param>
+        /// <param name="branchid"></param>
+        /// <param name="Detailed"></param>
+        /// <param name="transactionno"></param>
+        /// <param name="customersupplier"></param>
+        /// <param name="item"></param>
+        /// <param name="voucher"></param>
+        /// <param name="PreVoucherID"></param>
+        /// <returns></returns>
+        public CommonResponse GetVoucherHistory(DateTime DateFrom, DateTime DateUpto, int branchid,
+           bool Detailed, string transactionno, int? customersupplier,
+           int? item, int? voucher, int? PreVoucherID)
+        {
+            try
+            {
+                object result = null;
+                string Criteria = "VoucherDetails";
+                var query = new StringBuilder();
+                query.Append("Exec VoucherReportSP ");
+                query.AppendFormat("@Criteria = {0}, ", Criteria);
+                query.AppendFormat("@DateFrom = '{0}', ", DateFrom.ToString("yyyy-MM-dd"));
+                query.AppendFormat("@DateUpto = '{0}', ", DateUpto.ToString("yyyy-MM-dd"));
+                query.AppendFormat("@BranchID = {0}, ", branchid);
+                query.AppendFormat("@Detailed = {0}, ", Detailed);
+                if (transactionno != null)
+                {
+                    query.AppendFormat(", @TransactionNo = {0}", transactionno);
+                }
+                if (customersupplier != 0 && customersupplier != null)
+                {
+                    query.AppendFormat(", @AccountID = {0}", customersupplier);
+                }
+                if (item != 0 && item != null)
+                {
+                    query.AppendFormat(", @ItemID = {0}", item);
+                }
+                if (voucher != 0 && voucher != null)
+                {
+                    query.AppendFormat(", @VTypeID = {0}", voucher);
+                }
+                if (PreVoucherID != 0 && PreVoucherID != null)
+                {
+                    query.AppendFormat(", @PreVoucherID = {0}", PreVoucherID);
+                }
+                if (query.ToString().EndsWith(", "))
+                {
+                    query.Length -= 2;
+                }
+                result = _context.VoucherHistoryView.FromSqlRaw(query.ToString()).ToList();
+                return CommonResponse.Ok(result);
+            }
+            catch (Exception ex)
+            {
+               // _logger.LogError(ex.Message);
+                return CommonResponse.Error(ex.Message);
+            }
+        }
 
     }
 }

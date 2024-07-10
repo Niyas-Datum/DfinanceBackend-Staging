@@ -29,6 +29,6 @@ namespace Dfinance.Item.Services.Inventory.Interface
         CommonResponse GetROLReport(int? warehouse, int? type, int? commodity, int? item);
         CommonResponse GetQuotationStatusReport(int? VoucherId, string? VoucherNo);
         CommonResponse GetQuotationComparisonView(DateTime DateFrom, DateTime DateUpto, int BranchID, string? TransactionNo, int? AccountID, int? ItemID, int? VoucherID);
-
+        CommonResponse GetPartialDelivery(DateTime DateFrom, DateTime DateUpto, int branchid, bool Detailed, int? customersupplier, int? item, int? voucher, string? Criteria);
     }
 }
