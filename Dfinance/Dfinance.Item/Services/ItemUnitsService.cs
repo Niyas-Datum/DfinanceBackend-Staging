@@ -109,6 +109,7 @@ namespace Dfinance.Item.Services.Inventory
             {
                 foreach (var units in unitList)
                 {
+
                     var check = _context.ItemUnits.Any(u => u.Id == units.UnitID);
                     if (check == false)
                         return CommonResponse.NotFound("Unit Not Found");
@@ -139,7 +140,7 @@ namespace Dfinance.Item.Services.Inventory
                          units.RetailPrice2,
                          units.LowestRate,
                          units.MRP,
-                         branch,
+                         b,
                          units.UnitID);
                     _logger.LogInformation(units.UnitID+" ItemUnits Updated Successfully");
                 }
