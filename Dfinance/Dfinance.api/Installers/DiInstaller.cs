@@ -186,5 +186,9 @@ public class DiInstaller : IInstaller
         //AccountConfiguration
         service.AddScoped<IAccountConfigurationService, AccountConfigurationService>();
 
+        //counters
+        service.AddScoped<ICountersService, CountersService>();
+
+
     }
 }
