@@ -331,13 +331,35 @@ namespace Dfinance.Purchase.Services
                 {
                     return PermissionDenied("Delete International Purchase");
                 }
-                var result = _transactionService.DeletePurchase(TransId);
+                var result = _transactionService.DeleteTransactions(TransId);
                 _logger.LogInformation("Successfully Deleted International Purchase");
                 return CommonResponse.Ok(result);
             }
             catch (Exception ex)
             {
                 _logger.LogError("Failed to Delete International Purchase");
+                return CommonResponse.Error(ex);
+            }
+        }
+        public CommonResponse CancelInPurchase(int TransId, int PageId,string reason)
+        {
+            try
+            {
+                if (!_authService.IsPageValid(PageId))
+                {
+                    return PageNotValid(PageId);
+                }
+                if (!_authService.UserPermCheck(PageId, 5))
+                {
+                    return PermissionDenied("Cancel International Purchase");
+                }
+                var result = _transactionService.CancelTransaction(TransId,reason);
+                _logger.LogInformation("Successfully Canceled International Purchase");
+                return CommonResponse.Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Failed to Cancel International Purchase");
                 return CommonResponse.Error(ex);
             }
         }

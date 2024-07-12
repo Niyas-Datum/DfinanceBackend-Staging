@@ -14,6 +14,7 @@ public interface IAuthService
     int? GetId();
     string GetUserName();
     int? GetBranchId();
+    string? GetUserRole();
     string SetCon(DropdownLoginDto company);
     bool IsPageValid(int pageId);
 

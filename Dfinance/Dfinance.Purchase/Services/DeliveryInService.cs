@@ -154,13 +154,35 @@ namespace Dfinance.Purchase.Services
                 {
                     return PermissionDenied("Delete DeliveyIn");
                 }
-                var result = _transactionService.DeletePurchase(TransId);
+                var result = _transactionService.DeleteTransactions(TransId);
                 _logger.LogInformation("Successfully Deleted DeliveyIn");
                 return CommonResponse.Ok(result);
             }
             catch (Exception ex)
             {
                 _logger.LogError("Failed to Delete DeliveyIn");
+                return CommonResponse.Error(ex);
+            }
+        }
+        public CommonResponse CancelDeliveryIn(int TransId, int pageId,string reason)
+        {
+            try
+            {
+                if (!_authService.IsPageValid(pageId))
+                {
+                    return PageNotValid(pageId);
+                }
+                if (!_authService.UserPermCheck(pageId, 5))
+                {
+                    return PermissionDenied("Cancel DeliveyIn");
+                }
+                var result = _transactionService.CancelTransaction(TransId,reason);
+                _logger.LogInformation("Successfully Canceled DeliveyIn");
+                return CommonResponse.Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Failed to Cancel DeliveyIn");
                 return CommonResponse.Error(ex);
             }
         }

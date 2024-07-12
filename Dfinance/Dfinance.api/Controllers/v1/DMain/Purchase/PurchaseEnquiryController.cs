@@ -47,11 +47,25 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
 
         [HttpDelete(InvRoute.PurchaseEnquiry.DeletePUE)]
 
-        public IActionResult DeletePurchaseEnq(int TransId)
+        public IActionResult DeletePurchaseEnq(int TransId,int pageId)
         {
             try
             {
-                var result = _purchaseEnqservice.DeletePurchaseEnq(TransId);
+                var result = _purchaseEnqservice.DeletePurchaseEnq(TransId,pageId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        } 
+        [HttpPatch(InvRoute.PurchaseEnquiry.CancelPUE)]
+
+        public IActionResult CancelPurchaseEnq(int TransId,int pageId,string reason)
+        {
+            try
+            {
+                var result = _purchaseEnqservice.CancelPurchaseEnq(TransId,pageId,reason);
                 return Ok(result);
             }
             catch (Exception ex)

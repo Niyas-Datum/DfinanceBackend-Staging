@@ -559,5 +559,17 @@ namespace Dfinance.NUnitTest.Sales
             Assert.That(result.IsValid, Is.True);
             Assert.That(result.Data, Is.Not.Null);
         }
+        [Test]
+        public void CancelSalesTest()
+        {
+            int transId = 16;
+            int pageId = 149;
+            _salesReturn.Setup(x => x.CancelSalesReturn(transId, pageId, "Canceled")).Returns(new CommonResponse { Exception = null, Data = new InventoryTransactionDto() });
+            var result = _salesReturn.Object.CancelSalesReturn(transId, pageId, "Canceled");
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.IsValid, Is.True);
+            Assert.That(result.Data, Is.Not.Null);
+        }
     }
 }

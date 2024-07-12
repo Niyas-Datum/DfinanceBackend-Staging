@@ -350,6 +350,11 @@ public partial class DFCoreContext : DbContext
 
     //RecallVoucher
     public DbSet<RecallVoucherView> RecallVoucherViews { get; set; }
+
+    public DbSet<ItemOptionsView> ItemOptionsViews { get; set; }
+    //transcostallocation
+    public DbSet<TransCostAllocation> TransCostAllocations { get; set; }
+
     public DbSet<InventoryProfitItemView> InventoryProfitItemView { get; set; }
     public DbSet<InventoryProfitVoucherView> InventoryProfitVoucherView { get; set; }
     public DbSet<InventoryProfitVoucherViews> InventoryProfitVoucherViews { get; set; }
@@ -361,6 +366,7 @@ public partial class DFCoreContext : DbContext
     public DbSet<InvMaCounter> InvMaCounters {  get; set; }
     public DbSet<FillCounters> FillCounters {  get; set; }
     public DbSet<FillCountersById> FillCountersById { get; set; }
+
 
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -616,6 +622,7 @@ public partial class DFCoreContext : DbContext
         mb.Entity<PrintKotView>().HasNoKey().ToView(null);
         mb.Entity<KitchenCategoryView>().HasNoKey().ToView(null);
         mb.Entity<ProductVew>().HasNoKey().ToView(null);
+        mb.Entity<ItemOptionsView>().HasNoKey().ToView(null);
 
         //RecallVoucher
         mb.Entity<RecallVoucherView>().HasNoKey().ToView(null);
@@ -627,6 +634,8 @@ public partial class DFCoreContext : DbContext
         mb.Entity<BillwiseStatementView>().HasNoKey().ToView(null);
         mb.Entity<BalSheetView3>().HasNoKey().ToView(null);       
         mb.Entity<ProfitAndLossView3>().HasNoKey().ToView(null);
+
+
 
         //Account Configuration
         mb.Entity<AccountConfigView>().HasNoKey().ToView(null);
@@ -653,5 +662,6 @@ public partial class DFCoreContext : DbContext
         mb.Entity<FillCounters>().HasNoKey().ToView(null);
         mb.Entity<FillCountersById>().HasNoKey().ToView(null);
     }
+
 
 }
