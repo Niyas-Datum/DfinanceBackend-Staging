@@ -185,6 +185,13 @@ public class DiInstaller : IInstaller
         service.AddScoped<IFinStatementService, FinStatementService>();
         //AccountConfiguration
         service.AddScoped<IAccountConfigurationService, AccountConfigurationService>();
+
         service.AddScoped<IPageMenuService, PageMenuService>();
+
+
+        //counters
+        service.AddScoped<ICountersService, CountersService>();
+
+
     }
 }

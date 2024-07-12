@@ -335,6 +335,7 @@ namespace Dfinance.Shared.Routes.v1
             public const string GetCancelVch = $"{Main}/canclVch";
             public const string UpdateVch = $"{Main}/updateVch";
         }
+
         public static class PageMenu
         {
             public const string Main = $"{Base}/PageMenu";
@@ -343,6 +344,17 @@ namespace Dfinance.Shared.Routes.v1
             public const string save = $"{Main}/save";
             public const string update = $"{Main}/update";
             public const string delete = $"{Main}/delete";
+
+        public static class Counters
+        {
+            public const string Main = $"{Base}/Counters";
+            public const string Fillcounters = $"{Main}/fill";
+            public const string FillcountersById = $"{Main}/fillbyId";
+            public const string GetMachineNameandIp = $"{Main}/getnameIp";
+            public const string Save = $"{Main}/save";
+            public const string Update = $"{Main}/update";
+            public const string Delete = $"{Main}/delete";
+
         }
     }
 }

@@ -12,6 +12,7 @@ namespace Dfinance.Sales
     {
         CommonResponse SaveSalesReturn(InventoryTransactionDto purchaseDto, int PageId, int voucherId);
         CommonResponse UpdateSalesReturn(InventoryTransactionDto purchaseDto, int PageId, int voucherId);
-        CommonResponse DeleteSalesReturn(int TransId,int pageId);
+        CommonResponse DeleteSalesReturn(int TransId,int pageId); 
+        CommonResponse CancelSalesReturn(int TransId,int pageId,string reason);
     }
 }

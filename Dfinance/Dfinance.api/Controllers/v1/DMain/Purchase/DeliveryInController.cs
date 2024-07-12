@@ -32,7 +32,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost(InvRoute.DeliveryIn.Update)]
+        [HttpPatch(InvRoute.DeliveryIn.Update)]
         public IActionResult UpdateDeliveryIn(InventoryTransactionDto invTranseDto, int PageId, int voucherId)
         {
             try
@@ -45,12 +45,25 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost(InvRoute.DeliveryIn.Delete)]
+        [HttpDelete(InvRoute.DeliveryIn.Delete)]
         public IActionResult DeleteDeliveryIn(int TransId, int PageId)
         {
             try
             {
                 var data = _deliveryIn.DeleteDeliveryIn(TransId, PageId);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPatch(InvRoute.DeliveryIn.Cancel)]
+        public IActionResult CancelDeliveryIn(int TransId, int PageId,string reason)
+        {
+            try
+            {
+                var data = _deliveryIn.CancelDeliveryIn(TransId, PageId,reason);
                 return Ok(data);
             }
             catch (Exception ex)

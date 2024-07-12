@@ -123,5 +123,23 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
                 return BadRequest(ex.Message);
             }
         }
+        [HttpPatch(InvRoute.InternationalPurchase.CancelInp)]
+        public IActionResult Cancel(int transId, int pageId,string reason)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+                object result = _internationalPurchase.CancelInPurchase(transId, pageId, reason);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

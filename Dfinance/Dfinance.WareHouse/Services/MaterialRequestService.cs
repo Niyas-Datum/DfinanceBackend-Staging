@@ -244,7 +244,7 @@ namespace Dfinance.WareHouse.Services
                 {
                     return PermissionDenied("Delete Material Request");
                 }
-                var result = _transactionService.DeletePurchase(TransId);
+                var result = _transactionService.DeleteTransactions(TransId);
                 _logger.LogInformation("Successfully Deleted Material Request");
                 return CommonResponse.Ok(result);
             }

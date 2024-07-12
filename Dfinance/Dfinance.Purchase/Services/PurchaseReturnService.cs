@@ -181,15 +181,9 @@ namespace Dfinance.Purchase.Services
                 if (!transid)
                 {
                     return CommonResponse.NotFound("Transaction Not Found");
-
-
                 }
-                string criteria = "DeleteTransactions";
-
-                _context.Database.ExecuteSqlRaw("EXEC VoucherSP @Criteria={0}, @ID={1}",
-                                       criteria, TransId);
-
-                _logger.LogInformation("Delete successfully");
+                var result = _transactionService.DeleteTransactions(TransId);
+                _logger.LogInformation("Successfully Deleted Purchase");
                 return CommonResponse.Ok("Delete successfully");
             }
             catch (Exception ex)
@@ -198,7 +192,33 @@ namespace Dfinance.Purchase.Services
                 return CommonResponse.Error(ex);
             }
         }
-
+        public CommonResponse CancelPurchaseRtn(int TransId, int pageId,string reason)
+        {
+            try
+            {
+                if (!_authService.IsPageValid(pageId))
+                {
+                    return PageNotValid(pageId);
+                }
+                if (!_authService.UserPermCheck(pageId, 3))
+                {
+                    return PermissionDenied("Cancel purchase Return");
+                }
+                var transid = _context.FiTransaction.Any(x => x.Id == TransId);
+                if (!transid)
+                {
+                    return CommonResponse.NotFound("Transaction Not Found");
+                }
+                var result = _transactionService.CancelTransaction(TransId,reason);
+                _logger.LogInformation("Successfully Canceled PurchaseReturn");
+                return CommonResponse.Ok("Canceled successfully");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Error(ex);
+            }
+        }
 
     }
 }
