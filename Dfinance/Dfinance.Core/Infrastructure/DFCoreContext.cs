@@ -357,6 +357,12 @@ public partial class DFCoreContext : DbContext
     public DbSet<InventoryProfitPartyViews> InventoryProfitPartyViews { get; set; }
 
 
+    //Counters
+    public DbSet<InvMaCounter> InvMaCounters {  get; set; }
+    public DbSet<FillCounters> FillCounters {  get; set; }
+    public DbSet<FillCountersById> FillCountersById { get; set; }
+
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     //  => optionsBuilder.UseSqlServer(@"Data Source=ip.datuminnovation.com,9600;TrustServerCertificate=true;Initial Catalog=DatumSystemMain;User ID=sa;pwd=Datum123!");
     // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -439,6 +445,8 @@ public partial class DFCoreContext : DbContext
         mb.ApplyConfiguration(new MaEmployeeConfiguration());
         mb.ApplyConfiguration(new MaEmployeeDetailConfiguration());
         mb.ApplyConfiguration(new HREmployeeConfiguration());
+        //counter
+        mb.ApplyConfiguration(new InvMaCounterConfiguration());
 
 
         //View
@@ -641,6 +649,9 @@ public partial class DFCoreContext : DbContext
 
         //PDC
         mb.Entity<CheqDetailView>().HasNoKey().ToView(null);
+        //counters
+        mb.Entity<FillCounters>().HasNoKey().ToView(null);
+        mb.Entity<FillCountersById>().HasNoKey().ToView(null);
     }
 
 }
