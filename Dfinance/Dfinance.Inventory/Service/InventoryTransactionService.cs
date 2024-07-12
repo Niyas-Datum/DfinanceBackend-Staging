@@ -38,6 +38,15 @@ namespace Dfinance.Inventory.Service
 
         }
 
+        //Fill Party Balance when selecting supplier/ customer
+        public CommonResponse FillPartyBal(int partyId)
+        {
+            int BranchId=_authService.GetBranchId().Value;
+            var result = _context.CurrentStockView.FromSqlRaw($"select dbo.GetBalance('{partyId}',null,'{BranchId}')").ToList();            
+            return CommonResponse.Ok(result);
+        }
+
+
         //Fill Pay Type dropdown
         public CommonResponse FillPayType()
         {

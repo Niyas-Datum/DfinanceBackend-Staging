@@ -20,6 +20,8 @@ namespace Dfinance.Application.Configuration
 
             CreateMap<FinanceTransactionDto,ContraDto>().ReverseMap();
 
+            CreateMap<FinanceTransactionDto, OpeningVoucherDto>().ReverseMap();
+
 
 
 

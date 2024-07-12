@@ -1,5 +1,6 @@
 ﻿using Dfinance.api.Authorization;
 using Dfinance.api.Framework;
+using Dfinance.DataModels.Dto.Item;
 using Dfinance.Item.Services.Inventory;
 using Dfinance.Item.Services.Inventory.Interface;
 using Dfinance.Shared.Routes.v1;
@@ -278,6 +279,53 @@ namespace Dfinance.api.Controllers.v1.DMain.Item
             try
             {
                 var result = _itemService.GetInventoryAgeing(AccountID,  FromDate, ToDate, OpeningBalance, VoucherID, Nature);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
+        /// GetItemExpiryReport
+        /// </summary>
+        /// <param name="itemExpiryReportDto"></param>
+        /// <returns></returns>
+        [HttpPost(ApiRoutes.ItemMaster.ItemExpiryReport)]
+        [AllowAnonymous]
+        public IActionResult GetItemExpiryReport(ItemExpiryReportDto itemExpiryReportDto)
+        {
+            try
+            {
+                var result = _itemService.GetItemExpiryReport( itemExpiryReportDto);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ViewBy"></param>
+        /// <param name="StartDate"></param>
+        /// <param name="EndDate"></param>
+        /// <param name="Customer"></param>
+        /// <param name="Detailed"></param>
+        /// <param name="Item"></param>
+        /// <param name="Salesman"></param>
+        /// <param name="accountid"></param>
+        /// <returns></returns>
+        [HttpGet(ApiRoutes.ItemMaster.InventoryProfitSP)]
+        [AllowAnonymous]
+        public IActionResult GetInventoryProfitSP(string? ViewBy, DateTime StartDate, DateTime EndDate, int? Customer, bool? Detailed, int Item, string? Salesman, int? accountid)
+        {
+            try
+            {
+                var result = _itemService.GetInventoryProfitSP(ViewBy,  StartDate,  EndDate, Customer,Detailed,Item,Salesman,accountid);
                 return Ok(result);
             }
             catch (Exception ex)

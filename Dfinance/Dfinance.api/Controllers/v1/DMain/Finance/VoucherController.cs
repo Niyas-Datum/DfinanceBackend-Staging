@@ -21,7 +21,20 @@ namespace Dfinance.api.Controllers.v1.DMain.Finance
         {
             _VoucherService = VoucherService;
         }
-
+        //voucher popup-used in finance statements
+        [HttpGet(FinRoute.Voucher.popup)]
+        public IActionResult VoucherPopup()
+        {
+            try
+            {
+                var view = _VoucherService.VoucherPopup();
+                return Ok(view);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
         /// <summary>
         /// @windows: -Finance/masters  

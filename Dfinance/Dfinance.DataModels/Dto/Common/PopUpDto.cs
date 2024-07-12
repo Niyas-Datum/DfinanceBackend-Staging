@@ -3,13 +3,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Dfinance.DataModels.Dto.Common
 {
     public class PopUpDto
     {
+        [JsonPropertyName("id")]
         public int? Id { get; set; }
+        [JsonPropertyName("name")]
         public string? Name { get; set; }
         public string? Code {  get; set; }
         public string? Description { get; set; }
