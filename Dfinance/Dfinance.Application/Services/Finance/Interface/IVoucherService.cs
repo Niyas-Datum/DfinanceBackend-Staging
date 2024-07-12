@@ -14,7 +14,7 @@ namespace Dfinance.Application.Services.Finance.Interface
         CommonResponse SaveVoucherNumbering(NumberingDto numberingDto);
         CommonResponse UpdateVoucherNumbering(NumberingDto numberingDto, int Id);
         CommonResponse DeleteVoucherNumbering(int Id);
-
+        CommonResponse VoucherDropDown();
 
     }
 }
