@@ -136,6 +136,10 @@ public class AuthService : IAuthService
     {
         return _User.Users.BranchId;
     }
+    public string? GetUserRole()
+    {
+        return _User.Users.UserRole;
+    }
 
     public AuthResponseDto GetUserById(int? id)
     {

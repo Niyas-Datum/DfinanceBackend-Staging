@@ -21,12 +21,12 @@ namespace Dfinance.Shared.Routes
         }
 
 
-        
+
         public class TransactionAdditionals
         {
             public const string Main = $"{Base}/trnadd";
-            public const string Save=$"{Main}/save";
-            public const string Update=$"{Main}/update";
+            public const string Save = $"{Main}/save";
+            public const string Update = $"{Main}/update";
             public const string Delete = $"{Main}/delete";
             public const string GetByTransactionId = $"{Main}/getByTrnId";
             public const string transpType = $"{Main}/transpType";
@@ -34,20 +34,21 @@ namespace Dfinance.Shared.Routes
             public const string vehicleNo = $"{Main}/vehicleNo";
             public const string delLoc = $"{Main}/delLoc";
         }
-		
-		  public class InventroyTransactions
+
+        public class InventroyTransactions
         {
             public const string Main = $"{Base}/invtrans";
             public const string getsalesman = $"{Main}/fillsalesman";
             public const string getvoucherno = $"{Main}/getvocno";
             public const string getreference = $"{Main}/getrefer";
-            public const string DeletePurchase = $"{Main}/delete";
+            public const string Cancel = $"{Main}/cancel";
+            public const string DeleteTrans = $"{Main}/delete";
             public const string FillVoucherType = $"{Main}/fillVoucherType";
             public const string FillRefItems = $"{Main}/fillRefItems";
             public const string refItemList = $"{Main}/refItemList";
             public const string FillRef = $"{Main}/fillRef";
             public const string payType = $"{Main}/payType";
-            public const string GetInventoryTransactions = $"{Main}/getInvTrans"; 
+            public const string GetInventoryTransactions = $"{Main}/getInvTrans";
 
         }
         public class Purchase
@@ -57,12 +58,12 @@ namespace Dfinance.Shared.Routes
             public const string Updatepurchase = $"{Main}/updatepurchase";
             public const string Fillpurchasebyid = $"{Main}/fillpurchasebyid";
             public const string Fillpurchase = $"{Main}/fillpurchase";
+            public const string Cancelpurchase = $"{Main}/Cancelphs";
             public const string Delpurchase = $"{Main}/delpurchase";
             public const string fillitems = $"{Main}/fillitems";
             public const string GetData = $"{Main}/getdata";
             public const string GetSupplier = $"{Main}/getsupplier";
             public const string getPurchaseReport = $"{Main}/getPuReport";
-
         }
         public class InventoryPaymentTransaction
         {
@@ -76,7 +77,7 @@ namespace Dfinance.Shared.Routes
             public const string FillCheque = $"{Main}/popupCheque";
             public const string FillBankName = $"{Main}/popupBankName";
             public const string SaveCheque = $"{Main}/SaveCheque";
-           
+
         }
         public class InventoryItem
         {
@@ -109,8 +110,9 @@ namespace Dfinance.Shared.Routes
             public const string SavePO = $"{Main}/savePO";
             public const string UpdatePO = $"{Main}/updatePO";
             public const string DeletePO = $"{Main}/deletePO";
+            public const string CancelPO = $"{Main}/Cancel";
         }
-		 public class Sales
+        public class Sales
         {
             public const string Main = $"{Base}/sales";
             public const string SaveSales = $"{Main}/saveSales";
@@ -121,15 +123,16 @@ namespace Dfinance.Shared.Routes
             public const string fillitems = $"{Main}/fillitems";
             public const string GetData = $"{Main}/getdata";
             public const string GetCustomer = $"{Main}/getCustomer";
-
+            public const string CanlSales = $"{Main}/Cancel";
         }
-		  public class PurchaseEnquiry
+        public class PurchaseEnquiry
         {
             public const string Main = $"{Base}/PurchaseEnquiry";
             public const string SavePUE = $"{Main}/savePUE";
             public const string UpdatePUE = $"{Main}/updatePUE";
             public const string DeletePUE = $"{Main}/deletePUE";
-		}
+            public const string CancelPUE = $"{Main}/Cancel";
+        }
 
         public class PurchaseRequest
         {
@@ -137,6 +140,7 @@ namespace Dfinance.Shared.Routes
             public const string SavePuReq = $"{Main}/save";
             public const string UpdatePuReq = $"{Main}/update";
             public const string DeletePuReq = $"{Main}/delete";
+            public const string CancelPuReq = $"{Main}/Cancel";
         }
         public class PurchaseQuotaion
         {
@@ -144,6 +148,7 @@ namespace Dfinance.Shared.Routes
             public const string SavePuQut = $"{Main}/save";
             public const string UpdatePuQut = $"{Main}/update";
             public const string DeletePuQut = $"{Main}/delete";
+            public const string CancelpuQut = $"{Main}/Cancel";
         }
         public class InternationalPurchase
         {
@@ -155,6 +160,7 @@ namespace Dfinance.Shared.Routes
             public const string DelInpurchase = $"{Main}/delete";
             public const string fillitems = $"{Main}/fillitems";
             public const string GetData = $"{Main}/getdata";
+            public const string CancelInp = $"{Main}/Cancel";
         }
         public class GoodsInTransit
         {
@@ -162,23 +168,25 @@ namespace Dfinance.Shared.Routes
             public const string SaveGIT = $"{Main}/save";
             public const string UpdateGIT = $"{Main}/update";
             public const string DeleteGIT = $"{Main}/delete";
+            public const string CancelGit = $"{Main}/Cancel";
         }
-		 public class SalesReturn
+        public class SalesReturn
         {
             public const string Main = $"{Base}/salesReturn";
             public const string SaveSalesReturn = $"{Main}/saveSalesRtn";
             public const string UpdateSalesReturn = $"{Main}/updateSalesRtn";
             public const string DelSalesReturn = $"{Main}/delsalesRtn";
-
+            public const string CancelsalesRtn = $"{Main}/Cancel";
         }
-		 public class PurchaseReturn
+        public class PurchaseReturn
         {
             public const string Main = $"{Base}/PurchaseReturn";
             public const string SavePurchaseRtn = $"{Main}/savePR";
             public const string UpdatePurchaseRtn = $"{Main}/updatePR";
             public const string DeletePurchaseRtn = $"{Main}/deletePR";
+            public const string CancelPurchaseRtn = $"{Main}/Cancel";
         }
-		 public class MaterialRequest
+        public class MaterialRequest
         {
             public const string Main = $"{Base}/materialReq";
             public const string GetData = $"{Main}/getdata";
@@ -200,6 +208,7 @@ namespace Dfinance.Shared.Routes
             public const string Save = $"{Main}/save";
             public const string Update = $"{Main}/update";
             public const string Delete = $"{Main}/delete";
+            public const string Cancel = $"{Main}/Cancel";
         }
 
         public class MaterialReceipt
@@ -215,6 +224,7 @@ namespace Dfinance.Shared.Routes
             public const string Save = $"{Main}/save";
             public const string Update = $"{Main}/update";
             public const string Delete = $"{Main}/delete";
+            public const string CancelMatr = $"{Main}/cancel";
             public const string getSettings = $"{Main}/getSettings";
             public const string sizeMasterPopup = $"{Main}/sizeMasterPopup";
             public const string findQty = $"{Main}/findQty";

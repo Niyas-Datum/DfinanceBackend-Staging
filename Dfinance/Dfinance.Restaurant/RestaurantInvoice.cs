@@ -1,5 +1,6 @@
 ﻿using Dfinance.Application.Services.General.Interface;
 using Dfinance.AuthAppllication.Services.Interface;
+using Dfinance.Core;
 using Dfinance.Core.Domain;
 using Dfinance.Core.Infrastructure;
 using Dfinance.Core.Views;
@@ -16,6 +17,7 @@ using Dfinance.Shared.Domain;
 using Dfinance.Shared.Enum;
 using Dfinance.Stakeholder.Services.Interface;
 using Dfinance.Warehouse.Services.Interface;
+using FluentValidation.Validators;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
@@ -368,8 +370,12 @@ namespace Dfinance.Restaurant
         }
         private string GetAutoVoucherNo(int voucherId)
         {
-            int branchid = _authService.GetBranchId().Value;           
-            int lastTransNo = Convert.ToInt32(_context.FiTransaction.Where(x => x.VoucherId == voucherId && x.Date == DateTime.Now.AddHours(-1 * dayCloseLagHours).Date && x.CompanyId==branchid).Max(x => x.DailyTransactionNo));
+            int branchid = _authService.GetBranchId().Value;
+            var vNo = (from trans in _context.FiTransaction
+                       join addition in _context.FiTransactionAdditionals on trans.Id equals addition.TransactionId
+                       where trans.VoucherId == voucherId && trans.Date == DateTime.Now.AddHours(-1 * dayCloseLagHours).Date && trans.CompanyId == branchid
+                       select (addition.Code)).Max();
+            int lastTransNo = Convert.ToInt32(vNo);
             lastTransNo++;
             return lastTransNo.ToString();
         }

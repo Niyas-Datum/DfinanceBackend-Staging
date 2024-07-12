@@ -41,7 +41,7 @@ namespace Dfinance.Core.Domain
        // public virtual ICollection<InvTransItem> InvTransItems { get; set; }
         public virtual ICollection<FiTransactionEntry> InverseRefTrans { get; set; }
         public virtual ICollection<TransCollection> TransCollections { get; set; }
-        //public virtual ICollection<TransCostAllocation> TransCostAllocations { get; set; }
+        public virtual ICollection<TransCostAllocation> TransCostAllocations { get; set; }
         public virtual ICollection<TransExpense> TransExpenses { get; set; }
        // public virtual ICollection<TransItemExpense> TransItemExpenses { get; set; }
        // public virtual ICollection<VmfuelLog> VmfuelLogs { get; set; }

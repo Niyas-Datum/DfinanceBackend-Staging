@@ -349,6 +349,8 @@ public partial class DFCoreContext : DbContext
     //RecallVoucher
     public DbSet<RecallVoucherView> RecallVoucherViews { get; set; }
     public DbSet<ItemOptionsView> ItemOptionsViews { get; set; }
+    //transcostallocation
+    public DbSet<TransCostAllocation> TransCostAllocations { get; set; }
 
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -619,7 +621,8 @@ public partial class DFCoreContext : DbContext
         mb.Entity<ProfitAndLossView3>().HasNoKey().ToView(null);
         mb.Entity<eReturnView>().HasNoKey().ToView(null);
 
-   
+   //TransCostAllocation
+
     
     
 }

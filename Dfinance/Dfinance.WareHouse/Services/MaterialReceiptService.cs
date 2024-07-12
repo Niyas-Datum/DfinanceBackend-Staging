@@ -278,13 +278,35 @@ namespace Dfinance.WareHouse.Services
                 {
                     return PermissionDenied("Delete Material Receipt");
                 }
-                var result = _transactionService.DeletePurchase(TransId);
+                var result = _transactionService.DeleteTransactions(TransId);
                 _logger.LogInformation("Successfully Deleted Material Receipt");
                 return CommonResponse.Ok(result);
             }
             catch (Exception ex)
             {
                 _logger.LogError("Failed to Delete Material Receipt");
+                return CommonResponse.Error(ex);
+            }
+        }
+        public CommonResponse CancelMatReceipt(int TransId, int PageId,string reason)
+        {
+            try
+            {
+                if (!_authService.IsPageValid(PageId))
+                {
+                    return PageNotValid(PageId);
+                }
+                if (!_authService.UserPermCheck(PageId, 5))
+                {
+                    return PermissionDenied("Cancel Material Receipt");
+                }
+                var result = _transactionService.CancelTransaction(TransId,reason);
+                _logger.LogInformation("Successfully Canceled Material Receipt");
+                return CommonResponse.Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Failed to Cancel Material Receipt");
                 return CommonResponse.Error(ex);
             }
         }

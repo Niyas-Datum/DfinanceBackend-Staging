@@ -37,6 +37,7 @@ namespace Dfinance.Core.Domain
         public DateTime? CreatedOn { get; set; }
         public int? CreatedBy { get; set; }
         public int? CreatedBranchId { get; set; }
+        public virtual ICollection<TransCostAllocation> TransCostAllocations { get; set; }
 
         //Relationships
 

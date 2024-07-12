@@ -8,5 +8,6 @@ namespace Dfinance.Purchase.Services.Interface
         CommonResponse SaveGoodsInTransit(InventoryTransactionDto invTranseDto, int PageId, int voucherId);
         CommonResponse UpdateGoodsInTransit(InventoryTransactionDto invTranseDto, int PageId, int voucherId);
         CommonResponse DeleteGoodsInTransit(int TransId, int PageId);
+        CommonResponse CancelGoodsInTransit(int TransId, int pageId, string reason);
     }
 }

@@ -57,5 +57,18 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
                 return BadRequest(ex.Message);
             }
         }
+        [HttpPatch(InvRoute.PurchaseRequest.CancelPuReq)]
+        public IActionResult CancelPurchaseRequest(int PageId, int transId,string reason)
+        {
+            try
+            {
+                var data = _purchaseRequest.CancelPurchaseRequest(transId, PageId,reason);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

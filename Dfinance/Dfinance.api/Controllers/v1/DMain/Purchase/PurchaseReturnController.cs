@@ -12,8 +12,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
         private readonly IPurchaseReturnService _purchaseRtnService;
         public PurchaseReturnController(IPurchaseReturnService purchaseRtnService)
         {
-            _purchaseRtnService = purchaseRtnService;
-                
+            _purchaseRtnService = purchaseRtnService;                
         }
 
         [HttpPost(InvRoute.PurchaseReturn.SavePurchaseRtn)]
@@ -45,11 +44,24 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
         }
 
         [HttpDelete(InvRoute.PurchaseReturn.DeletePurchaseRtn)]
-        public IActionResult DeletePurchaseRtn(int TransId, int pageId)
+        public IActionResult DeletePurchaseRtn(int TransId, int pageId,bool isHigherApproval)
         {
             try
             {
                 var result = _purchaseRtnService.DeletePurchaseRtn(TransId, pageId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPatch(InvRoute.PurchaseReturn.CancelPurchaseRtn)]
+        public IActionResult CancelPurchaseRtn(int TransId, int pageId,bool isHigherApproval,string reason)
+        {
+            try
+            {
+                var result = _purchaseRtnService.CancelPurchaseRtn(TransId, pageId,reason);
                 return Ok(result);
             }
             catch (Exception ex)

@@ -19,8 +19,8 @@ namespace Dfinance.Inventory.Service.Interface
         CommonResponse UpdateTransReference(int? transId, List<int?> referIds);
         CommonResponse SaveVoucherAllocation(int transId, int transpayId, InvTransactionEntriesDto transactionAdvance);
         CommonResponse UpdateVoucherAllocation(int transId, int transpayId, InvTransactionEntriesDto transactionAdvance);
-        CommonResponse DeletePurchase(int TransId);
-
+        CommonResponse DeleteTransactions(int transId);
+        CommonResponse CancelTransaction(int transId,  string reason);
         CommonResponse FillVoucherType(int voucherId);
         CommonResponse FillImportItemList(int? transId, int? voucherId);
 

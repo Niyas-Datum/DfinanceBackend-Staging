@@ -133,6 +133,19 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
                 return BadRequest(ex.Message);
             }
         }
+        [HttpPatch(InvRoute.MaterialReceipt.CancelMatr)]
+        public IActionResult CancelMatReceipt(int TransId, int PageId, string reason)
+        {
+            try
+            {
+                var data = _matReceipt.CancelMatReceipt(TransId, PageId,reason);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         //[HttpGet(InvRoute.MaterialReceipt.getSettings)]
         //public IActionResult GetMaterialSettings()
         //{

@@ -60,24 +60,53 @@ namespace Dfinance.Sales
             _settings = settings;
         }
 
-        public CommonResponse DeleteSales(int TransId)
+        public CommonResponse DeleteSales(int TransId,int pageId)
         {
             try
             {
+                if (!_authService.IsPageValid(pageId))
+                {
+                    return PageNotValid(pageId);
+                }
+                if (!_authService.UserPermCheck(pageId, 2))
+                {
+                    return PermissionDenied("Save Sales");
+                }
                 var transid = _context.FiTransaction.Any(x => x.Id == TransId);
                 if (!transid)
                 {
                     return CommonResponse.NotFound("Transaction Not Found");
-
-
                 }
-                string criteria = "DeleteTransactions";
-
-                _context.Database.ExecuteSqlRaw("EXEC VoucherSP @Criteria={0}, @ID={1}",
-                                       criteria, TransId);
-
+                _transactionService.DeleteTransactions(TransId);
                 _logger.LogInformation("Delete successfully");
                 return CommonResponse.Ok("Delete successfully");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Error(ex);
+            }
+        }
+        public CommonResponse CancelSales(int TransId,int pageId,string reason)
+        {
+            try
+            {
+                if (!_authService.IsPageValid(pageId))
+                {
+                    return PageNotValid(pageId);
+                }
+                if (!_authService.UserPermCheck(pageId, 2))
+                {
+                    return PermissionDenied("Save Sales");
+                }
+                var transid = _context.FiTransaction.Any(x => x.Id == TransId);
+                if (!transid)
+                {
+                    return CommonResponse.NotFound("Transaction Not Found");
+                }
+               _transactionService.CancelTransaction(TransId, reason);
+                _logger.LogInformation("Cancel successfully");
+                return CommonResponse.Ok("Cancel successfully");
             }
             catch (Exception ex)
             {
