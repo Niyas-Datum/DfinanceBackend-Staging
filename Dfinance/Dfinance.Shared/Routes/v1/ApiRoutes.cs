@@ -287,7 +287,10 @@ namespace Dfinance.Shared.Routes.v1
             public const string ItemHistory = $"{Main}/ invhis";
             public const string ROLReport= $"{Main}/ rolreport";
             public const string GetQuotationStatusReport = $"{Main}/ getQusrep";
-            public const string GetQuotationComparisonReport = $"{Main}/ getQusComprep"; 
+            public const string GetQuotationComparisonReport = $"{Main}/ getQusComprep";
+            public const string GetPartialDelivery = $"{Main}/ getpartialdelivery";
+            
+            public const string GetMonthlyInventorySummary = $"{Main}/ getmonInvSumary"; 
         }
         public static class ItemUnits
         {

@@ -1230,8 +1230,8 @@ namespace Dfinance.Item.Services.Inventory
                 query.AppendFormat("@Criteria = {0}, ", Criteria);
                 query.AppendFormat("@DateFrom = '{0}', ", DateFrom.ToString("yyyy-MM-dd"));
                 query.AppendFormat("@DateUpto = '{0}', ", DateUpto.ToString("yyyy-MM-dd"));
-                query.AppendFormat("@BranchID = {0}, ", BranchID );
-                if (TransactionNo  != null)
+                query.AppendFormat("@BranchID = {0}, ", BranchID);
+                if (TransactionNo != null)
                 {
                     query.AppendFormat(", @TransactionNo = {0}", TransactionNo);
                 }
@@ -1267,10 +1267,10 @@ namespace Dfinance.Item.Services.Inventory
             try
             {
                 object result = null;
-               
+
                 var query = new StringBuilder();
                 query.Append("Exec InventoryRegisterSP ");
-                
+
                 query.AppendFormat("@DateFrom = '{0}', ", DateFrom.ToString("yyyy-MM-dd"));
                 query.AppendFormat("@DateUpto = '{0}', ", DateUpto.ToString("yyyy-MM-dd"));
                 query.AppendFormat("@BranchID = {0}, ", branchid);
@@ -1279,7 +1279,7 @@ namespace Dfinance.Item.Services.Inventory
                 {
                     query.AppendFormat("@Criteria = {0}, ", Criteria);
                 }
-                
+
                 if (customersupplier != 0 && customersupplier != null)
                 {
                     query.AppendFormat(", @AccountID = {0}", customersupplier);
@@ -1292,7 +1292,7 @@ namespace Dfinance.Item.Services.Inventory
                 {
                     query.AppendFormat(", @VTypeID = {0}", voucher);
                 }
-                
+
                 if (query.ToString().EndsWith(", "))
                 {
                     query.Length -= 2;
@@ -1304,6 +1304,60 @@ namespace Dfinance.Item.Services.Inventory
             {
                 // _logger.LogError(ex.Message);
                 return CommonResponse.Error(ex.Message);
+            }
+        }
+        /// <summary>
+        /// GetMonthlyInventorySummary
+        /// </summary>
+        /// <param name="startdate"></param>
+        /// <param name="enddate"></param>
+        /// <returns></returns>
+        public CommonResponse GetMonthlyInventorySummary(DateTime? startdate, DateTime? enddate,int? accountid,int? voucherid ,int? drcr,int? partycategoryid,int? categorytypeid,int? commodity,int? item)
+        {
+            //if (!_authService.IsPageValid(pageId))
+            //{
+            //    return PageNotValid(pageId);
+            //}
+            //if (!_authService.UserPermCheck(pageId, 1))
+            //{
+            //    return PermissionDenied("Fill the data ");
+            //}
+            try
+            {
+                int branchId = _authService.GetBranchId().Value;
+
+                var cmd = _context.Database.GetDbConnection().CreateCommand();
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = $"Exec ConsolidatedMonthwiseInventorySP @DateFrom='{startdate}',@DateUpto='{enddate}',@BranchID={branchId},@AccountID='{accountid}'," +
+                    $"@VoucherID='{voucherid}',@DrCr='{drcr}',@PartyCategoryID='{partycategoryid}',@CategoryType='{categorytypeid}',@Commodity='{commodity}',@ItemID='{item}'";
+                _context.Database.GetDbConnection().Open();
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        var tb = new DataTable();
+                        tb.Load(reader);
+
+                        List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+                        Dictionary<string, object> row;
+                        foreach (DataRow dr in tb.Rows)
+                        {
+                            row = new Dictionary<string, object>();
+                            foreach (DataColumn col in tb.Columns)
+                            {
+                                row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
+                            }
+                            rows.Add(row);
+                        }
+                        return CommonResponse.Ok(rows);
+                    }
+                    return CommonResponse.NoContent();
+                }
+            }
+            catch
+            {
+                _logger.LogError("Failed to fill Account Breakup/CostCentre Breakup ");
+                return CommonResponse.Error("Failed to fill the data ");
             }
         }
     }

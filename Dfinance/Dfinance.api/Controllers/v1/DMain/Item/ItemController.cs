@@ -414,7 +414,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Item
         {
             try
             {
-                var result = _itemService.GetQuotationComparisonView(DateFrom, DateUpto, BranchID, TransactionNo,AccountID, ItemID, VoucherID);
+                var result = _itemService.GetQuotationComparisonView(DateFrom, DateUpto, BranchID, TransactionNo, AccountID, ItemID, VoucherID);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -429,7 +429,22 @@ namespace Dfinance.api.Controllers.v1.DMain.Item
         {
             try
             {
-                var result = _itemService.GetPartialDelivery(DateFrom, DateUpto, branchid, Detailed,customersupplier, item, voucher, Criteria);
+                var result = _itemService.GetPartialDelivery(DateFrom, DateUpto, branchid, Detailed, customersupplier, item, voucher, Criteria);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+        [HttpGet(ApiRoutes.ItemMaster.GetMonthlyInventorySummary)]
+        [AllowAnonymous]
+        public IActionResult GetMonthlyInventorySummary(DateTime? startdate, DateTime? enddate, int? accountid, int? voucherid, int? drcr, int? partycategoryid, int? categorytypeid, int? commodity, int? item)
+        {
+            try
+            {
+                var result = _itemService.GetMonthlyInventorySummary(startdate, enddate, accountid, voucherid, drcr, partycategoryid, categorytypeid, commodity, item); ;
                 return Ok(result);
             }
             catch (Exception ex)
