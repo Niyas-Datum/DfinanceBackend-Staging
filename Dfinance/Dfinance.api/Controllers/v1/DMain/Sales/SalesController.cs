@@ -126,12 +126,12 @@ namespace Dfinance.api.Controllers.v1.DMain.Sales
             }
         }
         [HttpGet(InvRoute.Sales.getsalessummary)]
-       
+
         public IActionResult GetMonthlySalesSummary(DateTime? startDate, DateTime? endDate)
         {
             try
             {
-                var data = _salesService.GetMonthlySalesSummary(startDate,endDate);
+                var data = _salesService.GetMonthlySalesSummary(startDate, endDate);
                 return Ok(data);
             }
             catch (Exception ex)
@@ -139,6 +139,20 @@ namespace Dfinance.api.Controllers.v1.DMain.Sales
                 return BadRequest(ex.Message);
             }
         }
+        [HttpGet(InvRoute.Sales.DaySummary)]
+        [AllowAnonymous]
+        public IActionResult GetFillSalesDaySummary(string? criteria, DateTime startDate, DateTime endDate, int? branch, int? user)
+        {
+            try
+            {
+                var data = _salesService.GetFillSalesDaySummary(criteria, startDate, endDate, branch, user);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error retrieving sales day summary: {ex.Message}");
+            }
+        }
     }
-    }
+}
 

@@ -13,5 +13,6 @@ namespace Dfinance.Sales
         CommonResponse UpdateSales(InventoryTransactionDto purchaseDto, int PageId, int voucherId);
         CommonResponse DeleteSales(int TransId);
         CommonResponse GetMonthlySalesSummary(DateTime? startDate, DateTime? endDate);  
+        CommonResponse GetFillSalesDaySummary(string? criteria,DateTime startDate, DateTime endDate,int? branch,int? user);
     }
 }
