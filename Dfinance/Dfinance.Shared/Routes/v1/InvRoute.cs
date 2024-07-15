@@ -18,6 +18,9 @@ namespace Dfinance.Shared.Routes
             public const string Save = $"{Main}/Save";
             public const string Update = $"{Main}/Update";
             public const string Delete = $"{Main}/delete";
+            public const string Main1 = $"{Base}/stockRpt";
+            public const string StockLoadData = $"{Main1}/stkRegLD";
+            public const string StockRegistration = $"{Main1}/stkRegt";
         }
 
 
