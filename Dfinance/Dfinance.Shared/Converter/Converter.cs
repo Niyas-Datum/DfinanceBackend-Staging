@@ -65,5 +65,12 @@ namespace Dfinance.Shared
 
             return dict;
         }
+        public static bool StringToBoolean(string? str)
+        {
+            if(str == null) return false;
+            if(str=="1")
+                return true;
+            return false;
+        }
     }
 }

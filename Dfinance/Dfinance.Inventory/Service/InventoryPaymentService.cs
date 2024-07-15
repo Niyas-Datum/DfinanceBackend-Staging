@@ -41,7 +41,7 @@ namespace Dfinance.Inventory.Service
         private string? criteria = null;
         private string? tranType = null;
         private readonly DataRederToObj _rederToObj;
-		private int? discId = null;
+        private int? discId = null;
         public InventoryPaymentService(DFCoreContext context, IAuthService authService, DataRederToObj rederToObj, IHostEnvironment hostEnvironment)
         {
             _context = context;
@@ -52,6 +52,7 @@ namespace Dfinance.Inventory.Service
         }
         /// <summary>
         /// Save tranentries frm purchase
+        /// 
         /// </summary>
         /// <param name="purchaseDto"></param>
         /// <param name="pageId"></param>
@@ -62,9 +63,23 @@ namespace Dfinance.Inventory.Service
         {
             try
             {
-               
+                //SetSettings();
                 string? Reference = null;
-                SetVoucherDebitCreditDetails(pageId);
+                var financeUpdate = SetVoucherDebitCreditDetails(pageId);
+                //if (financeUpdate)
+                //{
+                //    //if (transactionDto.Items.Count > 0 && transactionDto.Items != null)
+                //    //{
+                //    //    if (taxBasedInvoiceAccount)
+                //    //    {
+                //    //        var invTransItem=_context.InvTransItems.Where(i=>i.TransactionId==transactionId).ToList();
+                //    //        foreach (var item in invTransItem)
+                //    //        {
+
+                //    //        }
+                //    //    }
+                //    //}
+                //}
                 int BranchID = _authService.GetBranchId().Value;
                 int? netAmtAcId = null;
                 var voucherName = (from pageMenu in _context.MaPageMenus
@@ -84,17 +99,16 @@ namespace Dfinance.Inventory.Service
                 using (var dbCommand = _context.Database.GetDbConnection().CreateCommand())
                 {
                     dbCommand.CommandText = $"EXEC FillPartyDetailsSP @BranchID={BranchID},@VoucherName='{voucherName.VoucherName}'";
-                    SqlDataAdapter da=new SqlDataAdapter((SqlCommand)dbCommand);
+                    SqlDataAdapter da = new SqlDataAdapter((SqlCommand)dbCommand);
                     DataSet dataSet = new DataSet();
                     da.Fill(dataSet);
                     var disc = dataSet.Tables[0].Rows[0];
-                        discountId = Convert.ToInt32(disc["ID"]);
+                    discountId = Convert.ToInt32(disc["ID"]);
                     var net = dataSet.Tables[2].Rows[0];
                     netAmtAcId = Convert.ToInt32(net["ID"]);//_rederToObj.Deserialize<TransAccount>((DbDataReader)reader[2]).Select(d => d.ID).FirstOrDefault();
                     var round = dataSet.Tables[4].Rows[0];                                  //var table4 = _rederToObj.Deserialize<TransAccount>(reader).Select(d => d.ID).FirstOrDefault();
-                    roundOffId = Convert.ToInt32(round["ID"]); 
+                    roundOffId = Convert.ToInt32(round["ID"]);
                 }
-               
                 int insertedId = 0;
                 var transEntry = _context.FiTransactionEntries.Any(t => t.Id == transactionId || t.Id == transPayId);
                 if (transEntry)//Delete Transaction Entries
@@ -159,7 +173,7 @@ namespace Dfinance.Inventory.Service
                 }
                 var payType = _context.MaMisc.Where(p => p.Id == transactionDto.FiTransactionAdditional.PayType.Id).Select(p => p.Value).FirstOrDefault();
                 transactionDto.Party.Name = _context.FiMaAccounts.Where(a => a.Id == transactionDto.Party.Id).Select(a => a.Name).FirstOrDefault();
-                if (transactionDto.Party.Name != Constants.CASHCUSTOMER && transactionDto.Party.Name != Constants.CASHSUPPLIER || payType==Constants.CREDIT)
+                if (transactionDto.Party.Name != Constants.CASHCUSTOMER && transactionDto.Party.Name != Constants.CASHSUPPLIER || payType == Constants.CREDIT)
                 {
                     //GrandTotal - PartyEntry
                     if (transactionDto.TransactionEntries.GrandTotal > 0)
@@ -177,7 +191,7 @@ namespace Dfinance.Inventory.Service
                         tranType = "Normal";
                         nature = "M";
                         //var normalAmount = Convert.ToDecimal(transactionDto.TransactionEntries.Cash.Sum(x => x.Amount) ?? 0) + Convert.ToDecimal(transactionDto?.TransactionEntries?.Cheque?.Sum(x => x.Amount) ?? 0) + Convert.ToDecimal(transactionDto?.TransactionEntries?.Card?.Sum(x => x.Amount) ?? 0);
-                        if(transactionDto.TransactionEntries.TotalPaid>0)
+                        if (transactionDto.TransactionEntries.TotalPaid > 0)
                             SaveTransactionEntries(transPayId, purchaseVoucherDebit, nature, transactionDto.Party.Id,
                                            transactionDto.TransactionEntries.TotalPaid, bankDate ?? null, refPageTypeId, transactionDto.Currency.Id, transactionDto.ExchangeRate,
                                            refPageTableId, Reference, description, tranType, transactionDto.TransactionEntries.DueDate, null, null);
@@ -338,8 +352,9 @@ namespace Dfinance.Inventory.Service
 
 
         }
-
-        private void SetVoucherDebitCreditDetails(int pageId)
+        //private string purchaseVoucherCreditAmount = string.Empty;
+        //private string purchaseVoucherDebitAmount = string.Empty;
+        private bool SetVoucherDebitCreditDetails(int pageId)
         {
             int? primaryVoucherID = (from v in _context.FiMaVouchers
                                      join pm in _context.MaPageMenus on v.Id equals pm.VoucherId
@@ -352,20 +367,24 @@ namespace Dfinance.Inventory.Service
                 case VoucherType.Service:
                     purchaseVoucherCredit = "C";
                     purchaseVoucherDebit = "D";
+                    //purchaseVoucherCreditAmount = "Credit";
+                    //purchaseVoucherDebitAmount = "Debit";
                     break;
                 case VoucherType.Sales_Invoice:
                 case VoucherType.Purchase_Return:
                 case VoucherType.Delivery:
                 case VoucherType.Service_Invoice:
                 case VoucherType.Service_Delivery_Out:
-                case VoucherType.RestaurantInvoice:
-                case VoucherType.RestaurantKOT:
                     purchaseVoucherCredit = "D";
                     purchaseVoucherDebit = "C";
+                    //purchaseVoucherCreditAmount = "Debit";
+                    //purchaseVoucherDebitAmount = "Credit";
                     break;
                 case VoucherType.Opening_Stock:
                     break;
             }
+            var financeUpdate = _context.FiMaVouchers.Where(v => v.PrimaryVoucherId == primaryVoucherID).Select(v => v.FinanceUpdate).FirstOrDefault();
+            return Convert.ToBoolean(financeUpdate);
         }
         /// <summary>
         /// Fill Tax
@@ -453,10 +472,10 @@ namespace Dfinance.Inventory.Service
         // Debit entry and Credit entry. Used in Accounting Finance entries.
         public const string DB_CREDIT_ENTRY = "C";
         public const string DB_DEBIT_ENTRY = "D";
-        private string DrCr = ""; 
+        private string DrCr = "";
         private void SetDrCr(int voucherId)
         {
-            int? PrimaryVoucherID=_context.FiMaVouchers.Where(v => v.Id == voucherId).Select(v => v.PrimaryVoucherId).FirstOrDefault();
+            int? PrimaryVoucherID = _context.FiMaVouchers.Where(v => v.Id == voucherId).Select(v => v.PrimaryVoucherId).FirstOrDefault();
             switch ((VoucherType)PrimaryVoucherID)
             {
                 case VoucherType.Purchase:
@@ -714,5 +733,23 @@ namespace Dfinance.Inventory.Service
             }
             return CommonResponse.Ok("Success");
         }
+        private bool taxBasedInvoiceAccount;
+        private bool SizeSales;
+        private void SetSettings()
+        {
+            string[] keys = new string[] { "TaxBasedInvoiceAccount", "Size Sales" };
+            var settings = _context.MaSettings
+        .Where(m => keys.Contains(m.Key))
+        .Select(m => new
+        {
+            Key = m.Key,
+            Value = m.Value,
+        }).ToList();
+            //var dicSettings = settings.ToDictionary(Key => Key, Value => Value);
+
+            taxBasedInvoiceAccount = Convert.ToBoolean(settings.Where(s => s.Key == "TaxBasedInvoiceAccount").Select(s => s.Value).FirstOrDefault());
+            SizeSales = Convert.ToBoolean(settings.Where(s => s.Key == "Size Sales").Select(s => s.Value).FirstOrDefault());
+        }
+
     }
 }

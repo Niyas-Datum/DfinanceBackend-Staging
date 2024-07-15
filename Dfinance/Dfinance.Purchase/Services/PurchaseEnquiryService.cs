@@ -117,13 +117,53 @@ namespace Dfinance.Purchase.Services
                 }
             }
         }
-
-        public CommonResponse DeletePurchaseEnq(int TransId)
+        private CommonResponse PermissionDenied(string msg)
         {
+            _logger.LogInformation("No Permission for " + msg);
+            return CommonResponse.Error("No Permission ");
+        }
+
+        private CommonResponse PageNotValid(int pageId)
+        {
+            _logger.LogInformation("Page not Exists :" + pageId);
+            return CommonResponse.Error("Page not Exists");
+        }
+        public CommonResponse DeletePurchaseEnq(int TransId,int pageId)
+        {
+            if (!_authService.IsPageValid(pageId))
+            {
+                return PageNotValid(pageId);
+            }
+            if (!_authService.UserPermCheck(pageId, 5))
+            {
+                return PermissionDenied("Delete GoodsInTransit");
+            }
             try
             {
-                var result = _transactionService.DeletePurchase(TransId);
+                var result = _transactionService.DeleteTransactions(TransId);
                 _logger.LogInformation("PurchaseEnq deleted successfully");
+                return CommonResponse.Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Error(ex);
+            }
+        }
+        public CommonResponse CancelPurchaseEnq(int TransId, int pageId,string reason)
+        {
+            if (!_authService.IsPageValid(pageId))
+            {
+                return PageNotValid(pageId);
+            }
+            if (!_authService.UserPermCheck(pageId, 5))
+            {
+                return PermissionDenied("Cancel GoodsInTransit");
+            }
+            try
+            {
+                var result = _transactionService.CancelTransaction(TransId,reason);
+                _logger.LogInformation("PurchaseEnq Canceled successfully");
                 return CommonResponse.Ok(result);
             }
             catch (Exception ex)

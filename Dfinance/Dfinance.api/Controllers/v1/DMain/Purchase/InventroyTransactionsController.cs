@@ -87,13 +87,27 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
                 return BadRequest(ex.Message);
             }
         }
-        [HttpDelete(InvRoute.InventroyTransactions.DeletePurchase)]
+        [HttpDelete(InvRoute.InventroyTransactions.DeleteTrans)]
 
-        public IActionResult DeletePurchase(int Transid)
+        public IActionResult DeleteTransactions(int Transid)
         {
             try
             {
-                var data = _transactionService.DeletePurchase(Transid);
+                var data = _transactionService.DeleteTransactions(Transid);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPatch(InvRoute.InventroyTransactions.Cancel)]
+
+        public IActionResult CancelTransaction(int Transid, string reason)
+        {
+            try
+            {
+                var data = _transactionService.CancelTransaction(Transid,reason);
                 return Ok(data);
             }
             catch (Exception ex)

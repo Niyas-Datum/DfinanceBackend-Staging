@@ -8,5 +8,6 @@ namespace Dfinance.Purchase.Services.Interface
         CommonResponse SavePurchaseRequest(InventoryTransactionDto invTranseDto, int PageId, int voucherId);
         CommonResponse UpdatePurchaseRequest(InventoryTransactionDto invTranseDto, int PageId, int voucherId);
         CommonResponse DeletePurchaseRequest(int TransId, int PageId);
+        CommonResponse CancelPurchaseRequest(int TransId, int pageId, string reason);
     }
 }

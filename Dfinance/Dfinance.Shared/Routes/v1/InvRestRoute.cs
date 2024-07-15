@@ -25,6 +25,8 @@ namespace Dfinance.Shared.Routes.v1
             public const string FillTable = $"{Main}/fillTable";
             public const string GetKitchenCategory = $"{Main}/getKitCat";
             public const string PrintKOT = $"{Main}/printKot";
+            public const string SaveOption = $"{Main}/saveOptn";
+            public const string UpdateOption = $"{Main}/updateOptn";
         }
     }
 }

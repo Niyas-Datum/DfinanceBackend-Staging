@@ -14,7 +14,8 @@ namespace Dfinance.Purchase.Services.Interface
         CommonResponse FillById(int transId, int pageId);
         CommonResponse SaveMatReceipt(MaterialTransferDto materialDto, int voucherId, int pageId);
         CommonResponse UpdateMatReceipt(MaterialTransferDto materialDto, int voucherId, int pageId);
-        CommonResponse DeleteMatReceipt(int TransId, int PageId);
+        CommonResponse DeleteMatReceipt(int TransId, int PageId); 
+        CommonResponse CancelMatReceipt(int TransId, int PageId,string reason);
         //CommonResponse GetMaterialSettings();
         CommonResponse SizeMasterPopup();
         CommonResponse FindQuantity(int itemId, int locId, int qty, int? transId = 0);
