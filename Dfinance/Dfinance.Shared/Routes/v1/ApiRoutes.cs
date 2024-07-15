@@ -356,5 +356,17 @@ namespace Dfinance.Shared.Routes.v1
             public const string Delete = $"{Main}/delete";
 
         }
+        public static class  ChequeTemplate
+        {
+            public const string Main = $"{Base}/CheqTemplate";
+            public const string FillChq = $"{Main}/fillchq";
+            public const string FillChqtemplate = $"{Main}/fillchqtemp";
+            public const string FillChqtemplateField = $"{Main}/fillchqtempfield";
+            public const string Save = $"{Main}/savecheqtemp";
+            public const string Update = $"{Main}/updatecheqtemp";
+            public const string Delete = $"{Main}/deletecheqtemp";
+            public const string BankPopup = $"{Main}/bankpopup";
+            
+        }
     }
 }
