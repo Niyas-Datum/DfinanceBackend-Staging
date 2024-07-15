@@ -1,5 +1,4 @@
 ﻿using Dfinance.AuthAppllication.Services.Interface;
-using Dfinance.Core.Domain.PageRolesConfig;
 using Dfinance.Core.Infrastructure;
 using Dfinance.DataModels.Dto.Inventory;
 using Dfinance.Shared.Domain;
@@ -166,7 +165,7 @@ namespace Dfinance.Warehouse.Services
                 {
                     var tb = new DataTable();
                     tb.Load(reader);
-                    if (tb.Rows.Count>0)
+                    if (tb.Rows.Count > 0)
                     {
                         List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
                         Dictionary<string, object> row;
@@ -214,10 +213,10 @@ namespace Dfinance.Warehouse.Services
         {
             try
             {
-                var voucher=GetVoucherList().Data;
-                var itemList=GetItem().Data;
+                var voucher = GetVoucherList().Data;
+                var itemList = GetItem().Data;
                 _logger.LogInformation("Sucessfully Load GetData");
-                return CommonResponse.Ok(new {Voucher=voucher,Items=itemList});
+                return CommonResponse.Ok(new { Voucher = voucher, Items = itemList });
             }
             catch (Exception ex)
             {
@@ -226,5 +225,47 @@ namespace Dfinance.Warehouse.Services
             }
         }
 
+        public CommonResponse FillStockItemRegister(ItemStockRegisterRpt itemStockRegister)
+        {
+            try
+            {
+                var cmd = _context.Database.GetDbConnection().CreateCommand();
+                cmd.CommandType = CommandType.Text;
+                var itemId = itemStockRegister.ItemID.Id != null ? itemStockRegister.ItemID.Id.ToString() : "NULL";
+                var branchID = itemStockRegister.BranchID.Id != null ? itemStockRegister.BranchID.Id.ToString() : "NULL";
+                //var batchNo = itemStockRegister.BatchNo != "" ? itemStockRegister.BatchNo.ToString() : "NULL";
+                if (itemStockRegister.BatchNo != null)                
+                    cmd.CommandText = $"Exec StockRegisterSP @FromDate='{itemStockRegister.FromDate}',@ItemID={itemId},@BranchID={branchID},@ToDate='{itemStockRegister.ToDate}',@BatchNo='{itemStockRegister.BatchNo}'";                
+                else                
+                    cmd.CommandText = $"Exec StockRegisterSP @FromDate='{itemStockRegister.FromDate}',@ItemID={itemId},@BranchID={branchID},@ToDate='{itemStockRegister.ToDate}'";                
+                _context.Database.GetDbConnection().Open();
+                using (var reader = cmd.ExecuteReader())
+                {
+                    var tb = new DataTable();
+                    tb.Load(reader);
+                    if (tb.Rows.Count > 0)
+                    {
+                        List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+                        Dictionary<string, object> row;
+                        foreach (DataRow dr in tb.Rows)
+                        {
+                            row = new Dictionary<string, object>();
+                            foreach (DataColumn col in tb.Columns)
+                            {
+                                row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
+                            }
+                            rows.Add(row);
+                        }
+                        return CommonResponse.Ok(rows);
+                    }
+                    return CommonResponse.NoContent();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Ok(ex.Message);
+            }
+        }
     }
 }

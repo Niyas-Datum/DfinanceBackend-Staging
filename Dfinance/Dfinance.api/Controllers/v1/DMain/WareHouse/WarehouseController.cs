@@ -1,8 +1,8 @@
 ﻿using Dfinance.api.Authorization;
 using Dfinance.api.Framework;
 using Dfinance.DataModels.Dto;
+using Dfinance.DataModels.Dto.Inventory;
 using Dfinance.Shared.Routes;
-
 using Dfinance.Warehouse.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
 namespace Dfinance.api.Controllers.v1.DMain.WareHouse
@@ -12,9 +12,11 @@ namespace Dfinance.api.Controllers.v1.DMain.WareHouse
     public class WarehouseController : BaseController
     {
         private readonly IWarehouseService _warehouseService;
-        public WarehouseController(IWarehouseService warehouseService)
+        private readonly IStockReportService _stockReportService;
+        public WarehouseController(IWarehouseService warehouseService,IStockReportService stockReportService)
         {
             _warehouseService = warehouseService;
+            _stockReportService = stockReportService;
         }
         [HttpGet(InvRoute.WareHouse.DropdownLocationTypes)]
         public IActionResult WarehouseDropdown()
@@ -101,6 +103,58 @@ namespace Dfinance.api.Controllers.v1.DMain.WareHouse
             try
             {
                 var data = _warehouseService.Delete(Id);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet(InvRoute.WareHouse.StockLoadData)]
+        public IActionResult StockRegistrationLoadData()
+        {
+            try
+            {
+                var data = _stockReportService.GetLoadData();
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost(InvRoute.WareHouse.StockRegistration)]
+        public IActionResult StockRegistrationReport(StockRegistration stockRegistration)
+        {
+            try
+            {
+                var data = _stockReportService.FillItemReports(stockRegistration);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet(InvRoute.WareHouse.StockItemLoadData)]
+        public IActionResult StockItemRegistrationLoadData()
+        {
+            try
+            {
+                var data = _stockReportService.GetItemStockLoadData();
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost(InvRoute.WareHouse.StockItemRegistration)]
+        public IActionResult StockItemRegistrationReport(ItemStockRegisterRpt itemStockRegister)
+        {
+            try
+            {
+                var data = _stockReportService.FillStockItemRegister(itemStockRegister);
                 return Ok(data);
             }
             catch (Exception ex)

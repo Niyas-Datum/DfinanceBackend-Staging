@@ -21,6 +21,8 @@ namespace Dfinance.Shared.Routes
             public const string Main1 = $"{Base}/stockRpt";
             public const string StockLoadData = $"{Main1}/stkRegLD";
             public const string StockRegistration = $"{Main1}/stkRegt";
+            public const string StockItemLoadData = $"{Main1}/stkItemLD";
+            public const string StockItemRegistration = $"{Main1}/stkItmRegt";
         }
 
 
