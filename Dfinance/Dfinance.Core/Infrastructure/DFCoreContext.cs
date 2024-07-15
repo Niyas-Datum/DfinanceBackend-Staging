@@ -329,6 +329,9 @@ public partial class DFCoreContext : DbContext
     //PDC
     public DbSet<CheqDetailView> CheqDetailView { get; set; }
 
+    //PageMenu
+    public DbSet<MenuGroupView> MenuGroupView { get; set; }
+    
 
     //inventoryAgen
     public DbSet<InventoryAgeingView> InventoryAgeingView {  get; set; }    
@@ -638,10 +641,7 @@ public partial class DFCoreContext : DbContext
 
 
         //Account Configuration
-        mb.Entity<AccountConfigView>().HasNoKey().ToView(null);
-        
-
-
+        mb.Entity<AccountConfigView>().HasNoKey().ToView(null);        
 
         mb.Entity<InventoryProfitItemView>().HasNoKey().ToView(null);
         mb.Entity<InventoryProfitVoucherView>().HasNoKey().ToView(null);
@@ -649,18 +649,22 @@ public partial class DFCoreContext : DbContext
         mb.Entity<InventoryProfitPartyView>().HasNoKey().ToView(null);
         mb.Entity<InventoryProfitPartyViews>().HasNoKey().ToView(null);
 
- 
-
-
         //AccountRecno
         mb.Entity<AccountReconcilationView>().HasNoKey().ToView(null);
         mb.Entity<AccountRecoView>().HasNoKey().ToView(null);
 
         //PDC
         mb.Entity<CheqDetailView>().HasNoKey().ToView(null);
+
+
+        //PageMenu
+        mb.Entity<MenuGroupView>().HasNoKey().ToView(null);
+        
+
         //counters
         mb.Entity<FillCounters>().HasNoKey().ToView(null);
         mb.Entity<FillCountersById>().HasNoKey().ToView(null);
+
     }
 
 

@@ -21,6 +21,19 @@ namespace Dfinance.api.Controllers.v1.DMain.Finance
         {
             _VoucherService = VoucherService;
         }
+        [HttpGet(FinRoute.Voucher.dropDown)]
+        public IActionResult VoucherDropDown()
+        {
+            try
+            {
+                var view = _VoucherService.VoucherDropDown();
+                return Ok(view);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         //voucher popup-used in finance statements
         [HttpGet(FinRoute.Voucher.popup)]
         public IActionResult VoucherPopup()
