@@ -79,7 +79,7 @@ namespace Dfinance.Shared.Routes
             public const string FillCheque = $"{Main}/popupCheque";
             public const string FillBankName = $"{Main}/popupBankName";
             public const string SaveCheque = $"{Main}/SaveCheque";
-
+            public const string defaultAcc = $"{Main}/defaultAcc";
         }
         public class InventoryItem
         {

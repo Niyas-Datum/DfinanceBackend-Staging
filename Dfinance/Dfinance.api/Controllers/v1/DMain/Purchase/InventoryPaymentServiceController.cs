@@ -1,9 +1,11 @@
 ﻿using Dfinance.api.Framework;
+using Dfinance.DataModels.Dto.Finance;
 using Dfinance.DataModels.Dto.Inventory.Purchase;
 using Dfinance.Inventory.Service.Interface;
 using Dfinance.Shared.Routes;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Dfinance.api.Controllers.v1.DMain.Purchase
 {
@@ -140,6 +142,19 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
                 return BadRequest(ex.Message);
             }
         }
-
+        [HttpGet(InvRoute.InventoryPaymentTransaction.defaultAcc)]
+        [SwaggerOperation(Summary = "Fills the Default Account for the time of Payment(Give input as Cash/ Card/ Online)")]
+        public IActionResult SetDefaultAccount(string TranType)
+        {
+            try
+            {
+                var view = _payservice.SetDefaultAccount(TranType);
+                return Ok(view);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
