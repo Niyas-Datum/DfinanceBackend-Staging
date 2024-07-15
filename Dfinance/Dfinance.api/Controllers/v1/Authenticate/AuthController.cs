@@ -40,7 +40,7 @@ public class AuthController : BaseController
 
             var constng = _authservice.SetCon(model);
             if (constng == null) return BadRequest();
-            if(_connectionServices.Setcon(constng))
+            if(_connectionServices.Setcon(constng).Result)
             return Ok("Connection successfull");
             else return BadRequest();
         }catch (Exception ex)
@@ -56,7 +56,7 @@ public class AuthController : BaseController
         DropdownLoginDto dropdownLoginDto = new DropdownLoginDto() { Id=46, Value=""};
         var constng =  _authservice.SetCon(dropdownLoginDto);
         if (constng == null) return BadRequest();
-       if( _connectionServices.Setcon(constng))
+       if( _connectionServices.Setcon(constng).Result)
         {
             AuthenticateRequestDto authenticateRequestDto = new AuthenticateRequestDto()
             {
@@ -74,6 +74,17 @@ public class AuthController : BaseController
         }
 
 
+    }
+    /// <summary>
+    /// android application login
+    /// </summary>
+    /// <example></example>
+    /// <param name="qrcode"> string</param>
+    /// <returns></returns>
+    [HttpGet("Qreader")]
+    public async Task<IActionResult> AppQrCodeReader(string qrcode)
+    {
+        return Response(_authservice.AppQrRead(qrcode).Result);
     }
 
     }
