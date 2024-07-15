@@ -189,6 +189,9 @@ public class DiInstaller : IInstaller
         //counters
         service.AddScoped<ICountersService, CountersService>();
 
+        //ChequeTemplate
+        service.AddScoped<IChequeTemplateService, ChequeTemplateService>();
+
 
     }
 }

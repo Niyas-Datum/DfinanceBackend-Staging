@@ -367,6 +367,9 @@ public partial class DFCoreContext : DbContext
     public DbSet<FillCounters> FillCounters {  get; set; }
     public DbSet<FillCountersById> FillCountersById { get; set; }
 
+    //CheqTemplate
+    public DbSet<ChequeTemplateField> ChequeTemplateFields { get; set; }
+    public DbSet<ChequeTemplate> ChequeTemplate { get; set; }
 
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
