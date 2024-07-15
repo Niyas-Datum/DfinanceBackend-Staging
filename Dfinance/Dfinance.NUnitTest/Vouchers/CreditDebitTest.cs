@@ -54,9 +54,9 @@ namespace Dfinance.NUnitTest.Vouchers
                 Credit = 0
             }
         },
-                billandRef = new List<FillAdvanceView>
+                billandRef = new List<FillAdvanceDrCrDto>
         {
-            new FillAdvanceView
+            new FillAdvanceDrCrDto
             {
                 VID = 0,
                 VEID = 4055,
@@ -128,9 +128,9 @@ namespace Dfinance.NUnitTest.Vouchers
                 Credit = 0
             }
         },
-                billandRef = new List<FillAdvanceView>
+                billandRef = new List<FillAdvanceDrCrDto>
         {
-            new FillAdvanceView
+            new FillAdvanceDrCrDto
             {
                 VID = 0,
                 VEID = 4055,

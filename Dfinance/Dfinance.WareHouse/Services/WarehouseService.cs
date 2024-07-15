@@ -127,7 +127,7 @@ namespace Dfinance.Warehouse.Services
                     var data = _context.Database.ExecuteSqlRaw("EXEC SpLocations @Criteria={0},@LocationTypeID={1},@Code={2},@Name={3},@Address={4}," +
                          "@Remarks={5},@ClearingPerCFT={6},@GroundRentPerCFT={7},@LottingPerPiece={8},@LorryHirePerCFT={9},@Active={10}," +
                          "@BranchID={11},@CreatedBy={12},@CreatedOn={13},@NewID={14} OUTPUT",
-                         criteria, warehouseDto.Type.ID, warehouseDto.Code, warehouseDto.Name,
+                         criteria, warehouseDto.Type.Id, warehouseDto.Code, warehouseDto.Name,
                          warehouseDto.Address, warehouseDto.Remarks, warehouseDto.ClearingChargePerCFT,
                          warehouseDto.GroundRentPerCFT, warehouseDto.LottingPerPiece, warehouseDto.LorryHirePerCFT, warehouseDto.Active, createdBranchId, createdBy, createdOn, newId);
                     //int newlocId = (int)newId.Value;
@@ -137,7 +137,7 @@ namespace Dfinance.Warehouse.Services
                 }
                 else
                 {
-                    if (warehouseDto.Type.ID ==10)
+                    if (warehouseDto.Type.Value == "InTransit")
                     {
                         return CommonResponse.Error("Updation not possiable in Type IN TRANSIT ");
                     }
@@ -155,7 +155,7 @@ namespace Dfinance.Warehouse.Services
                             var result = _context.Database.ExecuteSqlRaw("EXEC SpLocations @Mode={0},@LocationTypeID={1},@Code={2},@Name={3},@Address={4}," +
                                  "@Remarks={5},@ClearingPerCFT={6},@GroundRentPerCFT={7},@LottingPerPiece={8},@LorryHirePerCFT={9},@Active={10}," +
                                  "@BranchID={11},@CreatedBy={12},@CreatedOn={13},@ID={14} ",
-                                 mode, warehouseDto.Type.ID, warehouseDto.Code, warehouseDto.Name,
+                                 mode, warehouseDto.Type.Id, warehouseDto.Code, warehouseDto.Name,
                                  warehouseDto.Address, warehouseDto.Remarks, warehouseDto.ClearingChargePerCFT,
                                  warehouseDto.GroundRentPerCFT, warehouseDto.LottingPerPiece, warehouseDto.LorryHirePerCFT, warehouseDto.Active, createdBranchId, createdBy, DateTime.Now, warehouseDto.Id);
 
