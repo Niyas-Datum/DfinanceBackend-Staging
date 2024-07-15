@@ -750,6 +750,21 @@ namespace Dfinance.Inventory.Service
             taxBasedInvoiceAccount = Convert.ToBoolean(settings.Where(s => s.Key == "TaxBasedInvoiceAccount").Select(s => s.Value).FirstOrDefault());
             SizeSales = Convert.ToBoolean(settings.Where(s => s.Key == "Size Sales").Select(s => s.Value).FirstOrDefault());
         }
+     //fills the default cash/card/online account
+     public CommonResponse SetDefaultAccount(string TranType)
+     {
+            var result = from ua in _context.FimaUniqueAccount
+                         join a in _context.FiMaAccounts on ua.AccId equals a.Id
+                         where ua.Keyword == TranType+" ACCOUNT"
+                         select new
+                         {
+                             AccountCode = a.Alias,
+                             AccountName = a.Name,
+                             a.Id
+                         };
 
+            var list = result.FirstOrDefault();
+            return CommonResponse.Ok(result);
+     }
     }
 }
