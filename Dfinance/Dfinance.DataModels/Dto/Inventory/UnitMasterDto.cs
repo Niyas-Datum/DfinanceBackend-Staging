@@ -1,5 +1,4 @@
-using Dfinance.Core.Views;
-using Dfinance.Core.Views.Inventory;
+using Dfinance.DataModels.Dto.Common;
 using System.ComponentModel.DataAnnotations;
 
 namespace Dfinance.DataModels.Dto.Inventory
@@ -8,7 +7,7 @@ namespace Dfinance.DataModels.Dto.Inventory
     {
         [Required(ErrorMessage = "Unit is mandatory")]
         public string Unit { get; set; }
-        public DropDownView? BasicUnit { get; set; }
+        public DropdownDto? BasicUnit { get; set; }
 
         [Required(ErrorMessage = "Precision is mandatory")]
         public int Precision { get; set; }

@@ -207,7 +207,7 @@ namespace Dfinance.Finance.Services
                             "@Posted={28}, @Active={29}, @Cancelled={30}, @AccountID={31}, @Description={32}, " +
                             "@RefTransID={33}, @CostCentreID={34}, @PageID={35}, @NewID={36} OUTPUT",
                             criteria, transactionDto.Date, DateTime.Now, VoucherId, environmentname,
-                            voucherNo.Result[0].AccountCode, false, transactionDto.Currency.Id, transactionDto.ExchangeRate, null, null,
+                            voucherNo.Result.ToString(), false, transactionDto.Currency.Id, transactionDto.ExchangeRate, null, null,
                             ReferenceId, branchId, null, null, null,
                             null, null, transactionDto.Description, createdBy, null, DateTime.Now, null,
                             ApprovalStatus, null, null, Status, Autoentry, true, true, false, transactionDto.Party.Id,
@@ -338,11 +338,11 @@ namespace Dfinance.Finance.Services
 
                 var result = _context.AccountCodeView
                     .FromSqlRaw($"EXEC GetNextAutoEntryVoucherNoSP @VoucherID={voucherid}, @BranchID={branchid}")
-                    .ToList();
+                    .FirstOrDefault();
                 VoucherNo voucherNo = new VoucherNo
                 {
                     Code = voucher.Code,
-                    Result = result
+                    Result = result.ToString()
                 };
                 return CommonResponse.Ok(voucherNo);
             }

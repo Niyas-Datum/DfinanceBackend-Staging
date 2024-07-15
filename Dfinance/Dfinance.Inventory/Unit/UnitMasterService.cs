@@ -94,7 +94,7 @@ namespace Dfinance.Inventory
                 }
                 bool allowdel = true;
                 var result = _context.Database.ExecuteSqlRaw("Exec UnitMasterSP @Criteria='Insert',@Unit={0},@Description={1},@Factor={2},@IsComplex={3},@BasicUnit={4},@AllowDelete={5},@Precision={6},@Active={7}," +
-                    "@ArabicName={8}", unitmasterDto.Unit, unitmasterDto.Description, unitmasterDto.Factor, unitmasterDto.IsComplex, unitmasterDto.BasicUnit.Unit, allowdel, unitmasterDto.Precision, unitmasterDto.Active, unitmasterDto.ArabicName);
+                    "@ArabicName={8}", unitmasterDto.Unit, unitmasterDto.Description, unitmasterDto.Factor, unitmasterDto.IsComplex, unitmasterDto.BasicUnit.Value, allowdel, unitmasterDto.Precision, unitmasterDto.Active, unitmasterDto.ArabicName);
 
                
              // _userTrackService.AddUserActivity(unitmasterDto.Description, 0, 0, "Added", "UnitMaster", "Unit Master", 0);
@@ -124,7 +124,7 @@ namespace Dfinance.Inventory
                     return CommonResponse.NotFound(msg);
                 }
                 bool allowdel = true;
-                var update = _context.Database.ExecuteSqlRaw($"Exec UnitMasterSP @Criteria='Update',@Unit='{unitmasterDto.Unit}',@Description='{unitmasterDto.Description}',@Factor='{unitmasterDto.Factor}',@IsComplex='{unitmasterDto.IsComplex}',@BasicUnit='{unitmasterDto.BasicUnit.Unit}',@AllowDelete='{allowdel}'," +
+                var update = _context.Database.ExecuteSqlRaw($"Exec UnitMasterSP @Criteria='Update',@Unit='{unitmasterDto.Unit}',@Description='{unitmasterDto.Description}',@Factor='{unitmasterDto.Factor}',@IsComplex='{unitmasterDto.IsComplex}',@BasicUnit='{unitmasterDto.BasicUnit.Value}',@AllowDelete='{allowdel}'," +
                     $"@Precision='{unitmasterDto.Precision}',@Active='{unitmasterDto.Active}',@ArabicName='{unitmasterDto.ArabicName}'");
 
                 //   _userTrackService.AddUserActivity(unitmasterDto.Description, 0, 1, "Modified", "UnitMaster", "Unit Master", 0);

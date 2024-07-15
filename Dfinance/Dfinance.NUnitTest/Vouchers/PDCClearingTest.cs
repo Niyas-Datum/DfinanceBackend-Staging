@@ -31,9 +31,9 @@ namespace Dfinance.NUnitTest.Vouchers
                     Alias = "string",
 
                 },
-                ChequeDetails = new List<CheqDetailView>
+                ChequeDetails = new List<ChequeDetails>
             {
-                new CheqDetailView
+                new ChequeDetails
                 {
                     Selection = true,
                     ID = 3244,
@@ -87,9 +87,9 @@ namespace Dfinance.NUnitTest.Vouchers
                     Alias = "string",
 
                 },
-                ChequeDetails = new List<CheqDetailView>
+                ChequeDetails = new List<ChequeDetails>
             {
-                new CheqDetailView
+                new ChequeDetails
                 {
                     Selection = true,
                     ID = 3244,
