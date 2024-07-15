@@ -10,6 +10,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.Data;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
+using Dfinance.Shared.Configuration.Service;
 
 namespace Dfinance.AuthAppllication.Services;
 
@@ -21,16 +23,19 @@ public class AuthService : IAuthService
     private readonly IJwtSecret _jwtsecret;
     private readonly AuthCoreContext _authCoreContext;
     private readonly IConfiguration _configuration;
+    private readonly IConnectionServices _connectionServices;
 
 
     public AuthService(IJwtSecret jwtSecret, DFCoreContext dFCoreContext, IEncryptService encryptService, AuthCoreContext authCoreContext,
-        IConfiguration configuration)
+        IConfiguration configuration,
+        IConnectionServices connectionServices)
     {
         _jwtsecret = jwtSecret;
         _dfCoreContext = dFCoreContext;
         _encryptService = encryptService;
         _authCoreContext = authCoreContext;
         _configuration = configuration;
+        _connectionServices = connectionServices;
     }
 
     public CommonResponse Authenticate(AuthenticateRequestDto model)
@@ -203,4 +208,26 @@ public class AuthService : IAuthService
             return false;
         return true;
     }
+    /// <summary>
+    /// This function used for application Qrcode read and return valid data 
+    /// </summary>
+    /// <param name="Qrtext">Qrcode</param>
+    /// <returns> Company name , api URL, branch name</returns>
+    public async Task<CommonResponse> AppQrRead(string qrText)
+    {
+
+        var QRDECODE = Convert.FromBase64String(qrText);
+        string[] DecodedArray = System.Text.Encoding.UTF8.GetString(QRDECODE).Split("$#$");
+        if (DecodedArray.Length == 4)
+        {
+            var _companyData = _authCoreContext.Companies.Where(x => x.Id == Convert.ToInt32(DecodedArray[1])).Select(x => new DropdownLoginDto { Id = x.Id, Value = x.Name }).FirstOrDefault();
+            var _branchData = new DropdownLoginDto() { Id = Convert.ToInt32(DecodedArray[2]), Value = DecodedArray[3] };
+           
+            return CommonResponse.Ok(new { apilink = DecodedArray[1], companyData = _companyData, branchData = _branchData });
+            
+        }
+        return CommonResponse.Error("Qrcode no valid");
+    }
+   
+
 }

@@ -9,6 +9,8 @@ public interface IAuthService
 {
     CommonResponse Authenticate(AuthenticateRequestDto model);
     AuthResponseDto GetUserById(int? id);
+    Task<CommonResponse> AppQrRead(string Qrtext);
+
 
     bool UserPermCheck(int pageid, int method);
     int? GetId();
