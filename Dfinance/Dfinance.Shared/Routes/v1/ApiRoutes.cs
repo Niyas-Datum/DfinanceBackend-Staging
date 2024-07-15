@@ -344,6 +344,7 @@ namespace Dfinance.Shared.Routes.v1
             public const string save = $"{Main}/save";
             public const string update = $"{Main}/update";
             public const string delete = $"{Main}/delete";
+        }
 
         public static class Counters
         {
