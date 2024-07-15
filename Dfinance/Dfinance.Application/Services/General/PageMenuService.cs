@@ -5,6 +5,7 @@ using Dfinance.Shared.Domain;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System.Data;
 
 namespace Dfinance.Application.Services.General
@@ -133,21 +134,53 @@ namespace Dfinance.Application.Services.General
                 return CommonResponse.Error("PageMenu Cannot Deleted");
             }
         }
+        //public CommonResponse UpdateActive(List<PageActiveDto> pageActiveDto)
+        //{
+        //    try
+        //    {               
+        //        foreach(var page in  pageActiveDto)
+        //        {
+        //            _context.Database.ExecuteSqlRaw($"Exec MaPageMenuSP @Criteria='UpdateActiveForWeb',@ID={page.PageId},@Active='{page.Active}',@FrequentlyUsed='{page.FrequentlyUsed}'");
+        //        }
+        //        return CommonResponse.Ok("Activated Successfully");
+        //    }
+        //    catch
+        //    {
+        //        _logger.LogError("PageMenu Cannot Updated");
+        //        return CommonResponse.Error("PageMenu Cannot Updated");
+        //    }
+        //}
+
+        //update the Active anf Frequently used fields in MaPageMenu table of Selected pages
+        //Done by passing set of datatable into SP
         public CommonResponse UpdateActive(List<PageActiveDto> pageActiveDto)
         {
             try
-            {               
-                foreach(var page in  pageActiveDto)
-                {
-                    _context.Database.ExecuteSqlRaw($"Exec MaPageMenuSP @Criteria='UpdateActiveForWeb',@ID={page.PageId},@Active='{page.Active}',@FrequentlyUsed='{page.FrequentlyUsed}'");
-                }
-                return CommonResponse.Ok("Activated Successfully");
-            }
-            catch
             {
-                _logger.LogError("PageMenu Cannot Updated");
-                return CommonResponse.Error("PageMenu Cannot Updated");
+                DataTable table = new DataTable();
+                table.Columns.Add("PageId", typeof(int));
+                table.Columns.Add("Active", typeof(bool));
+                table.Columns.Add("FrequentlyUsed", typeof(bool));
+                foreach (var dto in pageActiveDto)
+                {
+                    table.Rows.Add(dto.PageId, dto.Active, dto.FrequentlyUsed);
+                }
+                string criteria = "UpdateActiveForWeb";
+                var criteriaParam = new SqlParameter("@Criteria", SqlDbType.NVarChar) { Value = criteria };
+                var pageActiveParam = new SqlParameter("@PageActive", SqlDbType.Structured)
+                {
+                    TypeName = "dbo.PageActiveDtoTableType",
+                    Value = table
+                };
+                _context.Database.ExecuteSqlRaw("EXEC MaPageMenuSP @Criteria={0}, @PageActive={1}", criteriaParam, pageActiveParam);
+                return CommonResponse.Ok("Updated Active and FrequeltlyUsed Properties");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "PageMenu update failed.");
+                return CommonResponse.Error("PageMenu update failed.");
             }
         }
+
     }
 }
