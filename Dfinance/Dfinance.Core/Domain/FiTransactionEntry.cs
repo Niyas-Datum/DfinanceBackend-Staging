@@ -36,7 +36,7 @@ namespace Dfinance.Core.Domain
         public virtual FiTransactionEntry? RefTrans { get; set; }
         public virtual FiTransaction Transaction { get; set; } = null!;
         //public virtual ICollection<FiCheque> FiCheques { get; set; }
-       // public virtual ICollection<FiChequesTran> FiChequesTrans { get; set; }
+        public virtual ICollection<FiChequesTran> FiChequesTrans { get; set; }
         public virtual ICollection<FiVoucherAllocation> FiVoucherAllocations { get; set; }
        // public virtual ICollection<InvTransItem> InvTransItems { get; set; }
         public virtual ICollection<FiTransactionEntry> InverseRefTrans { get; set; }
