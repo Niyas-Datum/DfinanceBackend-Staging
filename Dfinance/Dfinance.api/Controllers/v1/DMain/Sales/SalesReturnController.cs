@@ -52,7 +52,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Sales
                 return BadRequest(ex.Message);
             }
         }
-        [HttpDelete(InvRoute.SalesReturn.SaveSalesReturn)]
+        [HttpDelete(InvRoute.SalesReturn.DelSalesReturn)]
         public IActionResult Delete(int transId,int pageId)
         {
             try
@@ -62,6 +62,24 @@ namespace Dfinance.api.Controllers.v1.DMain.Sales
                     return BadRequest(ModelState);
                 }
                 object result = _salesReturnService.DeleteSalesReturn(transId,pageId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPatch(InvRoute.SalesReturn.CancelsalesRtn)]
+        public IActionResult Cancel(int transId,int pageId,string reason)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+                object result = _salesReturnService.CancelSalesReturn(transId,pageId,reason);
                 return Ok(result);
             }
             catch (Exception ex)

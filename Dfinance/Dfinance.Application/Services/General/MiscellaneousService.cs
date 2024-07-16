@@ -1,8 +1,10 @@
 ﻿using Dfinance.Application.Services.General.Interface;
 using Dfinance.Core.Infrastructure;
+using Dfinance.Core.Migrations;
 using Dfinance.Core.Views.Common;
 using Dfinance.Shared.Domain;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Collections.Generic;
 
 namespace Dfinance.Application.Services.General
@@ -49,34 +51,44 @@ namespace Dfinance.Application.Services.General
             }
             return CommonResponse.Ok(data);
         }
+        //input=>"Country" for country dropdown
+        //"ProjectStatus" for status dropdown
+        //"CreditnoteType" =>Page:CreditNote,Dropdown=>Particualrs
+
         public List<DropDownViewValue> FillDropDown(string key)
         {           
-                switch (key)
-                {
-                    case "Country":
-                        {
-                            return _context.DropDownViewValue.FromSqlRaw("Exec DropDownListSP @Criteria = 'FillMaMisc',@StrParam='Country'").ToList();
-                            break;
-                        }
-                    case "Quality":
-                        {
-                            return _context.DropDownViewValue.FromSqlRaw("Exec DropDownListSP @Criteria = 'FillQuality'").ToList();
-                            break;
-                        }
-                    case "Status":
-                        {
-                            return _context.DropDownViewValue.FromSqlRaw($"Exec DropDownListSP @Criteria ='FillMaMisc',@StrParam='ProjectStatus'").ToList();
-                            break;
-                        }
-                default:
-                        {
-                            return null;
-                        }
-            }
-        }
+                 if(key== "Quality")
+                return _context.DropDownViewValue.FromSqlRaw("Exec DropDownListSP @Criteria = 'FillQuality'").ToList();         
+           
+            return _context.DropDownViewValue.FromSqlRaw($"Exec DropDownListSP @Criteria = 'FillMaMisc',@StrParam='{key}'").ToList();
+            //    switch (key)
+            //    {
+            //        case key:
+            //            {
+            //                return _context.DropDownViewValue.FromSqlRaw("Exec DropDownListSP @Criteria = 'FillMaMisc',@StrParam='Country'").ToList();
+            //                break;
+            //            }
+            //        case "Quality":
+            //            {
+            //                return _context.DropDownViewValue.FromSqlRaw("Exec DropDownListSP @Criteria = 'FillQuality'").ToList();
+            //                break;
+            //            }
+            //        case "Status":
+            //            {
+            //                return _context.DropDownViewValue.FromSqlRaw($"Exec DropDownListSP @Criteria ='FillMaMisc',@StrParam='ProjectStatus'").ToList();
+            //                break;
+            //            }
+            //    default:
+            //            {
+            //                return null;
+            //            }
+            //}        
+			
+	   }
         
-        
+       
     }
 }
+
 
 

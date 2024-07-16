@@ -183,13 +183,35 @@ namespace Dfinance.Purchase.Services
             }
             try
             {
-                var result = _transactionService.DeletePurchase(TransId);
+                var result = _transactionService.DeleteTransactions(TransId);
                 _logger.LogInformation("Deletion of GoodsInTransit Failed");
                 return CommonResponse.Ok(result);
             }
             catch (Exception ex)
             {
                 _logger.LogError("Deletion of GoodsInTransit Failed");
+                return CommonResponse.Error(ex);
+            }
+        }
+        public CommonResponse CancelGoodsInTransit(int TransId, int PageId,string reason)
+        {
+            if (!_authService.IsPageValid(PageId))
+            {
+                return PageNotValid(PageId);
+            }
+            if (!_authService.UserPermCheck(PageId, 5))
+            {
+                return PermissionDenied("Cancel GoodsInTransit");
+            }
+            try
+            {
+                var result = _transactionService.CancelTransaction(TransId,reason);
+                _logger.LogInformation("Cancel of GoodsInTransit Failed");
+                return CommonResponse.Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Cancel of GoodsInTransit Failed");
                 return CommonResponse.Error(ex);
             }
         }

@@ -93,11 +93,12 @@ namespace Dfinance.Inventory.Service
         {
             var result = _context.AccountCodeView
                 .FromSqlRaw($"EXEC GetNextAutoEntryVoucherNoSP @VoucherID={voucherid}, @BranchID={branchid}")
-                .ToList();
+                .FirstOrDefault();
+            
             VoucherNo voucherNo = new VoucherNo
             {
                 Code = voucher.Code,
-                Result = result
+                Result = result.ToString()
             };
 
             return voucherNo;
@@ -125,11 +126,11 @@ namespace Dfinance.Inventory.Service
                     {
                         var result = _context.AccountCodeView
                         .FromSqlRaw($"EXEC GetPartywiseVoucherNoSP @VoucherID={voucherid}, @BranchID={branchid}, @PurchaseNumberPrefix=")
-                        .ToList();
+                        .FirstOrDefault();
                         VoucherNo voucherNo = new VoucherNo
                         {
                             Code = voucher.Code,
-                            Result = result
+                            Result = result.ToString()
                         };
 
                         return CommonResponse.Ok(voucherNo);
@@ -143,7 +144,7 @@ namespace Dfinance.Inventory.Service
                 else
                 {
                     var voucherNo = GetNextTransactionNo(voucherid, voucher, branchid);
-                    return CommonResponse.Ok(voucherNo.Result[0].AccountCode);
+                    return CommonResponse.Ok(voucherNo.Result.ToString());
                 }
 
             }
@@ -321,21 +322,21 @@ namespace Dfinance.Inventory.Service
                 //Set SerialNo
                 if (rackLocation)
                 {
-                    transactionDto.Items.OrderBy(i => i.Location);                    
+                    transactionDto.Items.OrderBy(i => i.Location);
                 }
                 //Set RoundOFF calculation
-                if(inventoryToFinanceRoundOff)
+                if (inventoryToFinanceRoundOff)
                 {
                     int numeric = 0;
-                    if(numericFormat =="N2")
+                    if (numericFormat == "N2")
                         numeric = 2;
                     else if (numericFormat == "N3")
                         numeric = 3;
                     else if (numericFormat == "N4")
                         numeric = 4;
                     var round = transactionDto.TransactionEntries.GrandTotal;
-                    transactionDto.TransactionEntries.GrandTotal = Decimal.Round(transactionDto.TransactionEntries.GrandTotal??0, numeric);
-                    transactionDto.TransactionEntries.Roundoff = round- transactionDto.TransactionEntries.GrandTotal;
+                    transactionDto.TransactionEntries.GrandTotal = Decimal.Round(transactionDto.TransactionEntries.GrandTotal ?? 0, numeric);
+                    transactionDto.TransactionEntries.Roundoff = round - transactionDto.TransactionEntries.GrandTotal;
                 }
 
                 if ((VoucherType)primaryVoucherId == VoucherType.Purchase || (VoucherType)primaryVoucherId == VoucherType.Sales_Invoice || (VoucherType)primaryVoucherId == VoucherType.Purchase_Return && (VoucherType)primaryVoucherId == VoucherType.Sales_Return)
@@ -357,6 +358,31 @@ namespace Dfinance.Inventory.Service
                         }
                     }
                 }
+                int? reserveVoucherId = null;
+                if ((VoucherType)primaryVoucherId == VoucherType.Sales_Invoice && transactionDto.References.Select(r => r.Id) != null)
+                {
+                    foreach (var trans in transactionDto.References)
+                    {
+                        if (trans.Sel == true)
+                        {
+                            reserveVoucherId = trans.Id;
+                        }
+                    }
+                    //if(dosageSystem)
+                    //autoapproval
+                    if (autoApproval)
+                    {
+                        var additional = _context.FiTransactionAdditionals.FirstOrDefault(a => a.TransactionId == transactionDto.Id);
+                        if (additional != null)
+                        {
+                            additional.IsHigherApproval = true;
+                            _context.SaveChanges();
+                        }
+                    }
+                }
+
+
+
                 int branchId = _authService.GetBranchId().Value;
                 int createdBy = _authService.GetId().Value;
                 //int SerialNo = 1;
@@ -440,12 +466,17 @@ namespace Dfinance.Inventory.Service
         private bool rackLocation = false;
         private bool inventoryToFinanceRoundOff = false;
         private string numericFormat;
+        private string inventoryApproval;
+        private bool costCentreSystem = false;
+        private bool commonCostcenterAllocationWindow = false;
+        private bool autoApproval = false;
+        private bool dosageSystem = false;
         private void SetSettings()
         {
             string[] keys = new string[] {"TaxBasedInvoiceAccount","MethodofAdditionalExpenseAllocationToItemCost","GrandTotalVerify","VoucherDateAsDueDate","AutoUpdateNewVoucherNo",
                     "PartywiseVoucherNo","CreditLimitCheck","CreditPeriodCheck","RackLocation","InventoryToFinanceRoundOff","ItemDiscountAccounting",
                     "IsCSTApplicable","AdditionalExpenseAccountingInInvoice","ExpenseCSTAccountEntry","DiscountAccounting","CostCentreSystem",
-                    "CommonCostcenterAllocationWindow","DosageSystem","AutoApproval","SalesArabicPrint","PrintAfterSave","NumericFormat" };
+                    "CommonCostcenterAllocationWindow","DosageSystem","AutoApproval","SalesArabicPrint","PrintAfterSave","NumericFormat","InventoryApproval" };
             var settings = _context.MaSettings
         .Where(m => keys.Contains(m.Key))
         .Select(m => new
@@ -465,6 +496,69 @@ namespace Dfinance.Inventory.Service
             else round = "false";
             inventoryToFinanceRoundOff = Convert.ToBoolean(round);
             numericFormat = settings.Where(s => s.Key == "NumericFormat").Select(s => s.Value).FirstOrDefault().ToString();
+            inventoryApproval = settings.Where(s => s.Key == "InventoryApproval").Select(s => s.Value).FirstOrDefault().ToString();
+            costCentreSystem = Convert.ToBoolean(settings.Where(s => s.Key == "CostCentreSystem").Select(s => s.Value).FirstOrDefault());
+            commonCostcenterAllocationWindow = Converter.StringToBoolean(settings.Where(s => s.Key == "CommonCostcenterAllocationWindow").Select(s => s.Value).FirstOrDefault());
+            autoApproval = Converter.StringToBoolean(settings.Where(s => s.Key == "AutoApproval").Select(s => s.Value).FirstOrDefault().ToString());
+            dosageSystem = Converter.StringToBoolean(settings.Where(s => s.Key == "DosageSystem").Select(s => s.Value).FirstOrDefault());
+        }
+        //CostCenter Settings
+        private void ShowCostCenters(int transId, List<TransCostAllocationDto> transCostAllocation)
+        {
+            if (costCentreSystem && commonCostcenterAllocationWindow)
+            {
+                if (!costCentreSystem) return;
+                Boolean skipRowAddForEdit = false;
+                var transEntry = _context.FiTransactionEntries.Where(e => e.TransactionId == transId).ToList();
+                foreach (var entry in transEntry)
+                {
+                    var isCostCentre = _context.FiMaAccounts.Where(a => a.Id == entry.AccountId).Select(a => a.IsCostCentre).FirstOrDefault();
+                    if (Convert.ToBoolean(isCostCentre))
+                    {
+                        skipRowAddForEdit = false;
+                        var transCostAllocate = _context.TransCostAllocations.Any(c => c.Veid == entry.Id);
+                        if (transCostAllocate)
+                            skipRowAddForEdit = true;
+                        if (skipRowAddForEdit)
+                            continue;
+                        if (transCostAllocation != null && transCostAllocation.Count > 0)
+                        {
+                            foreach (var transcost in transCostAllocation)
+                            {
+                                var transCostAllocateId = _context.TransCostAllocations.Where(c => c.Id == transcost.Id).Select(c => c.Id).FirstOrDefault();
+                                if (transCostAllocateId != null)
+                                {
+                                    SqlParameter newId = new SqlParameter("@NewID", SqlDbType.Int)
+                                    {
+                                        Direction = ParameterDirection.Output
+                                    };
+                                    var critera = "InsertTransCostAllocations";
+                                    _context.Database.ExecuteSqlRaw("EXEC CostCentreSP @Criteria={0},@VEID={1},@CostCentreID={2},@Amount={3},@Description={4},@NewID={5} OUTPUT",
+                                        critera, entry.Id, transcost.CostCentreId, transcost.Amount, transcost.Description ?? null, newId);
+                                }
+                                else
+                                {
+                                    var critera = "UpdateTransCostAllocations";
+                                    _context.Database.ExecuteSqlRaw("EXEC CostCentreSP @Criteria={0},@VEID={1},@CostCentreID={2},@Amount={3},@Description={4},@ID={5} ",
+                                        critera, entry.Id, transcost.CostCentreId, transcost.Amount, transcost.Description ?? null, transCostAllocateId);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+        //ItemWiseExpanse
+        private decimal CalculateItemWiseExp(Object AccountID)
+        {
+            string AllocationMethod = string.Empty;
+            decimal TotalExp;
+            //decimal Ratio;
+            decimal TotalQty;
+            TotalExp = 0;
+            return TotalExp;
         }
 
         /// <summary>
@@ -521,11 +615,11 @@ namespace Dfinance.Inventory.Service
                             "@Posted={28}, @Active={29}, @Cancelled={30}, @AccountID={31}, @Description={32}, " +
                             "@RefTransID={33}, @CostCentreID={34}, @PageID={35}, @NewID={36} OUTPUT",
                             criteria, transactionDto.Date, DateTime.Now, VoucherId, environmentname,
-                            voucherNo.Result[0].AccountCode, false, transactionDto.Currency.Id, transactionDto.ExchangeRate, null, null,
+                            voucherNo.Result, false, transactionDto.Currency.Id, transactionDto.ExchangeRate, null, null,
                             ReferenceId, branchId, null, null, null,
                             null, null, transactionDto.Description, createdBy, null, DateTime.Now, null,
-                            ApprovalStatus, null, null, Status, Autoentry, true, true, false, transactionDto.Party.Id,
-                            null, RefTransId, transactionDto.Project.Id, PageId, newId);
+                            ApprovalStatus, null, null, Status, Autoentry, true, true, transactionDto.Cancelled, transactionDto.Party.Id,
+                            transactionDto.Description, RefTransId, transactionDto.Project.Id, PageId, newId);
 
                         transactionDto.Id = (int)newId.Value;
                         return CommonResponse.Ok((int)newId.Value);
@@ -544,8 +638,8 @@ namespace Dfinance.Inventory.Service
                             "@Criteria={0}, @Date={1}, @EffectiveDate={2}, @VoucherID={3}, @MachineName={4}, " +
                             "@TransactionNo={5}, @IsPostDated={6}, @CurrencyID={7}, @ExchangeRate={8}, @RefPageTypeID={9}, " +
                             "@RefPageTableID={10}, @ReferenceNo={11}, @CompanyID={12}, @FinYearID={13}, @InstrumentType={14}, " +
-                            "@InstrumentNo={15}, @InstrumentDate={16}, @InstrumentBank={17}, @CommonNarration={18}, @AddedBy={19}, " +
-                            "@ApprovedBy={20}, @AddedDate={21}, @ApprovedDate={22}, @ApprovalStatus={23}, " +
+                            "@InstrumentNo={15}, @InstrumentDate={16}, @InstrumentBank={17}, @CommonNarration={18}, @EditedBy={19}, " +
+                            "@ApprovedBy={20}, @EditedDate={21}, @ApprovedDate={22}, @ApprovalStatus={23}, " +
                             "@ApproveNote={24}, @Action={25}, @Status={26}, @IsAutoEntry={27}, " +
                             "@Posted={28}, @Active={29}, @Cancelled={30}, @AccountID={31}, @Description={32}, " +
                             "@RefTransID={33}, @CostCentreID={34}, @PageID={35}, @ID={36}",
@@ -685,19 +779,7 @@ namespace Dfinance.Inventory.Service
             {
                 _context.FiVoucherAllocation.Where(v => v.RefTransId == transId).ExecuteDelete();
                 SaveVoucherAllocation(transId, transpayId, transactionAdvance);
-                //int Id=_context.FiVoucherAllocation .Where(x => x.RefTransId == transId)
-                // .Select(x => x.Id)
-                // .FirstOrDefault();
 
-                //string criteria = "UpdateVoucherAllocation";
-                //foreach (var adv in transactionAdvance.Advance)
-                //{
-
-
-                //    _context.Database.ExecuteSqlRaw("EXEC VoucherSP @Criteria={0}, @VID={1}, @VEID={2}, @AccountID={3},@Amount={4},@RefTransID={5}, @ID={6} ",
-                //        criteria, adv.VID, adv.VEID, adv.AccountID, adv.Amount, transId, Id);
-
-                //}
                 return CommonResponse.Ok();
 
             }
@@ -746,10 +828,22 @@ namespace Dfinance.Inventory.Service
         /// </summary>
         /// <param name="TransId"></param>
         /// <returns></returns>
-        public CommonResponse DeletePurchase(int transId)
+        public CommonResponse DeleteTransactions(int transId)
         {
             try
             {
+
+                inventoryApproval = GetSettings("InventoryApproval").ToString();
+                var userRole = _authService.GetUserRole();
+                if (inventoryApproval != "N" && inventoryApproval.Contains(userRole))
+                {
+                   var isHigherApproval=Convert.ToBoolean(_context.FiTransactionAdditionals.Where(a=>a.TransactionId == transId).Select(a=>a.IsHigherApproval).FirstOrDefault());
+                    Object EditStatus = isHigherApproval;
+                    if (EditStatus != DBNull.Value ? Convert.ToBoolean(EditStatus) : false)
+                    {
+                        return CommonResponse.Ok("You dont have permission to Cancel approved transactions");
+                    }
+                }
                 var transid = _context.FiTransaction.Any(x => x.Id == transId);
                 if (!transid)
                 {
@@ -768,18 +862,55 @@ namespace Dfinance.Inventory.Service
                 return CommonResponse.Error(ex);
             }
         }
+        public CommonResponse CancelTransaction(int transId, string reason)
+        {
+            try
+            {
+                inventoryApproval = GetSettings("InventoryApproval").ToString();
+                var userRole = _authService.GetUserRole();
+                if (inventoryApproval != "N" && inventoryApproval.Contains(userRole))
+                {
+                    var isHigherApproval = Convert.ToBoolean(_context.FiTransactionAdditionals.Where(a => a.TransactionId == transId).Select(a => a.IsHigherApproval).FirstOrDefault());
+                    Object EditStatus = isHigherApproval;
+                    if (EditStatus != DBNull.Value ? Convert.ToBoolean(EditStatus) : false)
+                    {
+                        return CommonResponse.Ok("You dont have permission to Cancel approved transactions");
+                    }
+                }
+                var transid = _context.FiTransaction.Any(x => x.Id == transId);
+                if (!transid)
+                {
+                    return CommonResponse.NotFound("Transaction Not Found");
+                }
+                DateTime currentDate = DateTime.Now;
+                var query = "UPDATE [FiTransactions] SET [Cancelled] = @cancelled, [Description] = @description, [EditedBy] = @editedBy, [EditedDate] = @editedDate WHERE [ID] = @id";
+
+                _context.Database.ExecuteSqlRaw(query,
+                    new SqlParameter("@cancelled", true),
+                    new SqlParameter("@description", reason),
+                    new SqlParameter("@editedBy", _authService.GetId()),
+                    new SqlParameter("@editedDate", currentDate),
+                    new SqlParameter("@id", transId));
+                _context.SaveChanges();
+                //SaveTransaction(inventoryTransactionDto, PageId, VoucherId, "Approve");
+                return CommonResponse.Ok("Cancelled successfully");
+            }
+            catch (Exception ex)
+            {
+
+                return CommonResponse.Error(ex);
+            }
+        }
         public CommonResponse EntriesAmountValidation(int TransId)
         {
             _context.Database.ExecuteSqlRaw("EXEC EntriesAmountCheck @TransactionID={0}",
                                    TransId);
-
             return CommonResponse.Ok();
         }
         public CommonResponse InventoryAmountValidation(int TransId)
         {
             _context.Database.ExecuteSqlRaw("EXEC InventoryAmountCheck @TransactionID={0}",
                                    TransId);
-
             return CommonResponse.Ok();
         }
 
@@ -829,7 +960,27 @@ namespace Dfinance.Inventory.Service
                 return CommonResponse.Error(ex.Message);
             }
         }
+        private object GetSettings(string key)
+        {
+            var settings = _context.MaSettings
+        .Where(m => key.Contains(m.Key))
+        .Select(m => m.Value).FirstOrDefault();
+            return settings;
+        }
 
+        private List<TransExpense> FillTransexpenses(int transId)
+        {
+            try
+            {
+                var transExp = _context.TransExpense.FromSqlRaw("EXEC VoucherSP @Criteria={0},@VID={1}",
+                                  "FillTransexpenses", transId).ToList();
+                return transExp;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
 
     }
 }

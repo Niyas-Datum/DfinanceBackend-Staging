@@ -553,8 +553,19 @@ namespace Dfinance.NUnitTest.Sales
         public void DeleteSalesTest()
         {
             int transId = 16;
-            _salesInvoice.Setup(x => x.DeleteSales(transId)).Returns(new CommonResponse { Exception = null, Data = new InventoryTransactionDto() });
-            var result = _salesInvoice.Object.DeleteSales(transId);
+            _salesInvoice.Setup(x => x.DeleteSales(transId,149)).Returns(new CommonResponse { Exception = null, Data = new InventoryTransactionDto() });
+            var result = _salesInvoice.Object.DeleteSales(transId, 149);
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.IsValid, Is.True);
+            Assert.That(result.Data, Is.Not.Null);
+        }
+        [Test]
+        public void CancelSalesTest()
+        {
+            int transId = 16;
+            _salesInvoice.Setup(x => x.CancelSales(transId,149,"Canceled")).Returns(new CommonResponse { Exception = null, Data = new InventoryTransactionDto() });
+            var result = _salesInvoice.Object.CancelSales(transId, 149, "Canceled");
 
             Assert.That(result, Is.Not.Null);
             Assert.That(result.IsValid, Is.True);

@@ -22,8 +22,9 @@ namespace Dfinance.Shared.Enum
     Service_Enquiry = 103, Service_Delivery_Out=108, GRN_Quotation=113,JobCard=112,WarrentyClaim=114,GRN=111, Queue = 137, Budgeting = 70, RestaurantInvoice = 118, RestaurantKOT = 117,
     LaundryReceive=122, LaundryInvoice=121,Shipping_Gate_Pass=145,Shipping_Delivery_In=148, Shipping_Delivery_Out=149,Contract=150,Shipping_Order=151,
     Container_Delivery = 152, Container_Storage_IN = 153, Container_Storage_OUT = 154, Container_Return = 155, Material_Request=156, Material_Issue=157, Material_Receive=158,
-    Provisional_Purchase=162,Stock_Request=134,Import_PurchaseOrder=135, Import_Purchase=136, ProjectInvoice=109, Purchase_Request = 143,Purchase_Quotation=161
-
+    Provisional_Purchase=162,Stock_Request=134,Import_PurchaseOrder=135, Import_Purchase=136, ProjectInvoice=109, Purchase_Request = 143,Purchase_Quotation=161,
+    Opening_Balance = 26, // openingvoucher primaryvoucherId
+    PDC_Clearing = 67
 
     }
     public enum Page
@@ -40,7 +41,15 @@ namespace Dfinance.Shared.Enum
         AccountBreakup=214,
         CostCenter_Breakup=213,
         CostCentre_AccountStatement=536,
-        Aging_Report=281
+        Aging_Report=281,
+        DayBook=76,
+        CashOrBank_Book=250,
+        PartyOutStanding= 282,
+        Salesman_Collection_Report=527,
+        Creditor_Debitor_Balance=480,
+        eReturn=284,
+
+        Account_Configuration=92
 
     }
 }

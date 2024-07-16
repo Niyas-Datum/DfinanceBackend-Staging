@@ -747,27 +747,28 @@ namespace Dfinance.Item.Services.Inventory
             var data = _context.TransItemsView.FromSqlRaw(res.commandText).ToList();
             var itemsWithExpiry = new List<object>();
             string criteria1 = "GetLastItemRate";
-            object toolTipData;
+            object prevTransData;
             bool? uniqueItem = false, expireItem = false;
+            object expiryItem=null ;
             var uniqueNo = (bool)_settings.GetSettings("SetUniqueNo").Data;
             var expiry = (bool)_settings.GetSettings("IsExpiryDate").Data;
             foreach (var item in data)
             {
                 if (uniqueNo)
                     uniqueItem = _context.ItemMaster.Where(i => i.Id == item.ID).Select(i => i.IsUniqueItem).FirstOrDefault();//returns whether the item is uniqueItem 
-                if (expiry)
-                    expireItem = _context.ItemMaster.Where(i => i.Id == item.ID).Select(i => i.IsExpiry).FirstOrDefault();//returns whether the item is an expiry item
-
+                if (expiry)                
+                    expiryItem = _context.ItemMaster.Where(i => i.Id == item.ID).Select(i => new { i.ExpiryPeriod, i.IsExpiry }).FirstOrDefault();
+                      //returns the Isexpiry , expiry period of item
+                     
                 units = _itemunitService.GetItemUnits(item.ID).Data;//for unit popup in itemgrid
-
-                toolTipData = _context.ItemTransaction.FromSqlRaw($"Exec VoucherAdditionalsSP @Criteria='{criteria1}',@BranchID='{branchId}',@ItemID='{item.ID}',@AccountID='{partyId}',@VoucherID='{voucherId}'").ToList();
+                prevTransData = _context.ItemTransaction.FromSqlRaw($"Exec VoucherAdditionalsSP @Criteria='{criteria1}',@BranchID='{branchId}',@ItemID='{item.ID}',@AccountID='{partyId}',@VoucherID='{voucherId}'").ToList();
                 itemsWithExpiry.Add(new
                 {
                     Item = item,
                     UnitPopup = units,
                     UniqueItem = uniqueItem,
-                    ExpiryItem = expireItem,
-                    ToolTipData = toolTipData
+                    ExpiryItem = expiryItem,
+                    PreviousTransData = prevTransData
                 });
             }
             return CommonResponse.Ok(new { Items = itemsWithExpiry });

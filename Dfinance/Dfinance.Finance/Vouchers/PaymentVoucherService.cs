@@ -276,7 +276,7 @@ namespace Dfinance.Finance.Vouchers
         public CommonResponse GetPayVocherSettings()
         {
             string[] keys = { "MultiCurrencySupport", "DisableVoucherNo", "CostCentreSystem", "AutoEntryVoucherNo", "LeftGridStatus" , "Display CostCentre in Voucher" ,
-                                "AutoCloseCashForm" , "DefaultCashSystem" , "DefaultAccount","SelectAllRefernece" };
+                                "AutoCloseCashForm" , "DefaultCashSystem" , "DefaultAccount","SelectAllRefernece","OpeningDateEditable" };   //OpeningDateEditable used in openingvou
 
             var settings = _settings.GetAllSettings(keys).Data;
             return CommonResponse.Ok(settings);

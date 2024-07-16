@@ -19,5 +19,6 @@ namespace Dfinance.Inventory.Service.Interface
         CommonResponse UpdateTransactionExpenses(List<InvAccountDetailsDto> accountDetailsDtos, int transactionId, string tranType);
         CommonResponse SaveTransCollections(InvTransactionEntriesDto transactionEntries, int transactionId);
         CommonResponse SaveTransCollectionsAllocation(InvTransactionEntriesDto transactionEntries, int transCollectionId, int vAllocId);
+        CommonResponse SetDefaultAccount(string TranType);
     }
 }

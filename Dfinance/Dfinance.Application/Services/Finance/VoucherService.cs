@@ -4,6 +4,7 @@ using Dfinance.Core.Domain;
 using Dfinance.Core.Infrastructure;
 using Dfinance.DataModels.Dto.Finance;
 using Dfinance.Shared.Domain;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
@@ -19,6 +20,15 @@ namespace Dfinance.Application.Services.Finance
         {
             _context = context;
             _authService = authService;
+        }
+
+        //voucher dropdown
+        //used in DayBook filter
+        //used in PageMenu
+        public CommonResponse VoucherDropDown()
+        {
+            var vouchers = _context.DropDownViewName.FromSqlRaw("exec DropDownListSP @Criteria='FillVouchers'").ToList();
+            return CommonResponse.Ok(vouchers);
         }
         //fill voucher popup-used in finance statements
         public CommonResponse VoucherPopup()
