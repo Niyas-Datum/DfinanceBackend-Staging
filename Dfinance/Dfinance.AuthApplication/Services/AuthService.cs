@@ -223,7 +223,7 @@ public class AuthService : IAuthService
             var _companyData = _authCoreContext.Companies.Where(x => x.Id == Convert.ToInt32(DecodedArray[1])).Select(x => new DropdownLoginDto { Id = x.Id, Value = x.Name }).FirstOrDefault();
             var _branchData = new DropdownLoginDto() { Id = Convert.ToInt32(DecodedArray[2]), Value = DecodedArray[3] };
            
-            return CommonResponse.Ok(new { apilink = DecodedArray[1], companyData = _companyData, branchData = _branchData });
+            return CommonResponse.Ok(new { apilink = DecodedArray[0], companyData = _companyData, branchData = _branchData });
             
         }
         return CommonResponse.Error("Qrcode no valid");
