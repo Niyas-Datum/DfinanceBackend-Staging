@@ -13,5 +13,7 @@ namespace Dfinance.Warehouse.Services.Interface
         CommonResponse FillStockItemDetails(ItemDetailsRpt itemDetails);
         CommonResponse GetWarehouseStockLoadData();
         CommonResponse FillWarehouseStockDetails(WarehouseStockRegRpt warehouseStock);
+        CommonResponse GetCommudityLoadData();
+        CommonResponse FillStockRegisterCommoditywise(CommodityStockRegRpt commodityStockReg);
     }
 }

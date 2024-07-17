@@ -1,6 +1,7 @@
 ﻿using Dfinance.Application.Services.General;
 using Dfinance.AuthAppllication.Services.Interface;
 using Dfinance.Core.Infrastructure;
+using Dfinance.Core.Views;
 using Dfinance.DataModels.Dto.Inventory;
 using Dfinance.Shared.Domain;
 using Dfinance.Warehouse.Services.Interface;
@@ -49,6 +50,21 @@ namespace Dfinance.Warehouse.Services
         private CommonResponse FillVoucherLocations()
         {
             var location = _context.LocationViewList.FromSqlRaw("Exec DropDownListSP @Criteria='FillVoucherLocations',@StrParam='StockReg Location wise'").ToList();
+            return CommonResponse.Ok(location);
+        }
+       
+        private CommonResponse FillTypeOfWoodForReports()
+        {
+            var branchId=_authService.GetBranchId();
+            var location =(from tw in _context.CategoryType 
+                           join c in _context.MaBranches on tw.CreatedBranchId equals c.Id
+                           where tw.ActiveFlag==1 && c.BranchCompanyId ==branchId
+                           orderby tw.Description
+                           select new
+                           {
+                               Name = tw.Description,
+                               Id=tw.Id
+                           }).Distinct().ToList();
             return CommonResponse.Ok(location);
         }
         private CommonResponse GetUnit()
@@ -339,6 +355,7 @@ namespace Dfinance.Warehouse.Services
                 return CommonResponse.Ok(ex.Message);
             }
         }
+        //************************************ Warehouse Stock **************************************
         public CommonResponse GetWarehouseStockLoadData()
         {
             try
@@ -362,6 +379,63 @@ namespace Dfinance.Warehouse.Services
                 var locationId = warehouseStock.LocationId.Id != null ? warehouseStock.LocationId.Id.ToString() : "NULL";
                 var branchID = _authService.GetBranchId();
                 cmd.CommandText = $"Exec StockRegisterSP @Criteria='Locationwise',@FromDate='{warehouseStock.FromDate}',@LocationID={locationId},@BranchID={branchID},@ToDate='{warehouseStock.ToDate}'";
+                _context.Database.GetDbConnection().Open();
+                using (var reader = cmd.ExecuteReader())
+                {
+                    var tb = new DataTable();
+                    tb.Load(reader);
+                    if (tb.Rows.Count > 0)
+                    {
+                        List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+                        Dictionary<string, object> row;
+                        foreach (DataRow dr in tb.Rows)
+                        {
+                            row = new Dictionary<string, object>();
+                            foreach (DataColumn col in tb.Columns)
+                            {
+                                row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
+                            }
+                            rows.Add(row);
+                        }
+                        return CommonResponse.Ok(rows);
+                    }
+                    return CommonResponse.NoContent();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Ok(ex.Message);
+            }
+        }
+
+        //************************CommodityWiseRegister******************************
+
+        public CommonResponse GetCommudityLoadData()
+        {
+            try
+            {
+                var locations = FillVoucherLocations().Data;
+                var type=FillTypeOfWoodForReports().Data;
+                _logger.LogInformation("Sucessfully Load GetWarehouseStockLoadData");
+                return CommonResponse.Ok(new { Location = locations ,Type= type});
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Ok(ex.Message);
+            }
+        }
+        public CommonResponse FillStockRegisterCommoditywise(CommodityStockRegRpt commodityStockReg)
+        {
+            try
+            {
+                var cmd = _context.Database.GetDbConnection().CreateCommand();
+                cmd.CommandType = CommandType.Text;
+                var locationId = commodityStockReg.LocationId.Id != null ? commodityStockReg.LocationId.Id.ToString() : "NULL";
+                var branchID = _authService.GetBranchId();
+                var typeId = commodityStockReg.TyoeOfWood.Id != null ? commodityStockReg.TyoeOfWood.Id.ToString() : "NULL";
+                cmd.CommandText = $"Exec StockRegisterSP @Criteria='Commoditywise',@FromDate='{commodityStockReg.FromDate}',@LocationID={locationId},@BranchID={branchID},@ToDate='{commodityStockReg.ToDate}',@TypeOfWoodID={typeId}";
                 _context.Database.GetDbConnection().Open();
                 using (var reader = cmd.ExecuteReader())
                 {
