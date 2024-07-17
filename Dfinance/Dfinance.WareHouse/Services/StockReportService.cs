@@ -465,5 +465,66 @@ namespace Dfinance.Warehouse.Services
                 return CommonResponse.Ok(ex.Message);
             }
         }
+
+        //*********************** Stock Receipt Issue ******************************
+
+        public CommonResponse GetStockReceiptLoadData()
+        {
+            try
+            {
+                var branches=FillAllBranch().Data;
+                var locations = FillVoucherLocations().Data;
+                var item = GetItem().Data;
+                _logger.LogInformation("Sucessfully Load GetWarehouseStockLoadData");
+                return CommonResponse.Ok(new { Location = locations, Item = item, Branches=branches });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Ok(ex.Message);
+            }
+        }
+        public CommonResponse FillStockReceiptIssue(StockReceiptIssueRpt stockReceiptIssue)
+        {
+            try
+            {
+                var cmd = _context.Database.GetDbConnection().CreateCommand();
+                cmd.CommandType = CommandType.Text;
+                var locationId = stockReceiptIssue.LocationId.Id != null ? stockReceiptIssue.LocationId.Id.ToString() : "NULL";
+                var Items = stockReceiptIssue.ItemId.Id != null ? stockReceiptIssue.ItemId.Id.ToString() : "NULL";
+                var fromBranch = stockReceiptIssue.FromBranch.Id != null ? stockReceiptIssue.FromBranch.Id.ToString() : "NULL";
+                var toBranch = stockReceiptIssue.ToBranch.Id != null ? stockReceiptIssue.ToBranch.Id.ToString() : "NULL";
+                var vType=stockReceiptIssue.VType.Value != null ? stockReceiptIssue.VType.Value.ToString() : "All";
+                cmd.CommandText = $"Exec StockIssueReceiptSP @DateFrom='{stockReceiptIssue.FromDate}',@DateUpto='{stockReceiptIssue.ToDate}',@VType='{vType}',@LocationID={locationId},@FromBranchID={fromBranch},@ToBranchID={toBranch},@ItemID={Items}";
+                _context.Database.GetDbConnection().Open();
+                using (var reader = cmd.ExecuteReader())
+                {
+                    var tb = new DataTable();
+                    tb.Load(reader);
+                    if (tb.Rows.Count > 0)
+                    {
+                        List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+                        Dictionary<string, object> row;
+                        foreach (DataRow dr in tb.Rows)
+                        {
+                            row = new Dictionary<string, object>();
+                            foreach (DataColumn col in tb.Columns)
+                            {
+                                row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
+                            }
+                            rows.Add(row);
+                        }
+                        return CommonResponse.Ok(rows);
+                    }
+                    return CommonResponse.NoContent();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Ok(ex.Message);
+            }
+        }
+
     }
 }

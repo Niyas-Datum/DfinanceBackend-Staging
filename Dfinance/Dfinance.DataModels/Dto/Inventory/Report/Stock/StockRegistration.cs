@@ -54,4 +54,14 @@ namespace Dfinance.DataModels.Dto.Inventory
         //public DropdownDto? BranchId { get; set; }
         public DropdownDto? TyoeOfWood { get; set; }
     }
+    public class StockReceiptIssueRpt
+    {
+        public DateTime FromDate { get; set; }
+        public DateTime ToDate { get; set; }
+        public DropdownDto? LocationId { get; set; }
+        public DropdownDto? FromBranch { get; set; }
+        public DropdownDto? ToBranch { get; set; }
+        public PopUpDto? ItemId { get; set; }
+        public DropdownDto? VType { get; set; }
+    }
 }
