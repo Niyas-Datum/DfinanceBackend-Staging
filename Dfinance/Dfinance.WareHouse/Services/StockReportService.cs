@@ -1,4 +1,5 @@
-﻿using Dfinance.AuthAppllication.Services.Interface;
+﻿using Dfinance.Application.Services.General;
+using Dfinance.AuthAppllication.Services.Interface;
 using Dfinance.Core.Infrastructure;
 using Dfinance.DataModels.Dto.Inventory;
 using Dfinance.Shared.Domain;
@@ -238,6 +239,129 @@ namespace Dfinance.Warehouse.Services
                     cmd.CommandText = $"Exec StockRegisterSP @FromDate='{itemStockRegister.FromDate}',@ItemID={itemId},@BranchID={branchID},@ToDate='{itemStockRegister.ToDate}',@BatchNo='{itemStockRegister.BatchNo}'";                
                 else                
                     cmd.CommandText = $"Exec StockRegisterSP @FromDate='{itemStockRegister.FromDate}',@ItemID={itemId},@BranchID={branchID},@ToDate='{itemStockRegister.ToDate}'";                
+                _context.Database.GetDbConnection().Open();
+                using (var reader = cmd.ExecuteReader())
+                {
+                    var tb = new DataTable();
+                    tb.Load(reader);
+                    if (tb.Rows.Count > 0)
+                    {
+                        List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+                        Dictionary<string, object> row;
+                        foreach (DataRow dr in tb.Rows)
+                        {
+                            row = new Dictionary<string, object>();
+                            foreach (DataColumn col in tb.Columns)
+                            {
+                                row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
+                            }
+                            rows.Add(row);
+                        }
+                        return CommonResponse.Ok(rows);
+                    }
+                    return CommonResponse.NoContent();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Ok(ex.Message);
+            }
+        }
+
+        //**************************ItemDetails*********************
+
+        private CommonResponse FillAllBranch()
+        {
+            try
+            {
+                string criteria = "FillCompanyMaster";
+                var result = _context.SpFillAllBranch.FromSqlRaw($"EXEC spCompany @Criteria='{criteria}'").ToList();
+                return CommonResponse.Ok(result);
+
+            }
+            catch (Exception ex)
+            {
+                return CommonResponse.Error(ex);
+            }
+        }
+        public CommonResponse GetItemDetailsLoadData()
+        {
+            try
+            {
+               
+                var branches = FillAllBranch().Data;
+                var itemList = GetItem().Data;
+                _logger.LogInformation("Sucessfully Load GetData");
+                return CommonResponse.Ok(new { Branches = branches, Items = itemList });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Ok(ex.Message);
+            }
+        }
+        public CommonResponse FillStockItemDetails(ItemDetailsRpt itemDetails)
+        {
+            try
+            {
+                var cmd = _context.Database.GetDbConnection().CreateCommand();
+                cmd.CommandType = CommandType.Text;
+                var itemId = itemDetails.ItemId.Id != null ? itemDetails.ItemId.Id.ToString() : "NULL";
+                var branchID = itemDetails.BranchId.Id != null ? itemDetails.BranchId.Id.ToString() : "NULL";
+                    cmd.CommandText = $"Exec GoldPriceSP @Criteria='GoldStock',@StockType='Quality',@FromDate='{itemDetails.FromDate}',@ItemID={itemId},@BranchID={branchID},@ToDate='{itemDetails.ToDate}'";
+                _context.Database.GetDbConnection().Open();
+                using (var reader = cmd.ExecuteReader())
+                {
+                    var tb = new DataTable();
+                    tb.Load(reader);
+                    if (tb.Rows.Count > 0)
+                    {
+                        List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+                        Dictionary<string, object> row;
+                        foreach (DataRow dr in tb.Rows)
+                        {
+                            row = new Dictionary<string, object>();
+                            foreach (DataColumn col in tb.Columns)
+                            {
+                                row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
+                            }
+                            rows.Add(row);
+                        }
+                        return CommonResponse.Ok(rows);
+                    }
+                    return CommonResponse.NoContent();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Ok(ex.Message);
+            }
+        }
+        public CommonResponse GetWarehouseStockLoadData()
+        {
+            try
+            {
+                var locations = FillVoucherLocations().Data;
+                _logger.LogInformation("Sucessfully Load GetWarehouseStockLoadData");
+                return CommonResponse.Ok(locations);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Ok(ex.Message);
+            }
+        }
+        public CommonResponse FillWarehouseStockDetails(WarehouseStockRegRpt warehouseStock)
+        {
+            try
+            {
+                var cmd = _context.Database.GetDbConnection().CreateCommand();
+                cmd.CommandType = CommandType.Text;
+                var locationId = warehouseStock.LocationId.Id != null ? warehouseStock.LocationId.Id.ToString() : "NULL";
+                var branchID = _authService.GetBranchId();
+                cmd.CommandText = $"Exec StockRegisterSP @Criteria='Locationwise',@FromDate='{warehouseStock.FromDate}',@LocationID={locationId},@BranchID={branchID},@ToDate='{warehouseStock.ToDate}'";
                 _context.Database.GetDbConnection().Open();
                 using (var reader = cmd.ExecuteReader())
                 {

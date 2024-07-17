@@ -9,5 +9,9 @@ namespace Dfinance.Warehouse.Services.Interface
         CommonResponse FillItemReports(StockRegistration stockRegistration);
         CommonResponse GetItemStockLoadData();
         CommonResponse FillStockItemRegister(ItemStockRegisterRpt itemStockRegister);
+        CommonResponse GetItemDetailsLoadData();
+        CommonResponse FillStockItemDetails(ItemDetailsRpt itemDetails);
+        CommonResponse GetWarehouseStockLoadData();
+        CommonResponse FillWarehouseStockDetails(WarehouseStockRegRpt warehouseStock);
     }
 }
