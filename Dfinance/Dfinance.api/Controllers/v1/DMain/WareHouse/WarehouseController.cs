@@ -189,5 +189,33 @@ namespace Dfinance.api.Controllers.v1.DMain.WareHouse
                 return BadRequest(ex.Message);
             }
         }
+
+        //StockRegisterCommoditywise
+        [HttpGet(InvRoute.WareHouse.CommodityStkLoadData)]
+        public IActionResult GetCommodityStockLoadData()
+        {
+            try
+            {
+                var data = _stockReportService.GetCommudityLoadData();
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost(InvRoute.WareHouse.CommodityStkReg)]
+        public IActionResult StockRegisterCommoditywise(CommodityStockRegRpt commodityStockReg)
+        {
+            try
+            {
+                var data = _stockReportService.FillStockRegisterCommoditywise(commodityStockReg);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

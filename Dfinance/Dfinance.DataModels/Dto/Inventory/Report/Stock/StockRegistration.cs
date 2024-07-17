@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Dfinance.DataModels.Dto.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,5 +24,34 @@ namespace Dfinance.DataModels.Dto.Inventory
         public Object? SupplierID { get; set; }
         public Object? CustomerID { get; set; } 
         public Object? CategoryTypeID { get; set; }
+    }
+    public class ItemDetailsRpt
+    {
+        public DateTime FromDate { get; set; }
+        public DateTime ToDate { get; set; }
+        public PopUpDto? ItemId { get; set; }
+        public DropdownDto? BranchId { get; set; }
+    }
+    public class ItemStockRegisterRpt
+    {
+        public DateTime FromDate { get; set; }
+        public DateTime ToDate { get; set; }
+        public PopUpDto? ItemID { get; set; }
+        public DropdownDto? BranchID { get; set; }
+        public String? BatchNo { get; set; }
+    }
+    public class WarehouseStockRegRpt
+    {
+        public DateTime FromDate { get; set; }
+        public DateTime ToDate { get; set; }
+        public DropdownDto? LocationId { get; set; }
+    }
+    public class CommodityStockRegRpt
+    {
+        public DateTime FromDate { get; set; }
+        public DateTime ToDate { get; set; }
+        public DropdownDto? LocationId { get; set; }
+        //public DropdownDto? BranchId { get; set; }
+        public DropdownDto? TyoeOfWood { get; set; }
     }
 }
