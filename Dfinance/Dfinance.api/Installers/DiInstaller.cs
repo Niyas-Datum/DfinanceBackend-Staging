@@ -194,7 +194,8 @@ public class DiInstaller : IInstaller
 
         //ChequeTemplate
         service.AddScoped<IChequeTemplateService, ChequeTemplateService>();
-
+        //submasters
+        service.AddScoped<ISubMastersService, SubMastersService>();
 
     }
 }
