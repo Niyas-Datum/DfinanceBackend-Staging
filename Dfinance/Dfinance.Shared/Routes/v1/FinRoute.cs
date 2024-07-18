@@ -243,5 +243,12 @@ namespace Dfinance.Shared.Routes.v1
 
 
             }
+        public static class JournalVoucher
+        {
+            public const string Main = $"{Base}/journalVoucher";
+            public const string fillAcc = $"{Main}/fillAcc";
+            public const string save = $"{Main}/save";
+            public const string update = $"{Main}/update";
+        }
     }
 }
