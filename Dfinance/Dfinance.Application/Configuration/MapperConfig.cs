@@ -22,12 +22,7 @@ namespace Dfinance.Application.Configuration
 
             CreateMap<FinanceTransactionDto, OpeningVoucherDto>().ReverseMap();
 
-
-
-
-
-
-
+            CreateMap<FinanceTransactionDto, JournalDto>().ReverseMap();
 
 
 
