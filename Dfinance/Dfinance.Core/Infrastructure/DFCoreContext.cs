@@ -117,6 +117,8 @@ public partial class DFCoreContext : DbContext
     public DbSet<InvSizeMaster> InvSizeMaster { get; set; }
     public DbSet<TransItemExpense> TransItemExpenses { get; set; }
     public DbSet<BudgetMonth> BudgetMonth { get; set; }
+    //ChequeRegister
+    public DbSet<FiChequesTran> FiChequesTrans { get; set; }
 
 
 
@@ -373,7 +375,8 @@ public partial class DFCoreContext : DbContext
     //CheqTemplate
     public DbSet<ChequeTemplateField> ChequeTemplateFields { get; set; }
     public DbSet<ChequeTemplate> ChequeTemplate { get; set; }
-
+    //ChequeRegister
+    public DbSet<ChequeregView> ChequeregViews { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     //  => optionsBuilder.UseSqlServer(@"Data Source=ip.datuminnovation.com,9600;TrustServerCertificate=true;Initial Catalog=DatumSystemMain;User ID=sa;pwd=Datum123!");
@@ -459,6 +462,8 @@ public partial class DFCoreContext : DbContext
         mb.ApplyConfiguration(new HREmployeeConfiguration());
         //counter
         mb.ApplyConfiguration(new InvMaCounterConfiguration());
+        //ChequeRegister
+        mb.ApplyConfiguration(new FiChequesTranConfiguration());
 
 
         //View
@@ -667,6 +672,9 @@ public partial class DFCoreContext : DbContext
         //counters
         mb.Entity<FillCounters>().HasNoKey().ToView(null);
         mb.Entity<FillCountersById>().HasNoKey().ToView(null);
+
+        //ChequeRegister
+        mb.Entity<ChequeregView>().HasNoKey().ToView(null);
 
     }
 
