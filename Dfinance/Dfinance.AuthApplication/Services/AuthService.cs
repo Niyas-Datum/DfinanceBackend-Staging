@@ -46,7 +46,12 @@ public class AuthService : IAuthService
             var Passwordtemp = _encryptService.Encrypt(model.Password);
             // GET LOGININFO
             int mod = 10;
-
+            var existUser=(from E in _dfCoreContext.MaEmployees
+                           join ED in _dfCoreContext.MaEmployeeBranchDet on E.Id equals ED.EmployeeId
+                           where E.Username==model.Username && E.Password== Passwordtemp && ED.BranchId==model.Branch.Id
+                           select E.Id).Any();
+            if (!existUser) 
+                return CommonResponse.NotFound("Authentication failed! Try again");
             var userData = _dfCoreContext.UserInfo.FromSqlRaw($"EXEC spAuthendication  @Mode='{mod}', @BranchID='{model.Branch.Id}', @Username='{model.Username}', @Password='{Passwordtemp}'").AsEnumerable().FirstOrDefault();
             int empid = userData.EmployeeID;
             // Get Menu only if authentication is successful
@@ -90,14 +95,14 @@ public class AuthService : IAuthService
             else 
             {
                 // Authentication failed
-                return CommonResponse.Error("An error occurred during authentication.");
+                return CommonResponse.NotFound("An error occurred during authentication.");
             }
         }
         catch (Exception ex) 
         {
             // Log the exception details
            // Log.Error("An error occurred during authentication.");
-            return CommonResponse.Error("An error occurred during authentication.");
+            return CommonResponse.NotFound("An error occurred during authentication.");
         }
     }
 
