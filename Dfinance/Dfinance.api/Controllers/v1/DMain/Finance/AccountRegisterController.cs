@@ -31,5 +31,47 @@ namespace Dfinance.api.Controllers.v1.DMain.Finance
                 return BadRequest(ex.Message);
             }
         }
+        [HttpGet(FinRoute.AccountRegister.PopupAccgr)]
+        public IActionResult AccountGroupPopup()
+        {
+            try
+            {
+                var view = _AccountRegisterService.AccountGroupPopup();
+
+                return Ok(view);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet(FinRoute.AccountRegister.PopupSubgr)]
+        public IActionResult SubGroupPopup()
+        {
+            try
+            {
+                var view = _AccountRegisterService.SubGroupPopup();
+
+                return Ok(view);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet(FinRoute.AccountRegister.PopupPar)]
+        public IActionResult ParentPopup()
+        {
+            try
+            {
+                var view = _AccountRegisterService.ParentPopup();
+
+                return Ok(view);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

@@ -77,5 +77,64 @@ namespace Dfinance.Finance.Services
             }
 
         }
-}
+        public CommonResponse AccountGroupPopup()
+        {
+            try
+            {
+                var result = _context.FiMaAccountGroup
+           .Select(at => new
+           {
+               at.Id,
+               at.Description
+           })
+           .ToList();
+                return CommonResponse.Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Error();
+            }
+        }
+        public CommonResponse SubGroupPopup()
+        {
+            try
+            {
+                var result = _context.FiMaSubGroups
+           .Select(at => new
+           {
+               at.Id,
+               at.Description
+           })
+           .ToList();
+                return CommonResponse.Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Error();
+            }
+        }
+        public CommonResponse ParentPopup()
+        {
+            try
+            {
+                var result = _context.FiMaAccounts
+            .Where(account => account.IsGroup == true)
+            .Select(account => new
+            {
+                account.Id,
+                AccountCode = account.Alias,
+                AccountName = account.Name
+            })
+            .ToList();
+                return CommonResponse.Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Error();
+            }
+        }
+    }
 }
