@@ -760,7 +760,7 @@ namespace Dfinance.Item.Services.Inventory
                      
                 units = _itemunitService.GetItemUnits(item.ID).Data;//for unit popup in itemgrid
                 prevTransData = _context.ItemTransaction.FromSqlRaw($"Exec VoucherAdditionalsSP @Criteria='{criteria1}',@BranchID='{branchId}',@ItemID='{item.ID}',@AccountID='{partyId}',@VoucherID='{voucherId}'").ToList();
-                var updatePrice = _itemunitService.FillItemUnits(item.ID, branchId??1);
+                var updatePrice = _itemunitService.FillItemUnits(item.ID, branchId??1).Data;
                 itemsWithExpiry.Add(new
                 {
                     Item = item,
