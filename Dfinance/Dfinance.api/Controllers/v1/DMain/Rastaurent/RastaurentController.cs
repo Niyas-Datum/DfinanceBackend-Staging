@@ -73,6 +73,40 @@ namespace Dfinance.api.Controllers.v1.DMain.Rastaurent
                 return BadRequest(ex.Message);
             }
         }
+        [HttpGet(InvRestRoute.Restaurant.GetEmployee)]
+        public IActionResult GetWaiterList()
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+                object result = _restaurantInvoice.GetWaiterList();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet(InvRestRoute.Restaurant.GetSection)]
+        public IActionResult GetSections()
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+                object result = _restaurantInvoice.GetSections();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         [HttpGet(InvRestRoute.Restaurant.FillTable)]
         public IActionResult GetTableData(int sectionId)
         {
