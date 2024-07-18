@@ -87,17 +87,17 @@ public class AuthService : IAuthService
                 //Log.Information("Authentication successful. AuthResponse: {@AuthResponse}", authResponse);
                 return CommonResponse.Ok(_User);
             }
-            else
+            else 
             {
                 // Authentication failed
-                return CommonResponse.Error();
+                return CommonResponse.Error("An error occurred during authentication.");
             }
         }
-        catch
+        catch (Exception ex) 
         {
             // Log the exception details
            // Log.Error("An error occurred during authentication.");
-            return CommonResponse.Error();
+            return CommonResponse.Error("An error occurred during authentication.");
         }
     }
 
