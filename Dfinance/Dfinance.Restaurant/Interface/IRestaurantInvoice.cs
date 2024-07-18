@@ -22,5 +22,7 @@ namespace Dfinance.Restaurant.Interface
         CommonResponse SaveItemOptions(ItemOptionsDto itemOptionsDto);
         CommonResponse UpdateItemOptions(ItemOptionsDto itemOptionsDto);
         CommonResponse FillItemOptionsMaster();
+        CommonResponse GetWaiterList();
+        CommonResponse GetSections();
     }
 }

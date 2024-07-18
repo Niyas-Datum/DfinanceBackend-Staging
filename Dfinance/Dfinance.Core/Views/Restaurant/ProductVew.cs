@@ -19,9 +19,9 @@ namespace Dfinance.Core.Views
         public decimal? TaxPerc {  get; set;}
         public int? CategoryID { get; set; }
         public int? TaxAccountID { get; set; }
-        public string ImagePath { get; set; }
-        public string ShipMark { get; set; }
-        public string PaintMark { get; set; }
+        public string? ImagePath { get; set; }
+        public string? ShipMark { get; set; }
+        public string? PaintMark { get; set; }
         public string? Unit { get; set;}
         public decimal? DiscountAmt { get; set;}
         public decimal? DiscountPerc { get; set;}

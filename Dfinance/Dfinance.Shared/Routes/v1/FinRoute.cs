@@ -245,5 +245,23 @@ namespace Dfinance.Shared.Routes.v1
 
 
             }
+        public static class ChequeRegister
+        {
+            public const string Main = $"{Base}/chequeregister";
+            public const string FillCheqreg = $"{Main}/FCheqreg";
+        }
+        public static class CustomerRegister
+        {
+            public const string Main = $"{Base}/customerregister";
+            public const string FillCusreg = $"{Main}/Cureg";
+        }
+        public static class AccountRegister
+        {
+            public const string Main = $"{Base}/accountregister";
+            public const string FillAccreg = $"{Main}/Accreg";
+            public const string PopupAccgr = $"{Main}/ACCgrpop";
+            public const string PopupSubgr = $"{Main}/Subgrpop";
+            public const string PopupPar = $"{Main}/Parentpop";
+        }
     }
 }

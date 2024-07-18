@@ -376,5 +376,15 @@ namespace Dfinance.Shared.Routes.v1
             public const string BankPopup = $"{Main}/bankpopup";
             
         }
+        public static class SubMasters
+        {
+            public const string Main = $"{Base}/submasters";
+            public const string KeyDropDown = $"{Main}/getkey";
+            public const string FillMaster = $"{Main}/fill";
+            public const string FillSubMasterById = $"{Main}/fillbyId";
+            public const string Save = $"{Main}/save";
+            public const string Update = $"{Main}/update";
+            public const string Delete = $"{Main}/delete";
+        }
     }
 }
