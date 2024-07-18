@@ -10,5 +10,8 @@ namespace Dfinance.Finance.Services.Interface
     public interface IAccountRegister
     {
         CommonResponse FillAccountRegister(int pageId);
+        CommonResponse AccountGroupPopup();
+        CommonResponse SubGroupPopup();
+        CommonResponse ParentPopup();
     }
 }
