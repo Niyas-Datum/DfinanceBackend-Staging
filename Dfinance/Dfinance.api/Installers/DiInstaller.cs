@@ -194,12 +194,17 @@ public class DiInstaller : IInstaller
 
         //ChequeTemplate
         service.AddScoped<IChequeTemplateService, ChequeTemplateService>();
+
+        //submasters
+        service.AddScoped<ISubMastersService, SubMastersService>();
+
         //ChequeRegister
         service.AddScoped<IChequeRegister, ChequeRegisterService>();
         //CustomerRegister
         service.AddScoped<ICustomerRegister, CustomerRegisterService>();
         //AccountRegister
         service.AddScoped<IAccountRegister, AccountRegisterService>();
+
 
     }
 }
