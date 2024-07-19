@@ -1,8 +1,10 @@
 ﻿using Dfinance.api.Authorization;
 using Dfinance.api.Framework;
+using Dfinance.DataModels.Dto.Common;
 using Dfinance.DataModels.Dto.Item;
 using Dfinance.Item.Services.Inventory;
 using Dfinance.Item.Services.Inventory.Interface;
+using Dfinance.Shared.Domain;
 using Dfinance.Shared.Routes.v1;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,12 +31,12 @@ namespace Dfinance.api.Controllers.v1.DMain.Item
         ///  <returns>Item Details</returns>
         /********************* Fill All Items ******************/
         [HttpGet(ApiRoutes.ItemMaster.FillMaster)]
-        public IActionResult FillItemMaster([FromQuery]int[]? catId,[FromQuery] int[]? brandId, string search = null, int pageNo = 0, int limit = 0)
+        public IActionResult FillItemMaster([FromQuery] int[]? catId, [FromQuery] int[]? brandId, string search = null, int pageNo = 0, int limit = 0)
         {
             try
             {
-                var response = _itemService.FillItemMaster(catId, brandId, search,pageNo,limit);
-                return Ok(response); 
+                var response = _itemService.FillItemMaster(catId, brandId, search, pageNo, limit);
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -49,11 +51,11 @@ namespace Dfinance.api.Controllers.v1.DMain.Item
         /// </summary>
         ///  <returns>fill item details by id,itemunits,item history,stock</returns>
         [HttpGet(ApiRoutes.ItemMaster.FillById)]
-        public IActionResult FillItemByID(int pageId,int Id, int BranchId = 0)
+        public IActionResult FillItemByID(int pageId, int Id, int BranchId = 0)
         {
             try
             {
-                var result = _itemService.FillItemByID(pageId,Id, BranchId);
+                var result = _itemService.FillItemByID(pageId, Id, BranchId);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -63,7 +65,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Item
             }
         }
 
-       
+
 
         /// <summary>
         /// @windows: -Inventory/masters 
@@ -133,13 +135,13 @@ namespace Dfinance.api.Controllers.v1.DMain.Item
         ///  <returns>save item</returns>
         ///
         [HttpPost(ApiRoutes.ItemMaster.SaveItem)]
-        public IActionResult SaveItemMaster([FromBody]ItemMasterDto itemDto,int pageId)
+        public IActionResult SaveItemMaster([FromBody] ItemMasterDto itemDto, int pageId)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    var result = _itemService.SaveItemMaster(itemDto,pageId);
+                    var result = _itemService.SaveItemMaster(itemDto, pageId);
                     return Ok(result);
                 }
 
@@ -171,7 +173,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Item
             {
                 if (ModelState.IsValid)
                 {
-                    var result = _itemService.UpdateItemMaster(itemDto, Id,pageId);
+                    var result = _itemService.UpdateItemMaster(itemDto, Id, pageId);
                     return Ok(result);
                 }
                 return BadRequest(ModelState);
@@ -193,7 +195,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Item
         {
             try
             {
-                var result = _itemService.DeleteItem(Id,pageId);
+                var result = _itemService.DeleteItem(Id, pageId);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -224,12 +226,12 @@ namespace Dfinance.api.Controllers.v1.DMain.Item
         /// <param name="value"></param>
         /// <returns></returns>
         [HttpGet(ApiRoutes.ItemMaster.Itemsearch)]
-       
-        public IActionResult GetItemSearch(int? itemId, string? value,string? criteria)
+
+        public IActionResult GetItemSearch(int? itemId, string? value, string? criteria)
         {
             try
             {
-                var result = _itemService.GetItemSearch(itemId,value, criteria);
+                var result = _itemService.GetItemSearch(itemId, value, criteria);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -246,12 +248,12 @@ namespace Dfinance.api.Controllers.v1.DMain.Item
         /// <param name="criteria"></param>
         /// <returns></returns>
         [HttpGet(ApiRoutes.ItemMaster.ItemRegister)]
-       
+
         public IActionResult GetItemRegister(int? branchId, int? warehouseId, bool less = false, DateTime? date = null)
         {
             try
             {
-                var result = _itemService.GetItemRegister(branchId,warehouseId,less,date);
+                var result = _itemService.GetItemRegister(branchId, warehouseId, less, date);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -278,7 +280,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Item
         {
             try
             {
-                var result = _itemService.GetInventoryAgeing(AccountID,  FromDate, ToDate, OpeningBalance, VoucherID, Nature);
+                var result = _itemService.GetInventoryAgeing(AccountID, FromDate, ToDate, OpeningBalance, VoucherID, Nature);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -298,7 +300,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Item
         {
             try
             {
-                var result = _itemService.GetItemExpiryReport( itemExpiryReportDto);
+                var result = _itemService.GetItemExpiryReport(itemExpiryReportDto);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -320,12 +322,12 @@ namespace Dfinance.api.Controllers.v1.DMain.Item
         /// <param name="accountid"></param>
         /// <returns></returns>
         [HttpGet(ApiRoutes.ItemMaster.InventoryProfitSP)]
-        [AllowAnonymous]
+
         public IActionResult GetInventoryProfitSP(string? ViewBy, DateTime StartDate, DateTime EndDate, int? Customer, bool? Detailed, int Item, string? Salesman, int? accountid)
         {
             try
             {
-                var result = _itemService.GetInventoryProfitSP(ViewBy,  StartDate,  EndDate, Customer,Detailed,Item,Salesman,accountid);
+                var result = _itemService.GetInventoryProfitSP(ViewBy, StartDate, EndDate, Customer, Detailed, Item, Salesman, accountid);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -333,6 +335,123 @@ namespace Dfinance.api.Controllers.v1.DMain.Item
                 _logger.LogError(ex.Message);
                 return BadRequest(ex.Message);
             }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="viewby"></param>
+        /// <param name="startdate"></param>
+        /// <param name="enddate"></param>
+        /// <param name="warehouse"></param>
+        /// <param name="customersupplier"></param>
+        /// <param name="item"></param>
+        /// <param name="unit"></param>
+        /// <param name="barcode"></param>
+        /// <param name="orgin"></param>
+        /// <param name="brand"></param>
+        /// <param name="commodity"></param>
+        /// <param name="branch"></param>
+        /// <param name="vouchertype"></param>
+        /// <param name="serialno"></param>
+        /// <returns></returns>
+        [HttpGet(ApiRoutes.ItemMaster.ItemHistory)]
+
+        public IActionResult GetItemHistory(string? viewby, DateTime startdate, DateTime enddate, int? warehouse, int? customersupplier, int? item, int? unit, string? barcode, int orgin, int? brand, int? commodity, int? branch, int? vouchertype, string? serialno)
+        {
+            try
+            {
+                var result = _itemService.GetItemHistory(viewby, startdate, enddate, warehouse, customersupplier, item, unit, barcode, orgin, brand, commodity, branch, vouchertype, serialno);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="warehouse"></param>
+        /// <param name="type"></param>
+        /// <param name="commodity"></param>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        [HttpGet(ApiRoutes.ItemMaster.ROLReport)]
+
+        public IActionResult GetROLReport(int? warehouse, int? type, int? commodity, int? item)
+        {
+            try
+            {
+                var result = _itemService.GetROLReport(warehouse, type, commodity, item);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet(ApiRoutes.ItemMaster.GetQuotationStatusReport)]
+        [AllowAnonymous]
+        public IActionResult GetQuotationStatusReport(int? VoucherId, string? VoucherNo)
+        {
+            try
+            {
+                var result = _itemService.GetQuotationStatusReport(VoucherId, VoucherNo);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet(ApiRoutes.ItemMaster.GetQuotationComparisonReport)]
+        [AllowAnonymous]
+        public IActionResult GetQuotationComparisonView(DateTime DateFrom, DateTime DateUpto, int BranchID, string? TransactionNo, int? AccountID, int? ItemID, int? VoucherID)
+        {
+            try
+            {
+                var result = _itemService.GetQuotationComparisonView(DateFrom, DateUpto, BranchID, TransactionNo, AccountID, ItemID, VoucherID);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet(ApiRoutes.ItemMaster.GetPartialDelivery)]
+        [AllowAnonymous]
+        public IActionResult GetPartialDelivery(DateTime DateFrom, DateTime DateUpto, int branchid, bool Detailed, int? customersupplier, int? item, int? voucher, string? Criteria)
+        {
+            try
+            {
+                var result = _itemService.GetPartialDelivery(DateFrom, DateUpto, branchid, Detailed, customersupplier, item, voucher, Criteria);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+        [HttpGet(ApiRoutes.ItemMaster.GetMonthlyInventorySummary)]
+        [AllowAnonymous]
+        public IActionResult GetMonthlyInventorySummary(DateTime? startdate, DateTime? enddate, int? accountid, int? voucherid, int? drcr, int? partycategoryid, int? categorytypeid, int? commodity, int? item)
+        {
+            try
+            {
+                var result = _itemService.GetMonthlyInventorySummary(startdate, enddate, accountid, voucherid, drcr, partycategoryid, categorytypeid, commodity, item); ;
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
         }
     }
 }

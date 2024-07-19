@@ -9,13 +9,16 @@ using Dfinance.Shared.Domain;
 using JsonDiffPatchDotNet;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Tokens;
 using System.Data;
 using System.Text;
 using System.Text.Json;
+using static Dfinance.Shared.Routes.InvRoute;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 
@@ -871,7 +874,7 @@ namespace Dfinance.Item.Services.Inventory
             try
             {
                 int userId = _authService.GetId().Value;
-                int? branchId = _authService.GetBranchId();
+                int? branchId = _authService.GetBranchId().Value;
                 var result = _context.InventoryAgeingView.FromSqlRaw($"Exec AccountStatementAgingSP @DateFrom='{FromDate}',@BranchID='{branchId}',@AccountID='{AccountID}',@UserID='{userId}',@Nature='{Nature}'").ToList();
                 return CommonResponse.Ok(result);
             }
@@ -890,7 +893,7 @@ namespace Dfinance.Item.Services.Inventory
         {
             try
             {
-                int? branchid = 1;
+                int? branchid = _authService.GetBranchId().Value;
                 var query = new StringBuilder();
                 query.Append("Exec ItemExpiryReportSP ");
 
@@ -926,7 +929,7 @@ namespace Dfinance.Item.Services.Inventory
                     query.AppendFormat("@OriginID = {0}, ", itemExpiryReportDto.Origin.Id);
                 }
 
-                if (itemExpiryReportDto.Brand.Id!=0)
+                if (itemExpiryReportDto.Brand.Id != 0)
                 {
                     query.AppendFormat("@BrandID = {0}, ", itemExpiryReportDto.Brand.Id);
                 }
@@ -936,12 +939,12 @@ namespace Dfinance.Item.Services.Inventory
                     query.AppendFormat("@CommodityID = {0}, ", itemExpiryReportDto.Commodity.Id);
                 }
 
-                if (itemExpiryReportDto.Color.Id!=0)
+                if (itemExpiryReportDto.Color.Id != 0)
                 {
                     query.AppendFormat("@ColorID = {0}, ", itemExpiryReportDto.Color.Id);
                 }
 
-                if (itemExpiryReportDto.ExpiryDays!=0)
+                if (itemExpiryReportDto.ExpiryDays != 0)
                 {
                     query.AppendFormat("@Days = {0}, ", itemExpiryReportDto.ExpiryDays);
                 }
@@ -977,10 +980,10 @@ namespace Dfinance.Item.Services.Inventory
             try
             {
                 object result = null;
-                int? branchid = 1;
+                int? branchid = _authService.GetBranchId().Value;
                 var query = new StringBuilder();
-                query.Append("Exec InventoryProfitSP "); 
-                query.AppendFormat("@Criteria = {0}, ", ViewBy );
+                query.Append("Exec InventoryProfitSP ");
+                query.AppendFormat("@Criteria = {0}, ", ViewBy);
                 query.AppendFormat("@BranchID = {0}, ", branchid ?? 0);
                 query.AppendFormat("@DateFrom = '{0}', ", StartDate.ToString("yyyy-MM-dd"));
                 query.AppendFormat("@DateUpto = '{0}', ", EndDate.ToString("yyyy-MM-dd"));
@@ -1021,7 +1024,7 @@ namespace Dfinance.Item.Services.Inventory
                         result = _context.InventoryProfitVoucherView.FromSqlRaw(query.ToString()).ToList();
 
                     }
-                    
+
                 }
                 else if (ViewBy == "Party")
                 {
@@ -1044,8 +1047,326 @@ namespace Dfinance.Item.Services.Inventory
                 return CommonResponse.Error(ex.Message);
             }
         }
+        /// <summary>
+        /// report ItemHistory
+        /// </summary>
+        /// <param name="viewby"></param>
+        /// <param name="startdate"></param>
+        /// <param name="enddate"></param>
+        /// <param name="warehouse"></param>
+        /// <param name="customersupplier"></param>
+        /// <param name="item"></param>
+        /// <param name="unit"></param>
+        /// <param name="barcode"></param>
+        /// <param name="orgin"></param>
+        /// <param name="brand"></param>
+        /// <param name="commodity"></param>
+        /// <param name="branch"></param>
+        /// <param name="vouchertype"></param>
+        /// <param name="serialno"></param>
+        /// <returns></returns>
+        public CommonResponse GetItemHistory(string? viewby, DateTime startdate, DateTime enddate, int? warehouse, int? customersupplier, int? item, int? unit, string? barcode, int orgin, int? brand, int? commodity, int? branch, int? vouchertype, string? serialno)
+        {
+            try
+            {
+                object result = null;
+                int? branchid = _authService.GetBranchId().Value;
+                var query = new StringBuilder();
+                query.Append("Exec ItemsHistorySP ");
+
+                // Add a conditionally appended parameters to a list
+                var parameters = new List<string>
+        {
+            $"@BranchID = {branchid ?? 0}",
+            $"@DateFrom = '{startdate:yyyy-MM-dd}'",
+            $"@DateUpto = '{enddate:yyyy-MM-dd}'"
+        };
+
+                if (viewby != null)
+                {
+                    parameters.Add($"@Nature = '{viewby}'");
+                }
+                if (item.HasValue && item.Value != 0)
+                {
+                    parameters.Add($"@ItemID = {item}");
+                }
+                if (customersupplier.HasValue && customersupplier.Value != 0)
+                {
+                    parameters.Add($"@AccountID = {customersupplier}");
+                }
+                if (!string.IsNullOrEmpty(barcode))
+                {
+                    parameters.Add($"@Barcode = '{barcode}'");
+                }
+                if (orgin != 0)
+                {
+                    parameters.Add($"@OriginID = {orgin}");
+                }
+                if (brand.HasValue && brand.Value != 0)
+                {
+                    parameters.Add($"@BrandID = {brand}");
+                }
+                if (commodity.HasValue && commodity.Value != 0)
+                {
+                    parameters.Add($"@CommodityID = {commodity}");
+                }
+                if (unit.HasValue && unit.Value != 0)
+                {
+                    parameters.Add($"@Unit = {unit}");
+                }
+                if (warehouse.HasValue && warehouse.Value != 0)
+                {
+                    parameters.Add($"@WarehouseID = {warehouse}");
+                }
+                if (vouchertype.HasValue && vouchertype.Value != 0)
+                {
+                    parameters.Add($"@VoucherID = {vouchertype}");
+                }
+                if (!string.IsNullOrEmpty(serialno))
+                {
+                    parameters.Add($"@UniqueID = '{serialno}'");
+                }
+
+                // Join parameters with commas
+                query.Append(string.Join(", ", parameters));
+
+                result = _context.ItemsHistoryReportView.FromSqlRaw(query.ToString()).ToList();
+                return CommonResponse.Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Error(ex.Message);
+            }
+        }
+        /// <summary>
+        /// Report=>ROL
+        /// </summary>
+        /// <param name="warehouse"></param>
+        /// <param name="type"></param>
+        /// <param name="commodity"></param>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public CommonResponse GetROLReport(int? warehouse, int? type, int? commodity, int? item)
+        {
+            try
+            {
+                object result = null;
+                int? branchid = _authService.GetBranchId().Value;
+                string Criteria = "FillROLInfo";
+                var query = new StringBuilder();
+                query.Append("Exec ItemMasterSP ");
+                query.AppendFormat("@Criteria = {0}, ", Criteria);
+                query.AppendFormat("@BranchID = {0}, ", branchid ?? 0);
+
+                if (item != 0 && item != null)
+                {
+                    query.AppendFormat(", @ID = {0}", item);
+                }
+                if (warehouse != 0 && warehouse != null)
+                {
+                    query.AppendFormat(", @LocID = {0}", warehouse);
+                }
+                if (type != 0 && type != null)
+                {
+                    query.AppendFormat(", @TypeofWoodID = {0}", type);
+                }
+                if (commodity != 0 && commodity != null)
+                {
+                    query.AppendFormat(", @CommodityID = {0}", commodity);
+                }
+                if (query.ToString().EndsWith(", "))
+                {
+                    query.Length -= 2;
+                }
+                result = _context.ROLView.FromSqlRaw(query.ToString()).ToList();
+                return CommonResponse.Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Error(ex.Message);
+            }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="VoucherId"></param>
+        /// <param name="VoucherNo"></param>
+        /// <returns></returns>
+        public CommonResponse GetQuotationStatusReport(int? VoucherId, string? VoucherNo)
+        {
+            try
+            {
+                object result = null;
+                string cri = "ReferenceReport";
+                result = _context.QuotationStatusReportView
+                   .FromSql($"exec VoucherAdditionalsSP @Criteria='{cri}', @VoucherID={VoucherId}, @ReferenceNo='{VoucherNo}'")
+                   .ToList();
+
+                return CommonResponse.Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Error(ex.Message);
+            }
+        }
+        /// <summary>
+        /// QuotationComparison
+        /// </summary>
+        /// <param name="DateFrom"></param>
+        /// <param name="DateUpto"></param>
+        /// <param name="BranchID"></param>
+        /// <param name="TransactionNo"></param>
+        /// <param name="AccountID"></param>
+        /// <param name="ItemID"></param>
+        /// <param name="VoucherID"></param>
+        /// <returns></returns>
+        public CommonResponse GetQuotationComparisonView(DateTime DateFrom, DateTime DateUpto, int BranchID, string? TransactionNo, int? AccountID, int? ItemID, int? VoucherID)
+        {
+            try
+            {
+                object result = null;
+                string Criteria = "QuotationDetails";
+                var query = new StringBuilder();
+                query.Append("Exec DeliveryReportSP ");
+                query.AppendFormat("@Criteria = {0}, ", Criteria);
+                query.AppendFormat("@DateFrom = '{0}', ", DateFrom.ToString("yyyy-MM-dd"));
+                query.AppendFormat("@DateUpto = '{0}', ", DateUpto.ToString("yyyy-MM-dd"));
+                query.AppendFormat("@BranchID = {0}, ", BranchID);
+                if (TransactionNo != null)
+                {
+                    query.AppendFormat(", @TransactionNo = {0}", TransactionNo);
+                }
+                if (AccountID != 0 && AccountID != null)
+                {
+                    query.AppendFormat(", @AccountID = {0}", AccountID);
+                }
+                if (ItemID != 0 && ItemID != null)
+                {
+                    query.AppendFormat(", @ItemID = {0}", ItemID);
+                }
+                if (VoucherID != 0 && VoucherID != null)
+                {
+                    query.AppendFormat(", @VTypeID = {0}", VoucherID);
+                }
+                if (query.ToString().EndsWith(", "))
+                {
+                    query.Length -= 2;
+                }
+                result = _context.QuotationComparisonView.FromSqlRaw(query.ToString()).ToList();
+                return CommonResponse.Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Error(ex.Message);
+            }
+        }
+        public CommonResponse GetPartialDelivery(DateTime DateFrom, DateTime DateUpto, int branchid,
+           bool Detailed, int? customersupplier,
+           int? item, int? voucher, string? Criteria)
+        {
+            try
+            {
+                object result = null;
+
+                var query = new StringBuilder();
+                query.Append("Exec InventoryRegisterSP ");
+
+                query.AppendFormat("@DateFrom = '{0}', ", DateFrom.ToString("yyyy-MM-dd"));
+                query.AppendFormat("@DateUpto = '{0}', ", DateUpto.ToString("yyyy-MM-dd"));
+                query.AppendFormat("@BranchID = {0}, ", branchid);
+                query.AppendFormat("@Detailed = {0}, ", Detailed);
+                if (Criteria != null)
+                {
+                    query.AppendFormat("@Criteria = {0}, ", Criteria);
+                }
+
+                if (customersupplier != 0 && customersupplier != null)
+                {
+                    query.AppendFormat(", @AccountID = {0}", customersupplier);
+                }
+                if (item != 0 && item != null)
+                {
+                    query.AppendFormat(", @ItemID = {0}", item);
+                }
+                if (voucher != 0 && voucher != null)
+                {
+                    query.AppendFormat(", @VTypeID = {0}", voucher);
+                }
+
+                if (query.ToString().EndsWith(", "))
+                {
+                    query.Length -= 2;
+                }
+                result = _context.PurchaseReportView.FromSqlRaw(query.ToString()).ToList();
+                return CommonResponse.Ok(result);
+            }
+            catch (Exception ex)
+            {
+                // _logger.LogError(ex.Message);
+                return CommonResponse.Error(ex.Message);
+            }
+        }
+        /// <summary>
+        /// GetMonthlyInventorySummary
+        /// </summary>
+        /// <param name="startdate"></param>
+        /// <param name="enddate"></param>
+        /// <returns></returns>
+        public CommonResponse GetMonthlyInventorySummary(DateTime? startdate, DateTime? enddate,int? accountid,int? voucherid ,int? drcr,int? partycategoryid,int? categorytypeid,int? commodity,int? item)
+        {
+            //if (!_authService.IsPageValid(pageId))
+            //{
+            //    return PageNotValid(pageId);
+            //}
+            //if (!_authService.UserPermCheck(pageId, 1))
+            //{
+            //    return PermissionDenied("Fill the data ");
+            //}
+            try
+            {
+                int branchId = _authService.GetBranchId().Value;
+
+                var cmd = _context.Database.GetDbConnection().CreateCommand();
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = $"Exec ConsolidatedMonthwiseInventorySP @DateFrom='{startdate}',@DateUpto='{enddate}',@BranchID={branchId},@AccountID='{accountid}'," +
+                    $"@VoucherID='{voucherid}',@DrCr='{drcr}',@PartyCategoryID='{partycategoryid}',@CategoryType='{categorytypeid}',@Commodity='{commodity}',@ItemID='{item}'";
+                _context.Database.GetDbConnection().Open();
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        var tb = new DataTable();
+                        tb.Load(reader);
+
+                        List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+                        Dictionary<string, object> row;
+                        foreach (DataRow dr in tb.Rows)
+                        {
+                            row = new Dictionary<string, object>();
+                            foreach (DataColumn col in tb.Columns)
+                            {
+                                row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
+                            }
+                            rows.Add(row);
+                        }
+                        return CommonResponse.Ok(rows);
+                    }
+                    return CommonResponse.NoContent();
+                }
+            }
+            catch
+            {
+                _logger.LogError("Failed to fill Account Breakup/CostCentre Breakup ");
+                return CommonResponse.Error("Failed to fill the data ");
+            }
+        }
     }
 }
+
 
 
 
