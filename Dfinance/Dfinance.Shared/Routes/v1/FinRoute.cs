@@ -252,7 +252,7 @@ namespace Dfinance.Shared.Routes.v1
             public const string fillAcc = $"{Main}/fillAcc";
             public const string save = $"{Main}/save";
             public const string update = $"{Main}/update";
-
+        }
         public static class ChequeRegister
         {
             public const string Main = $"{Base}/chequeregister";
