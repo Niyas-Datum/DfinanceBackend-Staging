@@ -338,6 +338,20 @@ namespace Dfinance.Restaurant
                 return CommonResponse.Error(ex);
             }
         }
+        public CommonResponse GetCategories()
+        {
+            try
+            {
+                var category = GetCategory().Data; 
+                _logger.LogInformation("GetKitchenCategory successfully");
+                return CommonResponse.Ok(category);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Error(ex);
+            }
+        }
         public CommonResponse GetProducts(int? categoryId = null)
         {
             try
@@ -359,6 +373,7 @@ namespace Dfinance.Restaurant
                         itemOptions.Add(new ItemOptionsListView { ItemId = (int)item.ID, ItemOptions = options });
                     }
                 }
+               
                 _logger.LogInformation("GetProducts successfully");
                 return CommonResponse.Ok(new { Product = data, ItemOptions= itemOptions });
             }
@@ -368,6 +383,7 @@ namespace Dfinance.Restaurant
                 return CommonResponse.Error(ex);
             }
         }
+
         private string GetAutoVoucherNo(int voucherId)
         {
             int branchid = _authService.GetBranchId().Value;

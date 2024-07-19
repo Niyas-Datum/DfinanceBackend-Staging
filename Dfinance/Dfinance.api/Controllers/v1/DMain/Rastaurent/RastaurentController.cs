@@ -158,6 +158,23 @@ namespace Dfinance.api.Controllers.v1.DMain.Rastaurent
                 return BadRequest(ex.Message);
             }
         }
+        [HttpGet(InvRestRoute.Restaurant.GetCategories)]
+        public IActionResult GetCategories()
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+                object result = _restaurantInvoice.GetCategories();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         [HttpGet(InvRestRoute.Restaurant.PrintKOT)]
         public IActionResult PrintKOT(int transactionId,int kitCatId)
         {
