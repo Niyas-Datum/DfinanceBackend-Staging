@@ -316,7 +316,7 @@ public partial class DFCoreContext : DbContext
     public DbSet<BalSheetView3> BalSheetView3 { get; set; }  
     public DbSet<ProfitAndLossView3> ProfitAndLossView3 { get; set; }
 
-    public DbSet<eReturnView> eReturnView { get; set; }
+   // public DbSet<eReturnView> eReturnView { get; set; }
 
 
 
