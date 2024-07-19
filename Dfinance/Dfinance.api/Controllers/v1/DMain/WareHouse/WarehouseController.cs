@@ -271,5 +271,32 @@ namespace Dfinance.api.Controllers.v1.DMain.WareHouse
                 return BadRequest(ex.Message);
             }
         }
+        //ItemsCataloguewiseStockRpt
+        [HttpGet(InvRoute.WareHouse.ItemwiseStockLoadData)]
+        public IActionResult GetItemwiseStockLoadData()
+        {
+            try
+            {
+                var data = _stockReportService.GetItemwiseStockLoadData();
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost(InvRoute.WareHouse.ItemwiseStockRpt)]
+        public IActionResult FillItemwiseStock(ItemsCatalogue itemsCatalogue)
+        {
+            try
+            {
+                var data = _stockReportService.FillItemwiseStock(itemsCatalogue);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

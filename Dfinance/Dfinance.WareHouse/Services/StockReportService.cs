@@ -526,7 +526,7 @@ namespace Dfinance.Warehouse.Services
             }
         }
 
-        //*********************** Unitwise Stock ******************************
+        //*********************** Itemwise Stock ******************************
 
         public CommonResponse GetUnitwiseStockLoadData()
         {
@@ -573,6 +573,78 @@ namespace Dfinance.Warehouse.Services
                     cmd.CommandText = $"Exec UnitwiseStockSP @DateUpto='{unitwiseStock.ToDate}',@BranchID={branchId},@WarehouseID={locationId},@ItemID={Items},@CommodityID={commodity},@BrandID={brandid},@OriginID={orgin},@Barcode='{unitwiseStock.Barcode.Code}'";
                 else
                     cmd.CommandText = $"Exec UnitwiseStockSP @DateUpto='{unitwiseStock.ToDate}',@BranchID={branchId},@WarehouseID={locationId},@ItemID={Items},@CommodityID={commodity},@BrandID={brandid},@OriginID={orgin}";
+
+                _context.Database.GetDbConnection().Open();
+                using (var reader = cmd.ExecuteReader())
+                {
+                    var tb = new DataTable();
+                    tb.Load(reader);
+                    if (tb.Rows.Count > 0)
+                    {
+                        List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+                        Dictionary<string, object> row;
+                        foreach (DataRow dr in tb.Rows)
+                        {
+                            row = new Dictionary<string, object>();
+                            foreach (DataColumn col in tb.Columns)
+                            {
+                                row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
+                            }
+                            rows.Add(row);
+                        }
+                        return CommonResponse.Ok(rows);
+                    }
+                    return CommonResponse.NoContent();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Ok(ex.Message);
+            }
+        }
+
+
+
+        //*********************** Unitwise Stock ******************************
+
+        public CommonResponse GetItemwiseStockLoadData()
+        {
+            try
+            {
+                var item = GetItem().Data;
+                var commditti = GetCommodity().Data;
+                var unit = GetUnit().Data;
+                var categories = GetCategoryType().Data;
+                _logger.LogInformation("Load Success");
+                return CommonResponse.Ok(new
+                {
+                    Items = item,
+                    Commodities = commditti,
+                    Categories = categories,
+                    Units=unit
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Ok(ex.Message);
+            }
+        }
+        public CommonResponse FillItemwiseStock(ItemsCatalogue itemsCatalogue)
+        {
+            try
+            {
+                var cmd = _context.Database.GetDbConnection().CreateCommand();
+                cmd.CommandType = CommandType.Text;
+                var warehouseId = itemsCatalogue.WarehouseID.Id != null ? itemsCatalogue.WarehouseID.Id.ToString() : "NULL";
+                var branchId = _authService.GetBranchId().Value;
+                if (itemsCatalogue.Less == null)
+                    itemsCatalogue.Less = false;
+                if (itemsCatalogue.Date != null)
+                    cmd.CommandText = $"Exec ItemCatalogueSP @BranchID={branchId},@WarehouseID={warehouseId},@Less={itemsCatalogue.Less}";
+                else
+                    cmd.CommandText = $"Exec ItemCatalogueSP @BranchID={branchId},@WarehouseID={warehouseId},@Less={itemsCatalogue.Less},@Date='{itemsCatalogue.Date}'";
 
                 _context.Database.GetDbConnection().Open();
                 using (var reader = cmd.ExecuteReader())

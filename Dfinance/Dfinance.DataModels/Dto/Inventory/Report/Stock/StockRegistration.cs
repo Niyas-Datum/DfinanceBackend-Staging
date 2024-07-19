@@ -74,4 +74,10 @@ namespace Dfinance.DataModels.Dto.Inventory
         public PopUpDto? OriginID { get; set; } = null;
         public PopUpDto? BrandId { get; set; }
     }
+    public class ItemsCatalogue
+    {
+       public DropdownDto? WarehouseID { get; set; }
+        public Boolean? Less {  get; set; }
+        public DateTime? Date { get; set; }
+    }
 }
