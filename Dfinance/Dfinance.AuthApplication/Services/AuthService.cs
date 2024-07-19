@@ -46,7 +46,12 @@ public class AuthService : IAuthService
             var Passwordtemp = _encryptService.Encrypt(model.Password);
             // GET LOGININFO
             int mod = 10;
-
+            var existUser=(from E in _dfCoreContext.MaEmployees
+                           join ED in _dfCoreContext.MaEmployeeBranchDet on E.Id equals ED.EmployeeId
+                           where E.Username==model.Username && E.Password== Passwordtemp && ED.BranchId==model.Branch.Id
+                           select E.Id).Any();
+            if (!existUser) 
+                return CommonResponse.Invalid(new { Message = "Authentication failed! Try again" });
             var userData = _dfCoreContext.UserInfo.FromSqlRaw($"EXEC spAuthendication  @Mode='{mod}', @BranchID='{model.Branch.Id}', @Username='{model.Username}', @Password='{Passwordtemp}'").AsEnumerable().FirstOrDefault();
             int empid = userData.EmployeeID;
             // Get Menu only if authentication is successful
@@ -87,17 +92,17 @@ public class AuthService : IAuthService
                 //Log.Information("Authentication successful. AuthResponse: {@AuthResponse}", authResponse);
                 return CommonResponse.Ok(_User);
             }
-            else
+            else 
             {
                 // Authentication failed
-                return CommonResponse.Error();
+                return CommonResponse.Invalid(new { Message = "An error occurred during authentication." });
             }
         }
-        catch
+        catch (Exception ex) 
         {
             // Log the exception details
            // Log.Error("An error occurred during authentication.");
-            return CommonResponse.Error();
+            return CommonResponse.Invalid(new { Message = "An error occurred during authentication." });
         }
     }
 
@@ -223,7 +228,7 @@ public class AuthService : IAuthService
             var _companyData = _authCoreContext.Companies.Where(x => x.Id == Convert.ToInt32(DecodedArray[1])).Select(x => new DropdownLoginDto { Id = x.Id, Value = x.Name }).FirstOrDefault();
             var _branchData = new DropdownLoginDto() { Id = Convert.ToInt32(DecodedArray[2]), Value = DecodedArray[3] };
            
-            return CommonResponse.Ok(new { apilink = DecodedArray[1], companyData = _companyData, branchData = _branchData });
+            return CommonResponse.Ok(new { apilink = DecodedArray[0], companyData = _companyData, branchData = _branchData });
             
         }
         return CommonResponse.Error("Qrcode no valid");

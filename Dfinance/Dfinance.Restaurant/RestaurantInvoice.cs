@@ -453,5 +453,29 @@ namespace Dfinance.Restaurant
                 return CommonResponse.Error(ex);
             }
         }
+        public CommonResponse GetWaiterList()
+        {
+            try
+            {
+                return CommonResponse.Ok(GetWaiter().Data);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Error(ex);
+            }
+        }
+        public CommonResponse GetSections()
+        {
+            try
+            {
+                return CommonResponse.Ok(FillSection().Data);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Error(ex);
+            }
+        }
     }
 }

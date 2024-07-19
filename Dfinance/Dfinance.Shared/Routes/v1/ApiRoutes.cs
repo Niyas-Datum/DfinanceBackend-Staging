@@ -284,6 +284,13 @@ namespace Dfinance.Shared.Routes.v1
             public const string InventoryAgeing = $"{Main}/ invageing";
             public const string ItemExpiryReport = $"{Main}/ itemexprep"; 
             public const string InventoryProfitSP = $"{Main}/ invprofit";
+            public const string ItemHistory = $"{Main}/ invhis";
+            public const string ROLReport= $"{Main}/ rolreport";
+            public const string GetQuotationStatusReport = $"{Main}/ getQusrep";
+            public const string GetQuotationComparisonReport = $"{Main}/ getQusComprep";
+            public const string GetPartialDelivery = $"{Main}/ getpartialdelivery";
+            
+            public const string GetMonthlyInventorySummary = $"{Main}/ getmonInvSumary"; 
         }
         public static class ItemUnits
         {
@@ -368,6 +375,16 @@ namespace Dfinance.Shared.Routes.v1
             public const string Delete = $"{Main}/deletecheqtemp";
             public const string BankPopup = $"{Main}/bankpopup";
             
+        }
+        public static class SubMasters
+        {
+            public const string Main = $"{Base}/submasters";
+            public const string KeyDropDown = $"{Main}/getkey";
+            public const string FillMaster = $"{Main}/fill";
+            public const string FillSubMasterById = $"{Main}/fillbyId";
+            public const string Save = $"{Main}/save";
+            public const string Update = $"{Main}/update";
+            public const string Delete = $"{Main}/delete";
         }
     }
 }

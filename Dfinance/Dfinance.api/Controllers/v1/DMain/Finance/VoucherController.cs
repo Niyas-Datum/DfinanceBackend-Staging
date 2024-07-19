@@ -3,6 +3,7 @@ using Dfinance.api.Framework;
 using Dfinance.Application.Services.Finance.Interface;
 using Dfinance.Core.Domain;
 using Dfinance.DataModels.Dto.Finance;
+using Dfinance.Shared.Domain;
 using Dfinance.Shared.Routes.v1;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -210,8 +211,34 @@ namespace Dfinance.api.Controllers.v1.DMain.Finance
                 return BadRequest(ex.Message);
             }
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="DateFrom"></param>
+        /// <param name="DateUpto"></param>
+        /// <param name="branchid"></param>
+        /// <param name="Detailed"></param>
+        /// <param name="transactionno"></param>
+        /// <param name="customersupplier"></param>
+        /// <param name="item"></param>
+        /// <param name="voucher"></param>
+        /// <param name="PreVoucherID"></param>
+        /// <returns></returns>
+        [HttpGet(FinRoute.Voucher.GetVoucherHistory)]
+        [AllowAnonymous]
+        public IActionResult GetVoucherHistory(DateTime DateFrom, DateTime DateUpto, int branchid, bool Detailed, string? transactionno, int? customersupplier ,  int? item , int? voucher , int? PreVoucherID)
+        {
+            try
+            {
+                var result = _VoucherService.GetVoucherHistory(DateFrom, DateUpto, branchid, Detailed, transactionno, customersupplier, item, voucher, PreVoucherID);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
 
-
+        }
     }
 }
 
