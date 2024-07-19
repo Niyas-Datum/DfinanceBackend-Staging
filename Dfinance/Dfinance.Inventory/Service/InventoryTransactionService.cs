@@ -257,7 +257,42 @@ namespace Dfinance.Inventory.Service
                 criteria, voucherId, transId).ToList();
             return CommonResponse.Ok(data);
         }
+        public CommonResponse FillImportItems(int transId,int? voucherId=null)
+        {
+            int branchId = _authService.GetBranchId().Value;
+            using (var cmd = _context.Database.GetDbConnection().CreateCommand())
+            {
+                cmd.CommandType = CommandType.Text;
+                string voucherIdValue = voucherId.HasValue ? voucherId.ToString() : "null";
+                cmd.CommandText = $"Exec VoucherAdditionalsSP @Criteria='FillImportItems', @VoucherID={voucherIdValue}, @TransactionID={transId}";
+                _context.Database.GetDbConnection().Open();
 
+                using (var reader = cmd.ExecuteReader())
+                {
+                    var tb = new DataTable();
+                    tb.Load(reader);
+
+                    if (tb.Rows.Count > 0)
+                    {
+                        List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+                        foreach (DataRow dr in tb.Rows)
+                        {
+                            Dictionary<string, object> row = new Dictionary<string, object>();
+                            foreach (DataColumn col in tb.Columns)
+                            {
+                                row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
+                            }
+                            rows.Add(row);
+                        }
+                        return CommonResponse.Ok(rows);
+                    }
+                    else
+                    {
+                        return CommonResponse.NoContent("No Data");
+                    }
+                }
+            }
+        }
         public CommonResponse FillReference(List<ReferenceDto> referenceDto)
         {
             int? transId = 0;
