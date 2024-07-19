@@ -24,5 +24,6 @@ namespace Dfinance.Restaurant.Interface
         CommonResponse FillItemOptionsMaster();
         CommonResponse GetWaiterList();
         CommonResponse GetSections();
+        CommonResponse GetCategories();
     }
 }

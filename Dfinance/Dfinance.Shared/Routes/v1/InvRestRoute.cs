@@ -29,6 +29,7 @@ namespace Dfinance.Shared.Routes.v1
             public const string UpdateOption = $"{Main}/updateOptn";
             public const string GetEmployee = $"{Main}/getWaiter";
             public const string GetSection = $"{Main}/getSection";
+            public const string GetCategories = $"{Main}/getCat";
         }
     }
 }
