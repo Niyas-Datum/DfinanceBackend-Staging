@@ -64,4 +64,14 @@ namespace Dfinance.DataModels.Dto.Inventory
         public PopUpDto? ItemId { get; set; }
         public DropdownDto? VType { get; set; }
     }
+    public class UnitwiseStock
+    {
+        public DropdownDto? LocationID { get; set; }
+        public PopUpDto? ItemID { get; set; }
+        public DateTime ToDate { get; set; }
+        public PopUpDto? Barcode { get; set; }
+        public PopUpDto? CommodityID { get; set; } = null;
+        public PopUpDto? OriginID { get; set; } = null;
+        public PopUpDto? BrandId { get; set; }
+    }
 }

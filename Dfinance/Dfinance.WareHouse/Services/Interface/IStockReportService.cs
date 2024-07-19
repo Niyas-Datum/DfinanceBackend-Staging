@@ -17,5 +17,7 @@ namespace Dfinance.Warehouse.Services.Interface
         CommonResponse FillStockRegisterCommoditywise(CommodityStockRegRpt commodityStockReg);
         CommonResponse GetStockReceiptLoadData();
         CommonResponse FillStockReceiptIssue(StockReceiptIssueRpt stockReceiptIssue);
+        CommonResponse GetUnitwiseStockLoadData();
+        CommonResponse FillUnitwiseStock(UnitwiseStock unitwiseStock);
     }
 }

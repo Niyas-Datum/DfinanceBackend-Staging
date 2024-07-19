@@ -74,8 +74,8 @@ namespace Dfinance.Warehouse.Services
         }
         private CommonResponse GetBarCode()
         {
-            var unit = _context.ItemMaster.Where(i => i.BarCode != null && i.Active == true).Select(u => new { u.Id, u.BarCode }).Distinct().ToList();
-            return CommonResponse.Ok(unit);
+            var barcode = _context.ItemMaster.Where(i => i.BarCode != null && i.Active == true).Select(u => new { u.Id, Code=u.BarCode,Name=u.ItemName }).Distinct().ToList();
+            return CommonResponse.Ok(barcode);
         }
         private CommonResponse GetOrginBrandColor(string key)
         {
@@ -377,7 +377,7 @@ namespace Dfinance.Warehouse.Services
                 var cmd = _context.Database.GetDbConnection().CreateCommand();
                 cmd.CommandType = CommandType.Text;
                 var locationId = warehouseStock.LocationId.Id != null ? warehouseStock.LocationId.Id.ToString() : "NULL";
-                var branchID = _authService.GetBranchId();
+                var branchID = _authService.GetBranchId().Value;
                 cmd.CommandText = $"Exec StockRegisterSP @Criteria='Locationwise',@FromDate='{warehouseStock.FromDate}',@LocationID={locationId},@BranchID={branchID},@ToDate='{warehouseStock.ToDate}'";
                 _context.Database.GetDbConnection().Open();
                 using (var reader = cmd.ExecuteReader())
@@ -433,7 +433,7 @@ namespace Dfinance.Warehouse.Services
                 var cmd = _context.Database.GetDbConnection().CreateCommand();
                 cmd.CommandType = CommandType.Text;
                 var locationId = commodityStockReg.LocationId.Id != null ? commodityStockReg.LocationId.Id.ToString() : "NULL";
-                var branchID = _authService.GetBranchId();
+                var branchID = _authService.GetBranchId().Value;
                 var typeId = commodityStockReg.TyoeOfWood.Id != null ? commodityStockReg.TyoeOfWood.Id.ToString() : "NULL";
                 cmd.CommandText = $"Exec StockRegisterSP @Criteria='Commoditywise',@FromDate='{commodityStockReg.FromDate}',@LocationID={locationId},@BranchID={branchID},@ToDate='{commodityStockReg.ToDate}',@TypeOfWoodID={typeId}";
                 _context.Database.GetDbConnection().Open();
@@ -526,5 +526,82 @@ namespace Dfinance.Warehouse.Services
             }
         }
 
+        //*********************** Unitwise Stock ******************************
+
+        public CommonResponse GetUnitwiseStockLoadData()
+        {
+            try
+            {
+                var item = GetItem().Data;
+                var commditti = GetCommodity().Data;
+                var orgin = GetOrginBrandColor("Item Origin").Data;
+                var brand = GetOrginBrandColor("Item Brand").Data;
+                var unit = GetUnit().Data;
+                var barcode = GetBarCode().Data;
+                var location = FillVoucherLocations().Data;
+                _logger.LogInformation("Load Success");
+                return CommonResponse.Ok(new
+                {
+                    Item = item,
+                    Commodity = commditti,
+                    Orgin = orgin,
+                    Brand = brand,
+                    BarCode = barcode,
+                    Location = location
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Ok(ex.Message);
+            }
+        }
+        public CommonResponse FillUnitwiseStock(UnitwiseStock unitwiseStock)
+        {
+            try
+            {
+                var cmd = _context.Database.GetDbConnection().CreateCommand();
+                cmd.CommandType = CommandType.Text;
+                var locationId = unitwiseStock.LocationID.Id != null ? unitwiseStock.LocationID.Id.ToString() : "NULL";
+                var Items = unitwiseStock.ItemID.Id != null ? unitwiseStock.ItemID.Id.ToString() : "NULL";
+                var brandid = unitwiseStock.BrandId.Id != null ? unitwiseStock.BrandId.Id.ToString() : "NULL";
+                var commodity = unitwiseStock.CommodityID.Id != null ? unitwiseStock.CommodityID.Id.ToString() : "NULL";
+                var orgin = unitwiseStock.OriginID.Id != null ? unitwiseStock.OriginID.Id.ToString() : "NULL";
+                //var barcode = unitwiseStock.Barcode.Code != null ? unitwiseStock.Barcode.Code.ToString() : "NULL";
+                var branchId = _authService.GetBranchId().Value;
+                if(unitwiseStock.Barcode.Code!="" && unitwiseStock.Barcode.Code!=null)
+                    cmd.CommandText = $"Exec UnitwiseStockSP @DateUpto='{unitwiseStock.ToDate}',@BranchID={branchId},@WarehouseID={locationId},@ItemID={Items},@CommodityID={commodity},@BrandID={brandid},@OriginID={orgin},@Barcode='{unitwiseStock.Barcode.Code}'";
+                else
+                    cmd.CommandText = $"Exec UnitwiseStockSP @DateUpto='{unitwiseStock.ToDate}',@BranchID={branchId},@WarehouseID={locationId},@ItemID={Items},@CommodityID={commodity},@BrandID={brandid},@OriginID={orgin}";
+
+                _context.Database.GetDbConnection().Open();
+                using (var reader = cmd.ExecuteReader())
+                {
+                    var tb = new DataTable();
+                    tb.Load(reader);
+                    if (tb.Rows.Count > 0)
+                    {
+                        List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+                        Dictionary<string, object> row;
+                        foreach (DataRow dr in tb.Rows)
+                        {
+                            row = new Dictionary<string, object>();
+                            foreach (DataColumn col in tb.Columns)
+                            {
+                                row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
+                            }
+                            rows.Add(row);
+                        }
+                        return CommonResponse.Ok(rows);
+                    }
+                    return CommonResponse.NoContent();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Ok(ex.Message);
+            }
+        }
     }
 }

@@ -31,6 +31,8 @@ namespace Dfinance.Shared.Routes
             public const string CommodityStkReg = $"{Main1}/cmdtyStkRegt";
             public const string StockIssueLoadData = $"{Main1}/stkissRecLD";
             public const string StockIssueReceipt = $"{Main1}/stkIssuRecpt";
+            public const string UnitwiseStockLoadData = $"{Main1}/unitStkLD";
+            public const string UnitwiseStockRpt = $"{Main1}/unitStkRpt";
         }
 
 
