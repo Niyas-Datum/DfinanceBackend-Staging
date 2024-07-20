@@ -80,4 +80,19 @@ namespace Dfinance.DataModels.Dto.Inventory
         public Boolean? Less {  get; set; }
         public DateTime? Date { get; set; }
     }
+    public class MonthwiseStockRpt
+    {
+        public DateTime? FromDate { get; set; }
+        public DateTime? ToDate { get; set; }
+        public DropdownDto? BranchId { get; set; }
+        public PopUpDto? PartyId { get; set; }
+        public PopUpDto? ItemId { get; set; }
+        public DropdownDto? VoucherId { get; set; }
+        public string? DrCr { get; set; }
+        public DropdownDto? PartyCategoryId { get; set; }
+        public DropdownDto? CategoryType { get; set; }
+        public PopUpDto? Commodity {  get; set; }
+        public PopUpDto? SalesMan { get; set; }
+        public string? ViewBy { get; set; }
+    }
 }

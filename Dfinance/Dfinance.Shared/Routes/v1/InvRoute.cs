@@ -35,6 +35,8 @@ namespace Dfinance.Shared.Routes
             public const string UnitwiseStockRpt = $"{Main1}/unitStkRpt";
             public const string ItemwiseStockLoadData = $"{Main1}/itemStkRptLD";
             public const string ItemwiseStockRpt = $"{Main1}/itemStkRpt";
+            public const string MonthwiseStockLoadData = $"{Main1}/monthStkRptLD";
+            public const string MonthwiseStockRpt = $"{Main1}/monthStkRpt";
         }
 
 

@@ -298,5 +298,32 @@ namespace Dfinance.api.Controllers.v1.DMain.WareHouse
                 return BadRequest(ex.Message);
             }
         }
+        //monthwise Stock Rpt
+        [HttpGet(InvRoute.WareHouse.MonthwiseStockLoadData)]
+        public IActionResult GetMonthwiseStockLoadData()
+        {
+            try
+            {
+                var data = _stockReportService.GetMonthwiseStockLoadData();
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost(InvRoute.WareHouse.MonthwiseStockRpt)]
+        public IActionResult FillMonthwiseStock(MonthwiseStockRpt monthwiseStockRpt)
+        {
+            try
+            {
+                var data = _stockReportService.FillMonthwiseStock(monthwiseStockRpt);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

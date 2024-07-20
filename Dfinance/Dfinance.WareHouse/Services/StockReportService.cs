@@ -95,6 +95,11 @@ namespace Dfinance.Warehouse.Services
                          }).ToList();
             return CommonResponse.Ok(parti);
         }
+        private CommonResponse GetParties()
+        {
+            var parties=_context.FiMaAccounts.Where(a=>a.IsGroup==false && a.Active== true).Select(a => new {AccountCode=a.Alias, AccountName=a.Name,a.Id}).ToList();
+            return CommonResponse.Ok(parties);
+        }
         private CommonResponse GetCategoryType()
         {
             var woods = _context.CategoryType.Where(w => w.ActiveFlag == 1).Select(w => new { w.Code, w.Description, w.Id }).ToList();
@@ -645,6 +650,111 @@ namespace Dfinance.Warehouse.Services
                     cmd.CommandText = $"Exec ItemCatalogueSP @BranchID={branchId},@WarehouseID={warehouseId},@Less={itemsCatalogue.Less}";
                 else
                     cmd.CommandText = $"Exec ItemCatalogueSP @BranchID={branchId},@WarehouseID={warehouseId},@Less={itemsCatalogue.Less},@Date='{itemsCatalogue.Date}'";
+
+                _context.Database.GetDbConnection().Open();
+                using (var reader = cmd.ExecuteReader())
+                {
+                    var tb = new DataTable();
+                    tb.Load(reader);
+                    if (tb.Rows.Count > 0)
+                    {
+                        List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+                        Dictionary<string, object> row;
+                        foreach (DataRow dr in tb.Rows)
+                        {
+                            row = new Dictionary<string, object>();
+                            foreach (DataColumn col in tb.Columns)
+                            {
+                                row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
+                            }
+                            rows.Add(row);
+                        }
+                        return CommonResponse.Ok(rows);
+                    }
+                    return CommonResponse.NoContent();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Ok(ex.Message);
+            }
+        }
+
+        //*********************** Unitwise Stock ******************************
+        private CommonResponse GetPrimaryVoucher()
+        {
+            string[] vName = { "Purchase", "Sales Invoice" };
+            var vouchers=_context.FiMaVouchers.Where(p=>vName.Contains(p.Name)).Select(p=>new {Id= p.PrimaryVoucherId, p.Name }).ToList();
+            return CommonResponse.Ok(vouchers);
+        }
+        private CommonResponse GetPartyCategory()
+        {
+            var partyCategory = _context.DropDownViewValue.FromSqlRaw("Exec DropDownListSP @Criteria='PartyCategory'").ToList();
+            return CommonResponse.Ok(partyCategory);
+        }
+        private CommonResponse GetCommodityTypy()
+        {
+            var branchId = _authService.GetBranchId().Value;
+            var commodityType = _context.DropDownViewName.FromSqlRaw($"Exec DropDownListSP @Criteria='FillTypeOfWoodForReports',@IntParam={branchId}").ToList();
+            return CommonResponse.Ok(commodityType);
+        }
+        private CommonResponse GetSalesMan()
+        {
+            var salesMan = _context.FiMaAccounts.Where(a=>a.AccountCategory==3 && a.Active==true).Select(a=>new {Code=a.Alias,a.Name,a.Id}).ToList();
+            return CommonResponse.Ok(salesMan);
+        }
+        public CommonResponse GetMonthwiseStockLoadData()
+        {
+            try
+            {
+                var parties = GetParties().Data;
+                var vochers=GetPrimaryVoucher().Data;
+                var item = GetItem().Data;
+                var commdittiType = GetCommodityTypy().Data;
+                var commodity = GetCommodity().Data;
+                var partyCategory = GetPartyCategory().Data;
+                var salesman = GetSalesMan().Data;
+                var branches = FillAllBranch().Data;
+                var categoriType = GetCategoryType().Data;
+                _logger.LogInformation("Load Success");
+                return CommonResponse.Ok(new
+                {
+                    Parties = parties,
+                    Items = item,
+                    Commodities = commodity,
+                    SalesMan = salesman,
+                    Vouchers = vochers,
+                    Branches = branches,
+                    PartiCategory=partyCategory,
+                    CommoditiType=commdittiType,
+                    CategoriType=categoriType
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Ok(ex.Message);
+            }
+        }
+        public CommonResponse FillMonthwiseStock(MonthwiseStockRpt monthwiseStk)
+        {
+            try
+            {
+                var cmd = _context.Database.GetDbConnection().CreateCommand();
+                cmd.CommandType = CommandType.Text;
+                var partyId = monthwiseStk.PartyId.Id != null ? monthwiseStk.PartyId.Id.ToString() : "NULL";
+                var voucher = monthwiseStk.VoucherId.Id != null ? monthwiseStk.VoucherId.Id.ToString() : "NULL";
+                var partiCategory = monthwiseStk.PartyCategoryId.Id != null ? monthwiseStk.PartyCategoryId.Id.ToString() : "NULL";
+                var categoryType = monthwiseStk.CategoryType.Id != null ? monthwiseStk.CategoryType.Id.ToString() : "NULL";
+                var commpdity = monthwiseStk.Commodity.Id != null ? monthwiseStk.Commodity.Id.ToString() : "NULL";
+                var item = monthwiseStk.ItemId.Id != null ? monthwiseStk.ItemId.Id.ToString() : "NULL";
+                
+                var branchId = _authService.GetBranchId().Value;               
+                if (monthwiseStk.SalesMan.Id != null)
+                    cmd.CommandText = $"Exec ConsolidatedMonthwiseInventorySP @Criteria='Stock',@BranchID={branchId},@DateFrom='{monthwiseStk.FromDate}',@DateUpto='{monthwiseStk.ToDate}',@AccountID={partyId},@VoucherID={voucher},@DrCr='{monthwiseStk.DrCr}',@PartyCategoryID={partiCategory},@CategoryType={categoryType},@Commodity={commpdity},@ItemID={item},@SalesManID={monthwiseStk.SalesMan.Id},@ViewBy='{monthwiseStk.ViewBy}'";
+                else
+                    cmd.CommandText = $"Exec ConsolidatedMonthwiseInventorySP @Criteria='Stock',@BranchID={branchId},@DateFrom='{monthwiseStk.FromDate}',@DateUpto='{monthwiseStk.ToDate}',@AccountID={partyId},@VoucherID={voucher},@DrCr='{monthwiseStk.DrCr}',@PartyCategoryID={partiCategory},@CategoryType={categoryType},@Commodity={commpdity},@ItemID={item},@ViewBy='{monthwiseStk.ViewBy}'";
 
                 _context.Database.GetDbConnection().Open();
                 using (var reader = cmd.ExecuteReader())
