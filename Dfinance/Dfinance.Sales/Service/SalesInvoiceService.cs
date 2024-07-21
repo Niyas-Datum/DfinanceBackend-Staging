@@ -722,7 +722,6 @@ namespace Dfinance.Sales
             }
 
         }
-
     }
 }
 
