@@ -227,16 +227,37 @@ namespace Dfinance.Sales
                 if (!transid)
                 {
                     return CommonResponse.NotFound("Transaction Not Found");
-
-
                 }
-                string criteria = "DeleteTransactions";
-
-                _context.Database.ExecuteSqlRaw("EXEC VoucherSP @Criteria={0}, @ID={1}",
-                                       criteria, TransId);
-
+                _transactionService.DeleteTransactions(TransId);
                 _logger.LogInformation("Delete successfully");
                 return CommonResponse.Ok("Delete successfully");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Error(ex);
+            }
+        } 
+        public CommonResponse CancelSalesReturn(int TransId,int pageId,string reason)
+        {
+            try
+            {
+                if (!_authService.IsPageValid(pageId))
+                {
+                    return PageNotValid(pageId);
+                }
+                if (!_authService.UserPermCheck(pageId, 3))
+                {
+                    return PermissionDenied("Cancel SalesReturn");
+                }
+                var transid = _context.FiTransaction.Any(x => x.Id == TransId);
+                if (!transid)
+                {
+                    return CommonResponse.NotFound("Transaction Not Found");
+                }
+                _transactionService.CancelTransaction(TransId,reason);
+                _logger.LogInformation("Canceled successfully");
+                return CommonResponse.Ok("Canceled successfully");
             }
             catch (Exception ex)
             {

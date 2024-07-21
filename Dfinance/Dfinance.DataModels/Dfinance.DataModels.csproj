@@ -12,7 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Dfinance.Core\Dfinance.Core.csproj" />
     <ProjectReference Include="..\Dfinance.Shared\Dfinance.Shared.csproj" />
   </ItemGroup>
 

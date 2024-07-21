@@ -1,4 +1,5 @@
 ﻿using Dfinance.Core.Views;
+using Dfinance.DataModels.Dto;
 using Dfinance.DataModels.Dto.Inventory.Purchase;
 using Dfinance.Restaurant.Interface;
 using Dfinance.Sales;
@@ -72,6 +73,40 @@ namespace Dfinance.api.Controllers.v1.DMain.Rastaurent
                 return BadRequest(ex.Message);
             }
         }
+        [HttpGet(InvRestRoute.Restaurant.GetEmployee)]
+        public IActionResult GetWaiterList()
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+                object result = _restaurantInvoice.GetWaiterList();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet(InvRestRoute.Restaurant.GetSection)]
+        public IActionResult GetSections()
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+                object result = _restaurantInvoice.GetSections();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         [HttpGet(InvRestRoute.Restaurant.FillTable)]
         public IActionResult GetTableData(int sectionId)
         {
@@ -133,6 +168,40 @@ namespace Dfinance.api.Controllers.v1.DMain.Rastaurent
                     return BadRequest(ModelState);
                 }
                 object result = _restaurantInvoice.PrintKOT(transactionId,kitCatId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost(InvRestRoute.Restaurant.SaveOption)]
+        public IActionResult SaveItemOptions([FromBody] ItemOptionsDto itemOptionsDto)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+                object result = _restaurantInvoice.SaveItemOptions(itemOptionsDto);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPatch(InvRestRoute.Restaurant.UpdateOption)]
+        public IActionResult UpdateItemOptions([FromBody] ItemOptionsDto itemOptionsDto)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+                object result = _restaurantInvoice.UpdateItemOptions(itemOptionsDto);
                 return Ok(result);
             }
             catch (Exception ex)

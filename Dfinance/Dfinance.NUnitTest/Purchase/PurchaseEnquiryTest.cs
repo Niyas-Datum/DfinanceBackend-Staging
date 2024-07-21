@@ -545,8 +545,8 @@ namespace Dfinance.NUnitTest.Purchase
         public void DeletePurchaseEnqTest()
         {
             int transId = 34;
-            _purchaseEnquiryMock.Setup(x => x.DeletePurchaseEnq(transId)).Returns(new CommonResponse { Exception = null, Data = new InventoryTransactionDto() });
-            var result = _purchaseEnquiryMock.Object.DeletePurchaseEnq(transId);
+            _purchaseEnquiryMock.Setup(x => x.DeletePurchaseEnq(transId,469)).Returns(new CommonResponse { Exception = null, Data = new InventoryTransactionDto() });
+            var result = _purchaseEnquiryMock.Object.DeletePurchaseEnq(transId, 469);
             Assert.That(result, Is.Not.Null);
             Assert.That(result.IsValid, Is.True);
             Assert.That(result.Data, Is.Not.Null);

@@ -214,11 +214,11 @@ namespace Dfinance.Purchase.Services
         /// <summary>
         /// Save Purchase
         /// </summary>
-        /// <param name="invTranseDto"></param>
+        /// <param name="purchaseDto"></param>
         /// <param name="PageId"></param>
         /// <param name="VoucherId"></param>
         /// <returns></returns>
-        public CommonResponse SavePurchase(InventoryTransactionDto invTranseDto, int PageId, int voucherId)
+        public CommonResponse SavePurchase(InventoryTransactionDto purchaseDto, int PageId, int voucherId)
         {
             if (!_authService.IsPageValid(PageId))
             {
@@ -229,13 +229,12 @@ namespace Dfinance.Purchase.Services
                 return PermissionDenied("Save Purchase");
             }
             using (var transactionScope = new TransactionScope())
-
             {
                 try
                 {
                     //int VoucherId=_com.GetVoucherId(PageId);
                     string Status = "Approved";
-                    var transaction = _transactionService.SaveTransaction(invTranseDto, PageId, voucherId, Status).Data;
+                    var transaction = _transactionService.SaveTransaction(purchaseDto, PageId, voucherId, Status).Data;
                     int TransId = 0;
 
                     var transType = transaction.GetType();
@@ -247,35 +246,36 @@ namespace Dfinance.Purchase.Services
                     {
                         TransId = (int)transaction;
                     }
-                    int transpayId = (int)_transactionService.SaveTransactionPayment(invTranseDto, TransId, Status, 2).Data;
-                    if (invTranseDto.FiTransactionAdditional != null)
+                    int transpayId = (int)_transactionService.SaveTransactionPayment(purchaseDto, TransId, Status, 2).Data;
+                    if (purchaseDto.FiTransactionAdditional != null)
                     {
-                        _additionalService.SaveTransactionAdditional(invTranseDto.FiTransactionAdditional, TransId, voucherId);
+                        _additionalService.SaveTransactionAdditional(purchaseDto.FiTransactionAdditional, TransId, voucherId);
                     }
 
-                    if (invTranseDto.References.Count > 0 && invTranseDto.References.Select(x => x.Id).FirstOrDefault() != 0)
+                    if (purchaseDto.References.Count > 0 && purchaseDto.References.Select(x => x.Id).FirstOrDefault() != 0)
                     {
-                        List<int?> referIds = invTranseDto.References.Select(x => x.Id).ToList();
+                        List<int?> referIds = purchaseDto.References.Select(x => x.Id).ToList();
 
                         _transactionService.SaveTransReference(TransId, referIds);
                     }
-                    if (invTranseDto.Items != null && voucherId == 17)
+                    if (purchaseDto.Items != null && voucherId == 17)
                     {
-                        _itemService.SaveInvTransItems(invTranseDto.Items, voucherId, TransId, invTranseDto.ExchangeRate, invTranseDto.FiTransactionAdditional.Warehouse.Id);
+                        _itemService.SaveInvTransItems(purchaseDto.Items, voucherId, TransId, purchaseDto.ExchangeRate, purchaseDto.FiTransactionAdditional.Warehouse.Id);
                     }
-                    if (invTranseDto.TransactionEntries != null)
+                    if (purchaseDto.TransactionEntries != null)
                     {
-                        int TransEntId = (int)_paymentService.SaveTransactionEntries(invTranseDto, PageId, TransId, transpayId).Data;
+                        int TransEntId = (int)_paymentService.SaveTransactionEntries(purchaseDto, PageId, TransId, transpayId).Data;
 
-                        if (invTranseDto.TransactionEntries.Advance != null && invTranseDto.TransactionEntries.Advance.Any(a => a.VID != null || a.VID != 0))
+                        if (purchaseDto.TransactionEntries.Advance != null && purchaseDto.TransactionEntries.Advance.Any(a => a.VID != null || a.VID != 0))
                         {
-                            _transactionService.SaveVoucherAllocation(TransId, transpayId, invTranseDto.TransactionEntries);
+                            _transactionService.SaveVoucherAllocation(TransId, transpayId, purchaseDto.TransactionEntries);
                         }
                     }
-                    if (invTranseDto != null)
+                    if (purchaseDto != null)
                     {
                         _transactionService.EntriesAmountValidation(TransId);
                     }
+                   
                     transactionScope.Complete();
                     _logger.LogInformation("Purchase Saved Successfully");
                     return CommonResponse.Created("Created Successfully");
@@ -375,13 +375,35 @@ namespace Dfinance.Purchase.Services
                 {
                     return PermissionDenied("Delete Purchase");
                 }
-                var result = _transactionService.DeletePurchase(TransId);
+                var result = _transactionService.DeleteTransactions(TransId);
                 _logger.LogInformation("Successfully Deleted Purchase");
                 return CommonResponse.Ok(result);
             }
             catch (Exception ex)
             {
                 _logger.LogError("Failed to Delete Purchase");
+                return CommonResponse.Error(ex.Message);
+            }
+        }
+        public CommonResponse CancelPurchase(int TransId, int PageId,string reason)
+        {
+            try
+            {
+                if (!_authService.IsPageValid(PageId))
+                {
+                    return PageNotValid(PageId);
+                }
+                if (!_authService.UserPermCheck(PageId, 5))
+                {
+                    return PermissionDenied("Cancel Purchase");
+                }
+                var result = _transactionService.CancelTransaction(TransId,reason);
+                _logger.LogInformation("Successfully Canceled Purchase");
+                return CommonResponse.Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Failed to Canceled Purchase");
                 return CommonResponse.Error(ex.Message);
             }
         }

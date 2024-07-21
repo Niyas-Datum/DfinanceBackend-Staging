@@ -1,4 +1,4 @@
-﻿using Dfinance.Core.Views.Common;
+﻿using Dfinance.DataModels.Dto.Common;
 using System.ComponentModel.DataAnnotations;
 namespace Dfinance.DataModels.Dto
 {
@@ -6,7 +6,7 @@ namespace Dfinance.DataModels.Dto
     {
         public int? Id { get; set; }
         [Required(ErrorMessage = "Type is mandatory!!")]
-        public DropDownViewName Type { get; set; }
+        public DropdownDto Type { get; set; }
         [Required(ErrorMessage = "Code is mandatory!!")]
         public string? Code { get; set; }
         [Required(ErrorMessage = "Name is mandatory!!")]

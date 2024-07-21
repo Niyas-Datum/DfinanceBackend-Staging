@@ -163,6 +163,16 @@ public class DiInstaller : IInstaller
         service.AddScoped<IBranchAccounts, BranchAccountsService>();
 
 
+        //AccountReconciliation
+        service.AddScoped<IAccountReconciliationService, AccountReconciliationService>();
+        //openingvoucher
+        service.AddScoped<IOpeningVoucherService, OpeningVoucherService>();
+        //PDC
+        service.AddScoped<IPdcClearingService,PdcClearingService>();
+        //creditdebitnote
+        service.AddScoped<ICreditDebitNoteService, CreditDebitNoteService>();
+
+
         //Restaurant
         service.AddScoped<IRestaurantInvoice, RestaurantInvoice>();
         //finance-statements
@@ -171,8 +181,30 @@ public class DiInstaller : IInstaller
         //RecallVoucher
         service.AddScoped<IRecallVoucherService, RecallVoucherService>();
 
-
+        //finance-statements
         service.AddScoped<IFinStatementService, FinStatementService>();
+        //AccountConfiguration
+        service.AddScoped<IAccountConfigurationService, AccountConfigurationService>();
+
+        service.AddScoped<IPageMenuService, PageMenuService>();
+
+
+        //counters
+        service.AddScoped<ICountersService, CountersService>();
+
+        //ChequeTemplate
+        service.AddScoped<IChequeTemplateService, ChequeTemplateService>();
+
+        //submasters
+        service.AddScoped<ISubMastersService, SubMastersService>();
+
+        //ChequeRegister
+        service.AddScoped<IChequeRegister, ChequeRegisterService>();
+        //CustomerRegister
+        service.AddScoped<ICustomerRegister, CustomerRegisterService>();
+        //AccountRegister
+        service.AddScoped<IAccountRegister, AccountRegisterService>();
+
 
     }
 }

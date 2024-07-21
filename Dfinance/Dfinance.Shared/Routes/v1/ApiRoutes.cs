@@ -342,5 +342,49 @@ namespace Dfinance.Shared.Routes.v1
             public const string GetCancelVch = $"{Main}/canclVch";
             public const string UpdateVch = $"{Main}/updateVch";
         }
+
+        public static class PageMenu
+        {
+            public const string Main = $"{Base}/PageMenu";
+            public const string fillMenu = $"{Main}/fillMenu";
+            public const string grpModules = $"{Main}/grpModules";
+            public const string save = $"{Main}/save";
+            public const string update = $"{Main}/update";
+            public const string delete = $"{Main}/delete";
+        }
+
+        public static class Counters
+        {
+            public const string Main = $"{Base}/Counters";
+            public const string Fillcounters = $"{Main}/fill";
+            public const string FillcountersById = $"{Main}/fillbyId";
+            public const string GetMachineNameandIp = $"{Main}/getnameIp";
+            public const string Save = $"{Main}/save";
+            public const string Update = $"{Main}/update";
+            public const string Delete = $"{Main}/delete";
+
+        }
+        public static class  ChequeTemplate
+        {
+            public const string Main = $"{Base}/CheqTemplate";
+            public const string FillChq = $"{Main}/fillchq";
+            public const string FillChqtemplate = $"{Main}/fillchqtemp";
+            public const string FillChqtemplateField = $"{Main}/fillchqtempfield";
+            public const string Save = $"{Main}/savecheqtemp";
+            public const string Update = $"{Main}/updatecheqtemp";
+            public const string Delete = $"{Main}/deletecheqtemp";
+            public const string BankPopup = $"{Main}/bankpopup";
+            
+        }
+        public static class SubMasters
+        {
+            public const string Main = $"{Base}/submasters";
+            public const string KeyDropDown = $"{Main}/getkey";
+            public const string FillMaster = $"{Main}/fill";
+            public const string FillSubMasterById = $"{Main}/fillbyId";
+            public const string Save = $"{Main}/save";
+            public const string Update = $"{Main}/update";
+            public const string Delete = $"{Main}/delete";
+        }
     }
 }

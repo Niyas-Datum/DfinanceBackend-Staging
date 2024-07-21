@@ -9,6 +9,10 @@ public class MvcInstaller : IInstaller
         service.AddControllers();
         // // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         service.AddEndpointsApiExplorer();
-        service.AddSwaggerGen();
+        service.AddSwaggerGen(c =>
+        {
+            c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "My API", Version = "v1" });
+            c.EnableAnnotations();
+        });
     }
 }

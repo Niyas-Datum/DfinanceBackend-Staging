@@ -157,7 +157,8 @@ namespace Dfinance.Inventory.Service
                 fiTransactionAdditionalDto.DelivaryLocation.Id,//8
                 fromLocId,//9
                 toLocId,//10
-                null, null, null, null, null, null, null, null, null, null,//11,12,13,14,15,16,17,18,19,20
+                null, null, null, null, null, null, null, null, null, 
+                fiTransactionAdditionalDto.Code?? null,//11,12,13,14,15,16,17,18,19,20
                 fiTransactionAdditionalDto.TermsOfDelivery,//21
                 null, null,//22,23
                 fiTransactionAdditionalDto.CreditPeriod,//24
