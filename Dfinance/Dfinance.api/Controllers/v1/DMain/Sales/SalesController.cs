@@ -2,8 +2,11 @@
 using Dfinance.api.Framework;
 using Dfinance.DataModels.Dto.Inventory.Purchase;
 using Dfinance.Sales;
+using Dfinance.Shared.Domain;
 using Dfinance.Shared.Routes;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using static Dfinance.Shared.Routes.v1.ApiRoutes;
 
 namespace Dfinance.api.Controllers.v1.DMain.Sales
 {
@@ -151,6 +154,48 @@ namespace Dfinance.api.Controllers.v1.DMain.Sales
             catch (Exception ex)
             {
                 return BadRequest($"Error retrieving sales day summary: {ex.Message}");
+            }
+        }
+        [HttpGet(InvRoute.Sales.SalesPurchaseSummary)]
+        [AllowAnonymous]
+        public IActionResult GetSalesPurchaseSummary(DateTime startDate, DateTime endDate, int? branch, int? user)
+        {
+            try
+            {
+                var data = _salesService.GetSalesPurchaseSummary(startDate, endDate, branch, user);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error retrieving sales day summary: {ex.Message}");
+            }
+        }
+        [HttpGet(InvRoute.Sales.AreaWiseSales)]
+        [AllowAnonymous]
+        public IActionResult AreaWiseSales(string? viewby, DateTime startdate, DateTime enddate, int? item, int? Area)
+        {
+            try
+            {
+                var data = _salesService.AreaWiseSales(viewby,startdate, enddate, item,Area);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet(InvRoute.Sales.SalesReport)]
+        [AllowAnonymous]
+        public IActionResult SalesReport(string? Criteria, DateTime DateFrom, DateTime DateUpto, int? VoucherID, bool? Detailed, int? AccountID, string? VoucherNo, int? SalesManID)
+        {
+            try
+            {
+                var data = _salesService.SalesReport(Criteria, DateFrom, DateUpto, VoucherID, Detailed, AccountID, VoucherNo, SalesManID);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
     }

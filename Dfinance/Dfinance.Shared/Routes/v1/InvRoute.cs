@@ -123,7 +123,10 @@ namespace Dfinance.Shared.Routes
             public const string GetData = $"{Main}/getdata";
             public const string GetCustomer = $"{Main}/getCustomer";
             public const string getsalessummary = $"{Main}/getsalessummary";
-            public const string DaySummary = $"{Main}/daysummary"; 
+            public const string DaySummary = $"{Main}/daysummary";
+            public const string SalesPurchaseSummary = $"{Main}/salespurchasesummary";
+            public const string AreaWiseSales = $"{Main}/areawisesales";
+            public const string SalesReport = $"{Main}/salesreport"; 
         }
 		  public class PurchaseEnquiry
         {
