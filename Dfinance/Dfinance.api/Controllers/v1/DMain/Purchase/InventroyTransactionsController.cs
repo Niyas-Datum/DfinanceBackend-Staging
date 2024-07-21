@@ -8,6 +8,7 @@ using Dfinance.Inventory.Service.Interface;
 using Dfinance.Shared.Domain;
 using Dfinance.Shared.Routes;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Dfinance.api.Controllers.v1.DMain.Purchase
 {
@@ -23,6 +24,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
             _transactionService = transactionService;
         }
         [HttpGet(InvRoute.InventroyTransactions.partyBal)]
+        [SwaggerOperation(Summary = "shows party balance")]
         public IActionResult FillPartyBal(int partyId)
         {
             try
@@ -36,6 +38,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
             }
         }
         [HttpGet(InvRoute.InventroyTransactions.payType)]
+        [SwaggerOperation(Summary = "Payment type:Cash/Card")]
         public IActionResult FillPayType()
         {
             try
@@ -75,6 +78,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
             }
         }
         [HttpGet(InvRoute.InventroyTransactions.getreference)]
+        [SwaggerOperation(Summary = "Fill the references")]
         public IActionResult GetReference([FromQuery] int voucherno, DateTime? date = null)
         {
             try
@@ -116,6 +120,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
             }
         }
         [HttpGet(InvRoute.InventroyTransactions.refItemList)]
+        [SwaggerOperation(Summary = "Shows the Item list of selected reference")]
         public IActionResult FillImportItemList(int? transId, int? voucherId)
         {
             try
@@ -129,6 +134,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
             }
         }
         [HttpGet(InvRoute.InventroyTransactions.FillVoucherType)]
+        [SwaggerOperation(Summary = "Dropdown VoucherType in Reference")]
         public IActionResult FillVoucherType(int voucherId)
         {
             try
@@ -142,6 +148,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
             }
         }
         [HttpGet(InvRoute.InventroyTransactions.FillRefItems)]
+        
         public IActionResult FillRefItems(List<ReferenceDto> referenceDto)
         {
             try
@@ -165,6 +172,13 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
         public IActionResult InventoryTransactions(InventoryTransactionsDto inventoryTransactionDto, int? moduleid)
         {
             var result = _transactionService.InventoryTransactions(inventoryTransactionDto, moduleid);
+            return Ok(result);
+        }
+        [HttpPost(InvRoute.InventroyTransactions.impItems)]
+        [SwaggerOperation(Summary = "Fill the Imported Items")]
+        public IActionResult FillImportItems(int transId, int? voucherId = null)
+        {
+            var result = _transactionService.FillImportItems(transId, voucherId);
             return Ok(result);
         }
     }
