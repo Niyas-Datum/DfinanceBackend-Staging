@@ -14,8 +14,8 @@ namespace Dfinance.Restaurant.Interface
     {       
         CommonResponse FillTables(int sectionId);
         CommonResponse GetLoadData(int voucherId);
-        CommonResponse SaveRestaurentInvoice(InventoryTransactionDto RestaurentDto, int PageId, int voucherId, int sectionId, TableView table, string? tokenId, string? deliveryId);
-        CommonResponse UpdateRestaurentInvoice(InventoryTransactionDto RestaurentDto, int PageId, int voucherId, int sectionId, TableView table, string? tokenId, string? deliveryId);
+        CommonResponse SaveRestaurentInvoice(InventoryTransactionDto RestaurentDto, int PageId, int voucherId, int sectionId, int tableId, string tableName, string? tokenId, string? deliveryId, int salesManId);
+        CommonResponse UpdateRestaurentInvoice(InventoryTransactionDto RestaurentDto, int PageId, int voucherId, int sectionId, int tableId, string tableName, string? tokenId, string? deliveryId, int salesManId);
         CommonResponse GetKitchenCategory(int transactionId);
         CommonResponse PrintKOT(int transactionId, int kitchenCatId);
         CommonResponse GetProducts(int? categoryId);
@@ -25,5 +25,6 @@ namespace Dfinance.Restaurant.Interface
         CommonResponse GetWaiterList();
         CommonResponse GetSections();
         CommonResponse GetCategories();
+        CommonResponse SaveAndPrintKOT(RestaurentDto restaurentDto, int sectionId, int tableId, string tableName,int salesManId);
     }
 }

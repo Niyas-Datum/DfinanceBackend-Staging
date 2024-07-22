@@ -152,14 +152,14 @@ namespace Dfinance.Inventory.Service
                 criteria,//0
                 TransId,//1
                 null, null, null,//2,3,4
-                fiTransactionAdditionalDto.PayType.Id,//5
+                fiTransactionAdditionalDto.PayType?.Id??null,//5
                 null, null,//6,7
-                fiTransactionAdditionalDto.DelivaryLocation.Id,//8
+                fiTransactionAdditionalDto.DelivaryLocation?.Id ?? null,//8
                 fromLocId,//9
                 toLocId,//10
                 null, null, null, null, null, null, null, null, null, 
                 fiTransactionAdditionalDto.Code?? null,//11,12,13,14,15,16,17,18,19,20
-                fiTransactionAdditionalDto.TermsOfDelivery,//21
+                fiTransactionAdditionalDto.TermsOfDelivery??null,//21
                 null, null,//22,23
                 fiTransactionAdditionalDto.CreditPeriod,//24
                 fiTransactionAdditionalDto.Days, null,
@@ -183,24 +183,24 @@ namespace Dfinance.Inventory.Service
                 fiTransactionAdditionalDto.OrderDate,//64
                 fiTransactionAdditionalDto.OrderNo,//65
                 null, null, null,
-                fiTransactionAdditionalDto.VehicleNo.Id,//69
+                fiTransactionAdditionalDto.VehicleNo?.Id ?? null,//69
                 null, null, null, null,
-                fiTransactionAdditionalDto.DelivaryLocation.Name,//74
+                fiTransactionAdditionalDto.DelivaryLocation?.Name??null,//74
                 null,
                 fiTransactionAdditionalDto.Approve,//76
                 null,
                 inLocId,//78
                 outLocId,//79
                 null, null,
-                fiTransactionAdditionalDto.SalesMan.Id,//82
+                fiTransactionAdditionalDto.SalesMan?.Id ?? null,//82
                 null, null, null, null,
-                fiTransactionAdditionalDto.SalesArea.Id,//87
+                fiTransactionAdditionalDto.SalesArea?.Id??null,//87
                 null, null,
-                fiTransactionAdditionalDto.CloseVoucher,//90
+                fiTransactionAdditionalDto.CloseVoucher??null,//90
                 null,
-                fiTransactionAdditionalDto.PartyName,//92
-                fiTransactionAdditionalDto.AddressLine1,//93
-                fiTransactionAdditionalDto.AddressLine2,//94
+                fiTransactionAdditionalDto.PartyName ?? null,//92
+                fiTransactionAdditionalDto.AddressLine1??null,//93
+                fiTransactionAdditionalDto.AddressLine2 ?? null,//94
                 null, null
 
                 );

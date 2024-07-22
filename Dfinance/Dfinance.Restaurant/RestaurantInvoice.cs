@@ -1,4 +1,5 @@
-﻿using Dfinance.Application.Services.General.Interface;
+﻿using AutoMapper;
+using Dfinance.Application.Services.General.Interface;
 using Dfinance.AuthAppllication.Services.Interface;
 using Dfinance.Core;
 using Dfinance.Core.Domain;
@@ -6,6 +7,7 @@ using Dfinance.Core.Infrastructure;
 using Dfinance.Core.Views;
 using Dfinance.Core.Views.Item;
 using Dfinance.DataModels.Dto;
+using Dfinance.DataModels.Dto.Common;
 using Dfinance.DataModels.Dto.Finance;
 using Dfinance.DataModels.Dto.Inventory.Purchase;
 using Dfinance.Inventory;
@@ -24,6 +26,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Data;
+using System.Diagnostics.Contracts;
 using System.Transactions;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using static System.Collections.Specialized.BitVector32;
@@ -48,9 +51,10 @@ namespace Dfinance.Restaurant
         private readonly ICostCentreService _costCentre;
         private readonly CommonService _com;
         private readonly ISettingsService _settings;
+        private readonly IMapper _mapper;
         public RestaurantInvoice(DFCoreContext context, IAuthService authService, IHostEnvironment environment, ILogger<RestaurantInvoice> logger, IInventoryTransactionService transactionService, IInventoryAdditional inventoryAdditional,
             IInventoryItemService inventoryItemService, IInventoryPaymentService inventoryPaymentService, DataRederToObj rederToObj, IItemMasterService item,
-            IWarehouseService warehouse, ICostCentreService costCentre, ICustomerSupplierService party, CommonService com, ISettingsService settings)
+            IWarehouseService warehouse, ICostCentreService costCentre, ICustomerSupplierService party, CommonService com, ISettingsService settings, IMapper mapper)
         {
             _context = context;
             _authService = authService;
@@ -67,6 +71,7 @@ namespace Dfinance.Restaurant
             _party = party;
             _com = com;
             _settings = settings;
+            _mapper = mapper;
         }
         private CommonResponse GetWaiter()
         {
@@ -157,7 +162,7 @@ namespace Dfinance.Restaurant
             _logger.LogInformation("Page not Exists :" + pageId);
             return CommonResponse.Error("Page not Exists");
         }
-        public CommonResponse SaveRestaurentInvoice(InventoryTransactionDto RestaurentDto, int PageId, int voucherId, int sectionId, TableView table, string? tokenId, string? deliveryId)
+        public CommonResponse SaveRestaurentInvoice(InventoryTransactionDto RestaurentDto, int PageId, int voucherId, int sectionId, int tableId,string tableName, string? tokenId, string? deliveryId,int salesManId)
         {
             using (var transactionScope = new TransactionScope())
 
@@ -165,11 +170,16 @@ namespace Dfinance.Restaurant
                 try
                 {
                     SetSettings();
-                    RestaurentDto.FiTransactionAdditional.CreditPeriod = table.Id;
-                    RestaurentDto.FiTransactionAdditional.AddressLine1 = table.TableName;
+                    if(RestaurentDto.FiTransactionAdditional==null)
+                        RestaurentDto.FiTransactionAdditional=new InvTransactionAdditionalDto();
+                    RestaurentDto.FiTransactionAdditional.CreditPeriod = tableId;
+                    RestaurentDto.FiTransactionAdditional.AddressLine1 = tableName;
                     RestaurentDto.FiTransactionAdditional.OrderNo = tokenId;
                     RestaurentDto.FiTransactionAdditional.DeliveryNote = deliveryId;
                     RestaurentDto.FiTransactionAdditional.Days = sectionId;
+                    if(RestaurentDto.FiTransactionAdditional.SalesMan==null)
+                        RestaurentDto.FiTransactionAdditional.SalesMan=new PopUpDto();
+                    RestaurentDto.FiTransactionAdditional.SalesMan.Id=salesManId;
                     if (!_authService.IsPageValid(PageId))
                     {
                         return PageNotValid(PageId);
@@ -206,26 +216,21 @@ namespace Dfinance.Restaurant
                     //}
                     if (RestaurentDto.Items != null)
                     {
-                        _itemService.SaveInvTransItems(RestaurentDto.Items, voucherId, TransId, RestaurentDto.ExchangeRate, RestaurentDto.FiTransactionAdditional.Warehouse.Id);
+                        _itemService.SaveInvTransItems(RestaurentDto.Items, voucherId, TransId, RestaurentDto.ExchangeRate, RestaurentDto.FiTransactionAdditional.Warehouse?.Id??null);
                     }
                     var primaryVoucherId = _transactionService.GetPrimaryVoucherID(voucherId);
-                    if ((VoucherType)primaryVoucherId == VoucherType.RestaurantInvoice)
+                    if ((VoucherType)primaryVoucherId == VoucherType.RestaurantInvoice && RestaurentDto.TransactionEntries !=null)
                     {
                         if (RestaurentDto.TransactionEntries.Cash.Count > 0 || RestaurentDto.TransactionEntries.Card.Count > 0 || RestaurentDto.TransactionEntries.Cheque.Count > 0)
                         {
                             transpayId = (int)_transactionService.SaveTransactionPayment(RestaurentDto, TransId, Status, 2).Data;
-                        }
-                        if (RestaurentDto.TransactionEntries != null)
-                        {
-
-                            int TransEntId = (int)_paymentService.SaveTransactionEntries(RestaurentDto, PageId, TransId, transpayId).Data;
-
-                        }
+                        } 
+                            int TransEntId = (int)_paymentService.SaveTransactionEntries(RestaurentDto, PageId, TransId, transpayId).Data;                      
 
                     }
                     _logger.LogInformation("Successfully Created");
                     transactionScope.Complete();
-                    return CommonResponse.Created("Created Successfully");
+                    return CommonResponse.Ok(TransId);
                 }
                 catch (Exception ex)
                 {
@@ -235,18 +240,23 @@ namespace Dfinance.Restaurant
                 }
             }
         }
-        public CommonResponse UpdateRestaurentInvoice(InventoryTransactionDto RestaurentDto, int PageId, int voucherId, int sectionId, TableView table, string? tokenId, string? deliveryId)
+        public CommonResponse UpdateRestaurentInvoice(InventoryTransactionDto RestaurentDto, int PageId, int voucherId, int sectionId, int tableId, string tableName, string? tokenId, string? deliveryId, int salesManId)
         {
             using (var transactionScope = new TransactionScope())
 
             {
                 try
                 {
-                    RestaurentDto.FiTransactionAdditional.CreditPeriod = table.Id;
-                    RestaurentDto.FiTransactionAdditional.AddressLine1 = table.TableName;
+                    if (RestaurentDto.FiTransactionAdditional == null)
+                        RestaurentDto.FiTransactionAdditional = new InvTransactionAdditionalDto();
+                    RestaurentDto.FiTransactionAdditional.CreditPeriod = tableId;
+                    RestaurentDto.FiTransactionAdditional.AddressLine1 = tableName;
                     RestaurentDto.FiTransactionAdditional.OrderNo = tokenId;
                     RestaurentDto.FiTransactionAdditional.DeliveryNote = deliveryId;
                     RestaurentDto.FiTransactionAdditional.Days = sectionId;
+                    if (RestaurentDto.FiTransactionAdditional.SalesMan == null)
+                        RestaurentDto.FiTransactionAdditional.SalesMan = new PopUpDto();
+                    RestaurentDto.FiTransactionAdditional.SalesMan.Id=salesManId;
                     if (!_authService.IsPageValid(PageId))
                     {
                         return PageNotValid(PageId);
@@ -286,7 +296,7 @@ namespace Dfinance.Restaurant
                         _itemService.UpdateInvTransItems(RestaurentDto.Items, voucherId, TransId, RestaurentDto.ExchangeRate, RestaurentDto.FiTransactionAdditional.Warehouse.Id);
                     }
                     var primaryVoucherId = _transactionService.GetPrimaryVoucherID(voucherId);
-                    if ((VoucherType)primaryVoucherId == VoucherType.RestaurantInvoice)
+                    if ((VoucherType)primaryVoucherId == VoucherType.RestaurantInvoice && RestaurentDto.TransactionEntries!=null)
                     {
                         if (RestaurentDto.TransactionEntries.Cash.Count > 0 || RestaurentDto.TransactionEntries.Card.Count > 0 || RestaurentDto.TransactionEntries.Cheque.Count > 0)
                         {
@@ -510,6 +520,24 @@ namespace Dfinance.Restaurant
             try
             {
                 return CommonResponse.Ok(FillSection().Data);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Error(ex);
+            }
+        }
+        public CommonResponse SaveAndPrintKOT(RestaurentDto restaurentDto, int sectionId, int tableId,string tableName, int salesManId)
+        {
+            try
+            {
+                var restDto = _mapper.Map<RestaurentDto, InventoryTransactionDto>(restaurentDto);
+                restDto.VoucherNo = GetAutoVoucherNo(141);
+                if (restDto.Party == null)
+                    restDto.Party =new PopUpDto() { Id= 309};
+                var transId = SaveRestaurentInvoice(restDto, 469, 141, sectionId, tableId, tableName, null, null,salesManId).Data;
+                var printKot = PrintKOT((int)transId, 1).Data;
+                return CommonResponse.Ok(printKot);
             }
             catch (Exception ex)
             {
