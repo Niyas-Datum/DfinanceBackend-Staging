@@ -49,11 +49,11 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
         }
         [HttpGet(InvRoute.Purchase.Fillpurchase)]
 
-        public IActionResult FillPurschase(int pageid, bool post)
+        public IActionResult FillPurchase(int PageId,int? transactionId = null)
         {
             try
             {
-                var data = _purchaseservice.FillPurchase(pageid, post);
+                var data = _purchaseservice.FillPurchase(PageId,transactionId);
                 return Ok(data);
             }
             catch (Exception ex)
