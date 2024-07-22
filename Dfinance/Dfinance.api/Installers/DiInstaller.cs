@@ -195,6 +195,11 @@ public class DiInstaller : IInstaller
         //ChequeTemplate
         service.AddScoped<IChequeTemplateService, ChequeTemplateService>();
 
+        //JournalVoucher
+        service.AddScoped<IJournalVoucherService, JournalVoucherService>();
+        
+
+
         //submasters
         service.AddScoped<ISubMastersService, SubMastersService>();
 
@@ -204,6 +209,7 @@ public class DiInstaller : IInstaller
         service.AddScoped<ICustomerRegister, CustomerRegisterService>();
         //AccountRegister
         service.AddScoped<IAccountRegister, AccountRegisterService>();
+
 
 
     }

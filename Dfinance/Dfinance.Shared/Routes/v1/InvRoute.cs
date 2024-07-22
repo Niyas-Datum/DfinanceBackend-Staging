@@ -50,8 +50,12 @@ namespace Dfinance.Shared.Routes
             public const string payType = $"{Main}/payType";
             public const string GetInventoryTransactions = $"{Main}/getInvTrans";
             public const string partyBal = $"{Main}/partyBal";
+
             public const string FillTranById = $"{Main}/FillTranbyId";
             
+
+
+            public const string impItems = $"{Main}/impItems";
 
 
         }
@@ -127,7 +131,12 @@ namespace Dfinance.Shared.Routes
             public const string fillitems = $"{Main}/fillitems";
             public const string GetData = $"{Main}/getdata";
             public const string GetCustomer = $"{Main}/getCustomer";
+
+            public const string getsalessummary = $"{Main}/getsalessummary";
+            public const string DaySummary = $"{Main}/daysummary"; 
+
             public const string CanlSales = $"{Main}/Cancel";
+
         }
         public class PurchaseEnquiry
         {

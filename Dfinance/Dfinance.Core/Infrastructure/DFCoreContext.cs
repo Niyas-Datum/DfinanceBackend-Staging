@@ -287,7 +287,7 @@ public partial class DFCoreContext : DbContext
     //voucher in finance
     public DbSet<AccountCodesView> AccountCodesView { get; set; }
     public DbSet<ContraAccCode> ContraAccCode { get; set; }
-    
+
     //ReportsView
     public DbSet<PurchaseReportView> PurchaseReportView { get; set; }
     public DbSet<PurchaseReportViews> PurchaseReportViews { get; set; }
@@ -316,6 +316,10 @@ public partial class DFCoreContext : DbContext
     public DbSet<BalSheetView3> BalSheetView3 { get; set; }  
     public DbSet<ProfitAndLossView3> ProfitAndLossView3 { get; set; }
 
+   // public DbSet<eReturnView> eReturnView { get; set; }
+
+
+
     //Account Configuration
     public DbSet<AccountConfigView> AccountConfigView { get; set; }
     
@@ -336,22 +340,23 @@ public partial class DFCoreContext : DbContext
     
 
     //inventoryAgen
-    public DbSet<InventoryAgeingView> InventoryAgeingView {  get; set; }    
-    public DbSet<InventoryAgeingViews> InventoryAgeingViews {  get; set; }
-    public DbSet<ItemExpiryReportView> ItemExpiryReportView {  get; set; }      
+    public DbSet<InventoryAgeingView> InventoryAgeingView { get; set; }
+    public DbSet<InventoryAgeingViews> InventoryAgeingViews { get; set; }
+    public DbSet<ItemExpiryReportView> ItemExpiryReportView { get; set; }
 
     //HR
     public DbSet<HREmployee> Hremployees { get; set; }
 
     public DbSet<InventoryTransactionsView> InventoryTransactionsView { get; set; }
-
-
+    public DbSet<MonthlyInvSummaryView> MonthlyInvSummaryView { get; set; }
+    public DbSet<ROLView> ROLView { get; set; }
     //Restaurent
     public DbSet<CommodityView> CommodityViews { get; set; }
     public DbSet<TableView> TableViews { get; set; }
     public DbSet<KitchenCategoryView> KitchenCategoryViews { get; set; }
     public DbSet<PrintKotView> PrintKotViews { get; set; }
     public DbSet<ProductVew> ProductVews { get; set; }
+    public DbSet<ItemUnitRestView> ItemUnitRests { get; set; }
 
     //RecallVoucher
     public DbSet<RecallVoucherView> RecallVoucherViews { get; set; }
@@ -365,6 +370,11 @@ public partial class DFCoreContext : DbContext
     public DbSet<InventoryProfitVoucherViews> InventoryProfitVoucherViews { get; set; }
     public DbSet<InventoryProfitPartyView> InventoryProfitPartyView { get; set; }
     public DbSet<InventoryProfitPartyViews> InventoryProfitPartyViews { get; set; }
+    public DbSet<ItemsHistoryReportView> ItemsHistoryReportView { get; set; }
+    public DbSet<QuotationStatusReportView> QuotationStatusReportView { get; set; }
+    public DbSet<QuotationComparisonView> QuotationComparisonView { get; set; }
+    public DbSet<VoucherHistoryView> VoucherHistoryView { get; set; }
+    
 
 
     //Counters
@@ -377,6 +387,8 @@ public partial class DFCoreContext : DbContext
     public DbSet<ChequeTemplate> ChequeTemplate { get; set; }
     //ChequeRegister
     public DbSet<ChequeregView> ChequeregViews { get; set; }
+
+
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     //  => optionsBuilder.UseSqlServer(@"Data Source=ip.datuminnovation.com,9600;TrustServerCertificate=true;Initial Catalog=DatumSystemMain;User ID=sa;pwd=Datum123!");
@@ -607,7 +619,7 @@ public partial class DFCoreContext : DbContext
         mb.Entity<InventoryAgeingViews>().HasNoKey().ToView(null);
         mb.Entity<ImportItemListView>().HasNoKey().ToView(null);
 
-        mb.Entity <ItemExpiryReportView>().HasNoKey().ToView(null);
+        mb.Entity<ItemExpiryReportView>().HasNoKey().ToView(null);
 
         mb.Entity<InventoryTransactionsView>().HasNoKey().ToView(null);
 
@@ -634,6 +646,7 @@ public partial class DFCoreContext : DbContext
         mb.Entity<KitchenCategoryView>().HasNoKey().ToView(null);
         mb.Entity<ProductVew>().HasNoKey().ToView(null);
         mb.Entity<ItemOptionsView>().HasNoKey().ToView(null);
+        mb.Entity<ItemUnitRestView>().HasNoKey().ToView(null);
 
         //RecallVoucher
         mb.Entity<RecallVoucherView>().HasNoKey().ToView(null);
@@ -657,6 +670,13 @@ public partial class DFCoreContext : DbContext
         mb.Entity<InventoryProfitPartyView>().HasNoKey().ToView(null);
         mb.Entity<InventoryProfitPartyViews>().HasNoKey().ToView(null);
 
+        mb.Entity<ItemsHistoryReportView>().HasNoKey().ToView(null);
+        mb.Entity<MonthlyInvSummaryView>().HasNoKey().ToView(null);
+        mb.Entity<ROLView>().HasNoKey().ToView(null);
+        mb.Entity<QuotationStatusReportView>().HasNoKey().ToView(null);
+        mb.Entity<QuotationComparisonView>().HasNoKey().ToView(null); 
+        mb.Entity<VoucherHistoryView>().HasNoKey().ToView(null);
+
         //AccountRecno
         mb.Entity<AccountReconcilationView>().HasNoKey().ToView(null);
         mb.Entity<AccountRecoView>().HasNoKey().ToView(null);
@@ -673,8 +693,10 @@ public partial class DFCoreContext : DbContext
         mb.Entity<FillCounters>().HasNoKey().ToView(null);
         mb.Entity<FillCountersById>().HasNoKey().ToView(null);
 
+
         //ChequeRegister
         mb.Entity<ChequeregView>().HasNoKey().ToView(null);
+
 
     }
 

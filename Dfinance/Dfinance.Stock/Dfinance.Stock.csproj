@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Services\Interface\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Dfinance.Application\Dfinance.Application.csproj" />
+    <ProjectReference Include="..\Dfinance.AuthApplication\Dfinance.AuthApplication.csproj" />
+    <ProjectReference Include="..\Dfinance.Core\Dfinance.Core.csproj" />
+    <ProjectReference Include="..\Dfinance.DataModels\Dfinance.DataModels.csproj" />
+    <ProjectReference Include="..\Dfinance.Inventory\Dfinance.Inventory.csproj" />
+    <ProjectReference Include="..\Dfinance.Item\Dfinance.Item.csproj" />
+    <ProjectReference Include="..\Dfinance.LogViewer\Dfinance.LogViewer.csproj" />
+    <ProjectReference Include="..\Dfinance.Shared\Dfinance.Shared.csproj" />
+    <ProjectReference Include="..\Dfinance.WareHouse\Dfinance.WareHouse.csproj" />
+  </ItemGroup>
+
+</Project>
