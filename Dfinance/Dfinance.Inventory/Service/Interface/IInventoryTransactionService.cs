@@ -35,5 +35,10 @@ namespace Dfinance.Inventory.Service.Interface
 
         CommonResponse InventoryTransactions(InventoryTransactionsDto inventoryTransactionDto ,int? ModuleID);
 
+        CommonResponse FillTransactionbyId(int Id);
+
+        CommonResponse FillImportItems(int transId, int? voucherId = null);
+
+
     }
 }

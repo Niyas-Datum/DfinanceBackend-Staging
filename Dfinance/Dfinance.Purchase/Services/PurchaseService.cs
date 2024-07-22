@@ -16,6 +16,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Tokens;
+using System.Data;
 using System.Diagnostics.Metrics;
 using System.Transactions;
 namespace Dfinance.Purchase.Services
@@ -104,13 +105,61 @@ namespace Dfinance.Purchase.Services
         /// <param name="PageId"></param>
         /// <param name="post"></param>
         /// <returns></returns>
-        public CommonResponse FillPurchase(int PageId, bool? post)
+        public CommonResponse FillPurchase(int PageId,int? transactionId=null)
         {
             try
             {
-                int branchid = _authService.GetBranchId().Value;
-                var data = _context.Fillvoucherview.FromSqlRaw($"Exec LeftGridMasterSP @Criteria='FillVoucher',@BranchID='{branchid}',@MaPageMenuID={PageId},@Posted={post}").ToList();
-                return CommonResponse.Ok(data);
+                int branchId=_authService.GetBranchId().Value;
+                int userId=_authService.GetId().Value;
+                var LeftGridStatus = (bool)_settings.GetSettings("LeftGridStatus").Data;
+                using (var cmd = _context.Database.GetDbConnection().CreateCommand())
+                {
+                    cmd.CommandType = CommandType.Text;                 
+
+                    if (transactionId == null)
+                    {
+                        if (LeftGridStatus)
+                            cmd.CommandText = $"Exec LeftGridMasterSP @Criteria='FillVoucher',@BranchID={branchId},@MaPageMenuID={PageId},@UserID={userId}";
+                        else
+                            cmd.CommandText = $"Exec LeftGridMasterSP @Criteria='FillVoucher',@BranchID={branchId},@MaPageMenuID={PageId}";
+                    }
+                    else
+                    {
+                        if (LeftGridStatus)
+                            cmd.CommandText = $"Exec VoucherSP @Criteria='FillVoucherByTransactionID',@TransactionID={transactionId},@UserID={userId}";
+                        else
+                            cmd.CommandText = $"Exec VoucherSP @Criteria='FillVoucherByTransactionID',@TransactionID={transactionId}";
+                    }
+                    _context.Database.GetDbConnection().Open();
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        var tb = new DataTable();
+                        tb.Load(reader);
+
+                        if (tb.Rows.Count > 0)
+                        {
+                            List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+                            foreach (DataRow dr in tb.Rows)
+                            {
+                                Dictionary<string, object> row = new Dictionary<string, object>();
+                                foreach (DataColumn col in tb.Columns)
+                                {
+                                    row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
+                                }
+                                rows.Add(row);
+                            }
+                            return CommonResponse.Ok(rows);
+                        }
+                        else
+                        {
+                            return CommonResponse.NoContent("No Data");
+                        }
+                    }
+                }
+                //int branchid = _authService.GetBranchId().Value;
+                //var data = _context.Fillvoucherview.FromSqlRaw($"Exec LeftGridMasterSP @Criteria='FillVoucher',@BranchID='{branchid}',@MaPageMenuID={PageId},@Posted={post}").ToList();
+                //return CommonResponse.Ok(data);
             }
             catch (Exception ex)
             {

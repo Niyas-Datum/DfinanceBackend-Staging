@@ -17,8 +17,8 @@ using Newtonsoft.Json;
 using Microsoft.IdentityModel.Tokens;
 using System.Data;
 using static Dfinance.Shared.Routes.v1.FinRoute;
-using Voucher = Dfinance.Core.Domain.Voucher;
 using System.Text;
+using Voucher = Dfinance.Core.Domain.Voucher;
 
 namespace Dfinance.Inventory.Service
 {
@@ -61,7 +61,7 @@ namespace Dfinance.Inventory.Service
         {
             try
             {
-                Voucher? voucher = _context.FiMaVouchers
+             var voucher = _context.FiMaVouchers
                     .Where(x => x.Id == voucherid)
                     .FirstOrDefault();
 
@@ -73,7 +73,7 @@ namespace Dfinance.Inventory.Service
                 int branchid = _authService.GetBranchId().Value;
                 //GetPrimaryVoucherID(voucherid);
 
-                var voucherNo = GetNextTransactionNo(voucherid, voucher, branchid);
+                var voucherNo = GetNextTransactionNo(voucherid, voucher.Code, branchid);
                 return CommonResponse.Ok(voucherNo);
 
             }
@@ -89,16 +89,16 @@ namespace Dfinance.Inventory.Service
             return (int)(_context.FiMaVouchers.Where(v => v.Id == voucherid).Select(v => v.PrimaryVoucherId).FirstOrDefault());
         }
 
-        private VoucherNo GetNextTransactionNo(int voucherid, Voucher? voucher, int branchid)
+        private VoucherNo GetNextTransactionNo(int voucherid, string? voucherCode, int branchid)
         {
             var result = _context.AccountCodeView
-                .FromSqlRaw($"EXEC GetNextAutoEntryVoucherNoSP @VoucherID={voucherid}, @BranchID={branchid}")
+                .FromSqlRaw($"EXEC GetNextAutoEntryVoucherNoSP @VoucherID={voucherid}, @BranchID={branchid}").AsEnumerable()
                 .FirstOrDefault();
             
             VoucherNo voucherNo = new VoucherNo
             {
-                Code = voucher.Code,
-                Result = result.ToString()
+                Code = voucherCode,
+                Result = result.AccountCode.ToString()
             };
 
             return voucherNo;
@@ -137,13 +137,13 @@ namespace Dfinance.Inventory.Service
                     }
                     else
                     {
-                        var voucherNo = GetNextTransactionNo(voucherid, voucher, branchid);
+                        var voucherNo = GetNextTransactionNo(voucherid, voucher.Code, branchid);
                         return CommonResponse.Ok(voucherNo);
                     }
                 }
                 else
                 {
-                    var voucherNo = GetNextTransactionNo(voucherid, voucher, branchid);
+                    var voucherNo = GetNextTransactionNo(voucherid, voucher.Code, branchid);
                     return CommonResponse.Ok(voucherNo.Result.ToString());
                 }
 
@@ -257,7 +257,42 @@ namespace Dfinance.Inventory.Service
                 criteria, voucherId, transId).ToList();
             return CommonResponse.Ok(data);
         }
+        public CommonResponse FillImportItems(int transId,int? voucherId=null)
+        {
+            int branchId = _authService.GetBranchId().Value;
+            using (var cmd = _context.Database.GetDbConnection().CreateCommand())
+            {
+                cmd.CommandType = CommandType.Text;
+                string voucherIdValue = voucherId.HasValue ? voucherId.ToString() : "null";
+                cmd.CommandText = $"Exec VoucherAdditionalsSP @Criteria='FillImportItems', @VoucherID={voucherIdValue}, @TransactionID={transId}";
+                _context.Database.GetDbConnection().Open();
 
+                using (var reader = cmd.ExecuteReader())
+                {
+                    var tb = new DataTable();
+                    tb.Load(reader);
+
+                    if (tb.Rows.Count > 0)
+                    {
+                        List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+                        foreach (DataRow dr in tb.Rows)
+                        {
+                            Dictionary<string, object> row = new Dictionary<string, object>();
+                            foreach (DataColumn col in tb.Columns)
+                            {
+                                row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
+                            }
+                            rows.Add(row);
+                        }
+                        return CommonResponse.Ok(rows);
+                    }
+                    else
+                    {
+                        return CommonResponse.NoContent("No Data");
+                    }
+                }
+            }
+        }
         public CommonResponse FillReference(List<ReferenceDto> referenceDto)
         {
             int? transId = 0;
@@ -982,6 +1017,42 @@ namespace Dfinance.Inventory.Service
             catch (Exception ex)
             {
                 return null;
+            }
+        }
+
+        public CommonResponse FillTransactionbyId(int Id)
+        {
+            try
+            {
+                var cmd = _context.Database.GetDbConnection().CreateCommand();
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = $"Exec VoucherSP @criteria='FillTransactions',@ID='{Id}'";
+                _context.Database.GetDbConnection().Open();
+                using (var reader = cmd.ExecuteReader())
+                {
+                    var tb = new DataTable();
+                    tb.Load(reader);
+                    if (tb.Rows.Count > 0)
+                    {
+                        List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+                        Dictionary<string, object> row;
+                        foreach (DataRow dr in tb.Rows)
+                        {
+                            row = new Dictionary<string, object>();
+                            foreach (DataColumn col in tb.Columns)
+                            {
+                                row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
+                            }
+                            rows.Add(row);
+                        }
+                        return CommonResponse.Ok(rows);
+                    }
+                }
+                return CommonResponse.NotFound();
+            }
+            catch (Exception ex)
+            {
+                return CommonResponse.Error(ex.Message);
             }
         }
 

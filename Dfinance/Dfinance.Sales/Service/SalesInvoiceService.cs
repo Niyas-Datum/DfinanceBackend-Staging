@@ -17,9 +17,12 @@ using System;
 using Dfinance.Shared.Domain;
 using Dfinance.DataModels.Dto.Inventory.Purchase;
 using System.Transactions;
+using System.Text;
+using Microsoft.Identity.Client;
+using System.Data;
 
 namespace Dfinance.Sales
-{    
+{
     public class SalesInvoiceService : ISalesInvoiceService
     {
         private readonly DFCoreContext _context;
@@ -261,7 +264,7 @@ namespace Dfinance.Sales
                     }
                     //int VoucherId=_com.GetVoucherId(PageId);
                     string Status = "Approved";
-                    var transaction =_transactionService.SaveTransaction(salesDto, PageId, voucherId, Status).Data;
+                    var transaction = _transactionService.SaveTransaction(salesDto, PageId, voucherId, Status).Data;
                     int TransId = 0;
                     var transType = transaction.GetType();
                     if (transType.Name == "String")
@@ -289,20 +292,20 @@ namespace Dfinance.Sales
                     }
                     if (salesDto.Items != null)
                     {
-                        _itemService.SaveInvTransItems(salesDto.Items, voucherId, TransId,salesDto.ExchangeRate,salesDto.FiTransactionAdditional.Warehouse.Id);
+                        _itemService.SaveInvTransItems(salesDto.Items, voucherId, TransId, salesDto.ExchangeRate, salesDto.FiTransactionAdditional.Warehouse.Id);
                     }
                     if (salesDto.TransactionEntries != null)
                     {
 
-                        int TransEntId = (int)_paymentService.SaveTransactionEntries(salesDto, PageId, TransId, transpayId).Data;                       
+                        int TransEntId = (int)_paymentService.SaveTransactionEntries(salesDto, PageId, TransId, transpayId).Data;
 
                         if (salesDto.TransactionEntries.Advance != null && salesDto.TransactionEntries.Advance.Any())
-                        {                            
-                            _transactionService.SaveVoucherAllocation(TransId,transpayId, salesDto.TransactionEntries);                            
+                        {
+                            _transactionService.SaveVoucherAllocation(TransId, transpayId, salesDto.TransactionEntries);
                         }
-                        
+
                     }
-                    if(salesDto!=null)
+                    if (salesDto != null)
                     {
                         _transactionService.EntriesAmountValidation(TransId);
                     }
@@ -384,7 +387,128 @@ namespace Dfinance.Sales
             }
 
         }
-       
-       
+        /// <summary>
+        /// GetMonthlySalesSummary
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public CommonResponse GetMonthlySalesSummary(DateTime? startDate, DateTime? endDate)
+        {
+            try
+            {
+                object result = null;
+                int? branchid = _authService.GetBranchId().Value;
+                var query = new StringBuilder();
+                query.Append("Exec MonthlyInventorySummarySP ");
+
+
+                var parameters = new List<string>
+        {
+            $"@BranchID = {branchid ?? 0}",
+            $"@DateFrom = '{startDate:yyyy-MM-dd}'",
+            $"@DateUpto = '{endDate:yyyy-MM-dd}'"
+        };
+                query.Append(string.Join(", ", parameters));
+
+                result = _context.MonthlyInvSummaryView.FromSqlRaw(query.ToString()).ToList();
+                return CommonResponse.Ok(result);
+
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+
+                return CommonResponse.Error();
+            }
+        }
+
+        /// <summary>
+        /// GetFillSalesDaySummary
+        /// </summary>
+        /// <param name="criteria"></param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="branch"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public CommonResponse GetFillSalesDaySummary(string? criteria, DateTime startDate, DateTime endDate, int? branch, int? user)
+        {
+            //if (!_authService.IsPageValid(pageId))
+            //{
+            //    return PageNotValid(pageId);
+            //}
+            //if (!_authService.UserPermCheck(pageId, 1))
+            //{
+            //    return PermissionDenied("Fill the data ");
+            //}
+            try
+            {
+                // Create and configure the command
+                var cmd = _context.Database.GetDbConnection().CreateCommand();
+                cmd.CommandType = CommandType.Text;
+
+                // Format dates to 'yyyy-MM-dd' to get only the date part
+                string formattedStartDate = startDate.ToString("yyyy-MM-dd");
+                string formattedEndDate = endDate.ToString("yyyy-MM-dd");
+
+                // Build the command text with the parameters
+                string commandText = $"Exec SalesDaySummarySP @StartDate='{formattedStartDate}', @EndDate='{formattedEndDate}', @BranchID={branch}, @UserID={user}";
+
+                if (criteria != null)
+                {
+                    var criteriaParam = cmd.CreateParameter();
+                    criteriaParam.ParameterName = "@Criteria";
+                    criteriaParam.Value = criteria;
+                    cmd.Parameters.Add(criteriaParam);
+                    commandText += ", @Criteria=@Criteria";
+                }
+
+
+                cmd.CommandText = commandText;
+
+                // Open the connection
+                _context.Database.GetDbConnection().Open();
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        var tb = new DataTable();
+                        tb.Load(reader);
+
+                        List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+                        foreach (DataRow dr in tb.Rows)
+                        {
+                            var row = new Dictionary<string, object>();
+                            foreach (DataColumn col in tb.Columns)
+                            {
+                                row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
+                            }
+                            rows.Add(row);
+                        }
+                        return CommonResponse.Ok(rows);
+                    }
+                    return CommonResponse.NoContent();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception (log it, rethrow it, return an error response, etc.)
+                return CommonResponse.Error(ex.Message);
+            }
+            finally
+            {
+                // Ensure the connection is closed
+                if (_context.Database.GetDbConnection().State == ConnectionState.Open)
+                {
+                    _context.Database.GetDbConnection().Close();
+                }
+            }
+        }
     }
 }
+
+

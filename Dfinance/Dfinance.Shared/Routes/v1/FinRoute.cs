@@ -61,7 +61,9 @@ namespace Dfinance.Shared.Routes.v1
 
             public const string FillVouchers = $"{Main}/getall";
             public const string popup = $"{Main}/popup";
+
             public const string dropDown = $"{Main}/dropDown";
+
             //   public const string SaveVouchers = $"{Main}/save";
 
             public const string UpdateVouchers = $"{Main}/update";
@@ -74,8 +76,8 @@ namespace Dfinance.Shared.Routes.v1
 
             public const string UpdateVoucherNumbering = $"{Main}/updatenumbering";
 
-            public const string DeleteVoucherNumbering = $"{Main}/delnumbering";
-
+            public const string DeleteVoucherNumbering = $"{Main}/delnumbering"; 
+            public const string GetVoucherHistory = $"{Main}/getvochhisy";
 
         }
         public static class FinanceYear
@@ -243,5 +245,32 @@ namespace Dfinance.Shared.Routes.v1
 
 
             }
+
+        public static class JournalVoucher
+        {
+            public const string Main = $"{Base}/journalVoucher";
+            public const string fillAcc = $"{Main}/fillAcc";
+            public const string save = $"{Main}/save";
+            public const string update = $"{Main}/update";
+        }
+        public static class ChequeRegister
+        {
+            public const string Main = $"{Base}/chequeregister";
+            public const string FillCheqreg = $"{Main}/FCheqreg";
+        }
+        public static class CustomerRegister
+        {
+            public const string Main = $"{Base}/customerregister";
+            public const string FillCusreg = $"{Main}/Cureg";
+        }
+        public static class AccountRegister
+        {
+            public const string Main = $"{Base}/accountregister";
+            public const string FillAccreg = $"{Main}/Accreg";
+            public const string PopupAccgr = $"{Main}/ACCgrpop";
+            public const string PopupSubgr = $"{Main}/Subgrpop";
+            public const string PopupPar = $"{Main}/Parentpop";
+
+        }
     }
 }
