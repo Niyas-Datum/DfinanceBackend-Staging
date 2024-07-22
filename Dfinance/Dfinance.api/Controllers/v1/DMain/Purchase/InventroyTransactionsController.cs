@@ -167,6 +167,20 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
             var result = _transactionService.InventoryTransactions(inventoryTransactionDto, moduleid);
             return Ok(result);
         }
+        [HttpGet(InvRoute.InventroyTransactions.FillTranById)]
+        public IActionResult FillTransactionbyId(int Id)
+        {
+            try
+            {
+                var data = _transactionService.FillTransactionbyId(Id);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        
     }
 }
 
