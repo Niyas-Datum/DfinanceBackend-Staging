@@ -594,8 +594,8 @@ namespace Dfinance.NUnitTest.Purchase
         {
             int pageId = 15;
             bool post = true;
-            _purchaseMock.Setup(x => x.FillPurchase( pageId,post)).Returns(new CommonResponse { Exception = null, Data = new Fillvoucherview() });
-            var result = _purchaseMock.Object.FillPurchase(pageId, post);
+            _purchaseMock.Setup(x => x.FillPurchase(pageId, null)).Returns(new CommonResponse { Exception = null, Data = new Fillvoucherview() });
+            var result = _purchaseMock.Object.FillPurchase(pageId,null);
         }
 
         [Test]

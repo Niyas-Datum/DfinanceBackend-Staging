@@ -7,7 +7,7 @@ namespace Dfinance.Purchase.Services.Interface
     {
         CommonResponse GetData(int pageId,int voucherId);       
         CommonResponse FillTransItems(int partyId, int PageID, int locId,int voucherId);
-        CommonResponse FillPurchase(int PageId, bool? post);
+        CommonResponse FillPurchase(int PageId,int? transactionId = null);
         CommonResponse FillPurchaseById(int TransId,int PageId);
         CommonResponse SavePurchase(InventoryTransactionDto purchaseDto, int PageId,int voucherId);
         CommonResponse UpdatePurchase(InventoryTransactionDto purchaseDto, int PageId,int voucherId);
