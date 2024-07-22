@@ -414,6 +414,24 @@ namespace Dfinance.Restaurant
             lastTransNo++;
             return lastTransNo.ToString();
         }
+        private VoucherNo GetNextTransactionNo(int voucherid )
+        {
+            var voucher = _context.FiMaVouchers
+                    .Where(x => x.Id == voucherid)
+                    .FirstOrDefault();
+            int branchid = _authService.GetBranchId().Value;
+            var result = _context.AccountCodeView
+                .FromSqlRaw($"EXEC GetNextAutoEntryVoucherNoSP @VoucherID={voucherid}, @BranchID={branchid}").AsEnumerable()
+                .FirstOrDefault();
+
+            VoucherNo voucherNo = new VoucherNo
+            {
+                Code = voucher.Code,
+                Result = result.AccountCode.ToString()
+            };
+
+            return voucherNo;
+        }
         private int dayCloseLagHours = 0;
         private void SetSettings()
         {
@@ -532,7 +550,7 @@ namespace Dfinance.Restaurant
             try
             {
                 var restDto = _mapper.Map<RestaurentDto, InventoryTransactionDto>(restaurentDto);
-                restDto.VoucherNo = GetAutoVoucherNo(141);
+                restDto.VoucherNo = GetNextTransactionNo(141).Result;
                 if (restDto.Party == null)
                     restDto.Party =new PopUpDto() { Id= 309};
                 var transId = SaveRestaurentInvoice(restDto, 469, 141, sectionId, tableId, tableName, null, null,salesManId).Data;

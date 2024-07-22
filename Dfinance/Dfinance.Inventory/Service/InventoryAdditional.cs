@@ -117,19 +117,19 @@ namespace Dfinance.Inventory.Service
                 case VoucherType.Purchase_Order:
                 case VoucherType.Purchase_Request:
                 case VoucherType.Purchase_Quotation:
-                    toLocId = fiTransactionAdditionalDto.Warehouse.Id;
-                    inLocId = fiTransactionAdditionalDto.Warehouse.Id;
+                    toLocId = fiTransactionAdditionalDto.Warehouse?.Id ?? null;
+                    inLocId = fiTransactionAdditionalDto.Warehouse?.Id??null;
                     break;
                 case VoucherType.Sales_Invoice:
                 case VoucherType.Purchase_Return:
                 case VoucherType.RestaurantInvoice:
                 case VoucherType.RestaurantKOT:
-                    fromLocId = fiTransactionAdditionalDto.Warehouse.Id;
-                    outLocId = fiTransactionAdditionalDto.Warehouse.Id;
+                    fromLocId = fiTransactionAdditionalDto.Warehouse?.Id??null;
+                    outLocId = fiTransactionAdditionalDto.Warehouse?.Id ?? null;
                     break;
 
                 case VoucherType.Purchase_Enquiry:
-                    inLocId = fiTransactionAdditionalDto.Warehouse.Id;
+                    inLocId = fiTransactionAdditionalDto.Warehouse?.Id ?? null;
                     break;
 
             }

@@ -481,11 +481,11 @@ namespace Dfinance.Inventory.Service
                         "@Posted={28}, @Active={29}, @Cancelled={30}, @AccountID={31}, @Description={32}, " +
                         "@RefTransID={33}, @CostCentreID={34}, @PageID={35}, @ID={36}",
                         criteria, transactionDto.Date, DateTime.Now, VoucherId, environmentname,
-                        transactionDto.VoucherNo, false, transactionDto.Currency.Id, transactionDto.ExchangeRate, null, null,
+                        transactionDto.VoucherNo, false, transactionDto.Currency?.Id??null, transactionDto.ExchangeRate, null, null,
                         ReferencesId, branchId, null, null, null,
                         null, null, transactionDto.Description, createdBy, null, DateTime.Now, null,
                         ApprovalStatus, null, null, Status, Autoentry, true, true, false, transactionDto.Party.Id,
-                        null, RefTransId, transactionDto.Project.Id, PageId, transactionDto.Id);
+                        null, RefTransId, transactionDto.Project?.Id??null, PageId, transactionDto.Id);
 
                     return CommonResponse.Ok(transactionDto.Id);
 
@@ -653,11 +653,11 @@ namespace Dfinance.Inventory.Service
                             "@Posted={28}, @Active={29}, @Cancelled={30}, @AccountID={31}, @Description={32}, " +
                             "@RefTransID={33}, @CostCentreID={34}, @PageID={35}, @NewID={36} OUTPUT",
                             criteria, transactionDto.Date, DateTime.Now, VoucherId, environmentname,
-                            voucherNo.Result, false, transactionDto.Currency.Id, transactionDto.ExchangeRate, null, null,
+                            voucherNo.Result, false, transactionDto.Currency?.Id ?? null, transactionDto.ExchangeRate, null, null,
                             ReferenceId, branchId, null, null, null,
                             null, null, transactionDto.Description, createdBy, null, DateTime.Now, null,
                             ApprovalStatus, null, null, Status, Autoentry, true, true, transactionDto.Cancelled, transactionDto.Party.Id,
-                            transactionDto.Description, RefTransId, transactionDto.Project.Id, PageId, newId);
+                            transactionDto.Description, RefTransId, transactionDto.Project?.Id ?? null, PageId, newId);
 
                         transactionDto.Id = (int)newId.Value;
                         return CommonResponse.Ok((int)newId.Value);
@@ -682,11 +682,11 @@ namespace Dfinance.Inventory.Service
                             "@Posted={28}, @Active={29}, @Cancelled={30}, @AccountID={31}, @Description={32}, " +
                             "@RefTransID={33}, @CostCentreID={34}, @PageID={35}, @ID={36}",
                             criteria, transactionDto.Date, DateTime.Now, VoucherId, environmentname,
-                            transactionDto.VoucherNo, false, transactionDto.Currency.Id, transactionDto.ExchangeRate, null, null,
+                            transactionDto.VoucherNo, false, transactionDto.Currency?.Id ?? null, transactionDto.ExchangeRate, null, null,
                             ReferenceId, branchId, null, null, null,
                             null, null, transactionDto.Description, createdBy, null, DateTime.Now, null,
                             ApprovalStatus, null, null, Status, Autoentry, true, true, false, transactionDto.Party.Id,
-                            null, RefTransId, transactionDto.Project.Id, PageId, PayId);
+                            null, RefTransId, transactionDto.Project?.Id ?? null, PageId, PayId);
 
                         transactionDto.Id = PayId;
                     }
