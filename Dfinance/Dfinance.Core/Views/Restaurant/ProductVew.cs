@@ -18,6 +18,7 @@ namespace Dfinance.Core.Views
         public int? TaxTypeID { get; set;}
         public decimal? TaxPerc {  get; set;}
         public int? CategoryID { get; set; }
+        public int? CommodityID { get; set; }
         public int? TaxAccountID { get; set; }
         public string? ImagePath { get; set; }
         public string? ShipMark { get; set; }
