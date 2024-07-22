@@ -356,6 +356,7 @@ public partial class DFCoreContext : DbContext
     public DbSet<KitchenCategoryView> KitchenCategoryViews { get; set; }
     public DbSet<PrintKotView> PrintKotViews { get; set; }
     public DbSet<ProductVew> ProductVews { get; set; }
+    public DbSet<ItemUnitRestView> ItemUnitRests { get; set; }
 
     //RecallVoucher
     public DbSet<RecallVoucherView> RecallVoucherViews { get; set; }
@@ -386,6 +387,8 @@ public partial class DFCoreContext : DbContext
     public DbSet<ChequeTemplate> ChequeTemplate { get; set; }
     //ChequeRegister
     public DbSet<ChequeregView> ChequeregViews { get; set; }
+
+
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     //  => optionsBuilder.UseSqlServer(@"Data Source=ip.datuminnovation.com,9600;TrustServerCertificate=true;Initial Catalog=DatumSystemMain;User ID=sa;pwd=Datum123!");
@@ -643,6 +646,7 @@ public partial class DFCoreContext : DbContext
         mb.Entity<KitchenCategoryView>().HasNoKey().ToView(null);
         mb.Entity<ProductVew>().HasNoKey().ToView(null);
         mb.Entity<ItemOptionsView>().HasNoKey().ToView(null);
+        mb.Entity<ItemUnitRestView>().HasNoKey().ToView(null);
 
         //RecallVoucher
         mb.Entity<RecallVoucherView>().HasNoKey().ToView(null);
