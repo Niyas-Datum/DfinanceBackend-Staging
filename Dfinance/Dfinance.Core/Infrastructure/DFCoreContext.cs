@@ -350,6 +350,7 @@ public partial class DFCoreContext : DbContext
     public DbSet<KitchenCategoryView> KitchenCategoryViews { get; set; }
     public DbSet<PrintKotView> PrintKotViews { get; set; }
     public DbSet<ProductVew> ProductVews { get; set; }
+    public DbSet<ItemUnitRestView> ItemUnitRests { get; set; }
 
     //RecallVoucher
     public DbSet<RecallVoucherView> RecallVoucherViews { get; set; }
@@ -373,6 +374,8 @@ public partial class DFCoreContext : DbContext
     //CheqTemplate
     public DbSet<ChequeTemplateField> ChequeTemplateFields { get; set; }
     public DbSet<ChequeTemplate> ChequeTemplate { get; set; }
+
+
 
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -629,6 +632,7 @@ public partial class DFCoreContext : DbContext
         mb.Entity<KitchenCategoryView>().HasNoKey().ToView(null);
         mb.Entity<ProductVew>().HasNoKey().ToView(null);
         mb.Entity<ItemOptionsView>().HasNoKey().ToView(null);
+        mb.Entity<ItemUnitRestView>().HasNoKey().ToView(null);
 
         //RecallVoucher
         mb.Entity<RecallVoucherView>().HasNoKey().ToView(null);
