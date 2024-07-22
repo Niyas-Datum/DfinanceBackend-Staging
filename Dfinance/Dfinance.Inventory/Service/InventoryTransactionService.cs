@@ -1017,5 +1017,41 @@ namespace Dfinance.Inventory.Service
             }
         }
 
+        public CommonResponse FillTransactionbyId(int Id)
+        {
+            try
+            {
+                var cmd = _context.Database.GetDbConnection().CreateCommand();
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = $"Exec VoucherSP @criteria='FillTransactions',@ID='{Id}'";
+                _context.Database.GetDbConnection().Open();
+                using (var reader = cmd.ExecuteReader())
+                {
+                    var tb = new DataTable();
+                    tb.Load(reader);
+                    if (tb.Rows.Count > 0)
+                    {
+                        List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+                        Dictionary<string, object> row;
+                        foreach (DataRow dr in tb.Rows)
+                        {
+                            row = new Dictionary<string, object>();
+                            foreach (DataColumn col in tb.Columns)
+                            {
+                                row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
+                            }
+                            rows.Add(row);
+                        }
+                        return CommonResponse.Ok(rows);
+                    }
+                }
+                return CommonResponse.NotFound();
+            }
+            catch (Exception ex)
+            {
+                return CommonResponse.Error(ex.Message);
+            }
+        }
+
     }
 }
