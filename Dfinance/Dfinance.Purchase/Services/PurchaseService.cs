@@ -1,6 +1,7 @@
 ﻿using Dfinance.Application.Services.General.Interface;
 using Dfinance.AuthAppllication.Services.Interface;
 using Dfinance.Core.Infrastructure;
+using Dfinance.Core.Views.Inventory;
 using Dfinance.DataModels.Dto.Finance;
 using Dfinance.DataModels.Dto.Inventory.Purchase;
 using Dfinance.Inventory;
@@ -185,9 +186,12 @@ namespace Dfinance.Purchase.Services
                 {
                     return PermissionDenied("Fill Purchase");
                 }
+                bool transExists=_context.FiTransaction.Any(t=>t.Id== TransId);
+                if (!transExists)
+                    return CommonResponse.NotFound("Transaction not exists");
                 string criteria = "Fill";
                 PurchaseFillByIdDto purchaseFillByIdDto = new PurchaseFillByIdDto();
-
+                
                 _context.Database.OpenConnection();
 
                 using (var dbCommand = _context.Database.GetDbConnection().CreateCommand())
@@ -214,7 +218,7 @@ namespace Dfinance.Purchase.Services
                         reader.NextResult();
                         purchaseFillByIdDto.fillDocuments = _rederToObj.Deserialize<FillDocuments>(reader).FirstOrDefault();
                         reader.NextResult();
-                        purchaseFillByIdDto.FillTransactionAdditional = _rederToObj.Deserialize<FillTransactionAdditional>(reader).FirstOrDefault();
+                        purchaseFillByIdDto.fillAdditionals = _rederToObj.Deserialize<FillTransactionAdditional>(reader).FirstOrDefault();
                         reader.NextResult();
 
                         purchaseFillByIdDto.fillTransactionExpenses = _rederToObj.Deserialize<FillTransactionExpenses>(reader).ToList();
@@ -240,14 +244,44 @@ namespace Dfinance.Purchase.Services
                         //purchaseFillByIdDto.fillTransCostAllocations = _rederToObj.Deserialize<FillTransCostAllocations>(reader).FirstOrDefault();
                         //reader.NextResult();
                     }
-                }
 
-                if (purchaseFillByIdDto.fillTransactions != null)
+                }
+                var transPayId=_context.FiTransaction.Where(t=>t.RefTransId==TransId).Select(t=>t.Id).SingleOrDefault();
+                Object TransPayment=null;
+                
+                if (transPayId!=null)
                 {
-                    return CommonResponse.Ok(purchaseFillByIdDto);
-                }
+                    using (var cmd = _context.Database.GetDbConnection().CreateCommand())
+                    {
+                        cmd.CommandType = CommandType.Text;
+                        cmd.CommandText = $"Exec VoucherSP @Criteria='FillTransactionEntries',@TransactionID={transPayId}";
+                        //_context.Database.GetDbConnection().Open();
+                        using (var reader = cmd.ExecuteReader())                       
+                        {
+                            var tb = new DataTable();
+                            tb.Load(reader);
+                            if (tb.Rows.Count > 0)
+                            {
+                                List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+                                foreach (DataRow dr in tb.Rows)
+                                {
+                                    Dictionary<string, object> row = new Dictionary<string, object>();
+                                    foreach (DataColumn col in tb.Columns)
+                                    {
+                                        row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
+                                    }
+                                    rows.Add(row);
+                                }                                
+                                TransPayment = rows;
+                            }                            
+                        }
+                    }
+                }                
+                    return CommonResponse.Ok(new { Transaction = purchaseFillByIdDto, Payment = TransPayment });
+                
 
-                return CommonResponse.NotFound("Purchase not found");
+                
+                //return CommonResponse.NotFound("Purchase not found");
             }
             catch (Exception ex)
             {
