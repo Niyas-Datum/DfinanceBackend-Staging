@@ -137,6 +137,10 @@ namespace Dfinance.Shared.Routes
 
             public const string CanlSales = $"{Main}/Cancel";
 
+          
+            public const string SalesPurchaseSummary = $"{Main}/salespurchasesummary";
+            public const string AreaWiseSales = $"{Main}/areawisesales";
+            public const string SalesReport = $"{Main}/salesreport"; 
         }
         public class PurchaseEnquiry
         {

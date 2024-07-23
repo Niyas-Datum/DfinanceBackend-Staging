@@ -311,18 +311,14 @@ public partial class DFCoreContext : DbContext
     public DbSet<DayBookView> DayBookView { get; set; }
 
     //finance-statements   
-    public DbSet<AccStatementView> AccStatementView { get; set; }   
+    public DbSet<AccStatementView> AccStatementView { get; set; }
     public DbSet<BillwiseStatementView> BillwiseStatementView { get; set; }
-    public DbSet<BalSheetView3> BalSheetView3 { get; set; }  
+    public DbSet<BalSheetView3> BalSheetView3 { get; set; }
     public DbSet<ProfitAndLossView3> ProfitAndLossView3 { get; set; }
-
-   // public DbSet<eReturnView> eReturnView { get; set; }
-
-
 
     //Account Configuration
     public DbSet<AccountConfigView> AccountConfigView { get; set; }
-    
+
 
     //itemregister report
     public DbSet<ItemCatalogueView> ItemCatalogueView { get; set; }
@@ -331,13 +327,13 @@ public partial class DFCoreContext : DbContext
 
     //AccountRecon
     public DbSet<AccountReconcilationView> AccountReconcilationView { get; set; }
-    
+
     //PDC
     public DbSet<CheqDetailView> CheqDetailView { get; set; }
 
     //PageMenu
     public DbSet<MenuGroupView> MenuGroupView { get; set; }
-    
+
 
     //inventoryAgen
     public DbSet<InventoryAgeingView> InventoryAgeingView { get; set; }
@@ -374,12 +370,12 @@ public partial class DFCoreContext : DbContext
     public DbSet<QuotationStatusReportView> QuotationStatusReportView { get; set; }
     public DbSet<QuotationComparisonView> QuotationComparisonView { get; set; }
     public DbSet<VoucherHistoryView> VoucherHistoryView { get; set; }
-    
+
 
 
     //Counters
-    public DbSet<InvMaCounter> InvMaCounters {  get; set; }
-    public DbSet<FillCounters> FillCounters {  get; set; }
+    public DbSet<InvMaCounter> InvMaCounters { get; set; }
+    public DbSet<FillCounters> FillCounters { get; set; }
     public DbSet<FillCountersById> FillCountersById { get; set; }
 
     //CheqTemplate
@@ -636,7 +632,7 @@ public partial class DFCoreContext : DbContext
         mb.Entity<MonthwiseBalSheetView>().HasNoKey().ToView(null);
         mb.Entity<MonthwisePandLView>().HasNoKey().ToView(null);
 
-       
+
 
         //HR
         mb.Entity<HREmployee>().HasNoKey().ToView(null);
@@ -653,16 +649,16 @@ public partial class DFCoreContext : DbContext
 
 
         //finance-statements
-       
-        mb.Entity<AccStatementView>().HasNoKey().ToView(null);       
+
+        mb.Entity<AccStatementView>().HasNoKey().ToView(null);
         mb.Entity<BillwiseStatementView>().HasNoKey().ToView(null);
-        mb.Entity<BalSheetView3>().HasNoKey().ToView(null);       
+        mb.Entity<BalSheetView3>().HasNoKey().ToView(null);
         mb.Entity<ProfitAndLossView3>().HasNoKey().ToView(null);
 
 
 
         //Account Configuration
-        mb.Entity<AccountConfigView>().HasNoKey().ToView(null);        
+        mb.Entity<AccountConfigView>().HasNoKey().ToView(null);
 
         mb.Entity<InventoryProfitItemView>().HasNoKey().ToView(null);
         mb.Entity<InventoryProfitVoucherView>().HasNoKey().ToView(null);
@@ -674,7 +670,7 @@ public partial class DFCoreContext : DbContext
         mb.Entity<MonthlyInvSummaryView>().HasNoKey().ToView(null);
         mb.Entity<ROLView>().HasNoKey().ToView(null);
         mb.Entity<QuotationStatusReportView>().HasNoKey().ToView(null);
-        mb.Entity<QuotationComparisonView>().HasNoKey().ToView(null); 
+        mb.Entity<QuotationComparisonView>().HasNoKey().ToView(null);
         mb.Entity<VoucherHistoryView>().HasNoKey().ToView(null);
 
         //AccountRecno
@@ -687,7 +683,7 @@ public partial class DFCoreContext : DbContext
 
         //PageMenu
         mb.Entity<MenuGroupView>().HasNoKey().ToView(null);
-        
+
 
         //counters
         mb.Entity<FillCounters>().HasNoKey().ToView(null);

@@ -20,6 +20,7 @@ using System.Transactions;
 using System.Text;
 using Microsoft.Identity.Client;
 using System.Data;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Dfinance.Sales
 {
@@ -446,15 +447,14 @@ namespace Dfinance.Sales
             //}
             try
             {
-                // Create and configure the command
+
                 var cmd = _context.Database.GetDbConnection().CreateCommand();
                 cmd.CommandType = CommandType.Text;
 
-                // Format dates to 'yyyy-MM-dd' to get only the date part
                 string formattedStartDate = startDate.ToString("yyyy-MM-dd");
                 string formattedEndDate = endDate.ToString("yyyy-MM-dd");
 
-                // Build the command text with the parameters
+
                 string commandText = $"Exec SalesDaySummarySP @StartDate='{formattedStartDate}', @EndDate='{formattedEndDate}', @BranchID={branch}, @UserID={user}";
 
                 if (criteria != null)
@@ -466,6 +466,75 @@ namespace Dfinance.Sales
                     commandText += ", @Criteria=@Criteria";
                 }
 
+                cmd.CommandText = commandText;
+                _context.Database.GetDbConnection().Open();
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        var tb = new DataTable();
+                        tb.Load(reader);
+
+                        List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+                        foreach (DataRow dr in tb.Rows)
+                        {
+                            var row = new Dictionary<string, object>();
+                            foreach (DataColumn col in tb.Columns)
+                            {
+                                row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
+                            }
+                            rows.Add(row);
+                        }
+                        return CommonResponse.Ok(rows);
+                    }
+                    return CommonResponse.NoContent();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return CommonResponse.Error(ex.Message);
+            }
+            finally
+            {
+
+                if (_context.Database.GetDbConnection().State == ConnectionState.Open)
+                {
+                    _context.Database.GetDbConnection().Close();
+                }
+            }
+        }
+        /// <summary>
+        /// GetSalesPurchaseSummary
+        /// </summary>
+        /// <param name="criteria"></param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="branch"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public CommonResponse GetSalesPurchaseSummary(DateTime startDate, DateTime endDate, int? branch, int? user)
+        {
+            //if (!_authService.IsPageValid(pageId))
+            //{
+            //    return PageNotValid(pageId);
+            //}
+            //if (!_authService.UserPermCheck(pageId, 1))
+            //{
+            //    return PermissionDenied("Fill the data ");
+            //}
+            try
+            {
+
+                var cmd = _context.Database.GetDbConnection().CreateCommand();
+                cmd.CommandType = CommandType.Text;
+
+                string formattedStartDate = startDate.ToString("yyyy-MM-dd");
+                string formattedEndDate = endDate.ToString("yyyy-MM-dd");
+
+
+                string commandText = $"Exec SalesPurchaseSummary @DateFrom='{formattedStartDate}', @DateUpto='{formattedEndDate}', @BranchID={branch}, @UserID={user}";
 
                 cmd.CommandText = commandText;
 
@@ -496,17 +565,162 @@ namespace Dfinance.Sales
             }
             catch (Exception ex)
             {
-                // Handle the exception (log it, rethrow it, return an error response, etc.)
+
                 return CommonResponse.Error(ex.Message);
             }
             finally
             {
-                // Ensure the connection is closed
+
                 if (_context.Database.GetDbConnection().State == ConnectionState.Open)
                 {
                     _context.Database.GetDbConnection().Close();
                 }
             }
+        }
+        /// <summary>
+        /// AreaWiseSales
+        /// </summary>
+        /// <param name="viewby"></param>
+        /// <param name="startdate"></param>
+        /// <param name="enddate"></param>
+        /// <param name="item"></param>
+        /// <param name="Area"></param>
+        /// <returns></returns>
+        public CommonResponse AreaWiseSales(string? viewby, DateTime startdate, DateTime enddate, int? item, int? Area)
+        {
+            //if (!_authService.IsPageValid(pageId))
+            //{
+            //    return PageNotValid(pageId);
+            //}
+            //if (!_authService.UserPermCheck(pageId, 1))
+            //{
+            //    return PermissionDenied("Fill the data ");
+            //}
+            try
+            {
+                int branch = 1;
+
+                var cmd = _context.Database.GetDbConnection().CreateCommand();
+                cmd.CommandType = CommandType.Text;
+
+                string formattedStartDate = startdate.ToString("yyyy-MM-dd");
+                string formattedEndDate = enddate.ToString("yyyy-MM-dd");
+
+
+                string commandText = $"Exec AreaWiseSalesSummarySP @Criteria='{viewby}', @DateFrom='{formattedStartDate}', @DateUpto='{formattedEndDate}', @BranchID={branch}";
+
+                cmd.CommandText = commandText;
+
+                // Open the connection
+                _context.Database.GetDbConnection().Open();
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        var tb = new DataTable();
+                        tb.Load(reader);
+
+                        List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+                        foreach (DataRow dr in tb.Rows)
+                        {
+                            var row = new Dictionary<string, object>();
+                            foreach (DataColumn col in tb.Columns)
+                            {
+                                row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
+                            }
+                            rows.Add(row);
+                        }
+                        return CommonResponse.Ok(rows);
+                    }
+                    return CommonResponse.NoContent();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return CommonResponse.Error(ex.Message);
+            }
+            finally
+            {
+
+                if (_context.Database.GetDbConnection().State == ConnectionState.Open)
+                {
+                    _context.Database.GetDbConnection().Close();
+                }
+            }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Criteria"></param>
+        /// <param name="DateFrom"></param>
+        /// <param name="DateUpto"></param>
+        /// <param name="VoucherID"></param>
+        /// <param name="BranchID"></param>
+        /// <param name="Detailed"></param>
+        /// <param name="AccountID"></param>
+        /// <param name="VoucherNo"></param>
+        /// <param name="SalesManID"></param>
+        /// <param name="UserID"></param>
+        /// <returns></returns>
+        public CommonResponse SalesReport(string? Criteria, DateTime DateFrom, DateTime DateUpto, int? VoucherID, bool? Detailed, int? AccountID, string? VoucherNo, int? SalesManID)
+
+        {
+            try
+            {
+                int branch = 1;
+                int userid = 118;
+                var cmd = _context.Database.GetDbConnection().CreateCommand();
+                cmd.CommandType = CommandType.Text;
+
+                string formattedStartDate = DateFrom.ToString("yyyy-MM-dd");
+                string formattedEndDate = DateUpto.ToString("yyyy-MM-dd");
+
+
+                string commandText = $"Exec SalesReportSP @Criteria='{Criteria}', @DateFrom='{formattedStartDate}', @DateUpto='{formattedEndDate}', @BranchID='{branch}',@VoucherID = '{VoucherID}',@AccountID= '{AccountID}',@Detailed = '{Detailed}',@UserID='{userid}',@SalesManID='{SalesManID}'";
+
+                cmd.CommandText = commandText;
+
+                // Open the connection
+                _context.Database.GetDbConnection().Open();
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        var tb = new DataTable();
+                        tb.Load(reader);
+
+                        List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+                        foreach (DataRow dr in tb.Rows)
+                        {
+                            var row = new Dictionary<string, object>();
+                            foreach (DataColumn col in tb.Columns)
+                            {
+                                row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
+                            }
+                            rows.Add(row);
+                        }
+                        return CommonResponse.Ok(rows);
+                    }
+                    return CommonResponse.NoContent();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return CommonResponse.Error(ex.Message);
+            }
+            finally
+            {
+
+                if (_context.Database.GetDbConnection().State == ConnectionState.Open)
+                {
+                    _context.Database.GetDbConnection().Close();
+                }
+            }
+
         }
     }
 }
