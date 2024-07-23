@@ -336,11 +336,13 @@ namespace Dfinance.Inventory.Service
                 SetSettings();
                 var primaryVoucherId = GetPrimaryVoucherID(VoucherId);
                 var totalAmt = transactionDto.Items.Sum(i => i.Total);
-                var grandTotal = Convert.ToDecimal(transactionDto.TransactionEntries.GrandTotal) + Convert.ToDecimal(transactionDto.TransactionEntries.TotalDisc) - Convert.ToDecimal(transactionDto.TransactionEntries.AddCharges.Sum(a => a.Amount));
-                if (grandTotalVerify && totalAmt - grandTotal >= 1 && grandTotal - totalAmt >= 1)// Grand Total Verify settings 
+                if (transactionDto.TransactionEntries != null)
                 {
-                    return CommonResponse.Error("There is an error in GrandTotal");
-                }
+                    var grandTotal = Convert.ToDecimal(transactionDto.TransactionEntries.GrandTotal) + Convert.ToDecimal(transactionDto.TransactionEntries.TotalDisc) - Convert.ToDecimal(transactionDto.TransactionEntries.AddCharges.Sum(a => a.Amount));
+                    if (grandTotalVerify && totalAmt - grandTotal >= 1 && grandTotal - totalAmt >= 1)// Grand Total Verify settings 
+                    {
+                        return CommonResponse.Error("There is an error in GrandTotal");
+                    }                
                 //Set DueDate Settings
                 if (voucherDateAsDueDate)
                 {
@@ -349,30 +351,32 @@ namespace Dfinance.Inventory.Service
                         transactionDto.TransactionEntries.DueDate = transactionDto.Date;
                     }
                 }
+                    //Set RoundOFF calculation
+                    if (inventoryToFinanceRoundOff)
+                    {
+                        int numeric = 0;
+                        if (numericFormat == "N2")
+                            numeric = 2;
+                        else if (numericFormat == "N3")
+                            numeric = 3;
+                        else if (numericFormat == "N4")
+                            numeric = 4;
+                        var round = transactionDto.TransactionEntries.GrandTotal;
+                        transactionDto.TransactionEntries.GrandTotal = Decimal.Round(transactionDto.TransactionEntries.GrandTotal ?? 0, numeric);
+                        transactionDto.TransactionEntries.Roundoff = round - transactionDto.TransactionEntries.GrandTotal;
+                    }
+                }
                 //Set AutoVoucher Next TransactionNo
                 if (autoUpdateNewVoucherNo)
                 {
-                    transactionDto.VoucherNo = (string?)GetAutoVoucherNo(VoucherId, transactionDto.FiTransactionAdditional.PayType.Id).Data;
+                    if(transactionDto.FiTransactionAdditional.PayType!=null)
+                        transactionDto.VoucherNo = (string?)GetAutoVoucherNo(VoucherId, transactionDto.FiTransactionAdditional.PayType.Id).Data;
                 }
                 //Set SerialNo
                 if (rackLocation)
                 {
                     transactionDto.Items.OrderBy(i => i.Location);
-                }
-                //Set RoundOFF calculation
-                if (inventoryToFinanceRoundOff)
-                {
-                    int numeric = 0;
-                    if (numericFormat == "N2")
-                        numeric = 2;
-                    else if (numericFormat == "N3")
-                        numeric = 3;
-                    else if (numericFormat == "N4")
-                        numeric = 4;
-                    var round = transactionDto.TransactionEntries.GrandTotal;
-                    transactionDto.TransactionEntries.GrandTotal = Decimal.Round(transactionDto.TransactionEntries.GrandTotal ?? 0, numeric);
-                    transactionDto.TransactionEntries.Roundoff = round - transactionDto.TransactionEntries.GrandTotal;
-                }
+                }               
 
                 if ((VoucherType)primaryVoucherId == VoucherType.Purchase || (VoucherType)primaryVoucherId == VoucherType.Sales_Invoice || (VoucherType)primaryVoucherId == VoucherType.Purchase_Return && (VoucherType)primaryVoucherId == VoucherType.Sales_Return)
                 {
@@ -424,15 +428,14 @@ namespace Dfinance.Inventory.Service
                 bool Autoentry = false;
                 int? RefTransId = null;
                 string? ApprovalStatus = "A";
-
-                string ReferencesId = string.Join(",", transactionDto.References.Select(popupDto => popupDto.VNo.ToString()));
+                string? ReferencesId = null;
+                if (transactionDto.References!=null)
+                     ReferencesId = string.Join(",", transactionDto.References.Select(popupDto => popupDto.VNo.ToString()));
 
                 string environmentname = _environment.EnvironmentName;
                 if (transactionDto.Id == null || transactionDto.Id == 0)
                 {
-
                     string criteria = "InsertTransactions";
-
                     SqlParameter newId = new SqlParameter("@NewID", SqlDbType.Int)
                     {
                         Direction = ParameterDirection.Output
@@ -448,11 +451,11 @@ namespace Dfinance.Inventory.Service
                         "@Posted={28}, @Active={29}, @Cancelled={30}, @AccountID={31}, @Description={32}, " +
                         "@RefTransID={33}, @CostCentreID={34}, @PageID={35}, @NewID={36} OUTPUT",
                         criteria, transactionDto.Date, DateTime.Now, VoucherId, environmentname,
-                        transactionDto.VoucherNo, false, transactionDto.Currency.Id, transactionDto.ExchangeRate, null, null,
+                        transactionDto.VoucherNo, false, transactionDto.Currency?.Id??null, transactionDto.ExchangeRate, null, null,
                         ReferencesId, branchId, null, null, null,
                         null, null, transactionDto.Description, createdBy, null, DateTime.Now, null,
                         ApprovalStatus, null, null, Status, Autoentry, true, true, false, transactionDto.Party.Id,
-                        null, RefTransId, transactionDto.Project.Id, PageId, newId);
+                        null, RefTransId, transactionDto.Project?.Id??null, PageId, newId);
 
                     var NewId = (int)newId.Value;
                     // transactionDto.Id = NewId;
@@ -478,11 +481,11 @@ namespace Dfinance.Inventory.Service
                         "@Posted={28}, @Active={29}, @Cancelled={30}, @AccountID={31}, @Description={32}, " +
                         "@RefTransID={33}, @CostCentreID={34}, @PageID={35}, @ID={36}",
                         criteria, transactionDto.Date, DateTime.Now, VoucherId, environmentname,
-                        transactionDto.VoucherNo, false, transactionDto.Currency.Id, transactionDto.ExchangeRate, null, null,
+                        transactionDto.VoucherNo, false, transactionDto.Currency?.Id??null, transactionDto.ExchangeRate, null, null,
                         ReferencesId, branchId, null, null, null,
                         null, null, transactionDto.Description, createdBy, null, DateTime.Now, null,
                         ApprovalStatus, null, null, Status, Autoentry, true, true, false, transactionDto.Party.Id,
-                        null, RefTransId, transactionDto.Project.Id, PageId, transactionDto.Id);
+                        null, RefTransId, transactionDto.Project?.Id??null, PageId, transactionDto.Id);
 
                     return CommonResponse.Ok(transactionDto.Id);
 
@@ -650,11 +653,11 @@ namespace Dfinance.Inventory.Service
                             "@Posted={28}, @Active={29}, @Cancelled={30}, @AccountID={31}, @Description={32}, " +
                             "@RefTransID={33}, @CostCentreID={34}, @PageID={35}, @NewID={36} OUTPUT",
                             criteria, transactionDto.Date, DateTime.Now, VoucherId, environmentname,
-                            voucherNo.Result, false, transactionDto.Currency.Id, transactionDto.ExchangeRate, null, null,
+                            voucherNo.Result, false, transactionDto.Currency?.Id ?? null, transactionDto.ExchangeRate, null, null,
                             ReferenceId, branchId, null, null, null,
                             null, null, transactionDto.Description, createdBy, null, DateTime.Now, null,
                             ApprovalStatus, null, null, Status, Autoentry, true, true, transactionDto.Cancelled, transactionDto.Party.Id,
-                            transactionDto.Description, RefTransId, transactionDto.Project.Id, PageId, newId);
+                            transactionDto.Description, RefTransId, transactionDto.Project?.Id ?? null, PageId, newId);
 
                         transactionDto.Id = (int)newId.Value;
                         return CommonResponse.Ok((int)newId.Value);
@@ -679,11 +682,11 @@ namespace Dfinance.Inventory.Service
                             "@Posted={28}, @Active={29}, @Cancelled={30}, @AccountID={31}, @Description={32}, " +
                             "@RefTransID={33}, @CostCentreID={34}, @PageID={35}, @ID={36}",
                             criteria, transactionDto.Date, DateTime.Now, VoucherId, environmentname,
-                            transactionDto.VoucherNo, false, transactionDto.Currency.Id, transactionDto.ExchangeRate, null, null,
+                            transactionDto.VoucherNo, false, transactionDto.Currency?.Id ?? null, transactionDto.ExchangeRate, null, null,
                             ReferenceId, branchId, null, null, null,
                             null, null, transactionDto.Description, createdBy, null, DateTime.Now, null,
                             ApprovalStatus, null, null, Status, Autoentry, true, true, false, transactionDto.Party.Id,
-                            null, RefTransId, transactionDto.Project.Id, PageId, PayId);
+                            null, RefTransId, transactionDto.Project?.Id ?? null, PageId, PayId);
 
                         transactionDto.Id = PayId;
                     }
@@ -1014,6 +1017,42 @@ namespace Dfinance.Inventory.Service
             catch (Exception ex)
             {
                 return null;
+            }
+        }
+
+        public CommonResponse FillTransactionbyId(int Id)
+        {
+            try
+            {
+                var cmd = _context.Database.GetDbConnection().CreateCommand();
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = $"Exec VoucherSP @criteria='FillTransactions',@ID='{Id}'";
+                _context.Database.GetDbConnection().Open();
+                using (var reader = cmd.ExecuteReader())
+                {
+                    var tb = new DataTable();
+                    tb.Load(reader);
+                    if (tb.Rows.Count > 0)
+                    {
+                        List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+                        Dictionary<string, object> row;
+                        foreach (DataRow dr in tb.Rows)
+                        {
+                            row = new Dictionary<string, object>();
+                            foreach (DataColumn col in tb.Columns)
+                            {
+                                row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
+                            }
+                            rows.Add(row);
+                        }
+                        return CommonResponse.Ok(rows);
+                    }
+                }
+                return CommonResponse.NotFound();
+            }
+            catch (Exception ex)
+            {
+                return CommonResponse.Error(ex.Message);
             }
         }
 

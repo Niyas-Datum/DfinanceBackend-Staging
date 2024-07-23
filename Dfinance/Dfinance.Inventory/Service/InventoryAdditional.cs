@@ -117,20 +117,23 @@ namespace Dfinance.Inventory.Service
                 case VoucherType.Purchase_Order:
                 case VoucherType.Purchase_Request:
                 case VoucherType.Purchase_Quotation:
+
                 case VoucherType.Opening_Stock:
-                    toLocId = fiTransactionAdditionalDto.Warehouse.Id;
-                    inLocId = fiTransactionAdditionalDto.Warehouse.Id;
+                   
+                    toLocId = fiTransactionAdditionalDto.Warehouse?.Id ?? null;
+                    inLocId = fiTransactionAdditionalDto.Warehouse?.Id??null;
+
                     break;
                 case VoucherType.Sales_Invoice:
                 case VoucherType.Purchase_Return:
                 case VoucherType.RestaurantInvoice:
                 case VoucherType.RestaurantKOT:
-                    fromLocId = fiTransactionAdditionalDto.Warehouse.Id;
-                    outLocId = fiTransactionAdditionalDto.Warehouse.Id;
+                    fromLocId = fiTransactionAdditionalDto.Warehouse?.Id??null;
+                    outLocId = fiTransactionAdditionalDto.Warehouse?.Id ?? null;
                     break;
 
                 case VoucherType.Purchase_Enquiry:
-                    inLocId = fiTransactionAdditionalDto.Warehouse.Id;
+                    inLocId = fiTransactionAdditionalDto.Warehouse?.Id ?? null;
                     break;
 
             }
@@ -153,9 +156,11 @@ namespace Dfinance.Inventory.Service
                 criteria,//0
                 TransId,//1
                 null, null, null,//2,3,4
-                fiTransactionAdditionalDto.PayType.Id??null,//5
+
+                fiTransactionAdditionalDto.PayType?.Id??null,//5
                 null, null,//6,7
-                fiTransactionAdditionalDto.DelivaryLocation.Id??null,//8
+                fiTransactionAdditionalDto.DelivaryLocation?.Id ?? null,//8
+
                 fromLocId,//9
                 toLocId,//10
                 null, null, null, null, null, null, null, null, null, 
@@ -184,24 +189,28 @@ namespace Dfinance.Inventory.Service
                 fiTransactionAdditionalDto.OrderDate??null,//64
                 fiTransactionAdditionalDto.OrderNo ?? null,//65
                 null, null, null,
-                fiTransactionAdditionalDto.VehicleNo.Id??null,//69
+
+                fiTransactionAdditionalDto.VehicleNo?.Id ?? null,//69
                 null, null, null, null,
-                fiTransactionAdditionalDto.DelivaryLocation.Name ?? null,//74
+                fiTransactionAdditionalDto.DelivaryLocation?.Name??null,//74
+
                 null,
                 fiTransactionAdditionalDto.Approve??null,//76
                 null,
                 inLocId,//78
                 outLocId,//79
                 null, null,
-                fiTransactionAdditionalDto.SalesMan.Id ?? null,//82
+
+                fiTransactionAdditionalDto.SalesMan?.Id ?? null,//82
                 null, null, null, null,
-                fiTransactionAdditionalDto.SalesArea.Id??null,//87
+                fiTransactionAdditionalDto.SalesArea?.Id??null,//87
                 null, null,
-                fiTransactionAdditionalDto.CloseVoucher ?? null,//90
+                fiTransactionAdditionalDto.CloseVoucher??null,//90
                 null,
-                fiTransactionAdditionalDto.PartyName??null,//92
-                fiTransactionAdditionalDto.AddressLine1 ?? null,//93
-                fiTransactionAdditionalDto.AddressLine2??null,//94
+                fiTransactionAdditionalDto.PartyName ?? null,//92
+                fiTransactionAdditionalDto.AddressLine1??null,//93
+                fiTransactionAdditionalDto.AddressLine2 ?? null,//94
+
                 null, null
 
                 );
