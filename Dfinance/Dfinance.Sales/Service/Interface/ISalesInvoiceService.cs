@@ -22,8 +22,8 @@ namespace Dfinance.Sales
         CommonResponse SalesReport(string Criteria, DateTime DateFrom, DateTime DateUpto, int? VoucherID, bool? Detailed, int? AccountID, string? VoucherNo, int? SalesManID);
 
       
-        CommonResponse GetMonthlySalesSummary(DateTime? startDate, DateTime? endDate);  
-        CommonResponse GetFillSalesDaySummary(string? criteria,DateTime startDate, DateTime endDate,int? branch,int? user);
+        //CommonResponse GetMonthlySalesSummary(DateTime? startDate, DateTime? endDate);  
+        //CommonResponse GetFillSalesDaySummary(string? criteria,DateTime startDate, DateTime endDate,int? branch,int? user);
 
     }
 }
