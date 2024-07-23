@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Services\Interface\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Dfinance.Application\Dfinance.Application.csproj" />
     <ProjectReference Include="..\Dfinance.AuthApplication\Dfinance.AuthApplication.csproj" />
     <ProjectReference Include="..\Dfinance.Core\Dfinance.Core.csproj" />

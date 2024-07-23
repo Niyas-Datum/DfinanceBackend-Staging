@@ -109,6 +109,7 @@ namespace Dfinance.Inventory.Service
                 {
                     case VoucherType.Purchase:
                     case VoucherType.Purchase_Order:
+                    case VoucherType.Opening_Stock:
                         inLocId = warehouse;
                         break;
                     case VoucherType.Sales_Invoice:
@@ -128,7 +129,7 @@ namespace Dfinance.Inventory.Service
                                .Select(t => t.Id).SingleOrDefault();
                         }  
                         
-                        if (voucherId == 17)
+                        if ((VoucherType)voucherId== VoucherType.Purchase || (VoucherType)voucherId==VoucherType.Opening_Stock)
                         {
                             rowType = 1;                            
                         }
