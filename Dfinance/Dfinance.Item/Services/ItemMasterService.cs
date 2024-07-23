@@ -737,10 +737,10 @@ namespace Dfinance.Item.Services.Inventory
             bool IsSizeItem = false, IsMargin = false, ISTransitLoc = false, IsFinishedGood = false, IsRawMaterial = false;
             object uniqueExpiry = 0;
             object units = 0;
-            DateTime? VoucherDate = null;
+            DateTime? VoucherDate = DateTime.Now;
 
             var result = _context.CommandTextView
-                  .FromSqlRaw($"select dbo.GetCommandText('{criteria}','{PrimaryVoucherID}','{branchId}','{partyId}','{locId}','{IsSizeItem}','{IsMargin}','{voucherId}','{ItemID}','{ISTransitLoc}','{IsFinishedGood}','{IsRawMaterial}','{ModeID}','{PageID}','{VoucherDate}','{TransactionID}','{userId}')")
+                  .FromSqlRaw($"select dbo.GetCommandText('{criteria}','{PrimaryVoucherID}','{branchId}','{partyId}','{locId}','{IsSizeItem}','{IsMargin}','{voucherId}','{ItemID}','{ISTransitLoc}',null,null,'{ModeID}','{PageID}','{VoucherDate}','{TransactionID}','{userId}')")
                   .ToList();
 
             var res = result.FirstOrDefault();
