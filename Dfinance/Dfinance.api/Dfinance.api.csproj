@@ -33,6 +33,7 @@
     <ProjectReference Include="..\Dfinance.AuthCore\Dfinance.AuthCore.csproj" />
     <ProjectReference Include="..\Dfinance.Core\Dfinance.Core.csproj" />
     <ProjectReference Include="..\Dfinance.Stakeholder\Dfinance.Stakeholder.csproj" />
+    <ProjectReference Include="..\Dfinance.Stock\Dfinance.Stock.csproj" />
     <ProjectReference Include="..\Dfinance.WareHouse\Dfinance.WareHouse.csproj" />
   </ItemGroup>
 

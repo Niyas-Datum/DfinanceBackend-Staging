@@ -248,5 +248,14 @@ namespace Dfinance.Shared.Routes
             public const string latVoucherdate = $"{Main}/latVoucherdate";
             public const string marPrice = $"{Main}/marPrice";
         }
+        public class PhysicalStock
+        {
+            public const string Main = $"{Base}/physicalstock";
+            public const string Save = $"{Main}/save";
+            public const string Update = $"{Main}/update";
+            public const string Delete = $"{Main}/delete";
+            public const string Cancel = $"{Main}/delete";
+            
+        }
     }
 }
