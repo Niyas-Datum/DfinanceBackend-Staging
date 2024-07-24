@@ -21,7 +21,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Rastaurent
         }
         [HttpPost(InvRestRoute.Restaurant.SaveRest)]
 
-        public IActionResult Save([FromBody] InventoryTransactionDto rastaurantDto, int PageId, int voucherId,int sectionId,int tableId,string tableName,int salesManId,string? tokenId = null,string? delivaryId=null)
+        public IActionResult Save([FromBody] InventoryTransactionDto rastaurantDto, int PageId, int voucherId,int sectionId,int tableId,string tableName,int salesManId,string chairName, string? tokenId = null,string? delivaryId=null)
         {
             try
             {
@@ -29,7 +29,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Rastaurent
                 {
                     return BadRequest(ModelState);
                 }
-                object result = _restaurantInvoice.SaveRestaurentInvoice(rastaurantDto, PageId, voucherId,sectionId,tableId,tableName,tokenId,delivaryId,salesManId);
+                object result = _restaurantInvoice.SaveRestaurentInvoice(rastaurantDto, PageId, voucherId,sectionId,tableId,tableName,tokenId,delivaryId,salesManId, chairName);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -39,7 +39,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Rastaurent
         }
         [HttpPatch(InvRestRoute.Restaurant.UpdateRest)]
 
-        public IActionResult Update([FromBody] InventoryTransactionDto rastaurantDto, int PageId, int voucherId, int sectionId, int tableId,string tableName, int salesManId, string? tokenId = null, string? delivaryId = null)
+        public IActionResult Update([FromBody] InventoryTransactionDto rastaurantDto, int PageId, int voucherId, int sectionId, int tableId,string tableName, int salesManId,string chairName, string? tokenId = null, string? delivaryId = null)
         {
             try
             {
@@ -47,7 +47,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Rastaurent
                 {
                     return BadRequest(ModelState);
                 }
-                object result = _restaurantInvoice.UpdateRestaurentInvoice(rastaurantDto, PageId, voucherId, sectionId, tableId,tableName, tokenId, delivaryId, salesManId);
+                object result = _restaurantInvoice.UpdateRestaurentInvoice(rastaurantDto, PageId, voucherId, sectionId, tableId,tableName, tokenId, delivaryId, salesManId, chairName);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -176,7 +176,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Rastaurent
             }
         }
         [HttpPost(InvRestRoute.Restaurant.PrintKOT)]
-        public IActionResult PrintKOT([FromBody] RestaurentDto restaurent, int sectionId, int tableId, string tableName,int salesManId)
+        public IActionResult PrintKOT([FromBody] RestaurentDto restaurent, int sectionId, int tableId, string tableName,int salesManId, string chairName)
         {
             try
             {
@@ -184,7 +184,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Rastaurent
                 {
                     return BadRequest(ModelState);
                 }
-                object result = _restaurantInvoice.SaveAndPrintKOT(restaurent,sectionId,tableId,tableName,salesManId);
+                object result = _restaurantInvoice.SaveAndPrintKOT(restaurent,sectionId,tableId,tableName,salesManId,chairName);
                 return Ok(result);
             }
             catch (Exception ex)
