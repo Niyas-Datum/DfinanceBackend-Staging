@@ -208,7 +208,7 @@ namespace Dfinance.Inventory.Service
                                     inLocId,//43
                                     outLocId,
                                      item.BatchNo,//45
-                                    item.SizeMaster.Id==0?null:item.SizeMaster.Id,//46-sizeMasterId
+                                    item.SizeMaster==null?null: item.SizeMaster.Id==0?null:item.SizeMaster.Id,//46-sizeMasterId
                                     item.DiscountPerc,//47
                                     item.TaxPerc,//48
                                     item.TaxValue,//49
@@ -218,7 +218,7 @@ namespace Dfinance.Inventory.Service
                                     null,//53-CostPerc
                                     item.ManufactureDate,//54
                                     item.ExpiryDate,//55
-                                    item.PriceCategory.Id==0?null:item.PriceCategory.Id,//56
+                                    item.PriceCategory == null ? null : item.PriceCategory.Id == 0 ? null : item.PriceCategory.Id,//56
                                     null,//57
                                     item.RateDisc == 0 ? null : item.RateDisc,//58
                                     null,//59-refId
