@@ -314,7 +314,7 @@ namespace Dfinance.Inventory.Service
                     }
                 }
                 //Set AutoVoucher Next TransactionNo
-                if (autoUpdateNewVoucherNo)
+                if (autoUpdateNewVoucherNo && transactionDto.Id == null)
                 {
                     transactionDto.VoucherNo = (string?)GetAutoVoucherNo(VoucherId, transactionDto.FiTransactionAdditional.PayType.Id).Data;
                 }
@@ -501,6 +501,7 @@ namespace Dfinance.Inventory.Service
             autoApproval = Converter.StringToBoolean(settings.Where(s => s.Key == "AutoApproval").Select(s => s.Value).FirstOrDefault().ToString());
             dosageSystem = Converter.StringToBoolean(settings.Where(s => s.Key == "DosageSystem").Select(s => s.Value).FirstOrDefault());
         }
+
         //CostCenter Settings
         private void ShowCostCenters(int transId, List<TransCostAllocationDto> transCostAllocation)
         {

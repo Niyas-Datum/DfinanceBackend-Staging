@@ -23,5 +23,9 @@ namespace Dfinance.Warehouse.Services.Interface
         CommonResponse FillItemwiseStock(ItemsCatalogue itemsCatalogue);
         CommonResponse GetMonthwiseStockLoadData();
         CommonResponse FillMonthwiseStock(MonthwiseStockRpt monthwiseStk);
+        CommonResponse GetWarehousewiseStockLoadData();
+        CommonResponse FillWarehousewiseStock(string item, int branchId);
+        CommonResponse GetBatchwiseStockLoadData();
+        CommonResponse FillBatchwiseStock(BatchwiseStockRpt batchwiseStock);
     }
 }

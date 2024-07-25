@@ -95,4 +95,15 @@ namespace Dfinance.DataModels.Dto.Inventory
         public PopUpDto? SalesMan { get; set; }
         public string? ViewBy { get; set; }
     }
+    public class BatchwiseStockRpt
+    {
+        public DateTime? DateUpto { get; set; }
+        public DropdownDto? WarehouseID { get; set; }
+        public PopUpDto? ItemID { get; set; }
+        public PopUpDto? CommodityID { get; set; }
+        public PopUpDto? Barcode { get; set; }
+        public PopUpDto? OriginID { get; set; } = null;
+        public PopUpDto? BrandId { get; set; }
+        public PopUpDto? Unit {  get; set; }
+    }
 }

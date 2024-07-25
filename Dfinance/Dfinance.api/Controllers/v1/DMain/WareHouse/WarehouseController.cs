@@ -312,12 +312,66 @@ namespace Dfinance.api.Controllers.v1.DMain.WareHouse
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost(InvRoute.WareHouse.MonthwiseStockRpt)]
+        [HttpPost(InvRoute.WareHouse.WhwiseStockLoadData)]
         public IActionResult FillMonthwiseStock(MonthwiseStockRpt monthwiseStockRpt)
         {
             try
             {
                 var data = _stockReportService.FillMonthwiseStock(monthwiseStockRpt);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        //Warehousehwise Stock Rpt
+        [HttpGet(InvRoute.WareHouse.WhwiseStockRpt)]
+        public IActionResult GetWarehousewiseStockLoadData()
+        {
+            try
+            {
+                var data = _stockReportService.GetWarehousewiseStockLoadData();
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost(InvRoute.WareHouse.MonthwiseStockRpt)]
+        public IActionResult FillWarehousewiseStock(string item,int branchId)
+        {
+            try
+            {
+                var data = _stockReportService.FillWarehousewiseStock(item,branchId);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        //Warehousehwise Stock Rpt
+        [HttpGet(InvRoute.WareHouse.BatchwiseStockLoadData)]
+        public IActionResult GetBatchwiseStockLoadData()
+        {
+            try
+            {
+                var data = _stockReportService.GetBatchwiseStockLoadData();
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost(InvRoute.WareHouse.BatchwiseStockRpt)]
+        public IActionResult FillBatchwiseStock(BatchwiseStockRpt batchwiseStock)
+        {
+            try
+            {
+                var data = _stockReportService.FillBatchwiseStock(batchwiseStock);
                 return Ok(data);
             }
             catch (Exception ex)
