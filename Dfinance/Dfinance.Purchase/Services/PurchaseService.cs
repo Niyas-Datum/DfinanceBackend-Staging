@@ -251,31 +251,7 @@ namespace Dfinance.Purchase.Services
                 
                 if (transPayId!=null)
                 {
-                    using (var cmd = _context.Database.GetDbConnection().CreateCommand())
-                    {
-                        cmd.CommandType = CommandType.Text;
-                        cmd.CommandText = $"Exec VoucherSP @Criteria='FillTransactionEntries',@TransactionID={transPayId}";
-                        //_context.Database.GetDbConnection().Open();
-                        using (var reader = cmd.ExecuteReader())                       
-                        {
-                            var tb = new DataTable();
-                            tb.Load(reader);
-                            if (tb.Rows.Count > 0)
-                            {
-                                List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
-                                foreach (DataRow dr in tb.Rows)
-                                {
-                                    Dictionary<string, object> row = new Dictionary<string, object>();
-                                    foreach (DataColumn col in tb.Columns)
-                                    {
-                                        row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
-                                    }
-                                    rows.Add(row);
-                                }                                
-                                TransPayment = rows;
-                            }                            
-                        }
-                    }
+                    TransPayment = FillEntriesbyId(transPayId);
                 }                
                     return CommonResponse.Ok(new { Transaction = purchaseFillByIdDto, Payment = TransPayment });
                 
@@ -293,7 +269,78 @@ namespace Dfinance.Purchase.Services
                 _context.Database.CloseConnection();
             }
         }
+        //fill FiTransactionEntries according to given transactionId
+        private CommonResponse FillEntriesbyId(int transId)
+        {
+            Object TransPayment = null;
+            using (var cmd = _context.Database.GetDbConnection().CreateCommand())
+            {
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = $"Exec VoucherSP @Criteria='FillTransactionEntries',@TransactionID={transId}";
+                //_context.Database.GetDbConnection().Open();
+                using (var reader = cmd.ExecuteReader())
+                {
+                    var tb = new DataTable();
+                    tb.Load(reader);
+                    if (tb.Rows.Count > 0)
+                    {
+                        List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+                        foreach (DataRow dr in tb.Rows)
+                        {
+                            Dictionary<string, object> row = new Dictionary<string, object>();
+                            foreach (DataColumn col in tb.Columns)
+                            {
+                                row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
+                            }
+                            rows.Add(row);
+                        }
+                        TransPayment = rows;
+                    }
+                }
+            }
+            return CommonResponse.Ok(TransPayment);
+        }
+        //fill TransExpenses for import reference
+        private CommonResponse FillTransExpensebyId(int transId)
+        {
+            Object TransPayment = null;
+            using (var cmd = _context.Database.GetDbConnection().CreateCommand())
+            {
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = $"Exec VoucherSP @Criteria='FillTransexpenses',@VID={transId}";
+                //_context.Database.GetDbConnection().Open();
+                using (var reader = cmd.ExecuteReader())
+                {
+                    var tb = new DataTable();
+                    tb.Load(reader);
+                    if (tb.Rows.Count > 0)
+                    {
+                        List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+                        foreach (DataRow dr in tb.Rows)
+                        {
+                            Dictionary<string, object> row = new Dictionary<string, object>();
+                            foreach (DataColumn col in tb.Columns)
+                            {
+                                row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
+                            }
+                            rows.Add(row);
+                        }
+                        TransPayment = rows;
+                    }
+                }
+            }
+            return CommonResponse.Ok(TransPayment);
+        }
 
+        //fill transactions,additionals,entries for import reference
+        public CommonResponse Fill(int transId)
+        {
+            var trans=_transactionService.FillTransactionbyId(transId).Data;
+            var additionals=_additionalService.FillTransactionAdditionals(transId).Data;
+            var exp=FillTransExpensebyId(transId).Data;
+            var entries = FillEntriesbyId(transId).Data;
+            return CommonResponse.Ok(new {TransactionData=trans,AdditionalData=additionals,Expenses=exp,PaymentData=entries});
+        }
         /// <summary>
         /// Save Purchase
         /// </summary>
