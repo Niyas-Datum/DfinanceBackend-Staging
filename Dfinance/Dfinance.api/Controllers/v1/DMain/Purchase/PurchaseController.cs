@@ -149,7 +149,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPatch(InvRoute.Purchase.fill)]
+        [HttpGet(InvRoute.Purchase.fill)]
         [SwaggerOperation(Summary = "Fill FiTransactions, Additionals and Entries data according to TransactionId for filling the import reference")]
         public IActionResult Fill(int transId)
         {
