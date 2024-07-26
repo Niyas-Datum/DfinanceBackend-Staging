@@ -117,8 +117,12 @@ namespace Dfinance.Inventory.Service
                 case VoucherType.Purchase_Order:
                 case VoucherType.Purchase_Request:
                 case VoucherType.Purchase_Quotation:
+
+                case VoucherType.Opening_Stock:
+                   
                     toLocId = fiTransactionAdditionalDto.Warehouse?.Id ?? null;
                     inLocId = fiTransactionAdditionalDto.Warehouse?.Id??null;
+
                     break;
                 case VoucherType.Sales_Invoice:
                 case VoucherType.Purchase_Return:
@@ -152,46 +156,51 @@ namespace Dfinance.Inventory.Service
                 criteria,//0
                 TransId,//1
                 null, null, null,//2,3,4
+
                 fiTransactionAdditionalDto.PayType?.Id??null,//5
                 null, null,//6,7
                 fiTransactionAdditionalDto.DelivaryLocation?.Id ?? null,//8
+
                 fromLocId,//9
                 toLocId,//10
                 null, null, null, null, null, null, null, null, null, 
                 fiTransactionAdditionalDto.Code?? null,//11,12,13,14,15,16,17,18,19,20
                 fiTransactionAdditionalDto.TermsOfDelivery??null,//21
                 null, null,//22,23
-                fiTransactionAdditionalDto.CreditPeriod,//24
-                fiTransactionAdditionalDto.Days, null,
-                fiTransactionAdditionalDto.MobileNo,//27
+                fiTransactionAdditionalDto.CreditPeriod??null,//24
+                fiTransactionAdditionalDto.Days??null, null,
+                fiTransactionAdditionalDto.MobileNo??null,//27
                 null, null, null, null,
-                fiTransactionAdditionalDto.StaffIncentives,//32
+                fiTransactionAdditionalDto.StaffIncentives ?? null,//32
                 null, null, null, null, null, null, null,
-                fiTransactionAdditionalDto.DespatchNo,//40
-                fiTransactionAdditionalDto.DespatchDate,//41
+                fiTransactionAdditionalDto.DespatchNo?? null,//40
+                fiTransactionAdditionalDto.DespatchDate ?? null,//41
                 null,
-                fiTransactionAdditionalDto.PartyDate,//43
-                fiTransactionAdditionalDto.PartyInvoiceNo,//44
+                fiTransactionAdditionalDto.PartyDate??null,//43
+                fiTransactionAdditionalDto.PartyInvoiceNo ?? null,//44
                 null,
-                fiTransactionAdditionalDto.Attention,//46
+                fiTransactionAdditionalDto.Attention??null,//46
                 null, null, null,
-                fiTransactionAdditionalDto.ExpiryDate,//50
+                fiTransactionAdditionalDto.ExpiryDate ?? null,//50
                 null, null, null, null, null, null, null,
-                fiTransactionAdditionalDto.DeliveryDate,//58
+                fiTransactionAdditionalDto.DeliveryDate??null,//58
                 null, null, null, null,
-                fiTransactionAdditionalDto.DeliveryNote,//63
-                fiTransactionAdditionalDto.OrderDate,//64
-                fiTransactionAdditionalDto.OrderNo,//65
+                fiTransactionAdditionalDto.DeliveryNote ?? null,//63
+                fiTransactionAdditionalDto.OrderDate??null,//64
+                fiTransactionAdditionalDto.OrderNo ?? null,//65
                 null, null, null,
+
                 fiTransactionAdditionalDto.VehicleNo?.Id ?? null,//69
                 null, null, null, null,
                 fiTransactionAdditionalDto.DelivaryLocation?.Name??null,//74
+
                 null,
-                fiTransactionAdditionalDto.Approve,//76
+                fiTransactionAdditionalDto.Approve??null,//76
                 null,
                 inLocId,//78
                 outLocId,//79
                 null, null,
+
                 fiTransactionAdditionalDto.SalesMan?.Id ?? null,//82
                 null, null, null, null,
                 fiTransactionAdditionalDto.SalesArea?.Id??null,//87
@@ -201,6 +210,7 @@ namespace Dfinance.Inventory.Service
                 fiTransactionAdditionalDto.PartyName ?? null,//92
                 fiTransactionAdditionalDto.AddressLine1??null,//93
                 fiTransactionAdditionalDto.AddressLine2 ?? null,//94
+
                 null, null
 
                 );
