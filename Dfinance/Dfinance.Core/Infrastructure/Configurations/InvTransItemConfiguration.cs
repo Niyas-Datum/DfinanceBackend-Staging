@@ -106,6 +106,11 @@ namespace Dfinance.Core.Infrastructure.Configurations
                     .WithMany(p => p.InvTransItems)
                     .HasForeignKey(d => d.TransactionId)
                     .HasConstraintName("FK_InvTransItems_FiTransactions");
+
+            builder.HasOne(d => d.SizeMaster)
+                    .WithMany(p => p.InvTransItems)
+                    .HasForeignKey(d => d.SizeMasterId)
+                    .HasConstraintName("FK_InvTransItems_InvSizeMaster");
         }
     }
 }

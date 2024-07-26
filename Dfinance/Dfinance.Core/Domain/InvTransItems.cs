@@ -112,6 +112,7 @@ namespace Dfinance.Core.Domain
         public virtual InvTransItems? Ref { get; set; }//self reference
         public virtual ICollection<InvTransItems>? InverseRef { get; set; }
         public virtual FiTransaction? Transaction {  get; set; }
+        public virtual InvSizeMaster? SizeMaster { get; set; }
         public ICollection<InvUniqueItems>? InvUniqueItems { get; set; }
       //  public virtual ICollection<InvBatchWiseItem> InvBatchWiseItems { get; set; }
     }

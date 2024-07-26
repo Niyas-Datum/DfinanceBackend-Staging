@@ -45,7 +45,11 @@ using Dfinance.Finance.Statements.Interface;
 using Dfinance.Finance.Statements;
 using Dfinance.Restaurant.Interface;
 using Dfinance.Restaurant;
+
+using Dfinance.Stock.Interface;
+
 using Dfinance.Stock.Services.Interface;
+
 using Dfinance.Stock.Services;
 
 
@@ -211,8 +215,14 @@ public class DiInstaller : IInstaller
         service.AddScoped<ICustomerRegister, CustomerRegisterService>();
         //AccountRegister
         service.AddScoped<IAccountRegister, AccountRegisterService>();
+
+        //PhysicalStock
+        service.AddScoped<IPhysicalStockService, PhysicalStockService>();
+
+
         //OpeningStock
         service.AddScoped<IOpeningStockService, OpeningStockService>();
+
 
     }
 }
