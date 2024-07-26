@@ -257,7 +257,7 @@ namespace Dfinance.Shared.Routes
             public const string Update = $"{Main}/update";
             public const string Delete = $"{Main}/delete";
             public const string Cancel = $"{Main}/delete";
-            
+        }   
 
         public class OpeningStock
         {
