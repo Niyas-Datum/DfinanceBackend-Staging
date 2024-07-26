@@ -109,6 +109,7 @@ app.UseCors(x => x
 app.UseAuthorization();
 
 //Middleware - authentication checking - every request
+app.UseConnectionKey();
 app.UseMiddleware<JwtMiddleware>();
 
 //Middleware - Logging
