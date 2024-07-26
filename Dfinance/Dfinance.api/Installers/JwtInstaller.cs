@@ -28,8 +28,8 @@ public class JwtInstaller : IInstaller
             {
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(appSettings.JwtSettings.Secret)),
-                ValidateIssuer = false,
-                ValidateAudience = false,
+                ValidateIssuer = true,
+                ValidateAudience = true,
                 RequireExpirationTime = false,
                 ValidateLifetime = true
             };
