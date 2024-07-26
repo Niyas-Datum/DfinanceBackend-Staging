@@ -6,6 +6,7 @@ using Dfinance.Shared.Routes;
 using Dfinance.api.Framework;
 using Dfinance.DataModels.Dto.Inventory.Purchase;
 using Dfinance.Purchase.Services.Interface;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Dfinance.api.Controllers.v1.DMain.Purchase
 {
@@ -145,6 +146,20 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
             catch (Exception ex)
             {
 
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet(InvRoute.Purchase.fill)]
+        [SwaggerOperation(Summary = "Fill FiTransactions, Additionals and Entries data according to TransactionId for filling the import reference")]
+        public IActionResult Fill(int transId)
+        {
+            try
+            {
+               var result= _purchaseservice.Fill(transId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
                 return BadRequest(ex.Message);
             }
         }

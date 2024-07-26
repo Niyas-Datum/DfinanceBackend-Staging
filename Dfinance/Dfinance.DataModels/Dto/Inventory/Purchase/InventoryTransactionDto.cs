@@ -114,12 +114,12 @@ namespace Dfinance.DataModels.Dto.Inventory.Purchase
         [DecimalValidation(4, ErrorMessage = "PrintedRate is not valid!!")]
         public decimal? PrintedRate { get; set; }
         public string? Hsn { get; set; }
-        [DecimalValidation(4, ErrorMessage = "AvgCost is not valid!!")]
+        //[DecimalValidation(4, ErrorMessage = "AvgCost is not valid!!")]
+        public PopUpDto? PriceCategory { get; set; }//popup
+        public PopUpDto? SizeMaster { get; set; }//popup according to settings
         public decimal? AvgCost { get; set; }
         public bool? IsReturn {  get; set; }
         public DateTime? ManufactureDate { get; set; }
-        public PopUpDto? PriceCategory { get; set; }//popup
-        public PopUpDto? SizeMaster { get; set; }//popup according to settings
         public List<InvUniqueItemDto>? UniqueItems { get; set; }
     }
 

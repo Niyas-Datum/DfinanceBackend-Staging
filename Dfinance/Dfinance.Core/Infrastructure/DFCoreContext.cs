@@ -643,6 +643,7 @@ public partial class DFCoreContext : DbContext
         mb.Entity<ProductVew>().HasNoKey().ToView(null);
         mb.Entity<ItemOptionsView>().HasNoKey().ToView(null);
         mb.Entity<ItemUnitRestView>().HasNoKey().ToView(null);
+        mb.Entity<TableView>().HasNoKey().ToView(null);
 
         //RecallVoucher
         mb.Entity<RecallVoucherView>().HasNoKey().ToView(null);

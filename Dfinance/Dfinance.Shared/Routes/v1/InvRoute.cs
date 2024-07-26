@@ -72,6 +72,7 @@ namespace Dfinance.Shared.Routes
             public const string GetData = $"{Main}/getdata";
             public const string GetSupplier = $"{Main}/getsupplier";
             public const string getPurchaseReport = $"{Main}/getPuReport";
+            public const string fill = $"{Main}/fill";
         }
         public class InventoryPaymentTransaction
         {
@@ -248,6 +249,7 @@ namespace Dfinance.Shared.Routes
             public const string latVoucherdate = $"{Main}/latVoucherdate";
             public const string marPrice = $"{Main}/marPrice";
         }
+
         public class PhysicalStock
         {
             public const string Main = $"{Base}/physicalstock";
@@ -256,6 +258,13 @@ namespace Dfinance.Shared.Routes
             public const string Delete = $"{Main}/delete";
             public const string Cancel = $"{Main}/delete";
             
+
+        public class OpeningStock
+        {
+            public const string Main = $"{Base}/openingStock";
+            public const string Save = $"{Main}/save";
+            public const string Update = $"{Main}/update";
+
         }
     }
 }

@@ -14,7 +14,7 @@ namespace Dfinance.Shared.Enum
     Sales_Invoice=23,
     Sales_POS=89,
     //Opening_Stock = 38,
-    Opening_Stock = 28, // Primary voucher id of Opening stock is 28.
+    Opening_Stock = 38, // Primary voucher id of Opening stock is 28.
     Purchase_Return=76,
     Sales_Return = 77, Delivery = 80, Service = 81, Payment_Voucher = 5, Receipt_Voucher = 7, Journal = 6, Contra = 4, Purchase_Order = 18, Sales_Enquiry = 84, Sales_Quotation = 85,
     Stock_Transfer = 83, Delivery_In = 13, Delivery_Out = 14, Stock_Adjustment = 46, Physical_Stock = 16, Stock_Return = 86, Stock_Issue = 90, Stock_Receipt = 91,
@@ -51,5 +51,12 @@ namespace Dfinance.Shared.Enum
 
         Account_Configuration=92
 
+    }
+    public enum DBApprovalStatus
+    {
+        PENDING = 'P',
+        APPROVED = 'A',
+        REJECTED = 'R',
+        RECOMMENDED = 'C'
     }
 }

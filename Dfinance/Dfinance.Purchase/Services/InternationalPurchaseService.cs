@@ -143,7 +143,7 @@ namespace Dfinance.Purchase.Services
                         reader.NextResult();
                         purchaseFillByIdDto.fillDocuments = _rederToObj.Deserialize<FillDocuments>(reader).FirstOrDefault();
                         reader.NextResult();
-                        purchaseFillByIdDto.FillTransactionAdditional = _rederToObj.Deserialize<FillTransactionAdditional>(reader).FirstOrDefault();
+                        purchaseFillByIdDto.fillAdditionals = _rederToObj.Deserialize<FillTransactionAdditional>(reader).FirstOrDefault();
                         reader.NextResult();
 
                         purchaseFillByIdDto.fillTransactionExpenses = _rederToObj.Deserialize<FillTransactionExpenses>(reader).ToList();

@@ -23,7 +23,9 @@ namespace Dfinance.Application.Configuration
             CreateMap<FinanceTransactionDto, OpeningVoucherDto>().ReverseMap();
 
 
-            CreateMap<RestaurentDto,InventoryTransactionDto>();
+            CreateMap<RestaurentDto, InventoryTransactionDto>()
+                .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.Items));
+            CreateMap<InvRestTransItemDto, InvTransItemDto>();
             CreateMap<FinanceTransactionDto, JournalDto>().ReverseMap();
 
 

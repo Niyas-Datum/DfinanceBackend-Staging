@@ -25,7 +25,7 @@ namespace Dfinance.DataModels.Dto.Inventory.Purchase
         public  FillDocumentImages? fillDocumentImages { get; set; }
         public  FillHRFinalSettlement? fillHRFinalSettlement { get; set; }
         public  FillTransCostAllocations? fillTransCostAllocations { get; set; }
-        public FillTransactionAdditional? FillTransactionAdditional { get; set; }
+       // public FillTransactionAdditional? FillTransactionAdditional { get; set; }
 
         }
     public class FillTransactions
@@ -589,4 +589,5 @@ namespace Dfinance.DataModels.Dto.Inventory.Purchase
         public string? AccountName { get; set;}
 
     }
+    
 }

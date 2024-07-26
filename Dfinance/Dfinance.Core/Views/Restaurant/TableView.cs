@@ -13,5 +13,6 @@ namespace Dfinance.Core.Views
         public int? TransactionID { get; set; }
         public string? BTime { get; set; }
         public string? TransactionNo { get; set; }
+        public string? ChairName { get; set;}
     }
 }

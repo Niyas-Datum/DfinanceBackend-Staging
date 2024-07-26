@@ -8,14 +8,11 @@ using System.Threading.Tasks;
 
 namespace Dfinance.Core.Views
 {
-    public class ItemOptionsListView
-    {
-        public int ItemId { get; set; }
-        public List<ItemOptionsView>? ItemOptions {  get; set; }
-    }
+   
     public class ItemUnitsListView
     {
-        public int ItemId { get; set; }
+       public ProductVew Items { get; set; }
         public List<ItemUnitRestView>? ItemUnits { get; set; }
+        public List<ItemOptionsView>? ItemOptions { get; set; }
     }
 }
