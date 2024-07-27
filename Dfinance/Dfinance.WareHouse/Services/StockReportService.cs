@@ -55,7 +55,11 @@ namespace Dfinance.Warehouse.Services
             var location = _context.LocationViewList.FromSqlRaw("Exec DropDownListSP @Criteria='FillVoucherLocations',@StrParam='StockReg Location wise'").ToList();
             return CommonResponse.Ok(location);
         }
-
+        public CommonResponse FillVoucherLocations(int branchId)
+        {
+            var location = _context.LocationViewList.FromSqlRaw($"Exec DropDownListSP @Criteria='FillVoucherLocations',@StrParam='StockReg Location wise',@IntParam={branchId}").ToList();
+            return CommonResponse.Ok(location);
+        }
         private CommonResponse FillTypeOfWoodForReports()
         {
             var branchId = _authService.GetBranchId();
@@ -614,7 +618,7 @@ namespace Dfinance.Warehouse.Services
 
 
 
-        //*********************** Unitwise Stock ******************************
+        //*********************** Itemwise Stock ******************************
 
         public CommonResponse GetItemwiseStockLoadData()
         {
@@ -793,7 +797,7 @@ namespace Dfinance.Warehouse.Services
 
         private CommonResponse GetCompany()
         {
-            var companies = _authContext.Companies.Where(c => c.Active == true).OrderByDescending(c => new { c.IsDefault, c.Name }).ToList();
+            var companies = _authContext.Companies.Where(c => c.Active == true).ToList();
             return CommonResponse.Ok(companies);
         }
 
@@ -886,7 +890,7 @@ namespace Dfinance.Warehouse.Services
                     Brand = brand,
                     BarCode = barcode,
                     Location = location,
-                    Unit=unit
+                    Unit = unit
                 });
             }
             catch (Exception ex)
@@ -902,7 +906,7 @@ namespace Dfinance.Warehouse.Services
             {
                 var cmd = _context.Database.GetDbConnection().CreateCommand();
                 cmd.CommandType = CommandType.Text;
-               
+
                 var locationId = batchwiseStock.WarehouseID.Id != null ? batchwiseStock.WarehouseID.Id.ToString() : "NULL";
                 var Items = batchwiseStock.ItemID.Id != null ? batchwiseStock.ItemID.Id.ToString() : "NULL";
                 var brandid = batchwiseStock.BrandId.Id != null ? batchwiseStock.BrandId.Id.ToString() : "NULL";
@@ -910,9 +914,9 @@ namespace Dfinance.Warehouse.Services
                 var orgin = batchwiseStock.OriginID.Id != null ? batchwiseStock.OriginID.Id.ToString() : "NULL";
                 //var UnitId = batchwiseStock.Unit.Name != null ? batchwiseStock.Unit.Code.ToString() : "NULL";
                 var branchId = _authService.GetBranchId().Value;
-                if(batchwiseStock.Barcode.Code!=null && batchwiseStock.Unit.Name!=null)
-                cmd.CommandText = $"Exec BatchwiseStockSP @DateUpto='{batchwiseStock.DateUpto}',@BranchID={branchId},@WarehouseID={locationId},@ItemID={Items},@CommodityID={commodity},@BrandID={brandid},@OriginID={orgin},@Unit='{batchwiseStock.Unit.Name}',@Barcode='{batchwiseStock.Barcode.Code}'";
-                else if(batchwiseStock.Barcode.Code!=null && batchwiseStock.Unit.Name==null)
+                if (batchwiseStock.Barcode.Code != null && batchwiseStock.Unit.Name != null)
+                    cmd.CommandText = $"Exec BatchwiseStockSP @DateUpto='{batchwiseStock.DateUpto}',@BranchID={branchId},@WarehouseID={locationId},@ItemID={Items},@CommodityID={commodity},@BrandID={brandid},@OriginID={orgin},@Unit='{batchwiseStock.Unit.Name}',@Barcode='{batchwiseStock.Barcode.Code}'";
+                else if (batchwiseStock.Barcode.Code != null && batchwiseStock.Unit.Name == null)
                     cmd.CommandText = $"Exec BatchwiseStockSP @DateUpto='{batchwiseStock.DateUpto}',@BranchID={branchId},@WarehouseID={locationId},@ItemID={Items},@CommodityID={commodity},@BrandID={brandid},@OriginID={orgin},@Barcode='{batchwiseStock.Barcode.Code}'";
                 else if (batchwiseStock.Barcode.Code == null && batchwiseStock.Unit.Name != null)
                     cmd.CommandText = $"Exec BatchwiseStockSP @DateUpto='{batchwiseStock.DateUpto}',@BranchID={branchId},@WarehouseID={locationId},@ItemID={Items},@CommodityID={commodity},@BrandID={brandid},@OriginID={orgin},@Unit='{batchwiseStock.Unit.Name}'";
@@ -968,21 +972,16 @@ namespace Dfinance.Warehouse.Services
             {
                 var item = GetItem().Data;
                 var commditti = GetCommodity().Data;
-                var orgin = GetOrginBrandColor("Item Origin").Data;
-                var brand = GetOrginBrandColor("Item Brand").Data;
-                var unit = GetUnit().Data;
-                var barcode = GetBarCode().Data;
-                var location = FillVoucherLocations().Data;
+                var type = FillTypeOfWoodForReports().Data;
+                var branch = FillAllBranch().Data;
+
                 _logger.LogInformation("Load Success");
                 return CommonResponse.Ok(new
                 {
                     Item = item,
                     Commodity = commditti,
-                    Orgin = orgin,
-                    Brand = brand,
-                    BarCode = barcode,
-                    Location = location,
-                    Unit = unit
+                    Type = type,
+                    Branch = branch
                 });
             }
             catch (Exception ex)
@@ -992,29 +991,169 @@ namespace Dfinance.Warehouse.Services
             }
         }
 
-        public CommonResponse FillItemwiseRegStock(BatchwiseStockRpt batchwiseStock) // Batch No front end filter
+        public CommonResponse FillItemwiseRegStock(ItemwiseRegRpt itemwiseReg) // Batch No front end filter
         {
             try
             {
                 var cmd = _context.Database.GetDbConnection().CreateCommand();
                 cmd.CommandType = CommandType.Text;
 
-                var locationId = batchwiseStock.WarehouseID.Id != null ? batchwiseStock.WarehouseID.Id.ToString() : "NULL";
-                var Items = batchwiseStock.ItemID.Id != null ? batchwiseStock.ItemID.Id.ToString() : "NULL";
-                var brandid = batchwiseStock.BrandId.Id != null ? batchwiseStock.BrandId.Id.ToString() : "NULL";
-                var commodity = batchwiseStock.CommodityID.Id != null ? batchwiseStock.CommodityID.Id.ToString() : "NULL";
-                var orgin = batchwiseStock.OriginID.Id != null ? batchwiseStock.OriginID.Id.ToString() : "NULL";
-                //var UnitId = batchwiseStock.Unit.Name != null ? batchwiseStock.Unit.Code.ToString() : "NULL";
-                var branchId = _authService.GetBranchId().Value;
-                if (batchwiseStock.Barcode.Code != null && batchwiseStock.Unit.Name != null)
-                    cmd.CommandText = $"Exec BatchwiseStockSP @DateUpto='{batchwiseStock.DateUpto}',@BranchID={branchId},@WarehouseID={locationId},@ItemID={Items},@CommodityID={commodity},@BrandID={brandid},@OriginID={orgin},@Unit='{batchwiseStock.Unit.Name}',@Barcode='{batchwiseStock.Barcode.Code}'";
-                else if (batchwiseStock.Barcode.Code != null && batchwiseStock.Unit.Name == null)
-                    cmd.CommandText = $"Exec BatchwiseStockSP @DateUpto='{batchwiseStock.DateUpto}',@BranchID={branchId},@WarehouseID={locationId},@ItemID={Items},@CommodityID={commodity},@BrandID={brandid},@OriginID={orgin},@Barcode='{batchwiseStock.Barcode.Code}'";
-                else if (batchwiseStock.Barcode.Code == null && batchwiseStock.Unit.Name != null)
-                    cmd.CommandText = $"Exec BatchwiseStockSP @DateUpto='{batchwiseStock.DateUpto}',@BranchID={branchId},@WarehouseID={locationId},@ItemID={Items},@CommodityID={commodity},@BrandID={brandid},@OriginID={orgin},@Unit='{batchwiseStock.Unit.Name}'";
-                else
-                    cmd.CommandText = $"Exec BatchwiseStockSP @DateUpto='{batchwiseStock.DateUpto}',@BranchID={branchId},@WarehouseID={locationId},@ItemID={Items},@CommodityID={commodity},@BrandID={brandid},@OriginID={orgin}";
+                var locationId = itemwiseReg.LocationID.Id != null ? itemwiseReg.LocationID.Id.ToString() : "NULL";
+                var Items = itemwiseReg.ItemID.Id != null ? itemwiseReg.ItemID.Id.ToString() : "NULL";
+                var branchId = itemwiseReg.BranchID.Id != null ? itemwiseReg.BranchID.Id.ToString() : "NULL";
+                var commodity = itemwiseReg.CommodityID.Id != null ? itemwiseReg.CommodityID.Id.ToString() : "NULL";
+                var typeOfWoodId = itemwiseReg.TypeOfWoodID.Id != null ? itemwiseReg.TypeOfWoodID.Id.ToString() : "NULL";
+                cmd.CommandText = $"Exec StockRegisterSP @Criteria='Itemwise',@FromDate='{itemwiseReg.FromDate}',@ToDate='{itemwiseReg.ToDate}',@BranchID={branchId},@LocationID={locationId},@ItemID={Items},@CommodityID={commodity},@TypeOfWoodID={typeOfWoodId}";
+                _context.Database.GetDbConnection().Open();
+                using (var reader = cmd.ExecuteReader())
+                {
+                    var tb = new DataTable();
+                    tb.Load(reader);
+                    if (tb.Rows.Count > 0)
+                    {
+                        List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+                        Dictionary<string, object> row;
+                        foreach (DataRow dr in tb.Rows)
+                        {
+                            row = new Dictionary<string, object>();
+                            foreach (DataColumn col in tb.Columns)
+                            {
+                                row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
+                            }
+                            rows.Add(row);
+                        }
+                        return CommonResponse.Ok(rows);
+                    }
+                    return CommonResponse.NoContent();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Ok(ex.Message);
+            }
+        }
 
+        //*********************** Itemwise Register Stock ******************************
+
+
+
+        /// <summary>
+        /// GetLoad Data  - same as  ===================== GetUnitwiseStockLoadData===============================
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="branchId"></param>
+        /// <returns></returns>
+        /// 
+
+        public CommonResponse GetItemStockRptLoadData()
+        {
+            try
+            {
+                var item = GetItem().Data;
+                var branch = FillAllBranch().Data;
+                _logger.LogInformation("Load Success");
+                return CommonResponse.Ok(new
+                {
+                    Item = item,
+                    Branch = branch
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Ok(ex.Message);
+            }
+        }
+
+        public CommonResponse FillItemStockRpt(ItemStockRpt itemStock) 
+        {
+            try
+            {
+                var cmd = _context.Database.GetDbConnection().CreateCommand();
+                cmd.CommandType = CommandType.Text;
+
+                var locationId = itemStock.LocationID.Id != null ? itemStock.LocationID.Id.ToString() : "NULL";
+                var Items = itemStock.ItemID.Id != null ? itemStock.ItemID.Id.ToString() : "NULL";
+                var branchId = itemStock.BranchID.Id != null ? itemStock.BranchID.Id.ToString() : "NULL";
+                cmd.CommandText = $"Exec ItemStockReportSP @Criteria='ItemStock',@Date='{itemStock.ToDate}',@BranchID={branchId},@LocationID={locationId},@ItemID={Items}";
+                _context.Database.GetDbConnection().Open();
+                using (var reader = cmd.ExecuteReader())
+                {
+                    var tb = new DataTable();
+                    tb.Load(reader);
+                    if (tb.Rows.Count > 0)
+                    {
+                        List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+                        Dictionary<string, object> row;
+                        foreach (DataRow dr in tb.Rows)
+                        {
+                            row = new Dictionary<string, object>();
+                            foreach (DataColumn col in tb.Columns)
+                            {
+                                row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
+                            }
+                            rows.Add(row);
+                        }
+                        return CommonResponse.Ok(rows);
+                    }
+                    return CommonResponse.NoContent();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Ok(ex.Message);
+            }
+        }
+
+        //*********************** Item Movement Analysis ******************************
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="branchId"></param>
+        /// <returns></returns>
+        /// 
+
+        public CommonResponse GetItemMovementAnalysisLoadData()
+        {
+            try
+            {
+                var item = GetItem().Data;
+                var branch = FillAllBranch().Data;
+                var commditti = GetCommodity().Data;
+                _logger.LogInformation("Load Success");
+                return CommonResponse.Ok(new
+                {
+                    Item = item,
+                    Branch = branch,
+                    Commdity = commditti,
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Ok(ex.Message);
+            }
+        }
+
+        public CommonResponse FillItemMovementAnalysis(ItemMovementAnalysis itemMovement)
+        {
+            try
+            {
+                var cmd = _context.Database.GetDbConnection().CreateCommand();
+                cmd.CommandType = CommandType.Text;
+
+                var locationId = itemMovement.LocationID.Id != null ? itemMovement.LocationID.Id.ToString() : "NULL";
+                var Items = itemMovement.ItemID.Id != null ? itemMovement.ItemID.Id.ToString() : "NULL";
+                var branchId = itemMovement.BranchID.Id != null ? itemMovement.BranchID.Id.ToString() : "NULL";
+                var perc = itemMovement.Percentage != null ? itemMovement.Percentage.ToString() : "NULL";
+                var commodity = itemMovement.CommodityID.Id != null ? itemMovement.CommodityID.Id.ToString() : "NULL";
+                cmd.CommandText = $"Exec ItemMovementAnalysisSP @FromDate='{itemMovement.FromDate}',@ToDate='{itemMovement.ToDate}',@BranchID={branchId},@LocationID={locationId},@ItemID={Items},@Percentage={perc},@CommodityID={commodity}";
                 _context.Database.GetDbConnection().Open();
                 using (var reader = cmd.ExecuteReader())
                 {

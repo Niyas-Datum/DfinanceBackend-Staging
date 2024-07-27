@@ -312,7 +312,7 @@ namespace Dfinance.api.Controllers.v1.DMain.WareHouse
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost(InvRoute.WareHouse.WhwiseStockLoadData)]
+        [HttpPost(InvRoute.WareHouse.MonthwiseStockRpt)]
         public IActionResult FillMonthwiseStock(MonthwiseStockRpt monthwiseStockRpt)
         {
             try
@@ -326,7 +326,7 @@ namespace Dfinance.api.Controllers.v1.DMain.WareHouse
             }
         }
         //Warehousehwise Stock Rpt
-        [HttpGet(InvRoute.WareHouse.WhwiseStockRpt)]
+        [HttpGet(InvRoute.WareHouse.WhwiseStockLoadData)]
         public IActionResult GetWarehousewiseStockLoadData()
         {
             try
@@ -339,7 +339,7 @@ namespace Dfinance.api.Controllers.v1.DMain.WareHouse
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost(InvRoute.WareHouse.MonthwiseStockRpt)]
+        [HttpPost(InvRoute.WareHouse.WhwiseStockRpt)]
         public IActionResult FillWarehousewiseStock(string item,int branchId)
         {
             try
@@ -352,7 +352,7 @@ namespace Dfinance.api.Controllers.v1.DMain.WareHouse
                 return BadRequest(ex.Message);
             }
         }
-        //Warehousehwise Stock Rpt
+        //Batchwise Stock Rpt
         [HttpGet(InvRoute.WareHouse.BatchwiseStockLoadData)]
         public IActionResult GetBatchwiseStockLoadData()
         {
@@ -372,6 +372,101 @@ namespace Dfinance.api.Controllers.v1.DMain.WareHouse
             try
             {
                 var data = _stockReportService.FillBatchwiseStock(batchwiseStock);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        //Itemwise Register Rpt
+        [HttpGet(InvRoute.WareHouse.ItemwiseRegLoadData)]
+        public IActionResult GetItemwiseRegStockLoadData()
+        {
+            try
+            {
+                var data = _stockReportService.GetItemwiseRegStockLoadData();
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost(InvRoute.WareHouse.ItemwiseRegStockRpt)]
+        public IActionResult FillItemwiseRegStock(ItemwiseRegRpt itemwiseStock)
+        {
+            try
+            {
+                var data = _stockReportService.FillItemwiseRegStock(itemwiseStock);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        //Item Stock Rpt
+        [HttpGet(InvRoute.WareHouse.ItemStockLoadData)]
+        public IActionResult GetItemStockRptLoadData()
+        {
+            try
+            {
+                var data = _stockReportService.GetItemStockRptLoadData();
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost(InvRoute.WareHouse.ItemStockRpt)]
+        public IActionResult FillItemStock(ItemStockRpt itemStock)
+        {
+            try
+            {
+                var data = _stockReportService.FillItemStockRpt(itemStock);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet(InvRoute.WareHouse.GetLocationsRpt)]
+        public IActionResult GetLocations(int branchId)
+        {
+            try
+            {
+                var data = _stockReportService.FillVoucherLocations(branchId);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        //ItemMovementAnalysis Rpt
+        [HttpGet(InvRoute.WareHouse.ItemMovAnlyLoadData)]
+        public IActionResult GetItemMovementAnalysisLoadData()
+        {
+            try
+            {
+                var data = _stockReportService.GetItemMovementAnalysisLoadData();
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost(InvRoute.WareHouse.ItemMovAnlyRpt)]
+        public IActionResult FillItemMovementAnalysis(ItemMovementAnalysis itemMovement)
+        {
+            try
+            {
+                var data = _stockReportService.FillItemMovementAnalysis(itemMovement);
                 return Ok(data);
             }
             catch (Exception ex)

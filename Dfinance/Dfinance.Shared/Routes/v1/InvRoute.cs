@@ -33,14 +33,21 @@ namespace Dfinance.Shared.Routes
             public const string StockIssueReceipt = $"{Main1}/stkIssuRecpt";
             public const string UnitwiseStockLoadData = $"{Main1}/unitStkLD";
             public const string UnitwiseStockRpt = $"{Main1}/unitStkRpt";
-            public const string ItemwiseStockLoadData = $"{Main1}/itemStkRptLD";
-            public const string ItemwiseStockRpt = $"{Main1}/itemStkRpt";
+            public const string ItemwiseStockLoadData = $"{Main1}/itemWsStkLD";
+            public const string ItemwiseStockRpt = $"{Main1}/itemWsStk";
             public const string MonthwiseStockLoadData = $"{Main1}/monthStkRptLD";
             public const string MonthwiseStockRpt = $"{Main1}/monthStkRpt";
             public const string WhwiseStockLoadData = $"{Main1}/whStkRptLD";
             public const string WhwiseStockRpt = $"{Main1}/whStkRpt";
             public const string BatchwiseStockLoadData = $"{Main1}/bhStkRptLD";
             public const string BatchwiseStockRpt = $"{Main1}/bhStkRpt";
+            public const string ItemwiseRegLoadData = $"{Main1}/ItemRegRptLD";
+            public const string ItemwiseRegStockRpt = $"{Main1}/ItemRegRpt";
+            public const string ItemStockLoadData = $"{Main1}/ItemStkRptLD";
+            public const string ItemStockRpt = $"{Main1}/ItemStkRpt";
+            public const string ItemMovAnlyLoadData = $"{Main1}/ItemMovAnlyRptLD";
+            public const string ItemMovAnlyRpt = $"{Main1}/ItemMovAnlyRpt";
+            public const string GetLocationsRpt = $"{Main1}/getLoctRpt";
         }
 
 

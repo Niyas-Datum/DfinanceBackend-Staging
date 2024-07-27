@@ -27,5 +27,13 @@ namespace Dfinance.Warehouse.Services.Interface
         CommonResponse FillWarehousewiseStock(string item, int branchId);
         CommonResponse GetBatchwiseStockLoadData();
         CommonResponse FillBatchwiseStock(BatchwiseStockRpt batchwiseStock);
+        CommonResponse GetItemwiseRegStockLoadData();
+        CommonResponse FillItemwiseRegStock(ItemwiseRegRpt itemwiseReg);
+        CommonResponse FillVoucherLocations(int branchId);
+        CommonResponse FillItemStockRpt(ItemStockRpt itemStock);
+        CommonResponse GetItemStockRptLoadData();
+        CommonResponse FillItemMovementAnalysis(ItemMovementAnalysis itemMovement);
+        CommonResponse GetItemMovementAnalysisLoadData();
+
     }
 }

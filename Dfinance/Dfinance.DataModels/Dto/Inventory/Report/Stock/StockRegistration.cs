@@ -106,4 +106,31 @@ namespace Dfinance.DataModels.Dto.Inventory
         public PopUpDto? BrandId { get; set; }
         public PopUpDto? Unit {  get; set; }
     }
+    public class ItemwiseRegRpt
+    {
+        public DateTime? FromDate { get; set; }
+        public DateTime? ToDate { get; set; }
+        public DropdownDto? BranchID { get; set; }
+        public PopUpDto? ItemID { get; set; }
+        public PopUpDto? CommodityID { get; set; }
+        public DropdownDto? LocationID { get; set; }
+        public DropdownDto? TypeOfWoodID { get; set; } = null;
+    }
+    public class ItemStockRpt
+    {
+        public DateTime ToDate { get; set; }
+        public DropdownDto? BranchID { get; set; }
+        public PopUpDto? ItemID { get; set; }
+        public DropdownDto? LocationID { get; set; }
+    }
+    public class ItemMovementAnalysis
+    {
+        public DateTime? FromDate { get; set; }
+        public DateTime? ToDate { get; set; }
+        public DropdownDto? BranchID { get; set; }
+        public PopUpDto? ItemID { get; set; }
+        public PopUpDto? CommodityID { get; set; }
+        public DropdownDto? LocationID { get; set; }
+        public decimal? Percentage { get; set; }
+    }
 }
