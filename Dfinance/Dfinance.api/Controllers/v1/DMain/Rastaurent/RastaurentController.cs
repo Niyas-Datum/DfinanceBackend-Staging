@@ -1,4 +1,6 @@
-﻿using Dfinance.Core.Views;
+﻿using Dfinance.api.Authorization;
+using Dfinance.api.Framework;
+using Dfinance.Core.Views;
 using Dfinance.DataModels.Dto;
 using Dfinance.DataModels.Dto.Inventory.Purchase;
 using Dfinance.Restaurant.Interface;
@@ -12,7 +14,9 @@ using static System.Collections.Specialized.BitVector32;
 
 namespace Dfinance.api.Controllers.v1.DMain.Rastaurent
 {
-    public class RastaurentController : Controller
+    [Authorize]
+    [ApiController]
+    public class RastaurentController : BaseController
     {
         private readonly IRestaurantInvoice _restaurantInvoice;
         public RastaurentController(IRestaurantInvoice restaurant)
