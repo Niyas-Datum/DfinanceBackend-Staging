@@ -10,7 +10,7 @@ public interface IAuthService
     CommonResponse Authenticate(AuthenticateRequestDto model);
     AuthResponseDto GetUserById(int? id);
     Task<CommonResponse> AppQrRead(string Qrtext);
-
+    CommonResponse LogOut();
 
     bool UserPermCheck(int pageid, int method);
     int? GetId();

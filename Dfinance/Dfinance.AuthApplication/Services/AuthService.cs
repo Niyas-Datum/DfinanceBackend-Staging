@@ -234,5 +234,10 @@ public class AuthService : IAuthService
         return CommonResponse.Error("Qrcode no valid");
     }
    
-
+    public CommonResponse LogOut()
+    {       
+        _connectionServices.RemoveConnection();
+        _connectionServices.setconkey(null);
+        return CommonResponse.Ok("LogOut Successfully");
+    }
 }

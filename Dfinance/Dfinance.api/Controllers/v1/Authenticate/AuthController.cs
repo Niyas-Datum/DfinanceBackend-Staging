@@ -2,6 +2,7 @@ using Dfinance.api.Framework;
 using Dfinance.AuthAppllication.Dto;
 using Dfinance.AuthAppllication.Services.Interface;
 using Dfinance.Shared.Configuration.Service;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dfinance.api.Controllers.v1.Authenticate;
@@ -86,5 +87,9 @@ public class AuthController : BaseController
     {
         return Response(_authservice.AppQrRead(qrcode).Result);
     }
-
+    [HttpPost("LogOut")]
+    public async Task<IActionResult> Logout()
+    {
+        return Response(_authservice.LogOut());
     }
+}
