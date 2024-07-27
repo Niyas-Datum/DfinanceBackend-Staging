@@ -18,6 +18,36 @@ namespace Dfinance.Shared.Routes
             public const string Save = $"{Main}/Save";
             public const string Update = $"{Main}/Update";
             public const string Delete = $"{Main}/delete";
+            public const string Main1 = $"{Base}/stockRpt";
+            public const string StockLoadData = $"{Main1}/stkRegLD";
+            public const string StockRegistration = $"{Main1}/stkRegt";
+            public const string StockItemLoadData = $"{Main1}/stkItemLD";
+            public const string StockItemRegistration = $"{Main1}/stkItmRegt";
+            public const string ItemDetailsLoadData = $"{Main1}/ItemDtsLD";
+            public const string StockItemDetails = $"{Main1}/stkItmDtsRegt";
+            public const string WarehouseStkLoadData = $"{Main1}/whStkLD";
+            public const string WarehouseStkReg = $"{Main1}/whStkRegt";
+            public const string CommodityStkLoadData = $"{Main1}/cmdtyStkLD";
+            public const string CommodityStkReg = $"{Main1}/cmdtyStkRegt";
+            public const string StockIssueLoadData = $"{Main1}/stkissRecLD";
+            public const string StockIssueReceipt = $"{Main1}/stkIssuRecpt";
+            public const string UnitwiseStockLoadData = $"{Main1}/unitStkLD";
+            public const string UnitwiseStockRpt = $"{Main1}/unitStkRpt";
+            public const string ItemwiseStockLoadData = $"{Main1}/itemWsStkLD";
+            public const string ItemwiseStockRpt = $"{Main1}/itemWsStk";
+            public const string MonthwiseStockLoadData = $"{Main1}/monthStkRptLD";
+            public const string MonthwiseStockRpt = $"{Main1}/monthStkRpt";
+            public const string WhwiseStockLoadData = $"{Main1}/whStkRptLD";
+            public const string WhwiseStockRpt = $"{Main1}/whStkRpt";
+            public const string BatchwiseStockLoadData = $"{Main1}/bhStkRptLD";
+            public const string BatchwiseStockRpt = $"{Main1}/bhStkRpt";
+            public const string ItemwiseRegLoadData = $"{Main1}/ItemRegRptLD";
+            public const string ItemwiseRegStockRpt = $"{Main1}/ItemRegRpt";
+            public const string ItemStockLoadData = $"{Main1}/ItemStkRptLD";
+            public const string ItemStockRpt = $"{Main1}/ItemStkRpt";
+            public const string ItemMovAnlyLoadData = $"{Main1}/ItemMovAnlyRptLD";
+            public const string ItemMovAnlyRpt = $"{Main1}/ItemMovAnlyRpt";
+            public const string GetLocationsRpt = $"{Main1}/getLoctRpt";
         }
 
 

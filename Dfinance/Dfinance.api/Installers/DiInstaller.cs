@@ -1,5 +1,9 @@
 using Dfiance.Hr.Employees;
 using Dfiance.Hr.Employees.Interface;
+using Dfinance.Application.LabelAndGridSettings;
+//using Dfinance.Application.LabelAndGridSettings.Interface;
+//using Dfinance.Application.LabelAndGridSettings;
+using Dfinance.Application.LabelAndGridSettings.Interface;
 using Dfinance.Application.Services;
 using Dfinance.Application.Services.Finance;
 using Dfinance.Application.Services.Finance.Interface;
@@ -14,37 +18,32 @@ using Dfinance.AuthAppllication.Services;
 using Dfinance.AuthAppllication.Services.Interface;
 using Dfinance.ChartOfAccount.Services.Finance;
 using Dfinance.ChartOfAccount.Services.Finance.Interface;
+using Dfinance.Finance.Services;
+using Dfinance.Finance.Services.Interface;
+using Dfinance.Finance.Statements;
+using Dfinance.Finance.Statements.Interface;
+using Dfinance.Finance.Vouchers;
+using Dfinance.Finance.Vouchers.Interface;
+using Dfinance.Inventory;
+using Dfinance.Inventory.Interface;
+using Dfinance.Inventory.Service;
+using Dfinance.Inventory.Service.Interface;
 using Dfinance.Item.Services.Inventory;
 using Dfinance.Item.Services.Inventory.Interface;
+using Dfinance.Purchase.Services;
+using Dfinance.Purchase.Services.Interface;
+using Dfinance.Restaurant;
+using Dfinance.Restaurant.Interface;
+using Dfinance.Sales;
 using Dfinance.Shared.Configuration.Service;
 using Dfinance.Shared.Deserialize;
 using Dfinance.Stakeholder.Services;
 using Dfinance.Stakeholder.Services.Interface;
-using Serilog.Formatting;
-using Dfinance.Warehouse.Services.Interface;
 using Dfinance.Warehouse.Services;
-using Dfinance.Inventory.Service.Interface;
-using Dfinance.Inventory.Service;
-//using Dfinance.Application.LabelAndGridSettings.Interface;
-//using Dfinance.Application.LabelAndGridSettings;
-using Dfinance.Application.LabelAndGridSettings.Interface;
-using Dfinance.Application.LabelAndGridSettings;
-
-using Dfinance.Inventory.Interface;
-using Dfinance.Inventory;
-using Dfinance.Sales;
-using Dfinance.Purchase.Services.Interface;
-using Dfinance.Purchase.Services;
-using Dfinance.Finance.Vouchers.Interface;
-using Dfinance.Finance.Vouchers;
-using Dfinance.Finance.Services.Interface;
-using Dfinance.Finance.Services;
-using Dfinance.WareHouse.Services.Interface;
+using Dfinance.Warehouse.Services.Interface;
 using Dfinance.WareHouse.Services;
-using Dfinance.Finance.Statements.Interface;
-using Dfinance.Finance.Statements;
-using Dfinance.Restaurant.Interface;
-using Dfinance.Restaurant;
+using Dfinance.WareHouse.Services.Interface;
+using Serilog.Formatting;
 
 using Dfinance.Stock.Interface;
 
@@ -122,6 +121,7 @@ public class DiInstaller : IInstaller
         //service.AddScoped<ITransactionAdditionalsService, TransactionAdditionalsService>();
 
         service.AddScoped<IWarehouseService, WarehouseService>();
+        service.AddScoped<IStockReportService, StockReportService>();
 
         //Roles
         service.AddScoped<IRoleService, RoleService>();

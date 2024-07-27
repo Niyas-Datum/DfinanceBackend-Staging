@@ -97,6 +97,7 @@ public partial class DFCoreContext : DbContext
     public DbSet<Locations> Locations { get; set; }
     public DbSet<LocationTypes> LocationTypes { get; set; }
     public DbSet<LocationBranchList> LocationBranchList { get; set; }
+    public DbSet<LocationView> LocationViewList { get; set; }
 
     //Transaction
     public DbSet<FiTransaction> FiTransaction { get; set; }
