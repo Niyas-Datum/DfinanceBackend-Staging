@@ -30,6 +30,7 @@ namespace Dfinance.Shared.Routes.v1
             public const string GetEmployee = $"{Main}/getWaiter";
             public const string GetSection = $"{Main}/getSection";
             public const string GetCategories = $"{Main}/getCat";
+            public const string GetItemsByTransId = $"{Main}/getItem";
         }
     }
 }
