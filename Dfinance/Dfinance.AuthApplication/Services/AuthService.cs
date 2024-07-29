@@ -223,12 +223,12 @@ public class AuthService : IAuthService
 
         var QRDECODE = Convert.FromBase64String(qrText);
         string[] DecodedArray = System.Text.Encoding.UTF8.GetString(QRDECODE).Split("$#$");
-        if (DecodedArray.Length == 4)
+        if (DecodedArray.Length == 5)
         {
             var _companyData = _authCoreContext.Companies.Where(x => x.Id == Convert.ToInt32(DecodedArray[1])).Select(x => new DropdownLoginDto { Id = x.Id, Value = x.Name }).FirstOrDefault();
             var _branchData = new DropdownLoginDto() { Id = Convert.ToInt32(DecodedArray[2]), Value = DecodedArray[3] };
-           
-            return CommonResponse.Ok(new { apilink = DecodedArray[0], companyData = _companyData, branchData = _branchData });
+           var _sKey = DecodedArray[4];
+            return CommonResponse.Ok(new { apilink = DecodedArray[0], companyData = _companyData, branchData = _branchData,sKey=_sKey });
             
         }
         return CommonResponse.Error("Qrcode no valid");
