@@ -565,8 +565,8 @@ namespace Dfinance.Restaurant
         private CommonResponse GetNextOrderNo(int voucherId)
         {
             var branchId=_authService.GetBranchId();            
-            var orderNo = _context.Database.ExecuteSqlRaw($"Exec GenerateOrderNoSP @BranchID={branchId},@VoucherID={voucherId}");
-            return CommonResponse.Ok(orderNo);
+            var orderNo = _context.AccountCodeView.FromSqlRaw($"Exec GenerateOrderNoSP @BranchID={branchId},@VoucherID={voucherId}").AsEnumerable().FirstOrDefault();
+            return CommonResponse.Ok(orderNo.AccountCode);
         }
         public CommonResponse GetItemsByTransId(int transId)
         {
