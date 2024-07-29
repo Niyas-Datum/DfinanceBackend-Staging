@@ -230,5 +230,22 @@ namespace Dfinance.api.Controllers.v1.DMain.Rastaurent
                 return BadRequest(ex.Message);
             }
         }
+        [HttpGet(InvRestRoute.Restaurant.GetItemsByTransId)]
+        public IActionResult GetItemsByTransId(int transId)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+                object result = _restaurantInvoice.GetItemsByTransId(transId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

@@ -26,5 +26,6 @@ namespace Dfinance.Restaurant.Interface
         CommonResponse GetSections();
         CommonResponse GetCategories();
         CommonResponse SaveAndPrintKOT(RestaurentDto restaurentDto, int sectionId, int tableId, string tableName,int salesManId,string chairName);
+        CommonResponse GetItemsByTransId(int transId);
     }
 }

@@ -9,6 +9,7 @@ using Dfinance.Core.Views.Item;
 using Dfinance.DataModels.Dto;
 using Dfinance.DataModels.Dto.Common;
 using Dfinance.DataModels.Dto.Finance;
+using Dfinance.DataModels.Dto.Inventory;
 using Dfinance.DataModels.Dto.Inventory.Purchase;
 using Dfinance.Inventory;
 using Dfinance.Inventory.Service.Interface;
@@ -191,7 +192,7 @@ namespace Dfinance.Restaurant
                     }
                     //int VoucherId=_com.GetVoucherId(PageId);
                     string Status = "Approved";
-                    RestaurentDto.FiTransactionAdditional.Code = GetAutoVoucherNo(voucherId);
+                    RestaurentDto.FiTransactionAdditional.Code = GetNextOrderNo(voucherId).Data.ToString();
                     var transaction = _transactionService.SaveTransaction(RestaurentDto, PageId, voucherId, Status).Data;
                     int TransId = 0;
                     var transType = transaction.GetType();
@@ -550,10 +551,42 @@ namespace Dfinance.Restaurant
                 restDto.Items = restItem;
                 restDto.VoucherNo = GetNextTransactionNo(141).Result;
                 if (restDto.Party == null)
-                    restDto.Party = new PopUpDto() { Id = 309 };
+                    restDto.Party = new PopUpDto() { Id = 309 };               
                 var transId = SaveRestaurentInvoice(restDto, 469, 141, sectionId, tableId, tableName, null, null, salesManId,chairName).Data;
                 var printKot = PrintKOT((int)transId, 1).Data;
                 return CommonResponse.Ok(printKot);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Error(ex);
+            }
+        }
+        private CommonResponse GetNextOrderNo(int voucherId)
+        {
+            var branchId=_authService.GetBranchId();            
+            var orderNo = _context.Database.ExecuteSqlRaw($"Exec GenerateOrderNoSP @BranchID={branchId},@VoucherID={voucherId}");
+            return CommonResponse.Ok(orderNo);
+        }
+        public CommonResponse GetItemsByTransId(int transId)
+        {
+            try
+            {
+                var items=(from T in _context.FiTransaction 
+                           join TI in _context.InvTransItems on T.Id equals TI.TransactionId
+                           join I in _context.ItemMaster on TI.ItemId equals I.Id
+                           join A in _context.FiTransactionAdditionals on T.Id equals A.TransactionId
+                           where TI.TransactionId == transId
+                           select new
+                           {
+                               TI.Id,
+                               I.ItemName,
+                               TI.ItemId,
+                               OrederNo=A.Code,
+                               Time= T.Date.ToString("HH:mm:ss")
+                           }).ToList();
+                    
+                return CommonResponse.Ok(items);
             }
             catch (Exception ex)
             {
