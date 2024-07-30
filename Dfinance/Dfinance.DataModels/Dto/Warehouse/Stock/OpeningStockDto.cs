@@ -1,7 +1,7 @@
 ﻿using Dfinance.DataModels.Dto.Common;
 using Dfinance.DataModels.Dto.Inventory.Purchase;
 
-namespace Dfinance.DataModels.Dto.Inventory.Stock
+namespace Dfinance.DataModels.Dto
 {
     public class OpeningStockDto
     {

@@ -1,4 +1,4 @@
-﻿using Dfinance.DataModels.Dto.Inventory;
+﻿using Dfinance.DataModels.Dto;
 using Dfinance.Shared.Domain;
 
 namespace Dfinance.Warehouse.Services.Interface

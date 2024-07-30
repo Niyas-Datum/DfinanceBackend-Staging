@@ -1,17 +1,9 @@
-﻿using Dfinance.DataModels.Dto.Common;
-using Dfinance.DataModels.Dto.Inventory.Purchase;
+﻿using Dfinance.DataModels.Dto;
+using Dfinance.DataModels.Dto.Common;
 using Dfinance.DataModels.Dto.Inventory;
-using Dfinance.DataModels.Dto.Inventory.Stock;
-using Dfinance.Purchase.Services.Interface;
-using Dfinance.Stock.Services.Interface;
+using Dfinance.DataModels.Dto.Inventory.Purchase;
+using Dfinance.WareHouse.Services;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Dfinance.Shared.Domain;
-using static Dfinance.Shared.Routes.InvRoute;
 
 namespace Dfinance.NUnitTest.Stock
 {
@@ -116,7 +108,7 @@ namespace Dfinance.NUnitTest.Stock
         }
     }
             };
-            _openingStock.Setup(x => x.SaveOpeningStock(dto, pageId, voucherId)).Returns(new CommonResponse { Exception = null, Data = new InventoryTransactionDto() });
+           // _openingStock.Setup(x => x.SaveOpeningStock(dto, pageId, voucherId)).Returns(new CommonResponse { Exception = null, Data = new InventoryTransactionDto() });
             var result = _openingStock.Object.SaveOpeningStock(dto, pageId, voucherId);
             Assert.That(result, Is.Not.Null);
             Assert.That(result.IsValid, Is.True);
@@ -216,7 +208,7 @@ UniqueItems = new List<InvUniqueItemDto>
     }
 }
             };
-            _openingStock.Setup(x => x.UpdateOpeningStock(dto, pageId, voucherId)).Returns(new CommonResponse { Exception = null, Data = new InventoryTransactionDto() });
+          //  _openingStock.Setup(x => x.UpdateOpeningStock(dto, pageId, voucherId)).Returns(new CommonResponse { Exception = null, Data = new InventoryTransactionDto() });
             var result = _openingStock.Object.UpdateOpeningStock(dto, pageId, voucherId);
             Assert.That(result, Is.Not.Null);
             Assert.That(result.IsValid, Is.True);

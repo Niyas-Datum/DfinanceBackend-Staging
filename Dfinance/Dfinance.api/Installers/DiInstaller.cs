@@ -45,12 +45,6 @@ using Dfinance.WareHouse.Services;
 using Dfinance.WareHouse.Services.Interface;
 using Serilog.Formatting;
 
-using Dfinance.Stock.Interface;
-
-using Dfinance.Stock.Services.Interface;
-
-using Dfinance.Stock.Services;
-
 
 namespace Dfinance.api.Installers;
 
@@ -217,11 +211,11 @@ public class DiInstaller : IInstaller
         service.AddScoped<IAccountRegister, AccountRegisterService>();
 
         //PhysicalStock
-        service.AddScoped<IPhysicalStockService, PhysicalStockService>();
+       // service.AddScoped<IPhysicalStockService, PhysicalStockService>();
 
 
         //OpeningStock
-        service.AddScoped<IOpeningStockService, OpeningStockService>();
+      //  service.AddScoped<IOpeningStockService, OpeningStockService>();
 
 
     }
