@@ -1,9 +1,9 @@
-﻿using Dfinance.DataModels.Dto.Common;
-using Dfinance.DataModels.Dto.Finance;
+﻿using Dfinance.DataModels.Dto;
+using Dfinance.DataModels.Dto.Common;
 using Dfinance.DataModels.Dto.Inventory;
 using Dfinance.DataModels.Dto.Inventory.Purchase;
 using Dfinance.Shared.Domain;
-using Dfinance.Stock.Interface;
+using Dfinance.WareHouse.Services;
 using Moq;
 
 namespace Dfinance.NUnitTest.Stock

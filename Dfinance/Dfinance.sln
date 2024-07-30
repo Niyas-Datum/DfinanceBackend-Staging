@@ -41,8 +41,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dfinance.Finance", "Dfinanc
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dfinance.Restaurant", "Dfinance.Restaurant\Dfinance.Restaurant.csproj", "{7121E439-8E00-45EF-88E4-139A8C4AEC4B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dfinance.Stock", "Dfinance.Stock\Dfinance.Stock.csproj", "{C726FC2C-84F8-45DB-A5CA-FD719DE4FCE5}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -125,10 +123,6 @@ Global
 		{7121E439-8E00-45EF-88E4-139A8C4AEC4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7121E439-8E00-45EF-88E4-139A8C4AEC4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7121E439-8E00-45EF-88E4-139A8C4AEC4B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C726FC2C-84F8-45DB-A5CA-FD719DE4FCE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C726FC2C-84F8-45DB-A5CA-FD719DE4FCE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C726FC2C-84F8-45DB-A5CA-FD719DE4FCE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C726FC2C-84F8-45DB-A5CA-FD719DE4FCE5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

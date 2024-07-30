@@ -1,9 +1,7 @@
-﻿using Dfinance.Application.Services.General;
-using Dfinance.AuthAppllication.Services.Interface;
+﻿using Dfinance.AuthAppllication.Services.Interface;
 using Dfinance.AuthCore.Infrastructure;
 using Dfinance.Core.Infrastructure;
-using Dfinance.Core.Views;
-using Dfinance.DataModels.Dto.Inventory;
+using Dfinance.DataModels.Dto;
 using Dfinance.Shared.Domain;
 using Dfinance.Warehouse.Services.Interface;
 using Microsoft.EntityFrameworkCore;

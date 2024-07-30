@@ -1,8 +1,7 @@
 ﻿using Dfinance.api.Authorization;
-using Dfinance.DataModels.Dto.Inventory;
-using Dfinance.Finance.Vouchers.Interface;
+using Dfinance.DataModels.Dto;
 using Dfinance.Shared.Routes;
-using Dfinance.Stock.Interface;
+using Dfinance.WareHouse.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dfinance.api.Controllers.v1.DMain.Stock

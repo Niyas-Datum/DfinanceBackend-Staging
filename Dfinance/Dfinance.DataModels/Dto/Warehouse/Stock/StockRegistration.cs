@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dfinance.DataModels.Dto.Inventory
+namespace Dfinance.DataModels.Dto
 {
     public class StockRegistration
     {

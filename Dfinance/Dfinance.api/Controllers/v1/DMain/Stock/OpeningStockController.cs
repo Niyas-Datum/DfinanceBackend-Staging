@@ -1,11 +1,10 @@
 ﻿using Dfinance.api.Authorization;
 using Dfinance.api.Framework;
-using Dfinance.DataModels.Dto.Inventory.Stock;
+using Dfinance.DataModels.Dto;
 using Dfinance.Shared.Routes;
-using Dfinance.Stock.Services.Interface;
+using Dfinance.WareHouse.Services;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using static Dfinance.Shared.Routes.InvRoute;
 
 namespace Dfinance.api.Controllers.v1.DMain.Stock
 {
