@@ -1,25 +1,20 @@
 ﻿using Dfinance.Application.Services.General.Interface;
 using Dfinance.AuthAppllication.Services.Interface;
-using Dfinance.Core;
 using Dfinance.Core.Infrastructure;
 using Dfinance.DataModels.Dto;
 using Dfinance.DataModels.Dto.Inventory.Purchase;
 using Dfinance.Inventory.Service.Interface;
 using Dfinance.Shared.Domain;
 using Dfinance.Shared.Enum;
+using Dfinance.WareHouse.Services;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Dfinance.Stock.Services
 {
-    public class StockTransService
+    public class StockTransService :IStockTransService
     {
         private readonly DFCoreContext _context;
         private readonly IAuthService _authService;
@@ -102,14 +97,14 @@ namespace Dfinance.Stock.Services
             }
             return CommonResponse.Ok(transId);
         }
-        private string inventoryApproval;
-        private object GetSettings(string key)
-        {
-            var settings = _context.MaSettings
-        .Where(m => key.Contains(m.Key))
-        .Select(m => m.Value).FirstOrDefault();
-            return settings;
-        }
+        //private string inventoryApproval;
+        //private object GetSettings(string key)
+        //{
+        //    var settings = _context.MaSettings
+        //.Where(m => key.Contains(m.Key))
+        //.Select(m => m.Value).FirstOrDefault();
+        //    return settings;
+        //}
         private CommonResponse PermissionDenied(string msg)
         {
             _logger.LogInformation("No Permission for " + msg);
