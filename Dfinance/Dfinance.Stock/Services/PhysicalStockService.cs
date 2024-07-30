@@ -1,7 +1,7 @@
 ﻿using Dfinance.Application.Services.General.Interface;
 using Dfinance.AuthAppllication.Services.Interface;
 using Dfinance.Core.Infrastructure;
-using Dfinance.DataModels.Dto.Inventory;
+using Dfinance.DataModels.Dto;
 using Dfinance.Inventory.Service.Interface;
 using Dfinance.Shared.Domain;
 using Dfinance.Stock.Interface;

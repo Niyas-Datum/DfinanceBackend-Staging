@@ -1,4 +1,4 @@
-﻿using Dfinance.DataModels.Dto.Inventory.Stock;
+﻿using Dfinance.DataModels.Dto;
 using Dfinance.Shared.Domain;
 
 namespace Dfinance.Stock.Services.Interface
