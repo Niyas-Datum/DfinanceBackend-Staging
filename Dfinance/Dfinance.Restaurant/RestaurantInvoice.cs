@@ -582,6 +582,7 @@ namespace Dfinance.Restaurant
                                TI.Id,
                                I.ItemName,
                                TI.ItemId,
+                               Quantity= TI.Qty,
                                OrederNo=A.Code,
                                Time= T.Date.ToString("HH:mm:ss")
                            }).ToList();
