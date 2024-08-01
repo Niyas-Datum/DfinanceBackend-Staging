@@ -18,6 +18,7 @@ using Dfinance.AuthAppllication.Services;
 using Dfinance.AuthAppllication.Services.Interface;
 using Dfinance.ChartOfAccount.Services.Finance;
 using Dfinance.ChartOfAccount.Services.Finance.Interface;
+using Dfinance.DataModels.Dto;
 using Dfinance.Finance.Services;
 using Dfinance.Finance.Services.Interface;
 using Dfinance.Finance.Statements;
@@ -35,6 +36,8 @@ using Dfinance.Purchase.Services.Interface;
 using Dfinance.Restaurant;
 using Dfinance.Restaurant.Interface;
 using Dfinance.Sales;
+using Dfinance.Sales.Service;
+using Dfinance.Sales.Service.Interface;
 using Dfinance.Shared.Configuration.Service;
 using Dfinance.Shared.Deserialize;
 using Dfinance.Stakeholder.Services;
@@ -141,7 +144,7 @@ public class DiInstaller : IInstaller
         service.AddScoped<IInternationalPurchaseService, InternationalPurchaseService>();
         service.AddScoped<IGoodsInTransitService, GoodsInTransitService>();
 		service.AddScoped<ISalesReturnService, SalesReturnService>();
-
+        service.AddScoped<ISalesOrder,SalesOrderService>(); 
         service.AddScoped<IPurchaseReturnService, PurchaseReturnService>();
 
         service.AddScoped<IFinanceAdditional, FinanceAdditional>();
@@ -218,7 +221,13 @@ public class DiInstaller : IInstaller
         service.AddScoped<IPhyOpenStockService, PhyOpenStockService>();
 
 
+
         
+
+        //StockReturn and Adjustment
+        service.AddScoped<IStockRtnAdjustService, StockRtnAdjustService>();
+      
+
 
 
     }

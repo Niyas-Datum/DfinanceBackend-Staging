@@ -163,8 +163,10 @@ namespace Dfinance.Inventory.Service
 
                 fromLocId,//9
                 toLocId,//10
-                null, null, null, null, null, null, null, null, null, 
-                fiTransactionAdditionalDto.Code?? null,//11,12,13,14,15,16,17,18,19,20
+                null, null, null, null, null, null, null,
+                null,
+                fiTransactionAdditionalDto.PartyNameandAddress ?? null, 
+                fiTransactionAdditionalDto.Code?? null,
                 fiTransactionAdditionalDto.TermsOfDelivery??null,//21
                 null, null,//22,23
                 fiTransactionAdditionalDto.CreditPeriod??null,//24
@@ -196,7 +198,7 @@ namespace Dfinance.Inventory.Service
 
                 null,
                 fiTransactionAdditionalDto.Approve??null,//76
-                null,
+                fiTransactionAdditionalDto.TransPortationType.Id,
                 inLocId,//78
                 outLocId,//79
                 null, null,

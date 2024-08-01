@@ -19,34 +19,34 @@ namespace Dfinance.Inventory.Service
         private readonly DFCoreContext _context;
         private readonly IAuthService _authService;
         private readonly IHostEnvironment _environment;
-        private readonly IItemUnitsService _itemUnits;
+        private readonly IInventoryTransactionService _inventoryTransactionService;
         private readonly IItemMasterService _itemMaster;
-        public InventoryItemservice(DFCoreContext context, IAuthService authService, IHostEnvironment hostEnvironment,IItemMasterService itemMaster,IItemUnitsService itemUnits)
+        public InventoryItemservice(DFCoreContext context, IAuthService authService, IHostEnvironment hostEnvironment, IItemMasterService itemMaster, IInventoryTransactionService inventoryTransaction)
         {
             _context = context;
             _authService = authService;
             _environment = hostEnvironment;
             _itemMaster = itemMaster;
-           _itemUnits = itemUnits;
+            _inventoryTransactionService = inventoryTransaction;
         }
-                
+
         //Get the IsUnique, IsExpiry values of item from InvItemMaster
         //get the units of item
         //get next batch number
         //get the price category pop up of the item grid
         //get the item transaction details for tool tip in item grid
-        public CommonResponse GetItemData(int itemId,int partyId,int voucherId)
+        public CommonResponse GetItemData(int itemId, int partyId, int voucherId)
         {
             try
             {
                 //var unitData = _itemUnits.GetItemUnits(itemId);
-               // var result = _itemMaster.GetUniqueExpiryItem(itemId);
-                var batch = NextBatchNo();                
+                // var result = _itemMaster.GetUniqueExpiryItem(itemId);
+                var batch = NextBatchNo();
                 //string criteria = "GetLastItemRate";
-                int branch=_authService.GetBranchId().Value;
+                int branch = _authService.GetBranchId().Value;
                 var PriceCat = PriceCategoryPopup(itemId);
-               // var itemData = _context.ItemTransaction.FromSqlRaw($"Exec VoucherAdditionalsSP @Criteria='{criteria}',@BranchID='{branch}',@ItemID='{itemId}',@AccountID='{partyId}',@VoucherID='{voucherId}'").ToList();
-                var outdata = new {  BatchNo = batch,  PriceCategory = PriceCat };
+                // var itemData = _context.ItemTransaction.FromSqlRaw($"Exec VoucherAdditionalsSP @Criteria='{criteria}',@BranchID='{branch}',@ItemID='{itemId}',@AccountID='{partyId}',@VoucherID='{voucherId}'").ToList();
+                var outdata = new { BatchNo = batch, PriceCategory = PriceCat };
 
 
                 return CommonResponse.Ok(outdata);
@@ -67,18 +67,25 @@ namespace Dfinance.Inventory.Service
         //for price category popup in item grid
         private object PriceCategoryPopup(int itemId)
         {//lin
-            var result = _context.MaPriceCategory.Include(x=> x.MultiRate)
-                
+            var result = _context.MaPriceCategory.Include(x => x.MultiRate)
+
                   .Where(pc => (bool)pc.Active) // Active price categories
            .Select(pc => new abc()
            {
-              id= pc.Id,
-              PriceCategory = pc.Name,
-              Perc = pc.Perc,
-              Rate = pc.MultiRate.Where(x=>x.Id == itemId && x.PriceCategoryId ==pc.Id).Select(x=>x.PurchaseRate).FirstOrDefault()              
-           }).ToList();                      
-            
+               id = pc.Id,
+               PriceCategory = pc.Name,
+               Perc = pc.Perc,
+               Rate = pc.MultiRate.Where(x => x.Id == itemId && x.PriceCategoryId == pc.Id).Select(x => x.PurchaseRate).FirstOrDefault()
+           }).ToList();
+
             return result;
+        }
+        private object GetSettings(string key)
+        {
+            var settings = _context.MaSettings
+        .Where(m => key.Contains(m.Key))
+        .Select(m => m.Value).FirstOrDefault();
+            return settings;
         }
 
         /// <summary>
@@ -88,7 +95,7 @@ namespace Dfinance.Inventory.Service
         /// <param name="voucherId"></param>
         /// <param name="transId"></param>
         /// <returns></returns>
-        public CommonResponse SaveInvTransItems(List<InvTransItemDto> Items, int voucherId, int transId,decimal? exchangeRate,int? warehouse)
+        public CommonResponse SaveInvTransItems(List<InvTransItemDto> Items, int voucherId, int transId, decimal? exchangeRate, int? warehouse)
         {
             try
             {
@@ -96,48 +103,83 @@ namespace Dfinance.Inventory.Service
                 int slNo = 1;
                 int refTransId1 = 0;
                 string criteria = "InsertInvTransItems";
-                decimal factor = 1;               
+                decimal factor = 1;
                 string tranType = "Normal";
-                decimal tempRate = 0;
-                int rowType = 0;
+                //decimal? tempRate = ;
+                int? rowType = null;
                 bool visible = true;
                 //decimal avgCost = 0;
                 int refTransItemId = 0;
                 int? outLocId = null;
                 int? inLocId = null;
-                switch ((VoucherType)voucherId)
+                decimal? tempQty = null;
+               
+                bool temQtySameAsQty = Convert.ToBoolean(GetSettings("TempQtySameAsQty"));
+
+                var primeryVoucherId = _inventoryTransactionService.GetPrimaryVoucherID(voucherId);
+                switch ((VoucherType)primeryVoucherId)
                 {
                     case VoucherType.Purchase:
                     case VoucherType.Purchase_Order:
                     case VoucherType.Opening_Stock:
+                    case VoucherType.Stock_Adjustment:
+                    case VoucherType.Stock_Return:
                         inLocId = warehouse;
                         break;
                     case VoucherType.Sales_Invoice:
-                        outLocId= warehouse;
+                    case VoucherType.Purchase_Return:
+                        outLocId = warehouse;
                         break;
                 }
-                if (Items != null && Items.Count>0)
+                if (Items != null && Items.Count > 0)
                 {
                     foreach (var item in Items)
                     {
-                        factor = _context.ItemUnits.Where(x => x.ItemId == item.ItemId && x.Unit == item.Unit.Unit).Select(x => x.Factor).SingleOrDefault();                      
+                        decimal? stockQty = (item.Qty + item.FocQty) * factor;
+                        factor = _context.ItemUnits.Where(x => x.ItemId == item.ItemId && x.Unit == item.Unit.Unit).Select(x => x.Factor).SingleOrDefault();
                         var importItems = _context.InvTransItems.Where(i => i.TransactionId == item.TransactionId).Select(i => i.ItemId).ToList();
                         foreach (var i in importItems)
                         {
                             if (i == item.ItemId)
                                 refTransItemId = _context.InvTransItems.Where(t => t.TransactionId == item.TransactionId && t.ItemId == item.ItemId)
                                .Select(t => t.Id).SingleOrDefault();
-                        }  
+                        }
+
+                        if ((VoucherType)primeryVoucherId == VoucherType.Purchase ||  (VoucherType)primeryVoucherId == VoucherType.Stock_Adjustment)
+                        {
+                            rowType = 1;
+                            tempQty= SetTempQty(temQtySameAsQty, item);
+                        }
+                        else if ((VoucherType)primeryVoucherId == VoucherType.Sales_Invoice)
+                        {
+                            rowType = -1;
+                            tempQty = SetTempQty(temQtySameAsQty, item);
+                        }
+                        if ((VoucherType)primeryVoucherId == VoucherType.Opening_Stock)
+                        {
+                            tempQty = SetTempQty(temQtySameAsQty, item);
+                            stockQty = item.BasicQty;
+                            rowType = 1;
+                            item.TempRate = item.Rate;
+                        }
+                        if ((VoucherType)primeryVoucherId == VoucherType.Physical_Stock)
+                        {
+                            tempQty = SetTempQty(temQtySameAsQty, item);
+                            stockQty = item.BasicQty;
+                            rowType = null;
+                            item.TempRate = item.Rate;
+                        }
+                        if ((VoucherType)primeryVoucherId == VoucherType.Stock_Return)
+                        {
+                            outLocId = _context.Locations.Where(x => x.DevCode == 3).Select(x => x.Id).FirstOrDefault();
+                            item.TempRate = null;
+                            tempQty = null;                            
+                        }
+                        item.IsReturn = null;
+                        if ((VoucherType)primeryVoucherId == VoucherType.Purchase_Return || (VoucherType)primeryVoucherId == VoucherType.Sales_Return)
+                            item.IsReturn = true;
                         
-                        if ((VoucherType)voucherId== VoucherType.Purchase || (VoucherType)voucherId==VoucherType.Opening_Stock)
-                        {
-                            rowType = 1;                            
-                        }
-                        else if (voucherId == 23)
-                        {
-                            rowType = -1;                       
-                          
-                        }
+
                         SqlParameter newId = new SqlParameter("@NewID", SqlDbType.Int)
                         {
                             Direction = ParameterDirection.Output
@@ -170,8 +212,8 @@ namespace Dfinance.Inventory.Service
                                     null,//4-refTransId1
                                     item.Unit.Unit,//5
                                     item.Qty,//6
-                                    item.FocQty==0?null:item.FocQty,//7
-                                    item.BasicQty==0?null:item.BasicQty,//8-BasicQty
+                                    item.FocQty == 0 ? null : item.FocQty,//7
+                                    item.BasicQty == 0 ? null : item.BasicQty,//8-BasicQty
                                     item.Rate,//9
                                     null,//10-advanceRate
                                     item.OtherRate == 0 ? null : item.OtherRate,//11
@@ -183,7 +225,7 @@ namespace Dfinance.Inventory.Service
                                     null,//17-InvavgCostId
                                     item.IsReturn,//18-IsReturn
                                     item.Discount == 0 ? null : item.Discount,//19
-                                    item.Additional==0?null:item.Additional,//20-Additional
+                                    item.Additional == 0 ? null : item.Additional,//20-Additional
                                     factor,//21
                                     null,//22-CommodityId
                                     null,//23-AccountId
@@ -204,12 +246,12 @@ namespace Dfinance.Inventory.Service
                                     item.FinishDate,//38
                                     item.UpdateDate,//39
                                     null,//40-IsSameForPcs
-                                    (item.Qty + item.FocQty) * factor,//41
+                                    stockQty,//41
                                     item.Margin == 0 ? null : item.Margin,//42
                                     inLocId,//43
                                     outLocId,
                                      item.BatchNo,//45
-                                    item.SizeMaster==null?null: item.SizeMaster.Id==0?null:item.SizeMaster.Id,//46-sizeMasterId
+                                    item.SizeMaster == null ? null : item.SizeMaster.Id == 0 ? null : item.SizeMaster.Id,//46-sizeMasterId
                                     item.DiscountPerc,//47
                                     item.TaxPerc,//48
                                     item.TaxValue,//49
@@ -223,25 +265,25 @@ namespace Dfinance.Inventory.Service
                                     null,//57
                                     item.RateDisc == 0 ? null : item.RateDisc,//58
                                     null,//59-refId
-                                    (item.Qty),//60-TempQty
-                                    tempRate == 0 ? null : tempRate,//61
-                                    item.ReplaceQty==0?null : item.ReplaceQty,//62
+                                    tempQty,//60-TempQty
+                                    item.TempRate == 0 ? null : item.TempRate,//61
+                                    item.ReplaceQty == 0 ? null : item.ReplaceQty,//62
                                     item.PrintedMRP == 0 ? null : item.PrintedMRP,//63-PrintedMRP
                                     item.PrintedRate == 0 ? null : item.PrintedRate,//64
                                     item.PtsRate == 0 ? null : item.PtsRate,//65-ptsRate
                                     item.PtrRate == 0 ? null : item.PtrRate,//66-ptrRate
                                     null,//67-tempBatchNo
                                     item.StockItemId == 0 ? null : item.StockItemId,//68
-                                    item.CostAccountId==0?null : item.CostAccountId,//69
+                                    item.CostAccountId == 0 ? null : item.CostAccountId,//69
                                     null, null, null, null,//70,71,72,73
                                     item.Hsn,
-                                    item.BrandId==0?null:item.BrandId,//75
+                                    item.BrandId == 0 ? null : item.BrandId,//75
                                     null, null, //76,77
-                                    string.IsNullOrEmpty(item.RepairsRequired)?null: item.RepairsRequired,//78
+                                    string.IsNullOrEmpty(item.RepairsRequired) ? null : item.RepairsRequired,//78
                                     exchangeRate,//79
                                     null, null, null, //80,81,82
                                     item.AvgCost == 0 ? null : item.AvgCost, //83-avgcost
-                                    item.Profit==0?null:item.Profit, //84
+                                    item.Profit == 0 ? null : item.Profit, //84
                                     null, null, null,//85 ,86,87
                                     item.Pcs == 0 ? null : item.Pcs,
                                     newId
@@ -254,9 +296,9 @@ namespace Dfinance.Inventory.Service
                         var uniqueItem = _context.ItemMaster.Where(i => i.Id == item.ItemId).Select(i => i.IsUniqueItem).SingleOrDefault();
                         if (uniqueItem == true)
                             if (item.Qty > 0 && item.UniqueItems.Count > 0)
-                                {                            
-                                     SaveUniqueItems(transId, transItemId, item.ItemId, item.UniqueItems);
-                                }
+                            {
+                                SaveUniqueItems(transId, transItemId, item.ItemId, item.UniqueItems);
+                            }
                     }
                     slNo++;
                 }
@@ -268,6 +310,24 @@ namespace Dfinance.Inventory.Service
             }
         }
 
+        private decimal SetTempQty( bool temQtySameAsQty, InvTransItemDto item)
+        {
+            decimal tempQty=0;
+            if (temQtySameAsQty)
+            {
+               var factor = _context.ItemUnits.Where(x => x.ItemId == item.ItemId && x.Unit == "Carton").Select(x => x.Factor).SingleOrDefault();
+                if (item.Unit.Unit != "Carton")
+                {
+                    if (factor == null || factor == 0)
+                        factor = 1;
+                    tempQty = item.Qty / factor;
+                }
+                else
+                    tempQty = item.Qty;
+            }
+            return tempQty;
+        }
+
         public CommonResponse UpdateInvTransItems(List<InvTransItemDto> Items, int voucherId, int transId, decimal? exchangeRate, int? warehouse)
         {
             try
@@ -277,14 +337,14 @@ namespace Dfinance.Inventory.Service
                 {
                     _context.InvUniqueItems.RemoveRange(uniqueRemove);
                     _context.SaveChanges();
-                }               
+                }
                 var itemsRemove = _context.InvTransItems.Where(i => i.TransactionId == transId).ToList();
-                if (itemsRemove.Count>0)
+                if (itemsRemove.Count > 0)
                 {
                     _context.InvTransItems.RemoveRange(itemsRemove);
                     _context.SaveChanges();
-                    SaveInvTransItems(Items, voucherId, transId,exchangeRate,warehouse);
-                }              
+                    SaveInvTransItems(Items, voucherId, transId, exchangeRate, warehouse);
+                }
 
                 return CommonResponse.Ok("TransItems Updated Successfully");
             }
@@ -313,12 +373,12 @@ namespace Dfinance.Inventory.Service
 
         private string NextBatchNo()
         {
-           
-                string criteria = "NextBatchNo";
-                var data = _context.NextBatchNoView.FromSqlRaw($"Exec VoucherAdditionalsSP @Criteria='{criteria}'").AsEnumerable(); 
-                var batchNo = data.FirstOrDefault();
-                return batchNo.nextBatchNo.ToString();
-           
+
+            string criteria = "NextBatchNo";
+            var data = _context.NextBatchNoView.FromSqlRaw($"Exec VoucherAdditionalsSP @Criteria='{criteria}'").AsEnumerable();
+            var batchNo = data.FirstOrDefault();
+            return batchNo.nextBatchNo.ToString();
+
         }
         /********************************************************InvUniqueItems******************************************************************************/
         private CommonResponse SaveUniqueItems(int transId, int transItemId, int itemId, List<InvUniqueItemDto> uniqueItems)

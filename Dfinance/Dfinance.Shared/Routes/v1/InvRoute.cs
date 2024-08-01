@@ -171,7 +171,9 @@ namespace Dfinance.Shared.Routes
           
             public const string SalesPurchaseSummary = $"{Main}/salespurchasesummary";
             public const string AreaWiseSales = $"{Main}/areawisesales";
-            public const string SalesReport = $"{Main}/salesreport"; 
+            public const string SalesReport = $"{Main}/salesreport";
+            public const string SaveSalesOrder = $"{Main}/saveSalesorder";
+            public const string UpdateSalesOrder = $"{Main}/updateSalesorder";
         }
         public class PurchaseEnquiry
         {
@@ -288,12 +290,13 @@ namespace Dfinance.Shared.Routes
             
         }   
 
-        public class OpeningStock
+        public class StockReturnAndAdjustment
         {
-            public const string Main = $"{Base}/openingStock";
+            public const string Main = $"{Base}/stkRtnAdj";
             public const string Save = $"{Main}/save";
             public const string Update = $"{Main}/update";
-
+            public const string Delete = $"{Main}/delete";
+            public const string Cancel = $"{Main}/cancel";
         }
     }
 }
