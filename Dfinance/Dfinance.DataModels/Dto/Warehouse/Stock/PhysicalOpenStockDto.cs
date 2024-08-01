@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Dfinance.DataModels.Dto
 {
-    public class PhysicalStockDto
+    public class PhyOpenStockDto
     {
         public int Id { get; set; }
         public string VoucherNo { get; set; }
