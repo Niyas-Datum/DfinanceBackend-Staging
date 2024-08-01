@@ -280,13 +280,12 @@ namespace Dfinance.Shared.Routes
             public const string marPrice = $"{Main}/marPrice";
         }
 
-        public class PhysicalStock
+        public class PhyOpenStock
         {
-            public const string Main = $"{Base}/physicalstock";
+            public const string Main = $"{Base}/phyOpenstock";
             public const string Save = $"{Main}/save";
             public const string Update = $"{Main}/update";
-            public const string Delete = $"{Main}/delete";
-            public const string Cancel = $"{Main}/delete";
+            
         }   
 
         public class OpeningStock

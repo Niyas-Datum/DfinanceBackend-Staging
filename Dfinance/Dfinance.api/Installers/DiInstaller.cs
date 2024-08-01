@@ -39,10 +39,12 @@ using Dfinance.Shared.Configuration.Service;
 using Dfinance.Shared.Deserialize;
 using Dfinance.Stakeholder.Services;
 using Dfinance.Stakeholder.Services.Interface;
+using Dfinance.Stock.Services;
 using Dfinance.Warehouse.Services;
 using Dfinance.Warehouse.Services.Interface;
 using Dfinance.WareHouse.Services;
 using Dfinance.WareHouse.Services.Interface;
+using Dfinance.WareHouse.Services.Stock;
 using Serilog.Formatting;
 
 
@@ -210,12 +212,13 @@ public class DiInstaller : IInstaller
         //AccountRegister
         service.AddScoped<IAccountRegister, AccountRegisterService>();
 
-        //PhysicalStock
-       // service.AddScoped<IPhysicalStockService, PhysicalStockService>();
+        service.AddScoped<IStockTransService,StockTransService>();
+
+        //PhysicalOpeningStock
+        service.AddScoped<IPhyOpenStockService, PhyOpenStockService>();
 
 
-        //OpeningStock
-      //  service.AddScoped<IOpeningStockService, OpeningStockService>();
+        
 
 
     }
