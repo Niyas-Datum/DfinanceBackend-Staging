@@ -252,6 +252,7 @@ namespace Dfinance.Purchase.Services
                 if (transPayId!=null)
                 {
                     TransPayment = FillEntriesbyId(transPayId);
+
                 }                
                     return CommonResponse.Ok(new { Transaction = purchaseFillByIdDto, Payment = TransPayment });
                 
@@ -301,6 +302,7 @@ namespace Dfinance.Purchase.Services
             return CommonResponse.Ok(TransPayment);
         }
         //fill TransExpenses for import reference
+        //getting tax and add.charges details
         private CommonResponse FillTransExpensebyId(int transId)
         {
             Object TransPayment = null;
@@ -366,7 +368,7 @@ namespace Dfinance.Purchase.Services
                     string Status = "Approved";
                     var transaction = _transactionService.SaveTransaction(purchaseDto, PageId, voucherId, Status).Data;
                     int TransId = 0;
-
+                    int? transpayId=0;
                     var transType = transaction.GetType();
                     if (transType.Name == "String")
                     {
@@ -376,7 +378,10 @@ namespace Dfinance.Purchase.Services
                     {
                         TransId = (int)transaction;
                     }
-                    int transpayId = (int)_transactionService.SaveTransactionPayment(purchaseDto, TransId, Status, 2).Data;
+                    if (purchaseDto.TransactionEntries.Cash.Count > 0 || purchaseDto.TransactionEntries.Cheque.Count > 0 || purchaseDto.TransactionEntries.Card.Count > 0)
+                    {
+                       transpayId = (int)_transactionService.SaveTransactionPayment(purchaseDto, TransId, Status, 2).Data;
+                    }
                     if (purchaseDto.FiTransactionAdditional != null)
                     {
                         _additionalService.SaveTransactionAdditional(purchaseDto.FiTransactionAdditional, TransId, voucherId);
@@ -394,11 +399,11 @@ namespace Dfinance.Purchase.Services
                     }
                     if (purchaseDto.TransactionEntries != null)
                     {
-                        int TransEntId = (int)_paymentService.SaveTransactionEntries(purchaseDto, PageId, TransId, transpayId).Data;
+                        int TransEntId = (int)_paymentService.SaveTransactionEntries(purchaseDto, PageId, TransId, transpayId??0).Data;
 
-                        if (purchaseDto.TransactionEntries.Advance != null && purchaseDto.TransactionEntries.Advance.Any(a => a.VID != null || a.VID != 0))
+                        if (purchaseDto.TransactionEntries.Advance != null && purchaseDto.TransactionEntries.Advance.Any(a => a.VID != null || a.VID != 0)&& transpayId!=0)
                         {
-                            _transactionService.SaveVoucherAllocation(TransId, transpayId, purchaseDto.TransactionEntries);
+                            _transactionService.SaveVoucherAllocation(TransId, transpayId ?? 0, purchaseDto.TransactionEntries);
                         }
                     }
                     if (purchaseDto != null)
