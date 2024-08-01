@@ -116,7 +116,7 @@ namespace Dfinance.Inventory.Service
                     DeleteTransEntries(transactionId, transPayId);
                 }
 
-
+                
                 //RoundOff
                 if (transactionDto.TransactionEntries.Roundoff > 0)
                 {
@@ -133,7 +133,7 @@ namespace Dfinance.Inventory.Service
                     tranType = null;
                     nature = null;
                     //var discountId = _context.FiMaAccounts.Where(a => a.Name == DISCOUNT).Select(a => a.Id).FirstOrDefault();
-                    discId = SaveTransactionEntries(transactionId, purchaseVoucherDebit, nature, discountId,
+                    discId = SaveTransactionEntries(transactionId, purchaseVoucherCredit, nature, discountId,
                         transactionDto.TransactionEntries.TotalDisc ?? null, bankDate ?? null, refPageTypeId, transactionDto.Currency.Id, transactionDto.ExchangeRate,
                         refPageTableId, Reference, description, tranType, transactionDto.TransactionEntries.DueDate, null, null);
                 }
@@ -146,7 +146,7 @@ namespace Dfinance.Inventory.Service
                     {
                         SaveTransactionEntries(transactionId, purchaseVoucherDebit, nature, tax.AccountCode.ID,
                             tax.Amount ?? null, bankDate ?? null, refPageTypeId, transactionDto.Currency.Id, transactionDto.ExchangeRate,
-                            refPageTableId, Reference, description, tranType, transactionDto.TransactionEntries.DueDate, null, null);
+                            refPageTableId, Reference, tax.Description, tranType, transactionDto.TransactionEntries.DueDate, null, null);
                     }
                 }
                 //AddCharges
@@ -158,7 +158,7 @@ namespace Dfinance.Inventory.Service
                     {
                         SaveTransactionEntries(transactionId, purchaseVoucherDebit, nature, expanse.AccountCode.ID,
                         expanse.Amount ?? null, bankDate ?? null, refPageTypeId, transactionDto.Currency.Id, transactionDto.ExchangeRate,
-                        refPageTableId, Reference, description, tranType, transactionDto.TransactionEntries.DueDate, null, null);
+                        refPageTableId, Reference, expanse.Description, tranType, transactionDto.TransactionEntries.DueDate, null, null);
                     }
                 }
                 if (transactionDto.Items.Count > 0)
@@ -207,7 +207,7 @@ namespace Dfinance.Inventory.Service
                     {
                         SaveTransactionEntries(transPayId, purchaseVoucherCredit, nature, cash.AccountCode.ID,
                         cash.Amount, bankDate ?? null, refPageTypeId, transactionDto.Currency.Id, transactionDto.ExchangeRate,
-                        refPageTableId, Reference, description, tranType, transactionDto.TransactionEntries.DueDate, null, null);
+                        refPageTableId, Reference, cash.Description, tranType, transactionDto.TransactionEntries.DueDate, null, null);
                     }
                 }
                 //Cheque
@@ -219,7 +219,7 @@ namespace Dfinance.Inventory.Service
                     {
                         var veId = SaveTransactionEntries(transPayId, purchaseVoucherCredit, nature, cheque.PDCPayable.ID,
                             cheque.Amount ?? null, bankDate ?? null, refPageTypeId, transactionDto.Currency.Id, transactionDto.ExchangeRate,
-                            refPageTableId, Reference, description, tranType, transactionDto.TransactionEntries.DueDate, null, null);
+                            refPageTableId, Reference, cheque.Description, tranType, transactionDto.TransactionEntries.DueDate, null, null);
                         SaveCheque(cheque, veId, transactionDto.Party.Id);
                     }
                 }
@@ -233,7 +233,7 @@ namespace Dfinance.Inventory.Service
                     {
                         SaveTransactionEntries(transPayId, purchaseVoucherCredit, nature, card.AccountCode.ID,
                         card.Amount, bankDate ?? null, refPageTypeId, transactionDto.Currency.Id, transactionDto.ExchangeRate,
-                        refPageTableId, Reference, description, tranType, transactionDto.TransactionEntries.DueDate, null, null);
+                        refPageTableId, Reference, card.Description, tranType, transactionDto.TransactionEntries.DueDate, null, null);
                     }
                 }
                 //var veId=_context.TransactionEntries.Where(e=>e.TransactionId == transactionId && e.TranType=="Party").Select(e=>e.Id).FirstOrDefault();
