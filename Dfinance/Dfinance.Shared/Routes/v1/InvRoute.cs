@@ -171,7 +171,9 @@ namespace Dfinance.Shared.Routes
           
             public const string SalesPurchaseSummary = $"{Main}/salespurchasesummary";
             public const string AreaWiseSales = $"{Main}/areawisesales";
-            public const string SalesReport = $"{Main}/salesreport"; 
+            public const string SalesReport = $"{Main}/salesreport";
+            public const string SaveSalesOrder = $"{Main}/saveSalesorder";
+            public const string UpdateSalesOrder = $"{Main}/updateSalesorder";
         }
         public class PurchaseEnquiry
         {

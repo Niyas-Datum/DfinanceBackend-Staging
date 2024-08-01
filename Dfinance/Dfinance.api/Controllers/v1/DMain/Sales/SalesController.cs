@@ -2,6 +2,7 @@
 using Dfinance.api.Framework;
 using Dfinance.DataModels.Dto.Inventory.Purchase;
 using Dfinance.Sales;
+using Dfinance.Sales.Service.Interface;
 using Dfinance.Shared.Domain;
 using Dfinance.Shared.Routes;
 using Microsoft.AspNetCore.Mvc;
@@ -15,9 +16,11 @@ namespace Dfinance.api.Controllers.v1.DMain.Sales
     public class SalesController : BaseController
     {
         private readonly ISalesInvoiceService _salesService;
-        public SalesController(ISalesInvoiceService sales)
+        private readonly ISalesOrder _salesOrder;
+        public SalesController(ISalesInvoiceService sales,ISalesOrder salesOrder)
         {
             _salesService = sales;
+            _salesOrder=salesOrder;
         }
         [HttpPost(InvRoute.Sales.SaveSales)]
 
@@ -213,6 +216,42 @@ namespace Dfinance.api.Controllers.v1.DMain.Sales
             }
             catch (Exception ex)
             {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost(InvRoute.Sales.SaveSalesOrder)]
+
+        public IActionResult SaveSalesOrder([FromBody] InventoryTransactionDto salesDto, int PageId, int voucherId)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+                object result = _salesOrder.SaveSalesOrder(salesDto, PageId, voucherId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPatch(InvRoute.Sales.UpdateSalesOrder)]
+        public IActionResult UpdatSalesOrder([FromBody] InventoryTransactionDto purchaseDto, int PageId, int voucherId)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+                object result = _salesOrder.UpdateSalesOrder(purchaseDto, PageId, voucherId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
                 return BadRequest(ex.Message);
             }
         }
