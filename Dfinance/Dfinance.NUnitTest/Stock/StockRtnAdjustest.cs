@@ -2,39 +2,60 @@
 using Dfinance.DataModels.Dto.Common;
 using Dfinance.DataModels.Dto.Inventory;
 using Dfinance.DataModels.Dto.Inventory.Purchase;
+using Dfinance.Shared.Domain;
 using Dfinance.WareHouse.Services;
 using Moq;
 
 namespace Dfinance.NUnitTest.Stock
 {
-    public class OpeningStockTest
+    public class StockRtnAdjustest
     {
-        private Mock<IOpeningStockService> _openingStock;
+        private Mock<IStockRtnAdjustService> _StockRtnAdjust;
         [SetUp]
         public void Setup()
         {
-            _openingStock = new Mock<IOpeningStockService>();
+            _StockRtnAdjust = new Mock<IStockRtnAdjustService>();
         }
         [Test]
-        public void SaveOpeningStockTest()
+        public void SaveStockRtnAdjustTest()
         {
-            int pageId = 135;
-            int voucherId = 38;
-            var dto = new OpeningStockDto
+            int pageId = 237;
+            int voucherId = 90;
+            var dto = new StockRtnAdjustDto
             {
-                Id = 1,
-                VoucherNo = "V123",
+                Id = 0,
+                VoucherNo = "0005",
                 Warehouse = new DropdownDto { Id = 1 }, // Assuming Name is needed for DropdownDto
                 Date = DateTime.Now,
-                Currency = new DropdownDto { Id = 1}, // Assuming Name is needed for DropdownDto
+                Currency = new DropdownDto { Id = 1 }, // Assuming Name is needed for DropdownDto
                 ExchangeRate = 1.25m,
                 Terms = "", // Empty string is acceptable, but ensure this matches expected format
-
-                transItems = new List<InvTransItemDto>
+                References = new List<ReferenceStockDto>
+                {
+                    new ReferenceStockDto
+                    {
+                        Sel=false,
+                        AddItem=false,
+                        VoucherId=90,
+                        VNo="001",
+                        VDate=DateTime.Now,
+                        ReferenceNo="a",
+                        AccountId=0,
+                        AccountName="s",
+                        Amount=0,
+                        PartyInvDate=DateTime.Now,
+                        PartyInvNo="a",
+                        Id=0,
+                        VoucherType="a",
+                        MobileNo="a",
+                    }
+                },
+                Description ="",
+                Items = new List<InvTransItemDto>
     {
         new InvTransItemDto
         {
-            TransactionId = 0,
+            TransactionId = 1,
             ItemId = 5, // Example ItemId
             ItemCode = "ITEM001", // Example ItemCode
             ItemName = "Sample Item", // Example ItemName
@@ -104,23 +125,24 @@ namespace Dfinance.NUnitTest.Stock
                 {
                     UniqueNumber = "UNIQUE001"
                 }
-            }
+            },
+            TempRate=0
         }
     }
             };
-           // _openingStock.Setup(x => x.SaveOpeningStock(dto, pageId, voucherId)).Returns(new CommonResponse { Exception = null, Data = new InventoryTransactionDto() });
-            var result = _openingStock.Object.SaveOpeningStock(dto, pageId, voucherId);
+            _StockRtnAdjust.Setup(s => s.SaveStockRtnAdjust(dto, voucherId, pageId)).Returns(new CommonResponse { Exception = null, Data = new StockRtnAdjustDto() });
+            var result = _StockRtnAdjust.Object.SaveStockRtnAdjust(dto, voucherId, pageId);
             Assert.That(result, Is.Not.Null);
             Assert.That(result.IsValid, Is.True);
             Assert.That(result.Data, Is.Not.Null);
 
         }
         [Test]
-        public void UpdateOpeningStockTest()
+        public void UpdateStockRtnAdjustTest()
         {
             int pageId = 135;
             int voucherId = 38;
-            var dto = new OpeningStockDto
+            var dto = new StockRtnAdjustDto
             {
                 Id = 1,
                 VoucherNo = "V123",
@@ -130,7 +152,7 @@ namespace Dfinance.NUnitTest.Stock
                 ExchangeRate = 1.25m,
                 Terms = "", // Empty string is acceptable, but ensure this matches expected format
 
-                transItems = new List<InvTransItemDto>
+                Items = new List<InvTransItemDto>
 {
     new InvTransItemDto
     {
@@ -206,18 +228,43 @@ UniqueItems = new List<InvUniqueItemDto>
             }
         }
     }
-}
+},
+  
             };
-          //  _openingStock.Setup(x => x.UpdateOpeningStock(dto, pageId, voucherId)).Returns(new CommonResponse { Exception = null, Data = new InventoryTransactionDto() });
-            var result = _openingStock.Object.UpdateOpeningStock(dto, pageId, voucherId);
+            _StockRtnAdjust.Setup(s => s.UpdateStockRtnAdjust(dto, voucherId, pageId)).Returns(new CommonResponse { Exception = null, Data = new StockRtnAdjustDto() });
+            var result = _StockRtnAdjust.Object.UpdateStockRtnAdjust(dto, voucherId, pageId);
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.IsValid, Is.True);
+            Assert.That(result.Data, Is.Not.Null);
+
+        }
+[Test]
+    public void DeleteStockTransactionTest()
+    {
+        int transId = 31;
+        int pageId = 231;
+        _StockRtnAdjust.Setup(x => x.DeleteTransactions(transId, pageId,"Deleted")).Returns(new CommonResponse { Exception = null, Data = new StockRtnAdjustDto() });
+        var result = _StockRtnAdjust.Object.DeleteTransactions(transId, pageId, "Deleted");
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.IsValid, Is.True);
+        Assert.That(result.Data, Is.Not.Null);
+
+    }
+        [Test]
+        public void CancelStockTransactionTest()
+        {
+            int transId = 31;
+            int pageId = 231;
+            _StockRtnAdjust.Setup(x => x.CancelTransaction(transId, pageId, "Deleted")).Returns(new CommonResponse { Exception = null, Data = new StockRtnAdjustDto() });
+            var result = _StockRtnAdjust.Object.CancelTransaction(transId, pageId, "Deleted");
             Assert.That(result, Is.Not.Null);
             Assert.That(result.IsValid, Is.True);
             Assert.That(result.Data, Is.Not.Null);
 
         }
     }
-                  
-                   
-                   
+
     
+
+
 }
