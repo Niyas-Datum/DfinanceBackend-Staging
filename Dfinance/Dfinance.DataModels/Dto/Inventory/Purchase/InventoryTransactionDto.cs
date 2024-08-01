@@ -121,6 +121,7 @@ namespace Dfinance.DataModels.Dto.Inventory.Purchase
         public bool? IsReturn {  get; set; }
         public DateTime? ManufactureDate { get; set; }
         public List<InvUniqueItemDto>? UniqueItems { get; set; }
+        public decimal? TempRate { get; set; }
     }
 
     public class InvUniqueItemDto

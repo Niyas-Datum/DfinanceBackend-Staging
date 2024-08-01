@@ -18,6 +18,7 @@ using Dfinance.AuthAppllication.Services;
 using Dfinance.AuthAppllication.Services.Interface;
 using Dfinance.ChartOfAccount.Services.Finance;
 using Dfinance.ChartOfAccount.Services.Finance.Interface;
+using Dfinance.DataModels.Dto;
 using Dfinance.Finance.Services;
 using Dfinance.Finance.Services.Interface;
 using Dfinance.Finance.Statements;
@@ -214,8 +215,9 @@ public class DiInstaller : IInstaller
        // service.AddScoped<IPhysicalStockService, PhysicalStockService>();
 
 
-        //OpeningStock
-      //  service.AddScoped<IOpeningStockService, OpeningStockService>();
+        //StockReturn and Adjustment
+        service.AddScoped<IStockRtnAdjustService, StockRtnAdjustService>();
+      
 
 
     }

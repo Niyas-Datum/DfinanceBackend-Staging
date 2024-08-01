@@ -289,12 +289,13 @@ namespace Dfinance.Shared.Routes
             public const string Cancel = $"{Main}/delete";
         }   
 
-        public class OpeningStock
+        public class StockReturnAndAdjustment
         {
-            public const string Main = $"{Base}/openingStock";
+            public const string Main = $"{Base}/stkRtnAdj";
             public const string Save = $"{Main}/save";
             public const string Update = $"{Main}/update";
-
+            public const string Delete = $"{Main}/delete";
+            public const string Cancel = $"{Main}/cancel";
         }
     }
 }
