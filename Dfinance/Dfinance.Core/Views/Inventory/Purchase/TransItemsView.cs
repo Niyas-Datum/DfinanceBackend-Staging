@@ -89,4 +89,9 @@
         public decimal? Perc { get; set; }
         public decimal? Rate { get; set; }
     }
+    public class UniqueItemView
+    {
+        public long ID { set; get; }
+        public string? UniqueNo { get; set; }
+    }
 }
