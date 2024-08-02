@@ -1,12 +1,10 @@
-﻿using AutoMapper;
-using Dfinance.Application.Services.General.Interface;
+﻿using Dfinance.Application.Services.General.Interface;
 using Dfinance.AuthAppllication.Services.Interface;
 using Dfinance.Core.Infrastructure;
 using Dfinance.DataModels.Dto;
 using Dfinance.Inventory.Service.Interface;
 using Dfinance.Shared.Domain;
 using Dfinance.Shared.Enum;
-using Dfinance.Stock.Services;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
