@@ -18,7 +18,6 @@ using Dfinance.AuthAppllication.Services;
 using Dfinance.AuthAppllication.Services.Interface;
 using Dfinance.ChartOfAccount.Services.Finance;
 using Dfinance.ChartOfAccount.Services.Finance.Interface;
-using Dfinance.DataModels.Dto;
 using Dfinance.Finance.Services;
 using Dfinance.Finance.Services.Interface;
 using Dfinance.Finance.Statements;
@@ -42,7 +41,6 @@ using Dfinance.Shared.Configuration.Service;
 using Dfinance.Shared.Deserialize;
 using Dfinance.Stakeholder.Services;
 using Dfinance.Stakeholder.Services.Interface;
-using Dfinance.Stock.Services;
 using Dfinance.Warehouse.Services;
 using Dfinance.Warehouse.Services.Interface;
 using Dfinance.WareHouse.Services;
@@ -215,11 +213,8 @@ public class DiInstaller : IInstaller
         //AccountRegister
         service.AddScoped<IAccountRegister, AccountRegisterService>();
 
-        service.AddScoped<IStockTransService,StockTransService>();
-
         //PhysicalOpeningStock
         service.AddScoped<IPhyOpenStockService, PhyOpenStockService>();
-
 
 
         
