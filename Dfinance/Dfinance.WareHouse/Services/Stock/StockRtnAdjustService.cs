@@ -53,6 +53,11 @@ namespace Dfinance.WareHouse.Services
             {
                 try
                 {
+                    var pVId=_inventoryTransactionService.GetPrimaryVoucherID(voucherId);
+                    if((VoucherType)pVId!=VoucherType.Stock_Adjustment && (VoucherType)pVId != VoucherType.Stock_Return)
+                    {
+                        return CommonResponse.Error("Invalid Voucher");
+                    }
                     var moduleName = _context.MaPageMenus.Where(p => p.Id == pageId).Select(p => p.MenuText).FirstOrDefault();
                     if (!_authService.IsPageValid(pageId))
                     {
@@ -62,7 +67,6 @@ namespace Dfinance.WareHouse.Services
                     {
                         return PermissionDenied("Save " + moduleName);
                     }
-
 
                     var transId = SaveFiTransaction(stockAdjustmentDto, voucherId, pageId).Data;
                     SaveTransAdditionals(stockAdjustmentDto.Terms, (int)stockAdjustmentDto.Warehouse.Id, (int)transId, voucherId);
@@ -95,6 +99,11 @@ namespace Dfinance.WareHouse.Services
         {
             try
             {
+                var pVId = _inventoryTransactionService.GetPrimaryVoucherID(voucherId);
+                if ((VoucherType)pVId != VoucherType.Stock_Adjustment && (VoucherType)pVId != VoucherType.Stock_Return)
+                {
+                    return CommonResponse.Error("Invalid Voucher");
+                }
                 var moduleName = _context.MaPageMenus.Where(p => p.Id == pageId).Select(p => p.MenuText).FirstOrDefault();
                 if (!_authService.IsPageValid(pageId))
                 {
