@@ -63,18 +63,15 @@ namespace Testing
         [Test]
         public void FillTransItemsTest()
         {
-            
-            int partyId = 304;
-            int PageID = 15;
-            int locId = 62;
-            int voucherId = 17;
-            _itemServiceMock.Setup(x => x.FillTransItems(partyId, PageID,locId,voucherId)).Returns(new CommonResponse { Exception = null, Data = new ItemMaster() });
-            var result = _itemServiceMock.Object.FillTransItems(partyId, PageID, locId, voucherId);
+
+            _itemServiceMock.Setup(x => x.FillTransItems(null, null, null, null, null, null, false, false, false, false, false, false, null, null, null)).Returns(new CommonResponse { Exception = null, Data = new InventoryTransactionsDto() });
+            var result = _itemServiceMock.Object.FillTransItems(null, null, null, null, null, null, false, false, false, false, false, false, null, null, null);
 
             Assert.That(result, Is.Not.Null);
             Assert.That(result.IsValid, Is.True);
             Assert.That(result.Data, Is.Not.Null);
         }
+
 
 
         [Test]
