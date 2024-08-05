@@ -298,5 +298,12 @@ namespace Dfinance.Shared.Routes
             public const string Delete = $"{Main}/delete";
             public const string Cancel = $"{Main}/cancel";
         }
+        public class StockTransfer
+        {
+            public const string Main = $"{Base}/Stock";
+            public const string Save = $"{Main}/save";
+            public const string Update = $"{Main}/update";
+            public const string fillDamageWh = $"{Main}/fillDamageWh";
+        }
     }
 }

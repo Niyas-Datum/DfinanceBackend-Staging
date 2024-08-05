@@ -717,7 +717,29 @@ namespace Dfinance.Item.Services.Inventory
             var result = _context.CurrentStockView.FromSqlRaw($"select dbo.StockQtyOnDate('{ItemId}','{BranchId}',null,null)").ToList();
             return CommonResponse.Ok(result);
         }
+        class abc
+        {
+            public int id { get; set; }
+            public decimal? Rate { get; set; }
+            public string PriceCategory { get; set; }
+            public decimal Perc { get; set; }
+        }
+        //for price category popup in item grid
+        private object PriceCategoryPopup(int itemId)
+        {//lin
+            var result = _context.MaPriceCategory.Include(x => x.MultiRate)
 
+                  .Where(pc => (bool)pc.Active) // Active price categories
+           .Select(pc => new abc()
+           {
+               id = pc.Id,
+               PriceCategory = pc.Name,
+               Perc = pc.Perc,
+               Rate = pc.MultiRate.Where(x => x.Id == itemId && x.PriceCategoryId == pc.Id).Select(x => x.PurchaseRate).FirstOrDefault()
+           }).ToList();
+
+            return result;
+        }
         /// <summary>
         /// fill transaction items
         /// </summary>
@@ -728,20 +750,34 @@ namespace Dfinance.Item.Services.Inventory
         /// //used in item grid in inventory transaction pages
         /// //return whether the item is Unique or not, expiry or not
         /// //return tool tip data for each item(in transaction pages)
-        public CommonResponse FillTransItems(int partyId, int PageID, int locId, int voucherId)
+        public CommonResponse FillTransItems(Object PartyId = null, Object PageID = null, Object LocationID = null, Object VoucherID = null,
+            Object PrimaryVoucherID = null, Boolean? IsSizeItem = null, Boolean IsMargin = false, Object ItemID = null, Boolean ISTransitLoc = false,
+           Boolean IsFinishedGood = false, Boolean IsRawMaterial = false, Object ModeID = null, DateTime? VoucherDate = null,
+            Object TransactionID = null, string Criteria = null)
         {
+
             int? userId = _authService.GetId();
-            string criteria = "ItemCommandText";
-            int? branchId = _authService.GetBranchId();
-            object PrimaryVoucherID = null, ItemID = null, ModeID = null, TransactionID = null;
-            bool IsSizeItem = false, IsMargin = false, ISTransitLoc = false, IsFinishedGood = false, IsRawMaterial = false;
+            if (Criteria == null)
+                Criteria = "ItemCommandText";
+            int branchId = _authService.GetBranchId().Value;
             object uniqueExpiry = 0;
             object units = 0;
-            DateTime? VoucherDate = DateTime.Now;
+            var finishedGood = IsFinishedGood ? "1" : null;
+            var rawMaterial = IsRawMaterial ? "1" : null;
+            string primaryVoucherIDStr = PrimaryVoucherID != null ? PrimaryVoucherID.ToString() : "NULL";
+            string partyIDStr = PartyId != null ? PartyId.ToString() : "NULL";
+            string LocIDStr = LocationID != null ? LocationID.ToString() : "NULL";
+            string VoucherIDStr = VoucherID != null ? VoucherID.ToString() : "NULL";
+            string ItemIDStr = ItemID != null ? ItemID.ToString() : "NULL";
+            string ModIDStr = ModeID != null ? ModeID.ToString() : "NULL";
+            string PageIDStr = PageID != null ? PageID.ToString() : "NULL";
+            string TransIDStr = TransactionID != null ? TransactionID.ToString() : "NULL";
+            if (VoucherDate == null)
+                VoucherDate = DateTime.Now;
 
             var result = _context.CommandTextView
-                  .FromSqlRaw($"select dbo.GetCommandText('{criteria}','{PrimaryVoucherID}','{branchId}','{partyId}','{locId}','{IsSizeItem}','{IsMargin}','{voucherId}','{ItemID}','{ISTransitLoc}',null,null,'{ModeID}','{PageID}','{VoucherDate}','{TransactionID}','{userId}')")
-                  .ToList();
+                 .FromSqlRaw($"select dbo.GetCommandText('{Criteria}',{primaryVoucherIDStr},'{branchId}',{partyIDStr},{LocIDStr},'{IsSizeItem}','{IsMargin}',{VoucherIDStr},{ItemIDStr},'{ISTransitLoc}','{finishedGood}','{rawMaterial}',{ModIDStr},{PageIDStr},'{VoucherDate}',{TransIDStr},{userId})")
+                 .ToList();
 
             var res = result.FirstOrDefault();
             var data = _context.TransItemsView.FromSqlRaw(res.commandText).ToList();
@@ -749,21 +785,22 @@ namespace Dfinance.Item.Services.Inventory
             string criteria1 = "GetLastItemRate";
             object prevTransData;
             bool? uniqueItem = false, expireItem = false;
-            object expiryItem=null ;
+            object expiryItem = null;
             var uniqueNo = (bool)_settings.GetSettings("SetUniqueNo").Data;
             var expiry = (bool)_settings.GetSettings("IsExpiryDate").Data;
-            
+
             foreach (var item in data)
             {
                 if (uniqueNo)
                     uniqueItem = _context.ItemMaster.Where(i => i.Id == item.ID).Select(i => i.IsUniqueItem).FirstOrDefault();//returns whether the item is uniqueItem 
-                if (expiry)                
+                if (expiry)
                     expiryItem = _context.ItemMaster.Where(i => i.Id == item.ID).Select(i => new { i.ExpiryPeriod, i.IsExpiry }).FirstOrDefault();
-                      //returns the Isexpiry , expiry period of item
-                     
+                //returns the Isexpiry , expiry period of item
+
                 units = _itemunitService.GetItemUnits(item.ID).Data;//for unit popup in itemgrid
-                prevTransData = _context.ItemTransaction.FromSqlRaw($"Exec VoucherAdditionalsSP @Criteria='{criteria1}',@BranchID='{branchId}',@ItemID='{item.ID}',@AccountID='{partyId}',@VoucherID='{voucherId}'").ToList();
-                var updatePrice = _itemunitService.FillItemUnits(item.ID, branchId??1).Data;
+                prevTransData = _context.ItemTransaction.FromSqlRaw($"Exec VoucherAdditionalsSP @Criteria='{criteria1}',@BranchID='{branchId}',@ItemID='{item.ID}',@AccountID='{PartyId}',@VoucherID='{VoucherID}'").ToList();
+                var updatePrice = _itemunitService.FillItemUnits(item.ID, branchId).Data;
+                var PriceCat = PriceCategoryPopup(item.ID);
                 itemsWithExpiry.Add(new
                 {
                     Item = item,
@@ -771,7 +808,8 @@ namespace Dfinance.Item.Services.Inventory
                     UniqueItem = uniqueItem,
                     ExpiryItem = expiryItem,
                     PreviousTransData = prevTransData,
-                    UpdatePrice=updatePrice
+                    UpdatePrice = updatePrice,
+                    PriceCategory = PriceCat
                 });
             }
             return CommonResponse.Ok(new { Items = itemsWithExpiry });

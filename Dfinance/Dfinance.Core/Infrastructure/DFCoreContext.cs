@@ -385,7 +385,7 @@ public partial class DFCoreContext : DbContext
     //ChequeRegister
     public DbSet<ChequeregView> ChequeregViews { get; set; }
 
-
+    public DbSet<UniqueItemView> UniqueItemView { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     //  => optionsBuilder.UseSqlServer(@"Data Source=ip.datuminnovation.com,9600;TrustServerCertificate=true;Initial Catalog=DatumSystemMain;User ID=sa;pwd=Datum123!");
@@ -695,7 +695,7 @@ public partial class DFCoreContext : DbContext
         //ChequeRegister
         mb.Entity<ChequeregView>().HasNoKey().ToView(null);
 
-
+        mb.Entity<UniqueItemView>().HasNoKey().ToView(null);
     }
 
 
