@@ -10,6 +10,7 @@ using Dfinance.Item.Services.Inventory.Interface;
 using Dfinance.Purchase.Services.Interface;
 using Dfinance.Shared.Deserialize;
 using Dfinance.Shared.Domain;
+using Dfinance.Shared.Enum;
 using Dfinance.Stakeholder.Services.Interface;
 using Dfinance.Warehouse.Services.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +19,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Tokens;
 using System.Data;
+using System.Data.Common;
 using System.Diagnostics.Metrics;
 using System.Transactions;
 namespace Dfinance.Purchase.Services
@@ -40,8 +42,8 @@ namespace Dfinance.Purchase.Services
         private readonly ICostCentreService _costCentre;
         private readonly CommonService _com;
         private readonly ISettingsService _settings;
-
-
+        private string? DrCr = null;
+        private int PrimaryVoucherID = 0;
         public PurchaseService(DFCoreContext context, IAuthService authService, IHostEnvironment hostEnvironment,
             ILogger<PurchaseService> logger, IInventoryTransactionService transactionService, IInventoryAdditional inventoryAdditional,
             IInventoryItemService inventoryItemService, IInventoryPaymentService inventoryPaymentService, DataRederToObj rederToObj, IItemMasterService item,
@@ -182,7 +184,7 @@ namespace Dfinance.Purchase.Services
                 {
                     return PageNotValid(PageId);
                 }
-                if (!_authService.UserPermCheck(PageId, 3))
+                if (!_authService.UserPermCheck(PageId, 1))
                 {
                     return PermissionDenied("Fill Purchase");
                 }
@@ -247,17 +249,18 @@ namespace Dfinance.Purchase.Services
 
                 }
                 var transPayId=_context.FiTransaction.Where(t=>t.RefTransId==TransId).Select(t=>t.Id).SingleOrDefault();
-                Object TransPayment=null;
+                Object TransPayment=null , chequ=null, allocc=null;
+                string msg= "Entries";
+                string cheq = "Cheque";
+                string alloc = "Allocation";
                 
                 if (transPayId!=null)
                 {
-                    TransPayment = FillEntriesbyId(transPayId);
-
+                    TransPayment = FillEntriesbyId(transPayId, msg,PageId);
+                    chequ = FillEntriesbyId(transPayId,cheq, PageId);
+                    allocc = FillEntriesbyId(transPayId, alloc, PageId);
                 }                
-                    return CommonResponse.Ok(new { Transaction = purchaseFillByIdDto, Payment = TransPayment });
-                
-
-                
+                    return CommonResponse.Ok(new { Transaction = purchaseFillByIdDto, Payment = TransPayment,Cheque =chequ ,VoucherAllocation= allocc });
                 //return CommonResponse.NotFound("Purchase not found");
             }
             catch (Exception ex)
@@ -271,13 +274,20 @@ namespace Dfinance.Purchase.Services
             }
         }
         //fill FiTransactionEntries according to given transactionId
-        private CommonResponse FillEntriesbyId(int transId)
+        private CommonResponse FillEntriesbyId(int transId, string? msg, int? PageId)
         {
             Object TransPayment = null;
             using (var cmd = _context.Database.GetDbConnection().CreateCommand())
             {
+                string drCrValue = SetDrCr(PageId);
+
                 cmd.CommandType = CommandType.Text;
-                cmd.CommandText = $"Exec VoucherSP @Criteria='FillTransactionEntries',@TransactionID={transId}";
+                if (msg == "Entries")
+                    cmd.CommandText = $"Exec VoucherSP @Criteria='FillTransactionEntries',@TransactionID={transId}";
+                else if (msg == "Cheque")
+                    cmd.CommandText = $"Exec VoucherSP @Criteria='FillCheques',@ID={transId}";
+                else if (msg == "Allocation")
+                    cmd.CommandText = $"Exec VoucherSP @Criteria='FillVoucherAllocation',@VID={transId},@DrCr='{drCrValue}'";
                 //_context.Database.GetDbConnection().Open();
                 using (var reader = cmd.ExecuteReader())
                 {
@@ -300,6 +310,28 @@ namespace Dfinance.Purchase.Services
                 }
             }
             return CommonResponse.Ok(TransPayment);
+        }
+  private string SetDrCr(int? PageId)
+        {
+            int? PrimaryVoucherID = (from v in _context.FiMaVouchers
+                                     join pm in _context.MaPageMenus on v.Id equals pm.VoucherId
+                                     where pm.Id == PageId
+                                     select v.PrimaryVoucherId).FirstOrDefault() ?? 0;
+
+            switch ((VoucherType)PrimaryVoucherID)
+            {
+                case VoucherType.Purchase:
+                case VoucherType.Sales_Return:
+                case VoucherType.Service:
+                    DrCr = "C";
+                    break;
+                case VoucherType.Sales_Invoice:
+                case VoucherType.Purchase_Return:
+                case VoucherType.Delivery:
+                    DrCr = "D";
+                    break;
+            }
+            return DrCr;
         }
         //fill TransExpenses for import reference
         //getting tax and add.charges details
@@ -337,10 +369,11 @@ namespace Dfinance.Purchase.Services
         //fill transactions,additionals,entries for import reference
         public CommonResponse Fill(int transId)
         {
+           
             var trans=_transactionService.FillTransactionbyId(transId).Data;
             var additionals=_additionalService.FillTransactionAdditionals(transId).Data;
             var exp=FillTransExpensebyId(transId).Data;
-            var entries = FillEntriesbyId(transId).Data;
+            var entries = FillEntriesbyId( transId, null,null);
             return CommonResponse.Ok(new {TransactionData=trans,AdditionalData=additionals,Expenses=exp,PaymentData=entries});
         }
         /// <summary>

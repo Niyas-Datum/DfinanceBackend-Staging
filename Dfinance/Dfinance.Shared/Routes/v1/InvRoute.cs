@@ -124,6 +124,7 @@ namespace Dfinance.Shared.Routes
             public const string getItems = $"{Main}/getItems";
             public const string DeleteItems = $"{Main}/delItems";
             public const string ItemTransData = $"{Main}/itemtransdata";
+            public const string stockItems = $"{Main}/stockItems";
         }
         public static class UnitMaster
         {
@@ -305,5 +306,13 @@ namespace Dfinance.Shared.Routes
             public const string Update = $"{Main}/update";
             public const string fillDamageWh = $"{Main}/fillDamageWh";
         }
+        //public class SizeMaster
+        //{
+        //    public const string Main = $"{Base}/SizeMaster";
+        //    public const string fill = $"{Main}/fill";
+        //    public const string fillById = $"{Main}/fillById";
+        //    public const string save = $"{Main}/save";
+        //    public const string delete = $"{Main}/delete";
+        //}
     }
 }

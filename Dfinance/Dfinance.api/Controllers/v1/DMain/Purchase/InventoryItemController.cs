@@ -46,6 +46,18 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
                 return BadRequest(ex.Message);
             }
         }
-
+        [HttpGet(InvRoute.InventoryItem.stockItems)]
+        public IActionResult StockItemPopup()
+        {
+            try
+            {
+                var result = _transItemsService.StockItemPopup();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
