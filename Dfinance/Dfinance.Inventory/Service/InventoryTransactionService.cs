@@ -352,19 +352,19 @@ namespace Dfinance.Inventory.Service
                     }
                 }
                     //Set RoundOFF calculation
-                    if (inventoryToFinanceRoundOff)
-                    {
-                        int numeric = 0;
-                        if (numericFormat == "N2")
-                            numeric = 2;
-                        else if (numericFormat == "N3")
-                            numeric = 3;
-                        else if (numericFormat == "N4")
-                            numeric = 4;
-                        var round = transactionDto.TransactionEntries.GrandTotal;
-                        transactionDto.TransactionEntries.GrandTotal = Decimal.Round(transactionDto.TransactionEntries.GrandTotal ?? 0, numeric);
-                        transactionDto.TransactionEntries.Roundoff = round - transactionDto.TransactionEntries.GrandTotal;
-                    }
+                    //if (inventoryToFinanceRoundOff)
+                    //{
+                    //    int numeric = 0;
+                    //    if (numericFormat == "N2")
+                    //        numeric = 2;
+                    //    else if (numericFormat == "N3")
+                    //        numeric = 3;
+                    //    else if (numericFormat == "N4")
+                    //        numeric = 4;
+                    //    var round = transactionDto.TransactionEntries.GrandTotal;
+                    //    transactionDto.TransactionEntries.GrandTotal = Decimal.Round(transactionDto.TransactionEntries.GrandTotal ?? 0, numeric);
+                    //    transactionDto.TransactionEntries.Roundoff = round - transactionDto.TransactionEntries.GrandTotal;
+                    //}
                 }
                 //Set AutoVoucher Next TransactionNo
                 if (autoUpdateNewVoucherNo && transactionDto.Id == null)
