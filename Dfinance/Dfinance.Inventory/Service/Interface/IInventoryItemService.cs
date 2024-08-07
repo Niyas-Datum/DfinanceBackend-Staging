@@ -10,5 +10,6 @@ namespace Dfinance.Inventory.Service.Interface
         CommonResponse GetItemData(int itemId, int partyId, int voucherId);
         CommonResponse DeleteInvTransItem(int Id);
         CommonResponse UpdateInvTransItems(List<InvTransItemDto> Items, int voucherId, int transId, decimal? exchangeRate, int? warehouse);
+        CommonResponse StockItemPopup();
     }
 }
