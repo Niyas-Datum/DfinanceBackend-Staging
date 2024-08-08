@@ -122,6 +122,7 @@ namespace Dfinance.DataModels.Dto.Inventory.Purchase
         public DateTime? ManufactureDate { get; set; }
         public List<InvUniqueItemDto>? UniqueItems { get; set; }
         public decimal? TempRate { get; set; }
+        public decimal? OrderQty { get; set; }
     }
 
     public class InvUniqueItemDto
@@ -162,13 +163,13 @@ namespace Dfinance.DataModels.Dto.Inventory.Purchase
     public class InvAccountDetailsDto
     {
        
-       // public int AccountId { get; set; }
+       
         public AccountNamePopUpDto? AccountCode { get; set; }
-        //public string? AccountName { get; set; }
+        
         public string? Description { get; set; }
         [DecimalValidation(4, ErrorMessage = "Amount is not valid!!")]
         public decimal? Amount { get; set; }
-       // public string? TransType { get; set; }
+       
         public AccountNamePopUpDto? PayableAccount { get; set; }
     }
     public class InvChequesDto

@@ -30,5 +30,8 @@
   "LeftGridStatus",
   "VoucherSettings",
   "AutoPrint",
-  "AutoUpdateNewVoucherNo"
+
+  "AutoUpdateNewVoucherNo",
+  "NumericFormat"
+
 ]
