@@ -180,14 +180,14 @@ namespace Dfinance.Purchase.Services
         {
             try
             {
-                if (!_authService.IsPageValid(PageId))
-                {
-                    return PageNotValid(PageId);
-                }
-                if (!_authService.UserPermCheck(PageId, 1))
-                {
-                    return PermissionDenied("Fill Purchase");
-                }
+                //if (!_authService.IsPageValid(PageId))
+                //{
+                //    return PageNotValid(PageId);
+                //}
+                //if (!_authService.UserPermCheck(PageId, 1))
+                //{
+                //    return PermissionDenied("Fill Purchase");
+                //}
                 bool transExists=_context.FiTransaction.Any(t=>t.Id== TransId);
                 if (!transExists)
                     return CommonResponse.NotFound("Transaction not exists");
