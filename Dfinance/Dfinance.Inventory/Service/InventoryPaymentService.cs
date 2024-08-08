@@ -118,7 +118,7 @@ namespace Dfinance.Inventory.Service
 
                 
                 //RoundOff
-                if (transactionDto.TransactionEntries.Roundoff > 0)
+                if (transactionDto.TransactionEntries.Roundoff != 0)
                 {
                     tranType = "RoundOff";
                     nature = null;
