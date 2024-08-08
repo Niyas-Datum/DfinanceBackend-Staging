@@ -373,7 +373,7 @@ namespace Dfinance.Purchase.Services
             var trans=_transactionService.FillTransactionbyId(transId).Data;
             var additionals=_additionalService.FillTransactionAdditionals(transId).Data;
             var exp=FillTransExpensebyId(transId).Data;
-            var entries = FillEntriesbyId( transId, null,null);
+            var entries = FillEntriesbyId( transId, "Entries", null);
             return CommonResponse.Ok(new {TransactionData=trans,AdditionalData=additionals,Expenses=exp,PaymentData=entries});
         }
         /// <summary>
