@@ -23,5 +23,12 @@
   "OtherDiscount",
   "VoucherHideParty",
   "SuperImposeItem",
-  "GrossAmountEditable"
+  "InventoryToFinanceRoundOff",
+  "ImportItems",
+  "TaxBasedInvoiceAccount",
+  "MethodofAdditionalExpenseAllocationToItemCost",
+  "LeftGridStatus",
+  "VoucherSettings",
+  "AutoPrint",
+  "AutoUpdateNewVoucherNo"
 ]
