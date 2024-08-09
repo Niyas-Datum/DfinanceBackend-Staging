@@ -121,7 +121,7 @@ public partial class DFCoreContext : DbContext
     //ChequeRegister
     public DbSet<FiChequesTran> FiChequesTrans { get; set; }
 
-//    public DbSet<InvRelatedItems> InvRelatedItems { get; set; }
+    public DbSet<InvRelatedItems> InvRelatedItems { get; set; }
 
 
 
@@ -388,8 +388,8 @@ public partial class DFCoreContext : DbContext
     public DbSet<ChequeregView> ChequeregViews { get; set; }
 
     public DbSet<UniqueItemView> UniqueItemView { get; set; }
-   // public DbSet<ItemMappingView> ItemMappingView { get; set; }
-   // public DbSet<ItemDetailsView> ItemDetailsView { get; set; }
+    public DbSet<ItemMappingView> ItemMappingView { get; set; }
+    public DbSet<ItemDetailsView> ItemDetailsView { get; set; }
     public DbSet<FillVoucherSettingsView> FillVoucherSettingsView { get; set; }
     
 
@@ -480,7 +480,7 @@ public partial class DFCoreContext : DbContext
         mb.ApplyConfiguration(new InvMaCounterConfiguration());
         //ChequeRegister
         mb.ApplyConfiguration(new FiChequesTranConfiguration());
-    //    mb.ApplyConfiguration(new InvRelatedItemsConfiguration());
+        mb.ApplyConfiguration(new InvRelatedItemsConfiguration());
 
         //View
 
@@ -704,8 +704,8 @@ public partial class DFCoreContext : DbContext
         mb.Entity<ChequeregView>().HasNoKey().ToView(null);
 
         mb.Entity<UniqueItemView>().HasNoKey().ToView(null);
-       // mb.Entity<ItemMappingView>().HasNoKey().ToView(null);
-       // mb.Entity<ItemDetailsView>().HasNoKey().ToView(null);
+       mb.Entity<ItemMappingView>().HasNoKey().ToView(null);
+        mb.Entity<ItemDetailsView>().HasNoKey().ToView(null);
         mb.Entity<FillVoucherSettingsView>().HasNoKey().ToView(null);
         
     }
