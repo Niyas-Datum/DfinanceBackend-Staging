@@ -224,6 +224,9 @@ public class DiInstaller : IInstaller
         service.AddScoped<IStockRtnAdjustService, StockRtnAdjustService>();
 
         service.AddScoped<IStockTransactionService, StockTransactionService>();
+        //BatchEdit
+        service.AddScoped<IBatchEditService, BatchEditService>();
+        service.AddScoped<IItemReservationService, ItemReservationService>();
 
 
     }

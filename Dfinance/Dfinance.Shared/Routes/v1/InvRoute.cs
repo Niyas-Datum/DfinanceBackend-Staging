@@ -305,5 +305,21 @@ namespace Dfinance.Shared.Routes
             public const string Update = $"{Main}/update";
             public const string fillDamageWh = $"{Main}/fillDamageWh";
         }
+        public class BatchEdit
+        {
+            public const string Main = $"{Base}/batchEdit";
+            public const string LoadDate = $"{Main}/loadData";
+            public const string Update = $"{Main}/update";
+            public const string FillBatchDetails = $"{Main}/fillBD";
+        }
+        public class ItemReserv
+        {
+            public const string Main = $"{Base}/itemReserv";
+            public const string LoadDate = $"{Main}/loadData";
+            public const string Save = $"{Main}/save";
+            public const string Update = $"{Main}/update";
+            public const string FillMaster = $"{Main}/fillmaster";
+            public const string FillById = $"{Main}/fillById";
+        }
     }
 }
