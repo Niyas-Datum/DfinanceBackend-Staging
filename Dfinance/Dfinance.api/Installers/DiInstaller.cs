@@ -28,6 +28,8 @@ using Dfinance.Inventory;
 using Dfinance.Inventory.Interface;
 using Dfinance.Inventory.Service;
 using Dfinance.Inventory.Service.Interface;
+using Dfinance.Item.Services;
+using Dfinance.Item.Services.Interface;
 using Dfinance.Item.Services.Inventory;
 using Dfinance.Item.Services.Inventory.Interface;
 using Dfinance.Purchase.Services;
@@ -224,9 +226,14 @@ public class DiInstaller : IInstaller
         service.AddScoped<IStockRtnAdjustService, StockRtnAdjustService>();
 
         service.AddScoped<IStockTransactionService, StockTransactionService>();
+
         //BatchEdit
         service.AddScoped<IBatchEditService, BatchEditService>();
         service.AddScoped<IItemReservationService, ItemReservationService>();
+
+
+        service.AddScoped<ISizeMasterService,SizeMasterService>();
+        service.AddScoped<IItemMappingService, ItemMappingService>();
 
 
     }

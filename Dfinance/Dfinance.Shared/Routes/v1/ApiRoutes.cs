@@ -200,6 +200,7 @@ namespace Dfinance.Shared.Routes.v1
             public const string FillAllCurrency = $"{Main}/Fillc";
 
             public const string FillCurrencyById = $"{Main}/FillById";
+            public const string curDropdown = $"{Main}/curDropdown";
         }
         public static class MaSettings
         {
