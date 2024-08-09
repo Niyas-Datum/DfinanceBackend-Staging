@@ -12,19 +12,19 @@ using Moq;
 using static Dfinance.Shared.Routes.v1.FinRoute;
 
 
-namespace Testing
+namespace Dfinance.NUnitTest.Item
 {
     [TestFixture]
     public class ItemTest
-    {              
-            private Mock<IItemMasterService> _itemServiceMock;
+    {
+        private Mock<IItemMasterService> _itemServiceMock;
 
-            [SetUp]
-            public void Setup()
-            {
-                _itemServiceMock=new Mock<IItemMasterService>();
+        [SetUp]
+        public void Setup()
+        {
+            _itemServiceMock = new Mock<IItemMasterService>();
 
-            }
+        }
 
 
         [Test]
@@ -38,8 +38,8 @@ namespace Testing
             int limit = 10;
             int pageId = 55;
             // Act
-            _itemServiceMock.Setup(x => x.FillItemMaster( catId,brandId,search,pageNo,limit)).Returns(new CommonResponse { Exception = null, Data = new ItemMaster() });
-            var result = _itemServiceMock.Object.FillItemMaster( catId, brandId, search, pageNo, limit);
+            _itemServiceMock.Setup(x => x.FillItemMaster(catId, brandId, search, pageNo, limit)).Returns(new CommonResponse { Exception = null, Data = new ItemMaster() });
+            var result = _itemServiceMock.Object.FillItemMaster(catId, brandId, search, pageNo, limit);
             // Assert
             Assert.That(result, Is.Not.Null);
             Assert.That(result.IsValid, Is.True);
@@ -52,9 +52,9 @@ namespace Testing
             int itemId = 9;
             int branchId = 1;
             int pageId = 55;
-            _itemServiceMock.Setup(x => x.FillItemByID(pageId,itemId, branchId)).Returns(new CommonResponse { Exception = null, Data = new ItemMaster() });
-            var result = _itemServiceMock.Object.FillItemByID(pageId,itemId, branchId);
-           
+            _itemServiceMock.Setup(x => x.FillItemByID(pageId, itemId, branchId)).Returns(new CommonResponse { Exception = null, Data = new ItemMaster() });
+            var result = _itemServiceMock.Object.FillItemByID(pageId, itemId, branchId);
+
             Assert.That(result, Is.Not.Null);
             Assert.That(result.IsValid, Is.True);
             Assert.That(result.Data, Is.Not.Null);
@@ -75,8 +75,8 @@ namespace Testing
 
 
         [Test]
-            public void SaveItemTest()
-            {
+        public void SaveItemTest()
+        {
             // Arrange
             int pageId = 55;
             var newItem = new ItemMasterDto
@@ -186,19 +186,19 @@ namespace Testing
 
 
             // Act              
-            _itemServiceMock.Setup(x => x.SaveItemMaster(newItem,pageId)).Returns(new CommonResponse { Exception = null, Data=new ItemMaster() });
-                var result = _itemServiceMock.Object.SaveItemMaster(newItem, pageId);
+            _itemServiceMock.Setup(x => x.SaveItemMaster(newItem, pageId)).Returns(new CommonResponse { Exception = null, Data = new ItemMaster() });
+            var result = _itemServiceMock.Object.SaveItemMaster(newItem, pageId);
             // Assert
             Assert.That(result, Is.Not.Null);
             Assert.That(result.IsValid, Is.True);
             Assert.That(result.Data, Is.Not.Null);
         }
 
-            [Test]
-            public void UpdateItemTest()
-            {
-                // Arrange
-                int itemId = 5;
+        [Test]
+        public void UpdateItemTest()
+        {
+            // Arrange
+            int itemId = 5;
             List<int> branch = new List<int>() { 1, 2 };
 
             var newItem = new ItemMasterDto
@@ -307,51 +307,51 @@ namespace Testing
             };
             int pageId = 55;
 
-            _itemServiceMock.Setup(x => x.UpdateItemMaster(newItem,itemId, pageId)).Returns(new CommonResponse { Exception = null, Data = new ItemMaster() });
-                var result = _itemServiceMock.Object.UpdateItemMaster(newItem, itemId, pageId);
+            _itemServiceMock.Setup(x => x.UpdateItemMaster(newItem, itemId, pageId)).Returns(new CommonResponse { Exception = null, Data = new ItemMaster() });
+            var result = _itemServiceMock.Object.UpdateItemMaster(newItem, itemId, pageId);
             // Assert
             Assert.That(result, Is.Not.Null);
             Assert.That(result.IsValid, Is.True);
             Assert.That(result.Data, Is.Not.Null);
         }
 
-          
-            [Test] 
-            public void DeleteItemTest()
-            {
+
+        [Test]
+        public void DeleteItemTest()
+        {
             // Arrange
-                 int itemId=0;
+            int itemId = 0;
             int pageId = 55;
-                _itemServiceMock.Setup(x => x.DeleteItem(itemId, pageId)).Returns(new CommonResponse { Exception = null,Data=new ItemMaster() });
+            _itemServiceMock.Setup(x => x.DeleteItem(itemId, pageId)).Returns(new CommonResponse { Exception = null, Data = new ItemMaster() });
 
-                // Act
-                var result = _itemServiceMock.Object.DeleteItem(itemId, pageId);
-
-            // Assert 
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.IsValid, Is.True);
-            Assert.That(result.Data, Is.Not.Null);
-        }
-            [Test]
-            public void GenCodeTest()
-            {
-                _itemServiceMock.Setup(x => x.GetNextItemCode()).Returns(new CommonResponse { Exception = null, Data = new ItemNextCode() });
-
-                // Act
-                var result = _itemServiceMock.Object.GetNextItemCode();
+            // Act
+            var result = _itemServiceMock.Object.DeleteItem(itemId, pageId);
 
             // Assert 
             Assert.That(result, Is.Not.Null);
             Assert.That(result.IsValid, Is.True);
             Assert.That(result.Data, Is.Not.Null);
         }
-            [Test]
-            public void GenBarCodeTest()
-            {
-                _itemServiceMock.Setup(x => x.GenerateBarCode()).Returns(new CommonResponse { Exception = null, Data = new BarcodeView() });
+        [Test]
+        public void GenCodeTest()
+        {
+            _itemServiceMock.Setup(x => x.GetNextItemCode()).Returns(new CommonResponse { Exception = null, Data = new ItemNextCode() });
 
-                // Act
-                var result = _itemServiceMock.Object.GenerateBarCode();
+            // Act
+            var result = _itemServiceMock.Object.GetNextItemCode();
+
+            // Assert 
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.IsValid, Is.True);
+            Assert.That(result.Data, Is.Not.Null);
+        }
+        [Test]
+        public void GenBarCodeTest()
+        {
+            _itemServiceMock.Setup(x => x.GenerateBarCode()).Returns(new CommonResponse { Exception = null, Data = new BarcodeView() });
+
+            // Act
+            var result = _itemServiceMock.Object.GenerateBarCode();
 
             // Assert 
             Assert.That(result, Is.Not.Null);
@@ -359,19 +359,19 @@ namespace Testing
             Assert.That(result.Data, Is.Not.Null);
         }
 
-            [Test]
-            public void ParentPopTest()
-            {
-                _itemServiceMock.Setup(x => x.ParentItemPopup()).Returns(new CommonResponse { Exception = null, Data = new ParentItemPoupView() });
+        [Test]
+        public void ParentPopTest()
+        {
+            _itemServiceMock.Setup(x => x.ParentItemPopup()).Returns(new CommonResponse { Exception = null, Data = new ParentItemPoupView() });
 
-                // Act
-                var result = _itemServiceMock.Object.ParentItemPopup();
+            // Act
+            var result = _itemServiceMock.Object.ParentItemPopup();
 
             // Assert 
             Assert.That(result, Is.Not.Null);
             Assert.That(result.IsValid, Is.True);
             Assert.That(result.Data, Is.Not.Null);
         }
-        }
-    
+    }
+
 }

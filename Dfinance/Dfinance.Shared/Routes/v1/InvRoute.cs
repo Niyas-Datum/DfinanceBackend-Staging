@@ -103,6 +103,7 @@ namespace Dfinance.Shared.Routes
             public const string GetSupplier = $"{Main}/getsupplier";
             public const string getPurchaseReport = $"{Main}/getPuReport";
             public const string fill = $"{Main}/fill";
+            public const string vouSett = $"{Main}/vouSett";
         }
         public class InventoryPaymentTransaction
         {
@@ -124,6 +125,7 @@ namespace Dfinance.Shared.Routes
             public const string getItems = $"{Main}/getItems";
             public const string DeleteItems = $"{Main}/delItems";
             public const string ItemTransData = $"{Main}/itemtransdata";
+            public const string stockItems = $"{Main}/stockItems";
         }
         public static class UnitMaster
         {
@@ -305,6 +307,7 @@ namespace Dfinance.Shared.Routes
             public const string Update = $"{Main}/update";
             public const string fillDamageWh = $"{Main}/fillDamageWh";
         }
+
         public class BatchEdit
         {
             public const string Main = $"{Base}/batchEdit";
@@ -320,6 +323,27 @@ namespace Dfinance.Shared.Routes
             public const string Update = $"{Main}/update";
             public const string FillMaster = $"{Main}/fillmaster";
             public const string FillById = $"{Main}/fillById";
+        }
+        public class SizeMaster
+        {
+            public const string Main = $"{Base}/SizeMaster";
+            public const string fill = $"{Main}/fill";
+            public const string fillById = $"{Main}/fillById";
+            public const string save = $"{Main}/save";
+            public const string delete = $"{Main}/delete";
+        }
+        public class ItemMapping
+        {
+            public const string Main = $"{Base}/ItemMap";
+            public const string fillItems = $"{Main}/fillItems";
+            public const string itemDetails = $"{Main}/itemDetails";
+            public const string save = $"{Main}/save";
+        }
+        public class PurchaseWithoutTax
+        {
+            public const string Main = $"{Base}/PurchWithoutTax";
+           
+
         }
     }
 }

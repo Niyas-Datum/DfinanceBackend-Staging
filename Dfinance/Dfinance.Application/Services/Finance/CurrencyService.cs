@@ -252,5 +252,13 @@ namespace Dfinance.Application.Services.Finance
                 return CommonResponse.Error(ex);
             }
         }
+
+        //currency dropdown
+        //used in purchase,save and other transaction pages
+        public CommonResponse CurrencyDropdown()
+        {
+            var currencies = _context.CurrencyDDView.FromSqlRaw("exec spCurrency @Criteria= 'FillCurrency'").ToList();
+            return CommonResponse.Ok(currencies);
+        }
     }
 }
