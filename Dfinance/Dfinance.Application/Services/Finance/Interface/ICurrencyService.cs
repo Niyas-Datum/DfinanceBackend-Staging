@@ -22,5 +22,6 @@ namespace Dfinance.Application.Services.Finance.Interface
         CommonResponse UpdateCurrency(CurrencyDto currencyDto, int Id);
         CommonResponse DeleteCurrency(int Id);
         CommonResponse CurrencyDropdown();
+        CommonResponse UpdateExchangeRate(int currencyId, decimal exchRate);
     }
 }
