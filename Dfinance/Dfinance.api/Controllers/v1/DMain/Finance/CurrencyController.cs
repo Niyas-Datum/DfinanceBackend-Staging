@@ -218,5 +218,18 @@ namespace Dfinance.api.Controllers.v1.DMain.Finance
                 return BadRequest(ex.Message);
             }
         }
+        [HttpDelete(ApiRoutes.Currency.curDropdown)]
+        public IActionResult CurrencyDropdown()
+        {
+            try
+            {
+                var result = _currencyService.CurrencyDropdown();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
