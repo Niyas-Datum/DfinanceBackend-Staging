@@ -128,6 +128,7 @@ namespace Dfinance.Inventory.Service
                         break;
                     case VoucherType.Sales_Invoice:
                     case VoucherType.Purchase_Return:
+                    case VoucherType.Item_Reservation:
                         outLocId = warehouse;
                         break;
                 }
@@ -150,10 +151,15 @@ namespace Dfinance.Inventory.Service
                             rowType = 1;
                             tempQty= SetTempQty(temQtySameAsQty, item);
                         }
-                        else if ((VoucherType)primeryVoucherId == VoucherType.Sales_Invoice)
+                        else if ((VoucherType)primeryVoucherId == VoucherType.Sales_Invoice )
                         {
                             rowType = -1;
                             tempQty = SetTempQty(temQtySameAsQty, item);
+                        }
+                        if ((VoucherType)primeryVoucherId == VoucherType.Item_Reservation)
+                        {
+                            rowType = -1;
+                            tempQty = null;                           
                         }
                         if ((VoucherType)primeryVoucherId == VoucherType.Opening_Stock)
                         {
