@@ -15,5 +15,6 @@ namespace Dfinance.Purchase.Services.Interface
         CommonResponse GetPurchaseReport(PurchaseReportDto reportdto);
         CommonResponse CancelPurchase(int TransId, int pageId, string reason);
         CommonResponse Fill(int transId);
+        CommonResponse FillVoucherSettings(object keyword = null, int? voucherId = null);
     }
 }
