@@ -509,11 +509,12 @@ namespace Dfinance.Inventory.Service
         private bool commonCostcenterAllocationWindow = false;
         private bool autoApproval = false;
         private bool dosageSystem = false;
+        private bool invFinValidation = false;
         private void SetSettings()
         {
             string[] keys = new string[] {"TaxBasedInvoiceAccount","MethodofAdditionalExpenseAllocationToItemCost","GrandTotalVerify","VoucherDateAsDueDate","AutoUpdateNewVoucherNo",
                     "PartywiseVoucherNo","CreditLimitCheck","CreditPeriodCheck","RackLocation","InventoryToFinanceRoundOff","ItemDiscountAccounting",
-                    "IsCSTApplicable","AdditionalExpenseAccountingInInvoice","ExpenseCSTAccountEntry","DiscountAccounting","CostCentreSystem",
+                    "IsCSTApplicable","AdditionalExpenseAccountingInInvoice","ExpenseCSTAccountEntry","DiscountAccounting","CostCentreSystem","InvFinValidation",
                     "CommonCostcenterAllocationWindow","DosageSystem","AutoApproval","SalesArabicPrint","PrintAfterSave","NumericFormat","InventoryApproval" };
             var settings = _context.MaSettings
         .Where(m => keys.Contains(m.Key))
@@ -539,6 +540,7 @@ namespace Dfinance.Inventory.Service
             commonCostcenterAllocationWindow = Converter.StringToBoolean(settings.Where(s => s.Key == "CommonCostcenterAllocationWindow").Select(s => s.Value).FirstOrDefault());
             autoApproval = Converter.StringToBoolean(settings.Where(s => s.Key == "AutoApproval").Select(s => s.Value).FirstOrDefault().ToString());
             dosageSystem = Converter.StringToBoolean(settings.Where(s => s.Key == "DosageSystem").Select(s => s.Value).FirstOrDefault());
+            invFinValidation = Converter.StringToBoolean(settings.Where(s => s.Key == "InvFinValidation").Select(s => s.Value).FirstOrDefault());
         }
 
         //CostCenter Settings
@@ -948,7 +950,8 @@ namespace Dfinance.Inventory.Service
         }
         public CommonResponse InventoryAmountValidation(int TransId)
         {
-            _context.Database.ExecuteSqlRaw("EXEC InventoryAmountCheck @TransactionID={0}",
+            if(invFinValidation)
+                _context.Database.ExecuteSqlRaw("EXEC InventoryAmountCheck @TransactionID={0}",
                                    TransId);
             return CommonResponse.Ok();
         }

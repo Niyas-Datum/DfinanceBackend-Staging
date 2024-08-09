@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Dfinance.Application.Services.General;
 using Dfinance.Application.Services.General.Interface;
 using Dfinance.AuthAppllication.Services.Interface;
 using Dfinance.Core;
@@ -53,9 +54,10 @@ namespace Dfinance.Restaurant
         private readonly CommonService _com;
         private readonly ISettingsService _settings;
         private readonly IMapper _mapper;
+        private readonly IUserTrackService _userTrackService;
         public RestaurantInvoice(DFCoreContext context, IAuthService authService, IHostEnvironment environment, ILogger<RestaurantInvoice> logger, IInventoryTransactionService transactionService, IInventoryAdditional inventoryAdditional,
             IInventoryItemService inventoryItemService, IInventoryPaymentService inventoryPaymentService, DataRederToObj rederToObj, IItemMasterService item,
-            IWarehouseService warehouse, ICostCentreService costCentre, ICustomerSupplierService party, CommonService com, ISettingsService settings, IMapper mapper)
+            IWarehouseService warehouse, ICostCentreService costCentre, ICustomerSupplierService party, IUserTrackService userTrackService, CommonService com, ISettingsService settings, IMapper mapper)
         {
             _context = context;
             _authService = authService;
@@ -73,6 +75,7 @@ namespace Dfinance.Restaurant
             _com = com;
             _settings = settings;
             _mapper = mapper;
+            _userTrackService = userTrackService;
         }
         private CommonResponse GetWaiter()
         {
@@ -165,6 +168,8 @@ namespace Dfinance.Restaurant
         }
         public CommonResponse SaveRestaurentInvoice(InventoryTransactionDto RestaurentDto, int PageId, int voucherId, int sectionId, int tableId, string tableName, string? tokenId, string? deliveryId, int salesManId,string chairName)
         {
+            var moduleName = _context.MaPageMenus.Where(p => p.Id == PageId).Select(p => p.MenuText).FirstOrDefault();
+
             using (var transactionScope = new TransactionScope())
 
             {
@@ -230,6 +235,7 @@ namespace Dfinance.Restaurant
                         int TransEntId = (int)_paymentService.SaveTransactionEntries(RestaurentDto, PageId, TransId, transpayId).Data;
 
                     }
+                    _userTrackService.AddUserActivity(RestaurentDto.VoucherNo, TransId, 0, RestaurentDto.Description, "FiTransactions", moduleName, 0, null);
                     _logger.LogInformation("Successfully Created");
                     transactionScope.Complete();
                     return CommonResponse.Ok(TransId);
@@ -244,6 +250,7 @@ namespace Dfinance.Restaurant
         }
         public CommonResponse UpdateRestaurentInvoice(InventoryTransactionDto RestaurentDto, int PageId, int voucherId, int sectionId, int tableId, string tableName, string? tokenId, string? deliveryId, int salesManId, string chairName)
         {
+            var moduleName = _context.MaPageMenus.Where(p => p.Id == PageId).Select(p => p.MenuText).FirstOrDefault();
             using (var transactionScope = new TransactionScope())
 
             {
@@ -313,6 +320,7 @@ namespace Dfinance.Restaurant
                         }
 
                     }
+                    _userTrackService.AddUserActivity(RestaurentDto.VoucherNo, TransId, 1, RestaurentDto.Description, "FiTransactions", moduleName, 0, null);
                     _logger.LogInformation("Successfully Updated");
                     transactionScope.Complete();
                     return CommonResponse.Created("Updated Successfully");
