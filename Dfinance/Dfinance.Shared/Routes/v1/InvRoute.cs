@@ -230,6 +230,26 @@ namespace Dfinance.Shared.Routes
             public const string DelSalesReturn = $"{Main}/delsalesRtn";
             public const string CancelsalesRtn = $"{Main}/Cancel";
         }
+        
+        public class SalesEnquiry
+        {
+            public const string Main = $"{Base}/salesenquiry";
+            public const string SaveSalesEnquiry = $"{Main}/saveSalesenq";
+            public const string UpdateSalesEnquiry = $"{Main}/updateSalesenq";
+        }
+        public class SalesEstimate
+        {
+            public const string Main = $"{Base}/salesestimate";
+            public const string SaveSalesEstimate = $"{Main}/saveSalesestmt";
+            public const string UpdateSalesEstimate = $"{Main}/updateSalesestmt";
+        }
+        public class SalesQuotation
+        {
+            public const string Main = $"{Base}/salesquotation";
+            public const string SaveSalesQuotation = $"{Main}/saveSalesquotion";
+            public const string UpdateSalesQuotation = $"{Main}/updateSalesquotion";
+        }
+        
         public class PurchaseReturn
         {
             public const string Main = $"{Base}/PurchaseReturn";
