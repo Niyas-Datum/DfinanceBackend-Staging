@@ -201,6 +201,7 @@ namespace Dfinance.Purchase.Services
             {
                 return PermissionDenied("Save ItemReservation");
             }
+            var moduleName = _context.MaPageMenus.Where(p => p.Id == PageId).Select(p => p.MenuText).FirstOrDefault();
             var reservDto = _mapper.Map<ItemReservationDto, InventoryTransactionDto>(ItemReservation);
             var reservItem = _mapper.Map<List<InvTransItemReservDto>, List<InvTransItemDto>>(ItemReservation.Items);
             using (var transactionScope = new TransactionScope())
@@ -222,6 +223,7 @@ namespace Dfinance.Purchase.Services
                         _additionalService.SaveTransactionAdditional(reservDto.FiTransactionAdditional, transId, voucherId);
                         if (reservDto.Items != null)
                             _itemService.SaveInvTransItems(reservItem, voucherId, transId, null, ItemReservation.Warehouse.Id);
+                        _userTrackService.AddUserActivity(ItemReservation.VoucherNo, transId, 0, ItemReservation.Description, "FiTransactions", moduleName, 0, null);
                     }
 
                     _logger.LogInformation("Successfully Created");
@@ -247,6 +249,7 @@ namespace Dfinance.Purchase.Services
             {
                 return PermissionDenied("Update ItemReservation");
             }
+            var moduleName = _context.MaPageMenus.Where(p => p.Id == PageId).Select(p => p.MenuText).FirstOrDefault();
             var reservDto = _mapper.Map<ItemReservationDto, InventoryTransactionDto>(ItemReservation);
             var reservItem = _mapper.Map<List<InvTransItemReservDto>, List<InvTransItemDto>>(ItemReservation.Items);
             using (var transactionScope = new TransactionScope())
@@ -268,6 +271,7 @@ namespace Dfinance.Purchase.Services
                         _additionalService.SaveTransactionAdditional(reservDto.FiTransactionAdditional, transId, voucherId);
                         if (reservDto.Items != null)
                             _itemService.UpdateInvTransItems(reservItem, voucherId, transId, null, ItemReservation.Warehouse.Id);
+                        _userTrackService.AddUserActivity(ItemReservation.VoucherNo, transId, 1, ItemReservation.Description, "FiTransactions", moduleName, 0, null);
                     }
 
                     _logger.LogInformation("Successfully Updated");
@@ -287,7 +291,7 @@ namespace Dfinance.Purchase.Services
             var cmd = _context.Database.GetDbConnection().CreateCommand();
             cmd.CommandType = CommandType.Text;
             cmd.CommandText = $"Exec VoucherAdditionalsSP @criteria='FillInvTransItems',@TransactionID={TransId}";
-            if (_context.Database.GetDbConnection().State == ConnectionState.Closed)            
+            if (_context.Database.GetDbConnection().State == ConnectionState.Closed)
                 _context.Database.GetDbConnection().Open();
             using (var reader = cmd.ExecuteReader())
             {
@@ -305,7 +309,7 @@ namespace Dfinance.Purchase.Services
                             row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
                         }
                         rows.Add(row);
-                    }                   
+                    }
                     return CommonResponse.Ok(rows);
                 }
             }
@@ -314,7 +318,7 @@ namespace Dfinance.Purchase.Services
 
         public CommonResponse FillById(int transId)
         {
-            var transDisclist = _transactionService.FillTransactionbyId(transId).Data;           
+            var transDisclist = _transactionService.FillTransactionbyId(transId).Data;
             var additionals = _additionalService.FillTransactionAdditionals(transId).Data;
             var items = FillInvTransItems(transId).Data;
             //var reservDto = _mapper.Map<InventoryTransactionDto,ItemReservationDto >(trans);
@@ -322,7 +326,7 @@ namespace Dfinance.Purchase.Services
             //reservDto.Items = reservItem;
             //reservDto.Warehouse.Id = trans.FiTransactionAdditional.Warehouse.Id;
             //reservDto.PartyInfo = trans.FiTransactionAdditional.PartyNameandAddress;
-            return CommonResponse.Ok(new { Transactions = transDisclist,TransAdditionals=additionals,Items=items });
+            return CommonResponse.Ok(new { Transactions = transDisclist, TransAdditionals = additionals, Items = items });
         }
     }
 }
