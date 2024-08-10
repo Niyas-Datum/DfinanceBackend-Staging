@@ -1,14 +1,7 @@
 ﻿using Dfinance.DataModels.Dto.Inventory;
-using Dfinance.DataModels.Dto.Inventory.Purchase;
 using Dfinance.Purchase.Services.Interface;
 using Dfinance.Shared.Domain;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Dfinance.Shared.Routes.InvRoute;
 
 namespace Dfinance.NUnitTest.Purchase
 {
