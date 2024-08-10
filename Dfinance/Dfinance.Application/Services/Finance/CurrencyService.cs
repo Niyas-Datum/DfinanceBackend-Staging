@@ -260,5 +260,12 @@ namespace Dfinance.Application.Services.Finance
             var currencies = _context.CurrencyDDView.FromSqlRaw("exec spCurrency @Criteria= 'FillCurrency'").ToList();
             return CommonResponse.Ok(currencies);
         }
+        //exchange rate updation in purchase, sales and other transaction pages
+        public CommonResponse UpdateExchangeRate(int currencyId, decimal exchRate)
+        {
+            string criteria = "UpdateExchangeRate";
+            _context.Database.ExecuteSqlRaw("Exec spCurrency @Criteria={0},@CurrencyID={1},@CurrencyRate={2}", criteria, currencyId, exchRate);
+            return CommonResponse.Ok();
+        }
     }
 }
