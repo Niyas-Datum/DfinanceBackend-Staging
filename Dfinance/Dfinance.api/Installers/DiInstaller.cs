@@ -232,8 +232,14 @@ public class DiInstaller : IInstaller
         service.AddScoped<ISizeMasterService,SizeMasterService>();
         service.AddScoped<IItemMappingService, ItemMappingService>();
 
+
         //PriceCategory
         service.AddScoped<IPriceCategoryService, PriceCategoryService>();
+
+        service.AddScoped<ISalesEnquiryService, SalesEnquiryService>();
+        service.AddScoped<ISalesEstimateService, SalesEstimateService>();   
+        service.AddScoped<ISalesQuotationService, SalesQuotationService>(); 
+
 
     }
 }
