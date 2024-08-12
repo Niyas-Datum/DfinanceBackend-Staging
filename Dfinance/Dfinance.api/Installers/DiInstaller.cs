@@ -218,8 +218,6 @@ public class DiInstaller : IInstaller
 
         //PhysicalOpeningStock
         service.AddScoped<IPhyOpenStockService, PhyOpenStockService>();
-
-
         
 
         //StockReturn and Adjustment
@@ -231,10 +229,11 @@ public class DiInstaller : IInstaller
         service.AddScoped<IBatchEditService, BatchEditService>();
         service.AddScoped<IItemReservationService, ItemReservationService>();
 
-
         service.AddScoped<ISizeMasterService,SizeMasterService>();
         service.AddScoped<IItemMappingService, ItemMappingService>();
 
+        //PriceCategory
+        service.AddScoped<IPriceCategoryService, PriceCategoryService>();
 
     }
 }

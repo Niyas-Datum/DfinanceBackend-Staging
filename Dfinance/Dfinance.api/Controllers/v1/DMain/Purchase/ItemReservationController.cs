@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using static Dfinance.Shared.Routes.InvRoute;
 using Dfinance.api.Authorization;
 using Dfinance.DataModels.Dto.Inventory;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Dfinance.api.Controllers.v1.DMain.Purchase
 {
@@ -32,6 +33,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
             }
         }
         [HttpPost(InvRoute.ItemReserv.Save)]
+        [SwaggerOperation(Summary = "PageId=452,VId=139")]
         public IActionResult SaveItemReserv(ItemReservationDto itemReservation,int pageId,int voucherId)
         {
             try
@@ -45,6 +47,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
             }
         }
         [HttpPatch(InvRoute.ItemReserv.Update)]
+        [SwaggerOperation(Summary = "PageId=452,VId=139")]
         public IActionResult UpdateItemReserv(ItemReservationDto itemReservation, int pageId, int voucherId)
         {
             try
