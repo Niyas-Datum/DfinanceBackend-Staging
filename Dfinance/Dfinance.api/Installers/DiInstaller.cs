@@ -225,6 +225,10 @@ public class DiInstaller : IInstaller
 
         service.AddScoped<IStockTransactionService, StockTransactionService>();
 
+        //InternationalBarCode
+        service.AddScoped<IInternationalBarCodeService, InternationalBarCodeService>();
+
+
         //BatchEdit
         service.AddScoped<IBatchEditService, BatchEditService>();
         service.AddScoped<IItemReservationService, ItemReservationService>();
@@ -239,6 +243,7 @@ public class DiInstaller : IInstaller
         service.AddScoped<ISalesEnquiryService, SalesEnquiryService>();
         service.AddScoped<ISalesEstimateService, SalesEstimateService>();   
         service.AddScoped<ISalesQuotationService, SalesQuotationService>(); 
+
 
 
     }
