@@ -249,7 +249,13 @@ namespace Dfinance.Shared.Routes
             public const string SaveSalesQuotation = $"{Main}/saveSalesquotion";
             public const string UpdateSalesQuotation = $"{Main}/updateSalesquotion";
         }
-        
+        public class DeliveryOut
+        {
+            public const string Main = $"{Base}/deliveryout";
+            public const string SaveDeliveryOut = $"{Main}/savedeliveryout";
+            public const string UpdateDeliveryOut = $"{Main}/updatedeliveryout";
+        }
+
         public class PurchaseReturn
         {
             public const string Main = $"{Base}/PurchaseReturn";

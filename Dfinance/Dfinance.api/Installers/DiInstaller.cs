@@ -87,7 +87,7 @@ public class DiInstaller : IInstaller
         //FINANCE
         service.AddScoped<IFinanceYearService, FinanceYearService>();
         service.AddScoped<ICurrencyService, CurrencyService>();
-		service.AddScoped<ICardMaster, CardMasterService>();
+        service.AddScoped<ICardMaster, CardMasterService>();
 
         service.AddScoped<IChartOfAccountsService, ChartOfAccountsService>();
         service.AddScoped<IVoucherService, VoucherService>();
@@ -106,7 +106,7 @@ public class DiInstaller : IInstaller
         service.AddScoped<IHrEmployeeService, HrEmployeeService>();
 
         //log
-       service.AddScoped <ITextFormatter, LogFormatterService>();
+        service.AddScoped<ITextFormatter, LogFormatterService>();
 
         //itemmaster
 
@@ -125,38 +125,38 @@ public class DiInstaller : IInstaller
 
         //Roles
         service.AddScoped<IRoleService, RoleService>();
- //label&Grid
+        //label&Grid
         service.AddScoped<ILabelAndGridSettings, LabelAndGridSettings>();
-		
-		 //commonservice in inventory
+
+        //commonservice in inventory
         service.AddScoped<Dfinance.Inventory.CommonService>();
-        	 //purchase
-      
+        //purchase
+
         service.AddScoped<IInventoryTransactionService, InventoryTransactionService>();
         service.AddScoped<IInventoryAdditional, InventoryAdditional>();
         service.AddScoped<IInventoryItemService, InventoryItemservice>();
-        service.AddScoped<IInventoryPaymentService, InventoryPaymentService>();       
+        service.AddScoped<IInventoryPaymentService, InventoryPaymentService>();
         service.AddScoped<IPurchaseService, PurchaseService>();
         service.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
-		 service.AddScoped<ISalesInvoiceService, SalesInvoiceService>();
-		 service.AddScoped<IPurchaseEnquiryService, PurchaseEnquiryService>();
+        service.AddScoped<ISalesInvoiceService, SalesInvoiceService>();
+        service.AddScoped<IPurchaseEnquiryService, PurchaseEnquiryService>();
         service.AddScoped<IPurchaseRequestService, PurchaseRequestService>();
         service.AddScoped<IPurchaseQuotationService, PurchaseQuotationService>();
         service.AddScoped<IInternationalPurchaseService, InternationalPurchaseService>();
         service.AddScoped<IGoodsInTransitService, GoodsInTransitService>();
-		service.AddScoped<ISalesReturnService, SalesReturnService>();
-        service.AddScoped<ISalesOrder,SalesOrderService>(); 
+        service.AddScoped<ISalesReturnService, SalesReturnService>();
+        service.AddScoped<ISalesOrder, SalesOrderService>();
         service.AddScoped<IPurchaseReturnService, PurchaseReturnService>();
 
         service.AddScoped<IFinanceAdditional, FinanceAdditional>();
         service.AddScoped<IFinancePaymentService, FinancePaymentService>();
         service.AddScoped<IFinanceTransactionService, FinanceTransactionService>();
-        service.AddScoped<IPaymentVoucherService,PaymentVoucherService>();
+        service.AddScoped<IPaymentVoucherService, PaymentVoucherService>();
         service.AddScoped<IReceiptVoucherService, ReceiptVoucherService>();
-        
+
         //contravou
         service.AddScoped<IContraVoucherService, ContraVoucherService>();
-	service.AddScoped<IMaterialRequestService, MaterialRequestService>();
+        service.AddScoped<IMaterialRequestService, MaterialRequestService>();
         service.AddScoped<IDeliveryInService, DeliveryInService>();
         service.AddScoped<IMaterialReceiptService, MaterialReceiptService>();
         service.AddScoped<IInvMatTransService, InvMatTransService>();
@@ -164,7 +164,7 @@ public class DiInstaller : IInstaller
         service.AddScoped<IBudgetingService, BudgetingService>();
         service.AddScoped<IBudgetRegisterService, BudgetRegisterService>();
         service.AddScoped<IBudgetMonthwiseService, BudgetMonthwiseService>();
-       
+
         //BranchAccounts
         service.AddScoped<IBranchAccounts, BranchAccountsService>();
 
@@ -174,15 +174,13 @@ public class DiInstaller : IInstaller
         //openingvoucher
         service.AddScoped<IOpeningVoucherService, OpeningVoucherService>();
         //PDC
-        service.AddScoped<IPdcClearingService,PdcClearingService>();
+        service.AddScoped<IPdcClearingService, PdcClearingService>();
         //creditdebitnote
         service.AddScoped<ICreditDebitNoteService, CreditDebitNoteService>();
-
 
         //Restaurant
         service.AddScoped<IRestaurantInvoice, RestaurantInvoice>();
         //finance-statements
-
 
         //RecallVoucher
         service.AddScoped<IRecallVoucherService, RecallVoucherService>();
@@ -194,7 +192,6 @@ public class DiInstaller : IInstaller
 
         service.AddScoped<IPageMenuService, PageMenuService>();
 
-
         //counters
         service.AddScoped<ICountersService, CountersService>();
 
@@ -203,8 +200,6 @@ public class DiInstaller : IInstaller
 
         //JournalVoucher
         service.AddScoped<IJournalVoucherService, JournalVoucherService>();
-        
-
 
         //submasters
         service.AddScoped<ISubMastersService, SubMastersService>();
@@ -218,7 +213,6 @@ public class DiInstaller : IInstaller
 
         //PhysicalOpeningStock
         service.AddScoped<IPhyOpenStockService, PhyOpenStockService>();
-        
 
         //StockReturn and Adjustment
         service.AddScoped<IStockRtnAdjustService, StockRtnAdjustService>();
@@ -233,7 +227,11 @@ public class DiInstaller : IInstaller
         service.AddScoped<IBatchEditService, BatchEditService>();
         service.AddScoped<IItemReservationService, ItemReservationService>();
 
+        service.AddScoped<ISizeMasterService, SizeMasterService>();
+
+
         service.AddScoped<ISizeMasterService,SizeMasterService>();
+
         service.AddScoped<IItemMappingService, ItemMappingService>();
 
 
@@ -241,8 +239,11 @@ public class DiInstaller : IInstaller
         service.AddScoped<IPriceCategoryService, PriceCategoryService>();
 
         service.AddScoped<ISalesEnquiryService, SalesEnquiryService>();
-        service.AddScoped<ISalesEstimateService, SalesEstimateService>();   
-        service.AddScoped<ISalesQuotationService, SalesQuotationService>(); 
+
+        service.AddScoped<ISalesEstimateService, SalesEstimateService>();
+        service.AddScoped<ISalesQuotationService, SalesQuotationService>();
+        service.AddScoped<IDeliveryOutService, DeliveryOutService>();
+
 
 
 
