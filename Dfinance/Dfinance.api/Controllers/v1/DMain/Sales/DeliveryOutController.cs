@@ -53,4 +53,3 @@ namespace Dfinance.api.Controllers.v1.DMain.Sales
         }
     }
 }
-
