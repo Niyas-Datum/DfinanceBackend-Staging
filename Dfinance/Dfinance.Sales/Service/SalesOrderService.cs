@@ -37,7 +37,7 @@ namespace Dfinance.Sales.Service
         private readonly ICostCentreService _costCentre;
         private readonly CommonService _com;
         private readonly ISettingsService _settings;
-        private readonly   ICustomerSupplierService _party;
+        private readonly ICustomerSupplierService _party;
         public SalesOrderService(DFCoreContext context, IAuthService authService, IHostEnvironment hostEnvironment,
             ILogger<SalesOrderService> logger, IInventoryTransactionService transactionService, IInventoryAdditional inventoryAdditional,
             IInventoryItemService inventoryItemService, IInventoryPaymentService inventoryPaymentService, DataRederToObj rederToObj, IItemMasterService item,
