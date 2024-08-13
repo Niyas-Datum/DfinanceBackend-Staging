@@ -74,11 +74,7 @@ public class AuthService : IAuthService
             .Select(m => new
             {
                 Key = m.Key,
-                Value = (
-                    m.Value.ToLower() == "true" ||
-                    m.Value.ToLower() == "yes" ||
-                    m.Value == "1"
-                ) ? "true" : "false"
+                Value =m.Value
             }).ToList();
                 var jsonSettings = JsonConvert.SerializeObject(settings, Formatting.Indented);
 

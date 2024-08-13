@@ -218,16 +218,33 @@ public class DiInstaller : IInstaller
 
         //PhysicalOpeningStock
         service.AddScoped<IPhyOpenStockService, PhyOpenStockService>();
-
-
         
 
         //StockReturn and Adjustment
         service.AddScoped<IStockRtnAdjustService, StockRtnAdjustService>();
 
         service.AddScoped<IStockTransactionService, StockTransactionService>();
+
         //InternationalBarCode
         service.AddScoped<IInternationalBarCodeService, InternationalBarCodeService>();
+
+
+        //BatchEdit
+        service.AddScoped<IBatchEditService, BatchEditService>();
+        service.AddScoped<IItemReservationService, ItemReservationService>();
+
+        service.AddScoped<ISizeMasterService,SizeMasterService>();
+        service.AddScoped<IItemMappingService, ItemMappingService>();
+
+
+        //PriceCategory
+        service.AddScoped<IPriceCategoryService, PriceCategoryService>();
+
+        service.AddScoped<ISalesEnquiryService, SalesEnquiryService>();
+        service.AddScoped<ISalesEstimateService, SalesEstimateService>();   
+        service.AddScoped<ISalesQuotationService, SalesQuotationService>(); 
+
+
 
     }
 }

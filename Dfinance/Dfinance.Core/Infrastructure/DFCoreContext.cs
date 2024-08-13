@@ -107,7 +107,7 @@ public partial class DFCoreContext : DbContext
     public DbSet<InvTransItems> InvTransItems { get; set; }
     public DbSet<InvAvgCost> InvAvgCost { get; set; }
     public DbSet<InvUniqueItems> InvUniqueItems { get; set; }
-    // public DbSet<InvBatchWiseItem> InvBatchWiseItem { get; set; }
+   // public DbSet<InvBatchWiseItem> InvBatchWiseItem { get; set; }
 
     //MaVehicle
     public DbSet<MaVehicles> MaVehicles { get; set; }
@@ -121,7 +121,7 @@ public partial class DFCoreContext : DbContext
     //ChequeRegister
     public DbSet<FiChequesTran> FiChequesTrans { get; set; }
 
-
+    public DbSet<InvRelatedItems> InvRelatedItems { get; set; }
 
 
 
@@ -177,6 +177,8 @@ public partial class DFCoreContext : DbContext
     public DbSet<FillCurrencyCodeById> FillCurrencyCodeById { get; set; }
     public DbSet<FillCurrency> FillCurrency { get; set; }
     public DbSet<FillCurrencyById> FillCurrencyById { get; set; }
+    public DbSet<CurrencyDDView> CurrencyDDView { get; set; }
+    
     public DbSet<FillCardMaster> FillCardMaster { get; set; }
     public DbSet<FillMaster> FillMaster { get; set; }
     //-------------ItemMaster  ------------------------------------------ 
@@ -386,6 +388,11 @@ public partial class DFCoreContext : DbContext
     public DbSet<ChequeregView> ChequeregViews { get; set; }
 
     public DbSet<UniqueItemView> UniqueItemView { get; set; }
+    public DbSet<ItemMappingView> ItemMappingView { get; set; }
+    public DbSet<ItemDetailsView> ItemDetailsView { get; set; }
+    public DbSet<FillVoucherSettingsView> FillVoucherSettingsView { get; set; }
+    
+
 
     //IntnBarCode
     public  DbSet<InvBarcodeMaster> InvBarcodeMasters { get; set; }
@@ -475,8 +482,12 @@ public partial class DFCoreContext : DbContext
         mb.ApplyConfiguration(new InvMaCounterConfiguration());
         //ChequeRegister
         mb.ApplyConfiguration(new FiChequesTranConfiguration());
+
         //InternBarCode
         mb.ApplyConfiguration(new InvBarcodeMasterConfiguuration());
+
+        mb.ApplyConfiguration(new InvRelatedItemsConfiguration());
+
 
         //View
 
@@ -547,6 +558,7 @@ public partial class DFCoreContext : DbContext
         mb.Entity<FillCurrencyCodeById>().HasNoKey().ToView(null);
         mb.Entity<FillCurrency>().HasNoKey().ToView(null);
         mb.Entity<FillCurrencyById>().HasNoKey().ToView(null);
+        mb.Entity<CurrencyDDView>().HasNoKey().ToView(null);
         //FinanceYear
         mb.Entity<FinanceYearView>().HasNoKey().ToView(null);
         mb.Entity<FinanceYearViewByID>().HasNoKey().ToView(null);
@@ -699,6 +711,10 @@ public partial class DFCoreContext : DbContext
         mb.Entity<ChequeregView>().HasNoKey().ToView(null);
 
         mb.Entity<UniqueItemView>().HasNoKey().ToView(null);
+       mb.Entity<ItemMappingView>().HasNoKey().ToView(null);
+        mb.Entity<ItemDetailsView>().HasNoKey().ToView(null);
+        mb.Entity<FillVoucherSettingsView>().HasNoKey().ToView(null);
+        
     }
 
 

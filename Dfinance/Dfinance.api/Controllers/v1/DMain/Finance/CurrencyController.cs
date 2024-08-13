@@ -218,5 +218,31 @@ namespace Dfinance.api.Controllers.v1.DMain.Finance
                 return BadRequest(ex.Message);
             }
         }
+        [HttpGet(ApiRoutes.Currency.curDropdown)]
+        public IActionResult CurrencyDropdown()
+        {
+            try
+            {
+                var result = _currencyService.CurrencyDropdown();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPatch(ApiRoutes.Currency.updExchRate)]
+        public IActionResult UpdateExchangeRate(int currencyId, decimal exchRate)
+        {
+            try
+            {
+                var result = _currencyService.UpdateExchangeRate(currencyId,exchRate);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
