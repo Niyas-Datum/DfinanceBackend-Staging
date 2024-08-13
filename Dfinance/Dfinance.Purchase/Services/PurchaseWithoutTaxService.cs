@@ -547,7 +547,7 @@ namespace Dfinance.Purchase.Services
                     roundOffId = Convert.ToInt32(round["ID"]);
                 }
                 int insertedId = 0;
-                var transEntry = _context.FiTransactionEntries.Any(t => t.Id == transactionId || t.Id == transPayId);
+                var transEntry = _context.FiTransactionEntries.Any(t => t.TransactionId == transactionId || t.TransactionId == transPayId);
                 if (transEntry)//Delete Transaction Entries
                 {
                     DeleteTransEntries(transactionId, transPayId);
