@@ -164,18 +164,18 @@ namespace Dfinance.Shared.Routes
             public const string fillitems = $"{Main}/fillitems";
             public const string GetData = $"{Main}/getdata";
             public const string GetCustomer = $"{Main}/getCustomer";
-
             public const string getsalessummary = $"{Main}/getsalessummary";
             public const string DaySummary = $"{Main}/daysummary"; 
-
             public const string CanlSales = $"{Main}/Cancel";
-
-          
             public const string SalesPurchaseSummary = $"{Main}/salespurchasesummary";
             public const string AreaWiseSales = $"{Main}/areawisesales";
             public const string SalesReport = $"{Main}/salesreport";
+            public const string SalesCommission = $"{Main}/salescommission";
+            public const string TopCustomerSupplier = $"{Main}/topcustSupp";
             public const string SaveSalesOrder = $"{Main}/saveSalesorder";
             public const string UpdateSalesOrder = $"{Main}/updateSalesorder";
+            
+            
         }
         public class PurchaseEnquiry
         {
@@ -332,6 +332,14 @@ namespace Dfinance.Shared.Routes
             public const string Save = $"{Main}/save";
             public const string Update = $"{Main}/update";
             public const string fillDamageWh = $"{Main}/fillDamageWh";
+        }
+
+        public class InternBarCode
+        {
+            public const string Main = $"{Base}/InternbarCode";
+            public const string FillIntnBarcode = $"{Main}/fill";
+            public const string SaveandUpdate = $"{Main}/SaveandUpdate";
+            
         }
 
         public class BatchEdit

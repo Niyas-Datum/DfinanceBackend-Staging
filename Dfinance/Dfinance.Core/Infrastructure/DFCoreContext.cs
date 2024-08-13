@@ -394,6 +394,8 @@ public partial class DFCoreContext : DbContext
     
 
 
+    //IntnBarCode
+    public  DbSet<InvBarcodeMaster> InvBarcodeMasters { get; set; }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     //  => optionsBuilder.UseSqlServer(@"Data Source=ip.datuminnovation.com,9600;TrustServerCertificate=true;Initial Catalog=DatumSystemMain;User ID=sa;pwd=Datum123!");
     // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -480,7 +482,12 @@ public partial class DFCoreContext : DbContext
         mb.ApplyConfiguration(new InvMaCounterConfiguration());
         //ChequeRegister
         mb.ApplyConfiguration(new FiChequesTranConfiguration());
+
+        //InternBarCode
+        mb.ApplyConfiguration(new InvBarcodeMasterConfiguuration());
+
         mb.ApplyConfiguration(new InvRelatedItemsConfiguration());
+
 
         //View
 
