@@ -240,6 +240,6 @@ public class DiInstaller : IInstaller
         service.AddScoped<ISalesEstimateService, SalesEstimateService>();   
         service.AddScoped<ISalesQuotationService, SalesQuotationService>(); 
 
-
+ service.AddScoped<IPurchaseWithoutTaxService, PurchaseWithoutTaxService>();
     }
 }

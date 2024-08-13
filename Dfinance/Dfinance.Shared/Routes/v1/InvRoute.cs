@@ -359,10 +359,7 @@ namespace Dfinance.Shared.Routes
             public const string itemDetails = $"{Main}/itemDetails";
             public const string save = $"{Main}/save";
         }
-        public class PurchaseWithoutTax
-        {
-            public const string Main = $"{Base}/PurchWithoutTax";     
-        }
+       
         public class PriceCatgory
         {
             public const string Main = $"{Base}/priceCat";
@@ -371,6 +368,13 @@ namespace Dfinance.Shared.Routes
             public const string save = $"{Main}/save";
             public const string update = $"{Main}/update";
             public const string delete = $"{Main}/delete";
+        }
+        public class PurchaseWithoutTax
+        {           
+            public const string Main = $"{Base}/PurchWithoutTax";
+            public const string getData = $"{Main}/getData";
+            public const string save = $"{Main}/save";
+            public const string update = $"{Main}/update";
         }
     }
 }
