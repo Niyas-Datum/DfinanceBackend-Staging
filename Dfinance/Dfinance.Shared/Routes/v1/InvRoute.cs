@@ -103,6 +103,7 @@ namespace Dfinance.Shared.Routes
             public const string GetSupplier = $"{Main}/getsupplier";
             public const string getPurchaseReport = $"{Main}/getPuReport";
             public const string fill = $"{Main}/fill";
+            public const string vouSett = $"{Main}/vouSett";
         }
         public class InventoryPaymentTransaction
         {
@@ -124,6 +125,7 @@ namespace Dfinance.Shared.Routes
             public const string getItems = $"{Main}/getItems";
             public const string DeleteItems = $"{Main}/delItems";
             public const string ItemTransData = $"{Main}/itemtransdata";
+            public const string stockItems = $"{Main}/stockItems";
         }
         public static class UnitMaster
         {
@@ -228,6 +230,26 @@ namespace Dfinance.Shared.Routes
             public const string DelSalesReturn = $"{Main}/delsalesRtn";
             public const string CancelsalesRtn = $"{Main}/Cancel";
         }
+        
+        public class SalesEnquiry
+        {
+            public const string Main = $"{Base}/salesenquiry";
+            public const string SaveSalesEnquiry = $"{Main}/saveSalesenq";
+            public const string UpdateSalesEnquiry = $"{Main}/updateSalesenq";
+        }
+        public class SalesEstimate
+        {
+            public const string Main = $"{Base}/salesestimate";
+            public const string SaveSalesEstimate = $"{Main}/saveSalesestmt";
+            public const string UpdateSalesEstimate = $"{Main}/updateSalesestmt";
+        }
+        public class SalesQuotation
+        {
+            public const string Main = $"{Base}/salesquotation";
+            public const string SaveSalesQuotation = $"{Main}/saveSalesquotion";
+            public const string UpdateSalesQuotation = $"{Main}/updateSalesquotion";
+        }
+        
         public class PurchaseReturn
         {
             public const string Main = $"{Base}/PurchaseReturn";
@@ -304,6 +326,51 @@ namespace Dfinance.Shared.Routes
             public const string Save = $"{Main}/save";
             public const string Update = $"{Main}/update";
             public const string fillDamageWh = $"{Main}/fillDamageWh";
+        }
+
+        public class BatchEdit
+        {
+            public const string Main = $"{Base}/batchEdit";
+            public const string LoadDate = $"{Main}/loadData";
+            public const string Update = $"{Main}/update";
+            public const string FillBatchDetails = $"{Main}/fillBD";
+        }
+        public class ItemReserv
+        {
+            public const string Main = $"{Base}/itemReserv";
+            public const string LoadDate = $"{Main}/loadData";
+            public const string Save = $"{Main}/save";
+            public const string Update = $"{Main}/update";
+            public const string FillMaster = $"{Main}/fillmaster";
+            public const string FillById = $"{Main}/fillById";
+        }
+        public class SizeMaster
+        {
+            public const string Main = $"{Base}/SizeMaster";
+            public const string fill = $"{Main}/fill";
+            public const string fillById = $"{Main}/fillById";
+            public const string save = $"{Main}/save";
+            public const string delete = $"{Main}/delete";
+        }
+        public class ItemMapping
+        {
+            public const string Main = $"{Base}/ItemMap";
+            public const string fillItems = $"{Main}/fillItems";
+            public const string itemDetails = $"{Main}/itemDetails";
+            public const string save = $"{Main}/save";
+        }
+        public class PurchaseWithoutTax
+        {
+            public const string Main = $"{Base}/PurchWithoutTax";     
+        }
+        public class PriceCatgory
+        {
+            public const string Main = $"{Base}/priceCat";
+            public const string fillMaster = $"{Main}/fillmaster";
+            public const string FillById = $"{Main}/fillById";
+            public const string save = $"{Main}/save";
+            public const string update = $"{Main}/update";
+            public const string delete = $"{Main}/delete";
         }
     }
 }

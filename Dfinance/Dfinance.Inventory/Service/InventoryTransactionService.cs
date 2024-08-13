@@ -352,19 +352,19 @@ namespace Dfinance.Inventory.Service
                     }
                 }
                     //Set RoundOFF calculation
-                    if (inventoryToFinanceRoundOff)
-                    {
-                        int numeric = 0;
-                        if (numericFormat == "N2")
-                            numeric = 2;
-                        else if (numericFormat == "N3")
-                            numeric = 3;
-                        else if (numericFormat == "N4")
-                            numeric = 4;
-                        var round = transactionDto.TransactionEntries.GrandTotal;
-                        transactionDto.TransactionEntries.GrandTotal = Decimal.Round(transactionDto.TransactionEntries.GrandTotal ?? 0, numeric);
-                        transactionDto.TransactionEntries.Roundoff = round - transactionDto.TransactionEntries.GrandTotal;
-                    }
+                    //if (inventoryToFinanceRoundOff)
+                    //{
+                    //    int numeric = 0;
+                    //    if (numericFormat == "N2")
+                    //        numeric = 2;
+                    //    else if (numericFormat == "N3")
+                    //        numeric = 3;
+                    //    else if (numericFormat == "N4")
+                    //        numeric = 4;
+                    //    var round = transactionDto.TransactionEntries.GrandTotal;
+                    //    transactionDto.TransactionEntries.GrandTotal = Decimal.Round(transactionDto.TransactionEntries.GrandTotal ?? 0, numeric);
+                    //    transactionDto.TransactionEntries.Roundoff = round - transactionDto.TransactionEntries.GrandTotal;
+                    //}
                 }
                 //Set AutoVoucher Next TransactionNo
                 if (autoUpdateNewVoucherNo && transactionDto.Id == null)
@@ -509,11 +509,12 @@ namespace Dfinance.Inventory.Service
         private bool commonCostcenterAllocationWindow = false;
         private bool autoApproval = false;
         private bool dosageSystem = false;
+        private bool invFinValidation = false;
         private void SetSettings()
         {
             string[] keys = new string[] {"TaxBasedInvoiceAccount","MethodofAdditionalExpenseAllocationToItemCost","GrandTotalVerify","VoucherDateAsDueDate","AutoUpdateNewVoucherNo",
                     "PartywiseVoucherNo","CreditLimitCheck","CreditPeriodCheck","RackLocation","InventoryToFinanceRoundOff","ItemDiscountAccounting",
-                    "IsCSTApplicable","AdditionalExpenseAccountingInInvoice","ExpenseCSTAccountEntry","DiscountAccounting","CostCentreSystem",
+                    "IsCSTApplicable","AdditionalExpenseAccountingInInvoice","ExpenseCSTAccountEntry","DiscountAccounting","CostCentreSystem","InvFinValidation",
                     "CommonCostcenterAllocationWindow","DosageSystem","AutoApproval","SalesArabicPrint","PrintAfterSave","NumericFormat","InventoryApproval" };
             var settings = _context.MaSettings
         .Where(m => keys.Contains(m.Key))
@@ -539,6 +540,7 @@ namespace Dfinance.Inventory.Service
             commonCostcenterAllocationWindow = Converter.StringToBoolean(settings.Where(s => s.Key == "CommonCostcenterAllocationWindow").Select(s => s.Value).FirstOrDefault());
             autoApproval = Converter.StringToBoolean(settings.Where(s => s.Key == "AutoApproval").Select(s => s.Value).FirstOrDefault().ToString());
             dosageSystem = Converter.StringToBoolean(settings.Where(s => s.Key == "DosageSystem").Select(s => s.Value).FirstOrDefault());
+            invFinValidation = Converter.StringToBoolean(settings.Where(s => s.Key == "InvFinValidation").Select(s => s.Value).FirstOrDefault());
         }
 
         //CostCenter Settings
@@ -624,15 +626,20 @@ namespace Dfinance.Inventory.Service
                 Autoentry = true;
                 RefTransId = TransId;
                 string ReferenceId = null;
+                int? PayId = null;
                 string environmentname = _environment.EnvironmentName;
                 var payType = _context.MaMisc.Where(p => p.Id == transactionDto.FiTransactionAdditional.PayType.Id).Select(p => p.Value).FirstOrDefault();
                 transactionDto.Party.Name = _context.FiMaAccounts.Where(a => a.Id == transactionDto.Party.Id).Select(a => a.Name).FirstOrDefault();
-                if (transactionDto.Party.Name != Constants.CASHCUSTOMER && transactionDto.Party.Name != Constants.CASHSUPPLIER || payType == Constants.CREDIT)
-                {
+                //if (transactionDto.Party.Name != Constants.CASHCUSTOMER && transactionDto.Party.Name != Constants.CASHSUPPLIER || payType == Constants.CREDIT)
+                //{
                     VoucherNo voucherNo = (VoucherNo)GetAutoVoucherNo(VoucherId).Data;
                     // var transaction = _mapper.Map<InventoryTransactionDto, FiTransaction>(transactionDto);
 
-                    if (transactionDto.Id == 0 || transactionDto.Id == null)
+                     PayId = _context.FiTransaction
+                     .Where(x => x.RefTransId == transactionDto.Id)
+                     .Select(x => x.Id)
+                     .FirstOrDefault();
+                    if (PayId == 0 || PayId == null)
                     {
                         string criteria = "InsertTransactions";
                         //transaction.RefTransId = RefTransId;
@@ -666,10 +673,7 @@ namespace Dfinance.Inventory.Service
                     }
                     else
                     {
-                        int PayId = _context.FiTransaction
-                     .Where(x => x.RefTransId == transactionDto.Id)
-                     .Select(x => x.Id)
-                     .FirstOrDefault();
+                        
                         string criteria = "UpdateTransactions";
 
                         RefTransId = transactionDto.Id;
@@ -689,14 +693,14 @@ namespace Dfinance.Inventory.Service
                             ApprovalStatus, null, null, Status, Autoentry, true, true, false, transactionDto.Party.Id,
                             null, RefTransId, transactionDto.Project?.Id ?? null, PageId, PayId);
 
-                        transactionDto.Id = PayId;
+                        
                     }
-                }
-                else
-                {
-                    transactionDto.Id = TransId;
-                }
-                return CommonResponse.Ok(transactionDto.Id);
+               // }
+                //else
+                //{
+                //    transactionDto.Id = TransId;
+                //}
+                return CommonResponse.Ok(PayId);
             }
             catch (Exception ex)
             {
@@ -948,7 +952,8 @@ namespace Dfinance.Inventory.Service
         }
         public CommonResponse InventoryAmountValidation(int TransId)
         {
-            _context.Database.ExecuteSqlRaw("EXEC InventoryAmountCheck @TransactionID={0}",
+            if(invFinValidation)
+                _context.Database.ExecuteSqlRaw("EXEC InventoryAmountCheck @TransactionID={0}",
                                    TransId);
             return CommonResponse.Ok();
         }

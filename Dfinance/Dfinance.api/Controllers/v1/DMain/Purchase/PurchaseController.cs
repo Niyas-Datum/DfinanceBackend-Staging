@@ -175,6 +175,19 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
                 var result = _purchaseservice.GetPurchaseReport(purchaseReportDto);
                 return Ok(result);
             }
+        [HttpGet(InvRoute.Purchase.vouSett)]       
+        public IActionResult FillVoucherSettings(int? keyword = null, int? voucherId = null)
+        {
+            try
+            {
+                var data = _purchaseservice.FillVoucherSettings(keyword, voucherId);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
+    }
     }
 

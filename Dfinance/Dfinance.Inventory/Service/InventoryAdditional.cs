@@ -15,6 +15,7 @@ namespace Dfinance.Inventory.Service
         private readonly IAuthService _authService;
         private readonly IHostEnvironment _environment;
 
+
         public InventoryAdditional(DFCoreContext context, IAuthService authService, IHostEnvironment hostEnvironment)
         {
             _context = context;
@@ -61,7 +62,7 @@ namespace Dfinance.Inventory.Service
             try
             {
                 string criteria = "FillFiTransactionAdditionals";
-                var result = _context.SpGetTransactionAdditionals.FromSqlRaw($"EXEC VoucherAdditionalsSP @Criteria='{criteria}',@TransactionID='{transactionId}'").ToList();
+                var result = _context.SpGetTransactionAdditionals.FromSqlRaw($"EXEC VoucherAdditionalsSP @Criteria='{criteria}',@TransactionID={transactionId}").ToList();
 
                 return CommonResponse.Ok(result);
             }
@@ -102,6 +103,10 @@ namespace Dfinance.Inventory.Service
                 return CommonResponse.Error();
             }
         }
+        private int GetPrimaryVoucherID(int voucherid)
+        {
+            return (int)(_context.FiMaVouchers.Where(v => v.Id == voucherid).Select(v => v.PrimaryVoucherId).FirstOrDefault());
+        }
         /// </summary>
         /// <param name="fiTransactionAdditionalDto"></param>
         /// <returns></returns>
@@ -110,19 +115,18 @@ namespace Dfinance.Inventory.Service
         {
             int? fromLocId = null, toLocId = null, inLocId = null, outLocId = null;
             string criteria = "";
-            switch ((VoucherType)voucherId)
+            var primaryVId=GetPrimaryVoucherID(voucherId);
+            switch ((VoucherType)primaryVId)
             {
                 case VoucherType.Purchase:
                 case VoucherType.Sales_Return:
                 case VoucherType.Purchase_Order:
                 case VoucherType.Purchase_Request:
                 case VoucherType.Purchase_Quotation:
-
                 case VoucherType.Opening_Stock:
-                   
+                case VoucherType.Item_Reservation:
                     toLocId = fiTransactionAdditionalDto.Warehouse?.Id ?? null;
                     inLocId = fiTransactionAdditionalDto.Warehouse?.Id??null;
-
                     break;
                 case VoucherType.Sales_Invoice:
                 case VoucherType.Purchase_Return:
@@ -165,7 +169,7 @@ namespace Dfinance.Inventory.Service
                 toLocId,//10
                 null, null, null, null, null, null, null,
                 null,
-                fiTransactionAdditionalDto.PartyNameandAddress ?? null, 
+                fiTransactionAdditionalDto.PartyNameandAddress ?? null, //19
                 fiTransactionAdditionalDto.Code?? null,
                 fiTransactionAdditionalDto.TermsOfDelivery??null,//21
                 null, null,//22,23
@@ -198,7 +202,7 @@ namespace Dfinance.Inventory.Service
 
                 null,
                 fiTransactionAdditionalDto.Approve??null,//76
-                fiTransactionAdditionalDto.TransPortationType.Id,
+                fiTransactionAdditionalDto.TransPortationType?.Id??null,
                 inLocId,//78
                 outLocId,//79
                 null, null,

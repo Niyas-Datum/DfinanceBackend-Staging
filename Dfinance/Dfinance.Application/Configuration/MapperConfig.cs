@@ -3,6 +3,7 @@ using Dfinance.Core;
 using Dfinance.Core.Domain;
 using Dfinance.DataModels.Dto;
 using Dfinance.DataModels.Dto.Finance;
+using Dfinance.DataModels.Dto.Inventory;
 using Dfinance.DataModels.Dto.Inventory.Purchase;
 
 namespace Dfinance.Application.Configuration
@@ -27,8 +28,10 @@ namespace Dfinance.Application.Configuration
                 .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.Items));
             CreateMap<InvRestTransItemDto, InvTransItemDto>();
             CreateMap<FinanceTransactionDto, JournalDto>().ReverseMap();
-
-
+            CreateMap<ItemReservationDto, InventoryTransactionDto>();
+            CreateMap<InvTransItemReservDto, InvTransItemDto>();
+            //CreateMap<InventoryTransactionDto, ItemReservationDto>();
+            //CreateMap<InvTransItemDto, InvTransItemReservDto>();
 
 
 

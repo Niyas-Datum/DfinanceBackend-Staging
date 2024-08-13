@@ -38,6 +38,7 @@ namespace Dfinance.Inventory.Service.Interface
         CommonResponse FillTransactionbyId(int Id);
 
         CommonResponse FillImportItems(int transId, int? voucherId = null);
+        CommonResponse GetAutoVoucherNo(int voucherid, int? payTypeId);
 
 
     }
