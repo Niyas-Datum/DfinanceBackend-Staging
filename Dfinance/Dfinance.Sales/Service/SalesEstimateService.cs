@@ -211,5 +211,4 @@ namespace Dfinance.Sales.Service
         }
     }
 }
-    }
-}
+
