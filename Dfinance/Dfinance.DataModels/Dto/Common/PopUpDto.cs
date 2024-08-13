@@ -85,4 +85,14 @@ namespace Dfinance.DataModels.Dto.Common
 
 
     }
+    public class Formpopup
+    {
+        public string? Name { get; set; }
+    }
+    public class GridPopup 
+    {
+        public int? Id { get; set; }
+        public string? Name { get; set; }
+    }
+
 }

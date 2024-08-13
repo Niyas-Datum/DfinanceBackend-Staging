@@ -34,7 +34,7 @@ namespace Dfinance.Sales.Service
         private readonly DataRederToObj _rederToObj;
         private readonly IItemMasterService _item;
         private readonly IWarehouseService _warehouse;
-        private readonly ICustomerSupplierService _party;
+        private readonly ICustomerSupplierService  _party;
         private readonly ICostCentreService _costCentre;
         private readonly CommonService _com;
         private readonly ISettingsService _settings;
@@ -210,4 +210,4 @@ namespace Dfinance.Sales.Service
 
         }
     }
-}
+

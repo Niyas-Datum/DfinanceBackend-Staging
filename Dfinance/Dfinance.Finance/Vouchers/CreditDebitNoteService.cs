@@ -11,8 +11,10 @@ using Dfinance.Shared.Enum;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Data;
 using System.Text.Json;
+using System.Transactions;
 
 namespace Dfinance.Finance.Vouchers
 {
@@ -49,7 +51,7 @@ namespace Dfinance.Finance.Vouchers
         {
             try
             {
-                int primaryvoucherId = _context.FiMaVouchers.Where(f => f.PrimaryVoucherId == voucherId).Select(f => f.Id).FirstOrDefault();
+                int? primaryvoucherId = _context.FiMaVouchers.Where(f => f.Id == voucherId).Select(f => f.PrimaryVoucherId).FirstOrDefault();
                 if ((VoucherType)primaryvoucherId == VoucherType.Sales_Return)
                 {
                     int branchId = _authService.GetBranchId().Value;
@@ -84,7 +86,7 @@ namespace Dfinance.Finance.Vouchers
                                 join p in _context.Parties on a.Id equals p.AccountId
                                 into ap
                                 from p in ap.DefaultIfEmpty()
-                                where !a.IsGroup && a.AccountCategory == 1 && a.Active && b.BranchId == branchId
+                                where !a.IsGroup && a.AccountCategory == 2 && a.Active && b.BranchId == branchId
                                 select new PopUpDto
                                 {
                                     Code = a.Alias, //acccode
@@ -97,42 +99,25 @@ namespace Dfinance.Finance.Vouchers
                                 };
                     return CommonResponse.Ok(query);
                 }
-                int branchID = _authService.GetBranchId().Value;
-                var data = from a in _context.FiMaAccounts
-                           join b in _context.FiMaBranchAccounts on a.Id equals b.AccountId
-                           into ab
-                           from b in ab.DefaultIfEmpty()
-                           join p in _context.Parties on a.Id equals p.AccountId
-                           into ap
-                           from p in ap.DefaultIfEmpty()
-                           where !a.IsGroup && a.AccountCategory == 2 && a.Active && b.BranchId == branchID
-                           select new PopUpDto
-                           {
-                               Code = a.Alias, //acccode
-                               Name = a.Name, //accname
-                               Description = (p.AddressLineOne ?? "") + (p.AddressLineTwo != null && p.City != null && p.Pobox != null ? "," : " ")
-                                         + (p.AddressLineTwo ?? "") + (p.City != null && p.Pobox != null ? "," : " ")
-                                         + (p.City ?? "") + (p.Pobox != null ? "," : " ")
-                                         + (p.Pobox ?? ""), //address
-                               Id = a.Id
-                           };
-                return CommonResponse.Ok(data);
+                return CommonResponse.Ok();
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
                 return CommonResponse.Error(ex);
             }
+              
         }
 
         public CommonResponse SaveCreditDebitNote(DebitCreditDto debitCreditDto, int PageId, int VoucherId)
         {
-            using (var transaction = _context.Database.BeginTransaction())
+            using (var transactionScope = new TransactionScope())
             {
                 try
                 {
-                    int primaryvoucherId = _context.FiMaVouchers.Where(f => f.PrimaryVoucherId == VoucherId).Select(f => f.Id).FirstOrDefault();
+                    int? primaryvoucherId = _context.FiMaVouchers.Where(f => f.Id == VoucherId).Select(f => f.PrimaryVoucherId).FirstOrDefault();
 
+                    //creditnote and creditnote9
                     if ((VoucherType)primaryvoucherId == VoucherType.Sales_Return)
                     {
 
@@ -142,7 +127,7 @@ namespace Dfinance.Finance.Vouchers
                         }
                         if (!_authService.UserPermCheck(PageId, 2))
                         {
-                            return PermissionDenied("Save Creditnote");
+                            return PermissionDenied("Save");
                         }
                         int transpayId;
                         //save
@@ -157,7 +142,7 @@ namespace Dfinance.Finance.Vouchers
                             transpayId = (int)SaveTransactionEntries(debitCreditDto, PageId, transId).Data;
 
                             
-                            if (debitCreditDto.billandRef != null && debitCreditDto.billandRef.Any(a => a.VID != null || a.VID != 0))
+                            if (debitCreditDto.billandRef != null && debitCreditDto.billandRef.Any(x => x.Selection == true))
                             {
                                SaveVoucherAllocation(transId, transpayId, debitCreditDto);
                             }
@@ -167,11 +152,27 @@ namespace Dfinance.Finance.Vouchers
                         {
                             _transactionService.EntriesAmountValidation(transId);
                         }
-                        
 
-
+                        //usertrack
+                        var primaryvoucher = _context.FiMaVouchers.Where(f => f.Id == VoucherId).FirstOrDefault();
+                        decimal amount = 0;
+                        var jsonCN = JsonSerializer.Serialize(debitCreditDto);
+                        foreach (var usertrack in debitCreditDto.accountDetails)
+                        {
+                            if (usertrack.Debit.HasValue && usertrack.Debit != 0)
+                            {
+                                amount = usertrack.Debit.Value;
+                            }
+                            else
+                                amount = usertrack.Credit.Value;
+                        }
+                        _userTrackService.AddUserActivity(debitCreditDto.VoucherNo, transId, 0, "Added", "FiTransactions", primaryvoucher.Name, amount, jsonCN);
+                         
                     }
-                    //Debitnote
+
+
+
+                    //Debitnote and debitnote9
                     else if ((VoucherType)primaryvoucherId == VoucherType.Purchase_Return)
                     {
                         if (!_authService.IsPageValid(PageId))
@@ -180,7 +181,7 @@ namespace Dfinance.Finance.Vouchers
                         }
                         if (!_authService.UserPermCheck(PageId, 2))
                         {
-                            return PermissionDenied("Save Debitnote");
+                            return PermissionDenied("Save");
                         }
                         int transpayId;
                         //save
@@ -195,7 +196,7 @@ namespace Dfinance.Finance.Vouchers
                             transpayId = (int)SaveTransactionEntries(debitCreditDto, PageId, transId).Data;
 
 
-                            if (debitCreditDto.billandRef != null && debitCreditDto.billandRef.Any(a => a.VID != null || a.VID != 0))
+                            if (debitCreditDto.billandRef != null && debitCreditDto.billandRef.Any(x => x.Selection == true))
                             {
                                 SaveVoucherAllocation(transId, transpayId, debitCreditDto);
                             }
@@ -205,15 +206,33 @@ namespace Dfinance.Finance.Vouchers
                         {
                             _transactionService.EntriesAmountValidation(transId);
                         }
+                        //usertrack
+                        var primaryvoucher = _context.FiMaVouchers.Where(f => f.Id == VoucherId).FirstOrDefault();
+                        
+                            decimal amount = 0;
+                            var jsonCN = JsonSerializer.Serialize(debitCreditDto);
+                            foreach (var usertrack in debitCreditDto.accountDetails)
+                            {
+                                if (usertrack.Credit.HasValue && usertrack.Credit != 0)
+                                {
+                                    amount = usertrack.Credit.Value;
+                                }
+                                else
+                                    amount = usertrack.Debit.Value;
+                            }
+                            _userTrackService.AddUserActivity(debitCreditDto.VoucherNo, transId, 0, "Added", "FiTransactions", primaryvoucher.Name, amount, jsonCN);
+                           
+                        
                     }
                     _logger.LogInformation(" Successfully Created!");
-                    transaction.Commit();
+                    transactionScope.Complete();
                     return CommonResponse.Created(" Successfully Created!");
 
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex.Message);
+                    transactionScope.Dispose();  
                     return CommonResponse.Error(ex);
                 }
             }
@@ -221,12 +240,13 @@ namespace Dfinance.Finance.Vouchers
 
         public CommonResponse UpdateCreditDebitNote(DebitCreditDto debitCreditDto, int PageId, int VoucherId)
         {
-            using (var transaction = _context.Database.BeginTransaction())
+            using (var transactionScope = new TransactionScope())
             {
                 try
                 {
-                    int primaryvoucherId = _context.FiMaVouchers.Where(f => f.PrimaryVoucherId == VoucherId).Select(f => f.Id).FirstOrDefault();
+                    int? primaryvoucherId = _context.FiMaVouchers.Where(f => f.Id == VoucherId).Select(f => f.PrimaryVoucherId).FirstOrDefault();
 
+                    //update for credit and creditnote9
                     if ((VoucherType)primaryvoucherId == VoucherType.Sales_Return)
                     {
 
@@ -236,13 +256,11 @@ namespace Dfinance.Finance.Vouchers
                         }
                         if (!_authService.UserPermCheck(PageId, 3))
                         {
-                            return PermissionDenied("Update creditnote ");
+                            return PermissionDenied("Update");
                         }
                         int transpayId;
                         //save
                         int transId = (int)SaveTransactions(debitCreditDto, PageId, VoucherId).Data;
-
-
                         if (debitCreditDto != null)
                             SaveTransactionAdditional(debitCreditDto, transId, VoucherId);
 
@@ -256,13 +274,30 @@ namespace Dfinance.Finance.Vouchers
                         if (debitCreditDto != null)
                         {
                             transpayId = (int)SaveTransactionEntries(debitCreditDto, PageId, transId).Data;
-                            if (debitCreditDto.billandRef != null && debitCreditDto.billandRef.Any(a => a.VID != null || a.VID != 0))
+                            if (debitCreditDto.billandRef != null && debitCreditDto.billandRef.Any(x => x.Selection == true))
                             {
                                 SaveVoucherAllocation(transId, transpayId, debitCreditDto);
                             }
                         }
-                       
+                        //usertrack
+                        
+                        var primaryvoucher = _context.FiMaVouchers.Where(f => f.Id == VoucherId).FirstOrDefault();
+                        decimal amount = 0;
+                        var jsonCN = JsonSerializer.Serialize(debitCreditDto);
+                        foreach (var usertrack in debitCreditDto.accountDetails)
+                        {
+                            if (usertrack.Debit.HasValue && usertrack.Debit != 0)
+                            {
+                                amount = usertrack.Debit.Value;
+                            }
+                            else
+                                amount = usertrack.Credit.Value;
+                        }
+                        _userTrackService.AddUserActivity(debitCreditDto.VoucherNo, transId, 1, "Updated", "FiTransactions", primaryvoucher.Name, amount, jsonCN);
+
                     }
+
+                    //debit and debit note 9
                     else if ((VoucherType)primaryvoucherId == VoucherType.Purchase_Return)
                     {
                         if (!_authService.IsPageValid(PageId))
@@ -271,7 +306,7 @@ namespace Dfinance.Finance.Vouchers
                         }
                         if (!_authService.UserPermCheck(PageId, 3))
                         {
-                            return PermissionDenied("Update debitnote");
+                            return PermissionDenied("Update");
                         }
                         int transpayId;
                         //save
@@ -291,20 +326,35 @@ namespace Dfinance.Finance.Vouchers
                         if (debitCreditDto != null)
                         {
                             transpayId = (int)SaveTransactionEntries(debitCreditDto, PageId, transId).Data;
-                            if (debitCreditDto.billandRef != null && debitCreditDto.billandRef.Any(a => a.VID != null || a.VID != 0))
+                            if (debitCreditDto.billandRef != null && debitCreditDto.billandRef.Any(x => x.Selection == true))
                             {
                                 SaveVoucherAllocation(transId, transpayId, debitCreditDto);
                             }
                         }
+                        //usertrack
+
+                        var primaryvoucher = _context.FiMaVouchers.Where(f => f.Id == VoucherId).FirstOrDefault();
+                        decimal amount = 0;
+                        var jsonCN = JsonSerializer.Serialize(debitCreditDto);
+                        foreach (var usertrack in debitCreditDto.accountDetails)
+                        {
+                            if (usertrack.Debit.HasValue && usertrack.Debit != 0)
+                            {
+                                amount = usertrack.Debit.Value;
+                            }
+                            else
+                                amount = usertrack.Credit.Value;
+                        }
+                        _userTrackService.AddUserActivity(debitCreditDto.VoucherNo, transId, 1, "Updated", "FiTransactions", primaryvoucher.Name, amount, jsonCN);
                     }
                      _logger.LogInformation(" Successfully Updated!");
-                    transaction.Commit();
+                    transactionScope.Complete();
                     return CommonResponse.Created("Successfully Updated!");
                 }
                 catch (Exception ex) 
                 {
                     _logger.LogError(ex.Message);
-                    transaction.Rollback();
+                    transactionScope.Dispose();
                     return CommonResponse.Error(ex.Message);
                 }
             }
@@ -328,8 +378,6 @@ namespace Dfinance.Finance.Vouchers
                 if (!transid)
                 {
                     return CommonResponse.NotFound("Transaction Not Found");
-
-
                 }
                 string criteria = "DeleteTransactions";
 
@@ -371,7 +419,6 @@ namespace Dfinance.Finance.Vouchers
             }
             catch (Exception ex)
             {
-
                 return CommonResponse.Error(ex);
             }
         }
@@ -399,7 +446,7 @@ namespace Dfinance.Finance.Vouchers
             int? accId = null;
             if (debitCreditDto.Id == 0 || debitCreditDto.Id == null)
             {
-                reason = "Added";
+               
                 var voucherNoCheck = _context.FiTransaction.Any(t => t.VoucherId == voucherId && t.TransactionNo == debitCreditDto.VoucherNo);
                 if (voucherNoCheck)
                     return CommonResponse.Error("VoucherNo already exists");
@@ -422,12 +469,9 @@ namespace Dfinance.Finance.Vouchers
                                ApprovalStatus, null, null, Status, IsAutoEntry, Posted, Active, Cancelled, accId, null, null, null, pageId, newId);
 
                 transId = (int)newId.Value;
-
             }
             else
             {
-                actionId = 1;
-                reason = "Updated";
                 accId = debitCreditDto.Party.Id.Value;
                 if (cancel == true)
                 {
@@ -460,44 +504,6 @@ namespace Dfinance.Finance.Vouchers
                 transId = (int)debitCreditDto.Id;
 
             }
-            int primaryvoucherId = _context.FiMaVouchers.Where(f => f.PrimaryVoucherId == voucherId).Select(f => f.Id).FirstOrDefault();
-
-            if ((VoucherType)primaryvoucherId == VoucherType.Sales_Return)
-            {
-                decimal amount = 0;
-                var jsonCN = JsonSerializer.Serialize(debitCreditDto);
-                foreach (var usertrack in debitCreditDto.accountDetails)
-                {
-                    if (usertrack.Debit.HasValue && usertrack.Debit != 0)
-                    {
-                        amount = usertrack.Debit.Value;
-                    }
-                    else
-                        amount = usertrack.Credit.Value;
-
-                }
-
-                _userTrackService.AddUserActivity(debitCreditDto.VoucherNo, transId, actionId, reason, "FiTransactions", "Credit Note", amount, jsonCN);
-                // return CommonResponse.Ok(transId);
-            }
-
-            else if ((VoucherType)primaryvoucherId == VoucherType.Purchase_Return)
-            {
-                decimal amount = 0;
-                var jsonCN = JsonSerializer.Serialize(debitCreditDto);
-                foreach (var usertrack in debitCreditDto.accountDetails)
-                {
-                    if (usertrack.Credit.HasValue && usertrack.Credit != 0)
-                    {
-                        amount = usertrack.Credit.Value;
-                    }
-                    else
-                        amount = usertrack.Debit.Value;
-                }
-                _userTrackService.AddUserActivity(debitCreditDto.VoucherNo, transId, actionId, reason, "FiTransactions", "Debit Note", amount, jsonCN);
-                //  return CommonResponse.Ok(transId);
-            }
-
             return CommonResponse.Ok(transId);
         }
 
@@ -706,18 +712,13 @@ namespace Dfinance.Finance.Vouchers
         }
 
 
-        public CommonResponse SaveVoucherAllocation(int transId, int transpayId, DebitCreditDto debitCreditDto)
+        private CommonResponse SaveVoucherAllocation(int transId, int transpayId, DebitCreditDto debitCreditDto)
         {
             try
             {
                 int? refTransId = null;
                 string criteria = "InsertVoucherAllocation";
-                var selection = debitCreditDto.billandRef.Where(a => a.Selection == true);
-
-                if (!selection.Any())
-                {
-                    return CommonResponse.Error();
-                }
+              
                 int? veid = null;
 
                 if (debitCreditDto.billandRef != null && debitCreditDto.billandRef.Any(a => a.Amount > 0))
@@ -727,7 +728,7 @@ namespace Dfinance.Finance.Vouchers
 
                         //var veid = _context.FiTransactionEntries.Where(e => e.TranType == "Party" && e.AccountId == adv.AccountID).Select(e => e.Id).FirstOrDefault();
                        
-                            veid = adv.VEID;
+                        veid = adv.VEID;
                         
                         if (adv.VID != 0)
                         {
@@ -747,15 +748,12 @@ namespace Dfinance.Finance.Vouchers
                             criteria, adv.VID, veid, adv.AccountID, adv.Amount, transId, newId);
                     }
                 }
-
-
                 return CommonResponse.Ok();
-
             }
             catch (Exception ex)
             {
                 return CommonResponse.Error(ex);
-
+                
             }
         }
 
