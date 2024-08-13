@@ -6,51 +6,51 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dfinance.api.Controllers.v1.DMain.Sales
 {
-        [Route("api/[controller]")]
-        [ApiController]
-        public class DeliveryOutController : BaseController
+    [Route("api/[controller]")]
+    [ApiController]
+    public class DeliveryOutController : BaseController
+    {
+        private readonly IDeliveryOutService _deliveryOutService;
+        public DeliveryOutController(IDeliveryOutService deliveryOutService)
         {
-            private readonly IDeliveryOutService _deliveryOutService;
-            public DeliveryOutController(IDeliveryOutService deliveryOutService)
-            {
             _deliveryOutService = deliveryOutService;
-            }
-            [HttpPost(InvRoute.DeliveryOut.SaveDeliveryOut)]
+        }
+        [HttpPost(InvRoute.DeliveryOut.SaveDeliveryOut)]
 
-            public IActionResult SaveDeliveryOut([FromBody] InventoryTransactionDto salesDto, int PageId, int voucherId)
+        public IActionResult SaveDeliveryOut([FromBody] InventoryTransactionDto salesDto, int PageId, int voucherId)
+        {
+            try
             {
-                try
+                if (!ModelState.IsValid)
                 {
-                    if (!ModelState.IsValid)
-                    {
-                        return BadRequest(ModelState);
-                    }
-                    object result = _deliveryOutService.SaveDeliveryOut(salesDto, PageId, voucherId);
-                    return Ok(result);
+                    return BadRequest(ModelState);
                 }
-                catch (Exception ex)
-                {
-                    return BadRequest(ex.Message);
-                }
+                object result = _deliveryOutService.SaveDeliveryOut(salesDto, PageId, voucherId);
+                return Ok(result);
             }
-            [HttpPatch(InvRoute.DeliveryOut.UpdateDeliveryOut)]
-            public IActionResult UpdateDeliveryOut([FromBody] InventoryTransactionDto purchaseDto, int PageId, int voucherId)
+            catch (Exception ex)
             {
-                try
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPatch(InvRoute.DeliveryOut.UpdateDeliveryOut)]
+        public IActionResult UpdateDeliveryOut([FromBody] InventoryTransactionDto purchaseDto, int PageId, int voucherId)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
                 {
-                    if (!ModelState.IsValid)
-                    {
-                        return BadRequest(ModelState);
-                    }
-                    object result = _deliveryOutService.UpdateDeliveryOut(purchaseDto, PageId, voucherId);
-                    return Ok(result);
+                    return BadRequest(ModelState);
                 }
-                catch (Exception ex)
-                {
+                object result = _deliveryOutService.UpdateDeliveryOut(purchaseDto, PageId, voucherId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
 
-                    return BadRequest(ex.Message);
-                }
+                return BadRequest(ex.Message);
             }
         }
     }
 }
+
