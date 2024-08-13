@@ -234,6 +234,8 @@ public class DiInstaller : IInstaller
 
         //PriceCategory
         service.AddScoped<IPriceCategoryService, PriceCategoryService>();
+        //CloseVoucher
+        service.AddScoped<ICloseVoucherService, CloseVoucherService>();
 
     }
 }
