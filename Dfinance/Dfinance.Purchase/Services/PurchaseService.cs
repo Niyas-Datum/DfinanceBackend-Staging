@@ -428,13 +428,13 @@ namespace Dfinance.Purchase.Services
                         _additionalService.SaveTransactionAdditional(purchaseDto.FiTransactionAdditional, TransId, voucherId);
                     }
 
-                    if (purchaseDto.References.Count > 0 && purchaseDto.References.Select(x => x.Id).FirstOrDefault() != 0)
+                    if (purchaseDto.References.Count > 0 && purchaseDto.References.Any(r=>r.Sel==true))
                     {
                         List<int?> referIds = purchaseDto.References.Select(x => x.Id).ToList();
 
                         _transactionService.SaveTransReference(TransId, referIds);
                     }
-                    if (purchaseDto.Items != null && voucherId == 17)
+                    if (purchaseDto.Items != null && purchaseDto.Items.Count>0)
                     {
                         _itemService.SaveInvTransItems(purchaseDto.Items, voucherId, TransId, purchaseDto.ExchangeRate, purchaseDto.FiTransactionAdditional.Warehouse.Id);
                     }
