@@ -442,7 +442,7 @@ namespace Dfinance.Purchase.Services
                     {
                         int TransEntId = (int)_paymentService.SaveTransactionEntries(purchaseDto, PageId, TransId, transpayId??0).Data;
 
-                        if (purchaseDto.TransactionEntries.Advance != null && purchaseDto.TransactionEntries.Advance.Any(a => a.VID != null || a.VID != 0)&& transpayId!=0)
+                        if (purchaseDto.TransactionEntries.Advance != null && purchaseDto.TransactionEntries.Advance.Any(a => a.VID != null || a.VID != 0) || transpayId!=TransId )
                         {
                             _transactionService.SaveVoucherAllocation(TransId, transpayId ?? 0, purchaseDto.TransactionEntries);
                         }
@@ -510,9 +510,9 @@ namespace Dfinance.Purchase.Services
                     {
                         int TransEntId = (int)_paymentService.SaveTransactionEntries(invTranseDto, PageId, TransId, transpayId ?? 0).Data;
 
-                        if (invTranseDto.TransactionEntries.Advance != null && invTranseDto.TransactionEntries.Advance.Any(a => a.AccountID != null || a.AccountID != 0)&& transpayId !=null)
+                        if (invTranseDto.TransactionEntries.Advance != null && invTranseDto.TransactionEntries.Advance.Any(a => a.AccountID != null || a.AccountID != 0)|| transpayId !=TransId)
                         {
-                            _transactionService.UpdateVoucherAllocation(TransId, transpayId??0, invTranseDto.TransactionEntries);
+                            _transactionService.SaveVoucherAllocation(TransId, transpayId??0, invTranseDto.TransactionEntries);
                         }
                     }
                     if (invTranseDto != null)
@@ -520,8 +520,8 @@ namespace Dfinance.Purchase.Services
                         _transactionService.EntriesAmountValidation(TransId);
                     }
                     transactionScope.Complete();
-                    _logger.LogInformation("Purchase Update Successfully");
-                    return CommonResponse.Created("Prchase Update Successfully");
+                    _logger.LogInformation("Purchase Updated Successfully");
+                    return CommonResponse.Created("Purchase Updated Successfully");
                 }
 
                 catch (Exception ex)

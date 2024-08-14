@@ -244,7 +244,14 @@ namespace Dfinance.Inventory.Service
                 _context.TransItemExpenses.RemoveRange(transItemexp);
                 _context.SaveChanges();
             }
-
+            
+            var teidVoucher = _context.FiTransactionEntries.Where(t => t.TransactionId == transactionId && t.TranType == "Party").Select(c => c.Id).FirstOrDefault();           
+             var    voucherAlloc = _context.FiVoucherAllocation.Where(c => c.Vid==transactionId||c.Vid==transPayId).ToList();
+            if (voucherAlloc.Any())
+            {
+                _context.FiVoucherAllocation.RemoveRange(voucherAlloc);
+                _context.SaveChanges();
+            }
             var transEntry = _context.FiTransactionEntries.Where(e => e.TransactionId == transactionId).ToList();
             _context.FiTransactionEntries.RemoveRange(transEntry);
             _context.SaveChanges();
