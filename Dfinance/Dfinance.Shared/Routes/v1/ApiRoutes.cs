@@ -397,5 +397,13 @@ namespace Dfinance.Shared.Routes.v1
             public const string Update = $"{Main}/update";
             public const string Delete = $"{Main}/delete";
         }
+        public static class DocType
+        {
+            public const string Main = $"{Base}/docType";
+            public const string fill = $"{Main}/fill";
+            public const string fillById = $"{Main}/fillById";
+            public const string save = $"{Main}/save";
+            public const string delete = $"{Main}/delete";
+        }
     }
 }
