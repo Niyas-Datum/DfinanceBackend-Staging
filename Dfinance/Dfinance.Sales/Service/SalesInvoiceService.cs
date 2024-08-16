@@ -21,6 +21,7 @@ using System.Text;
 using Microsoft.Identity.Client;
 using System.Data;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Dfinance.DataModels.Dto.Finance;
 
 namespace Dfinance.Sales
 {
@@ -721,6 +722,51 @@ namespace Dfinance.Sales
                 }
             }
 
+        }
+
+        //Userwise profit report
+        public CommonResponse UserwiseProfit(DateTime startDate,DateTime endDate,int pageId,int? User,bool? detailed)
+        {
+            if (!_authService.IsPageValid(pageId))
+            {
+                return PageNotValid(pageId);
+            }
+            if (!_authService.UserPermCheck(pageId, 1))
+            {
+                return PermissionDenied("Fill Userwise Profit");
+            }
+            string criteria = "UserwiseProfit";
+            int branchId = _authService.GetBranchId().Value;
+            string voucherId = "null";
+            string account = "null";
+            string userId = User.HasValue ? User.Value.ToString() : "NULL";
+            var cmd = _context.Database.GetDbConnection().CreateCommand();
+            cmd.CommandType = CommandType.Text;
+            _context.Database.GetDbConnection().Open();
+            cmd.CommandText = $"Exec SalesReportSP @Criteria='{criteria}',@DateFrom='{startDate}',@DateUpto='{endDate}',@BranchID={branchId},@VoucherID={voucherId},@AccountID={account},@Detailed='{detailed}',@SalesManID={userId}";
+            using (var reader = cmd.ExecuteReader())
+            {
+                if (reader.Read())
+                {
+                    var tb = new DataTable();
+                    tb.Load(reader);
+
+                    List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+                    Dictionary<string, object> row;
+                    foreach (DataRow dr in tb.Rows)
+                    {
+                        row = new Dictionary<string, object>();
+                        foreach (DataColumn col in tb.Columns)
+                        {
+                            row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
+                        }
+                        rows.Add(row);
+                    }
+                    return CommonResponse.Ok(rows);
+
+                }
+                return CommonResponse.NoContent("No Data");
+            }
         }
     }
 }

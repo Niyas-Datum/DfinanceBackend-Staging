@@ -182,6 +182,9 @@ namespace Dfinance.Shared.Routes
             //sales B2C
             public const string saveSalesB2C = $"{Main}/saveSalesB2C";
             public const string updateSalesB2C = $"{Main}/updateSalesB2C";
+
+            //Userwise - report
+             public const string userwiseProfit = $"{Main}/userwiseProfit";
         }
         public class PurchaseEnquiry
         {

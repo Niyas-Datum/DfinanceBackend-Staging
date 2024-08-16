@@ -21,7 +21,7 @@ namespace Dfinance.Sales
         CommonResponse AreaWiseSales(string? viewby, DateTime startdate, DateTime enddate, int? item, int? Area);
         CommonResponse SalesReport(string Criteria, DateTime DateFrom, DateTime DateUpto, int? VoucherID, bool? Detailed, int? AccountID, string? VoucherNo, int? SalesManID);
 
-      
+        CommonResponse UserwiseProfit(DateTime startDate, DateTime endDate, int pageId, int? User, bool? detailed);
         //CommonResponse GetMonthlySalesSummary(DateTime? startDate, DateTime? endDate);  
         //CommonResponse GetFillSalesDaySummary(string? criteria,DateTime startDate, DateTime endDate,int? branch,int? user);
 
