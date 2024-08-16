@@ -13,5 +13,6 @@ namespace Dfinance.Application.LabelAndGridSettings.Interface
         CommonResponse SaveAndUpdateGrid(List<GridDto> gridDto, string password);
         CommonResponse labelGridpopup();
         CommonResponse GetGridByPageId(int pageId);
+        CommonResponse GetLabelByPageId(int pageId);
     }
 }

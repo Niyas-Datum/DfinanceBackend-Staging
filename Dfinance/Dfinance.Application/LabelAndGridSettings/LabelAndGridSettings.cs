@@ -239,6 +239,13 @@ namespace Dfinance.Application.LabelAndGridSettings
             return CommonResponse.Ok(grid);
         }
 
+        public CommonResponse GetLabelByPageId(int pageId)
+        {
+            var check = _context.FormLabelSettings.Any(x => x.PageId == pageId);
+            if (!check) { return CommonResponse.NotFound("Id not found"); }
+            var label = _context.FormLabelSettings.Where(i => i.PageId == pageId && i.Visible == true).ToList();
+            return CommonResponse.Ok(label);
+        }
 
 
 

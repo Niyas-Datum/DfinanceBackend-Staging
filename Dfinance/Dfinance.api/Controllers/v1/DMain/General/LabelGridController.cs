@@ -129,5 +129,18 @@ namespace Dfinance.api.Controllers.v1.DMain.General
                 return BadRequest(ex.Message);
             }
         }
+        [HttpGet(ApiRoutes.LabelGrid.getlabelbyId)]
+        public IActionResult GetLabelByPageId(int pageId)
+        {
+            try
+            {
+                var result = _labelgrid.GetLabelByPageId(pageId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
