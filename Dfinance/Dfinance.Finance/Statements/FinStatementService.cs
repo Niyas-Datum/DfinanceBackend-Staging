@@ -524,6 +524,47 @@ namespace Dfinance.Finance.Statements
                 return CommonResponse.Error("Failed to fill CostCentre report ");
             }
         }
+
+        //VAT computation
+        public CommonResponse VatComputation(DateTime dateFrom,DateTime dateUpto,int pageId)
+        {
+            if (!_authService.IsPageValid(pageId))
+            {
+                return PageNotValid(pageId);
+            }
+            if (!_authService.UserPermCheck(pageId, 1))
+            {
+                return PermissionDenied("Fill VatComputation report ");
+            }
+            int branchId = _authService.GetBranchId().Value;
+            var cmd = _context.Database.GetDbConnection().CreateCommand();
+            cmd.CommandType = CommandType.Text;
+            _context.Database.GetDbConnection().Open();
+            cmd.CommandText = $"Exec VATComputationSP @DateFrom='{dateFrom}',@DateUpto='{dateUpto}',@BranchID={branchId}";
+            using (var reader = cmd.ExecuteReader())
+            {
+                if (reader.Read())
+                {
+                    var tb = new DataTable();
+                    tb.Load(reader);
+
+                    List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+                    Dictionary<string, object> row;
+                    foreach (DataRow dr in tb.Rows)
+                    {
+                        row = new Dictionary<string, object>();
+                        foreach (DataColumn col in tb.Columns)
+                        {
+                            row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
+                        }
+                        rows.Add(row);
+                    }
+                    return CommonResponse.Ok(rows);
+
+                }
+                return CommonResponse.NoContent("No Data");
+            }
+        }
       
     }
 }
