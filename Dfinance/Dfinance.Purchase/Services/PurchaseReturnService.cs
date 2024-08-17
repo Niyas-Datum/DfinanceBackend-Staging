@@ -4,7 +4,6 @@ using Dfinance.DataModels.Dto.Inventory.Purchase;
 using Dfinance.Inventory.Service.Interface;
 using Dfinance.Purchase.Services.Interface;
 using Dfinance.Shared.Domain;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Transactions;
 
@@ -42,6 +41,13 @@ namespace Dfinance.Purchase.Services
             _logger.LogInformation("Page not Exists :" + pageId);
             return CommonResponse.Error("Page not Exists");
         }
+        /// <summary>
+        /// PurchaseReturn And PurchaseReturnForm9(save)
+        /// </summary>
+        /// <param name="purchaseRtnDto"></param>
+        /// <param name="PageId"></param>
+        /// <param name="voucherId"></param>
+        /// <returns></returns>
         public CommonResponse SavePurchaseRtn(InventoryTransactionDto purchaseRtnDto, int PageId, int voucherId)
         {
             using (var transactionScope = new TransactionScope())
@@ -55,10 +61,12 @@ namespace Dfinance.Purchase.Services
                     }
                     if (!_authService.UserPermCheck(PageId, 2))
                     {
-                        return PermissionDenied("Save PurchaseReturn");
+                        return PermissionDenied("Save");
                     }
                     string Status = "Approved";
                     string? tranType = null;
+
+                    //purchasereturn & purchasereturn Form9
 
                     int TransId = (int)_transactionService.SaveTransaction(purchaseRtnDto, PageId, voucherId, Status).Data;
                     int transpayId=TransId;
@@ -66,13 +74,14 @@ namespace Dfinance.Purchase.Services
                         purchaseRtnDto.TransactionEntries.Card.Any(c => c.AccountCode.ID > 0) ||
                         purchaseRtnDto.TransactionEntries.Cheque.Any(c => c.PDCPayable.ID > 0))
                     {
+                        purchaseRtnDto.Description = null;
                         transpayId = (int)_transactionService.SaveTransactionPayment(purchaseRtnDto, TransId, Status, 7).Data;
                     }
                     if (purchaseRtnDto.FiTransactionAdditional != null)
                     {
                         _additionalService.SaveTransactionAdditional(purchaseRtnDto.FiTransactionAdditional, TransId, voucherId);
                     }
-                    if (purchaseRtnDto.References.Count > 0 && purchaseRtnDto.References.Select(x => x.Id).FirstOrDefault() != 0)
+                    if (purchaseRtnDto.References.Count > 0 && purchaseRtnDto.References.Any(x => x.Sel==true))
                     {
                         List<int?> referIds = purchaseRtnDto.References.Select(x => x.Id).ToList();
                         _transactionService.SaveTransReference(TransId, referIds);
@@ -86,12 +95,18 @@ namespace Dfinance.Purchase.Services
                     if (purchaseRtnDto.TransactionEntries != null)
                     {
                         int TransEntId = (int)_paymentService.SaveTransactionEntries(purchaseRtnDto, PageId, TransId, transpayId).Data;
-                        _transactionService.SaveVoucherAllocation(TransId, transpayId, purchaseRtnDto.TransactionEntries);
+                        if (purchaseRtnDto.TransactionEntries.Advance != null && purchaseRtnDto.TransactionEntries.Advance.Any(a => a.VID != null || a.VID != 0) || TransId != transpayId)
+                        {
+                            _transactionService.SaveVoucherAllocation(TransId, transpayId, purchaseRtnDto.TransactionEntries);
+                        }
                     }
-
-                    _logger.LogInformation("Purchase Return inserted");
+                    if (purchaseRtnDto != null)
+                    {
+                        _transactionService.EntriesAmountValidation(TransId);
+                    }
+                    _logger.LogInformation("Inserted Successfully");
                     transactionScope.Complete();
-                    return CommonResponse.Ok("inserted successfully");
+                    return CommonResponse.Ok("Inserted successfully");
 
                 }
                 catch (Exception ex) 
@@ -102,18 +117,24 @@ namespace Dfinance.Purchase.Services
                 }
             }
         }
-
+        /// <summary>
+        /// PurchaseReturn And PurchaseReturnForm9(update)
+        /// </summary>
+        /// <param name="purchaseRtnDto"></param>
+        /// <param name="PageId"></param>
+        /// <param name="voucherId"></param>
+        /// <returns></returns>
         public CommonResponse UpdatePurchaseRtn(InventoryTransactionDto purchaseRtnDto, int PageId, int voucherId)
         {
-           
-                    if (!_authService.IsPageValid(PageId))
-                    {
-                        return PageNotValid(PageId);
-                    }
-                    if (!_authService.UserPermCheck(PageId, 3))
-                    {
-                        return PermissionDenied("Update PurchaseReturn");
-                    }
+            if (!_authService.IsPageValid(PageId))
+            {
+                return PageNotValid(PageId);
+            }
+            if (!_authService.UserPermCheck(PageId, 3))
+            {
+                return PermissionDenied("Update");
+            }
+
             using (var transactionScope = new TransactionScope())
 
             {
@@ -128,13 +149,14 @@ namespace Dfinance.Purchase.Services
                          purchaseRtnDto.TransactionEntries.Card.Any(c => c.AccountCode.ID > 0) ||
                          purchaseRtnDto.TransactionEntries.Cheque.Any(c => c.PDCPayable.ID > 0))
                     {
+                        purchaseRtnDto.Description = null;
                         transpayId = (int)_transactionService.SaveTransactionPayment(purchaseRtnDto, TransId, Status, 7).Data;
                     }
                     if (purchaseRtnDto.FiTransactionAdditional != null)
                     {
                         _additionalService.SaveTransactionAdditional(purchaseRtnDto.FiTransactionAdditional, TransId, voucherId);
                     }
-                    if (purchaseRtnDto.References.Count > 0 && purchaseRtnDto.References.Select(x => x.Id).FirstOrDefault() != 0)
+                    if (purchaseRtnDto.References.Count > 0 && purchaseRtnDto.References.Any(x => x.Sel == true))
                     {
                         List<int?> referIds = purchaseRtnDto.References.Select(x => x.Id).ToList();
                         _transactionService.UpdateTransReference(TransId, referIds);
@@ -148,11 +170,17 @@ namespace Dfinance.Purchase.Services
                     if (purchaseRtnDto.TransactionEntries != null)
                     {
                         int TransEntId = (int)_paymentService.SaveTransactionEntries(purchaseRtnDto, PageId, TransId, transpayId).Data;
-                            _transactionService.UpdateVoucherAllocation(TransId, transpayId, purchaseRtnDto.TransactionEntries);
+                        if (purchaseRtnDto.TransactionEntries.Advance != null && purchaseRtnDto.TransactionEntries.Advance.Any(a => a.VID != null || a.VID != 0) || TransId != transpayId)
+                        {
+                            _transactionService.SaveVoucherAllocation(TransId, transpayId, purchaseRtnDto.TransactionEntries);
+                        }
                     }
-
+                    if (purchaseRtnDto != null)
+                    {
+                        _transactionService.EntriesAmountValidation(TransId);
+                    }
                     transactionScope.Complete();
-                    _logger.LogInformation("Purchase Return Updated");
+                    _logger.LogInformation("Updated");
                     return CommonResponse.Ok("updated successfully");
 
                 }
