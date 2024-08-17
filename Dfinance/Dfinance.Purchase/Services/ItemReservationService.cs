@@ -57,14 +57,14 @@ namespace Dfinance.Purchase.Services
         private CommonResponse GetParties()
         {
             var branchId = _authService.GetBranchId().Value;
-            var accountCategories = new int[] { 1, 2 };
+            List<int> accountCategories = new List<int> { 1, 2 };
             var result = from A in _context.FiMaAccounts
                          join B in _context.FiMaBranchAccounts on A.Id equals B.AccountId
                          join P in _context.Parties on A.Id equals P.AccountId into joinedParties
                          from P in joinedParties.DefaultIfEmpty() // Left join
                          where A.IsGroup == false
                             && A.Active == true
-                            // && accountCategories.Contains(A.AccountCategory)
+                             && accountCategories.Contains((int)A.AccountCategory)
                             && A.AccountCategory == 1 || A.AccountCategory == 2
                             && B.BranchId == branchId
                          select new
