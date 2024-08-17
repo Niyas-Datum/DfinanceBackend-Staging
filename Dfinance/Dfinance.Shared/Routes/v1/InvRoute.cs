@@ -386,5 +386,12 @@ namespace Dfinance.Shared.Routes
             public const string update = $"{Main}/update";
             public const string delete = $"{Main}/delete";
         }
+        public class DosageMaster
+        {
+            public const string Main = $"{Base}/dosagemaster";
+            public const string FillMasterAndId = $"{Main}/fillMasterAndById";
+            public const string SaveUpdateDosage = $"{Main}/saveAndupdate";
+            public const string Delete = $"{Main}/delete";
+        }
     }
 }

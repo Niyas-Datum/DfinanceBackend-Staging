@@ -391,8 +391,9 @@ public partial class DFCoreContext : DbContext
     public DbSet<ItemMappingView> ItemMappingView { get; set; }
     public DbSet<ItemDetailsView> ItemDetailsView { get; set; }
     public DbSet<FillVoucherSettingsView> FillVoucherSettingsView { get; set; }
-    
 
+    //DosageMaster
+    public  DbSet<InvDrugDosage> InvDrugDosages { get; set; } 
 
     //IntnBarCode
     public  DbSet<InvBarcodeMaster> InvBarcodeMasters { get; set; }
@@ -487,6 +488,11 @@ public partial class DFCoreContext : DbContext
         mb.ApplyConfiguration(new InvBarcodeMasterConfiguuration());
 
         mb.ApplyConfiguration(new InvRelatedItemsConfiguration());
+
+        //DosageMaster
+        mb.ApplyConfiguration(new InvDrugDosageConfiguration());
+
+
 
 
         //View

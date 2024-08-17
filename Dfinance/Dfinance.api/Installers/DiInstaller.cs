@@ -244,7 +244,8 @@ public class DiInstaller : IInstaller
         service.AddScoped<ISalesQuotationService, SalesQuotationService>();
         service.AddScoped<IDeliveryOutService, DeliveryOutService>();
 
-
+        //DosageMaster
+        service.AddScoped<IDosageMasterService, DosageMasterService>();
 
 
     }
