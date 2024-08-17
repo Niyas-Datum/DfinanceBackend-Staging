@@ -34,6 +34,9 @@ namespace Dfinance.Warehouse.Services.Interface
         CommonResponse GetItemStockRptLoadData();
         CommonResponse FillItemMovementAnalysis(ItemMovementAnalysis itemMovement);
         CommonResponse GetItemMovementAnalysisLoadData();
-
+        CommonResponse GetWarehousewiseInventoryLoadData();
+        CommonResponse FillWarehousewiseInventory(WarehouseWiseInventoryRpt warehouseWiseInventory);
+        CommonResponse GetUnitwiseStkLoadData();
+        CommonResponse FillUnitwiseStk(int itemId);
     }
 }

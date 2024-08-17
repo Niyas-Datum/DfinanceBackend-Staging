@@ -1,20 +1,18 @@
-using Microsoft.EntityFrameworkCore;
 using Dfinance.Core.Domain;
-using Dfinance.Core.Infrastructure.Configurations;
-using Dfinance.Core.Views;
-using Dfinance.Core.Views.General;
 using Dfinance.Core.Domain.Roles;
+using Dfinance.Core.Infrastructure.Configurations;
 using Dfinance.Core.Infrastructure.Configurations.Employee;
 using Dfinance.Core.Infrastructure.Configurations.Roles;
-using Dfinance.Core.Views.Inventory;
-using Dfinance.Core.Views.PagePermission;
+using Dfinance.Core.Views;
 using Dfinance.Core.Views.Common;
-using Dfinance.Shared.Configuration.Service;
 using Dfinance.Core.Views.Finance;
+using Dfinance.Core.Views.General;
+using Dfinance.Core.Views.Inventory;
 using Dfinance.Core.Views.Inventory.Purchase;
 using Dfinance.Core.Views.Item;
-using System.Reflection.Emit;
-using System;
+using Dfinance.Core.Views.PagePermission;
+using Dfinance.Shared.Configuration.Service;
+using Microsoft.EntityFrameworkCore;
 
 namespace Dfinance.Core.Infrastructure;
 
@@ -392,8 +390,8 @@ public partial class DFCoreContext : DbContext
     public DbSet<ItemDetailsView> ItemDetailsView { get; set; }
     public DbSet<FillVoucherSettingsView> FillVoucherSettingsView { get; set; }
     
-
-
+    public DbSet<FiPrimaryVoucher> FiPrimaryVouchers { get; set; }
+    
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     //  => optionsBuilder.UseSqlServer(@"Data Source=ip.datuminnovation.com,9600;TrustServerCertificate=true;Initial Catalog=DatumSystemMain;User ID=sa;pwd=Datum123!");
     // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -481,6 +479,8 @@ public partial class DFCoreContext : DbContext
         //ChequeRegister
         mb.ApplyConfiguration(new FiChequesTranConfiguration());
         mb.ApplyConfiguration(new InvRelatedItemsConfiguration());
+
+        mb.ApplyConfiguration(new FiMaVouchersConfiguration());
 
         //View
 
@@ -707,7 +707,6 @@ public partial class DFCoreContext : DbContext
        mb.Entity<ItemMappingView>().HasNoKey().ToView(null);
         mb.Entity<ItemDetailsView>().HasNoKey().ToView(null);
         mb.Entity<FillVoucherSettingsView>().HasNoKey().ToView(null);
-        
     }
 
 

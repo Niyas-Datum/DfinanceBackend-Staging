@@ -474,5 +474,57 @@ namespace Dfinance.api.Controllers.v1.DMain.WareHouse
                 return BadRequest(ex.Message);
             }
         }
+        [HttpGet(InvRoute.WareHouse.GetWHWiseInvLoadData)]
+        public IActionResult GetWarehousewiseInventoryLoadData()
+        {
+            try
+            {
+                var data = _stockReportService.GetWarehousewiseInventoryLoadData();
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost(InvRoute.WareHouse.FillWHWiseInv)]
+        public IActionResult FillWarehousewiseInventory(WarehouseWiseInventoryRpt warehouseWiseInventory)
+        {
+            try
+            {
+                var data = _stockReportService.FillWarehousewiseInventory(warehouseWiseInventory);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet(InvRoute.WareHouse.GetUnitStkLD)]
+        public IActionResult GetUnitwiseStkLoadData()
+        {
+            try
+            {
+                var data = _stockReportService.GetUnitwiseStkLoadData();
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost(InvRoute.WareHouse.FillUnitWiseStk)]
+        public IActionResult FillUnitwiseStk(int itemId)
+        {
+            try
+            {
+                var data = _stockReportService.FillUnitwiseStk(itemId);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

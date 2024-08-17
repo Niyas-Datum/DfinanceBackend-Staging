@@ -48,6 +48,10 @@ namespace Dfinance.Shared.Routes
             public const string ItemMovAnlyLoadData = $"{Main1}/ItemMovAnlyRptLD";
             public const string ItemMovAnlyRpt = $"{Main1}/ItemMovAnlyRpt";
             public const string GetLocationsRpt = $"{Main1}/getLoctRpt";
+            public const string GetWHWiseInvLoadData = $"{Main1}/getWHInvLD";
+            public const string FillWHWiseInv = $"{Main1}/fillWHInv";
+            public const string GetUnitStkLD = $"{Main1}/getUnitstkLd";
+            public const string FillUnitWiseStk = $"{Main1}/fillUnitstk";
         }
 
 
