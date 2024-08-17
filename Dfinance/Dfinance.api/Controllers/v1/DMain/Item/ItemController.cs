@@ -453,5 +453,40 @@ namespace Dfinance.api.Controllers.v1.DMain.Item
             }
 
         }
+
+        [HttpGet(ApiRoutes.ItemMaster.PriceCategoryRep)]
+        public IActionResult PriceCategoryReport(int? ItemId)
+        {
+            try
+            {
+                var result = _itemService.PriceCategoryReport(ItemId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+        //ItemPopup in PriceCategoryReport
+        [HttpGet(ApiRoutes.ItemMaster.ItemPopup)]
+        public IActionResult ItemPopUp()
+        {
+            try
+            {
+                var result = _itemService.ItemPopUp();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+
+
+
+
     }
 }

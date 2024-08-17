@@ -1402,6 +1402,80 @@ namespace Dfinance.Item.Services.Inventory
                 return CommonResponse.Error("Failed to fill the data ");
             }
         }
+
+
+        public CommonResponse PriceCategoryReport(int? ItemId)
+        {
+            try
+            {
+                string? criteria = "FillInvItemUnits";
+                var cmd = _context.Database.GetDbConnection().CreateCommand();
+                cmd.CommandType = CommandType.Text;
+                string commandText = $"Exec ItemMasterSP @Criteria='{criteria}',@ItemID={ItemId}";
+                cmd.CommandText = commandText;
+                _context.Database.GetDbConnection().Open();
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        var tb = new DataTable();
+                        tb.Load(reader);
+
+                        List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+                        foreach (DataRow dr in tb.Rows)
+                        {
+                            var row = new Dictionary<string, object>();
+                            foreach (DataColumn col in tb.Columns)
+                            {
+                                row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
+                            }
+                            rows.Add(row);
+                        }
+                        return CommonResponse.Ok(rows);
+                    }
+                    return CommonResponse.NoContent();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return CommonResponse.Error(ex.Message);
+            }
+            finally
+            {
+
+                if (_context.Database.GetDbConnection().State == ConnectionState.Open)
+                {
+                    _context.Database.GetDbConnection().Close();
+                }
+            }
+        }
+
+        //ItemPopup used in PriceCategoryReport
+        public CommonResponse ItemPopUp()
+        {
+            try
+            {
+                var items = _context.ItemMaster.Where(im => im.Active == true && im.IsGroup == false)
+                    .Select(im => new
+                    {
+                        ItemCode = im.ItemCode,
+                        ItemName = im.ItemName,
+                        Unit = im.Unit,
+                        BarCode = im.BarCode,
+                        ID = im.Id
+                    }).ToList();
+                return CommonResponse.Ok(items);        
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Error(ex.Message);
+            }
+        }
+
+
     }
 }
 
