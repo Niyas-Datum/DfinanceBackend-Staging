@@ -201,6 +201,7 @@ namespace Dfinance.Shared.Routes.v1
 
             public const string FillCurrencyById = $"{Main}/FillById";
             public const string curDropdown = $"{Main}/curDropdown";
+            public const string updExchRate = $"{Main}/updExchRate";
         }
         public static class MaSettings
         {
@@ -291,7 +292,11 @@ namespace Dfinance.Shared.Routes.v1
             public const string GetQuotationComparisonReport = $"{Main}/ getQusComprep";
             public const string GetPartialDelivery = $"{Main}/ getpartialdelivery";
             
-            public const string GetMonthlyInventorySummary = $"{Main}/ getmonInvSumary"; 
+            public const string GetMonthlyInventorySummary = $"{Main}/ getmonInvSumary";
+            public const string PriceCategoryRep = $"{Main}/ priceCategoryRep";
+            public const string ItemPopup = $"{Main}/ itemPopup";
+            
+
         }
         public static class ItemUnits
         {
@@ -331,9 +336,15 @@ namespace Dfinance.Shared.Routes.v1
             public const string Main = $"{Base}/LabelGrid";
             public const string Getlabel = $"{Main}/Getlabel";
             public const string Getgrid = $"{Main}/Getgrid";
-            public const string UpdateLabel = $"{Main}/UpdateLabel";
-            public const string Updategrid = $"{Main}/Updategrid";
+            public const string SaveUpdateLabel = $"{Main}/SaveUpdateLabel";
+            public const string SaveUpdategrid = $"{Main}/SaveUpdategrid";
             public const string labelGridpopup = $"{Main}/labelGridpopup";
+            public const string FormName = $"{Main}/formNamepopup";
+            public const string PagePopUp = $"{Main}/pagepopup";
+            public const string getgridbyId = $"{Main}/getgridbyId";
+            public const string getlabelbyId = $"{Main}/getlabelbyId";
+            
+
 
         }
         public static class RecallVoucher

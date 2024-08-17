@@ -219,6 +219,35 @@ namespace Dfinance.api.Controllers.v1.DMain.Sales
                 return BadRequest(ex.Message);
             }
         }
+        [HttpGet(InvRoute.Sales.SalesCommission)]
+        public IActionResult SalesCommission(DateTime startdate, DateTime enddate, int? salesmanId, int? userId)
+        {
+            try
+            {
+                var data = _salesService.SalesCommission(startdate, enddate, salesmanId, userId);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet(InvRoute.Sales.TopCustomerSupplier)]
+        public IActionResult TopCustomerSupplier(DateTime startdate, DateTime enddate, int? pageId)
+        {
+            try
+            {
+                var data = _salesService.TopCustomerSupplier(startdate, enddate, pageId);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
         [HttpPost(InvRoute.Sales.SaveSalesOrder)]
 
         public IActionResult SaveSalesOrder([FromBody] InventoryTransactionDto salesDto, int PageId, int voucherId)

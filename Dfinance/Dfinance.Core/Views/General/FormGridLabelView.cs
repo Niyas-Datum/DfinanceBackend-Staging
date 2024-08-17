@@ -24,8 +24,7 @@ namespace Dfinance.Core
         public string? OriginalCaption { get; set; }
         public string? NewCaption { get; set; }
         public bool? Visible { get; set; }
-        public int? PageID { get; set; }
         public string? ArabicCaption { get; set; }
-        public bool? Enable { get; set; }
+        
     }
 }

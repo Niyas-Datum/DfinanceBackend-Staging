@@ -1,11 +1,16 @@
 ﻿using Dfinance.Application.LabelAndGridSettings.Interface;
+using Dfinance.AuthApplication.Services;
 using Dfinance.AuthApplication.Services.Interface;
 using Dfinance.AuthAppllication.Services.Interface;
 using Dfinance.Core.Infrastructure;
 using Dfinance.DataModels.Dto.General;
+using Dfinance.DataModels.Dto.Item;
 using Dfinance.Shared.Domain;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Data;
+using static Dfinance.Shared.Routes.v1.ApiRoutes;
 
 namespace Dfinance.Application.LabelAndGridSettings
 {
@@ -58,43 +63,99 @@ namespace Dfinance.Application.LabelAndGridSettings
             }
         }
 
-        public CommonResponse UpdateLabel(List<LabelDto> labelDto, string password)
+        public CommonResponse FormNamePopup()
         {
             try
             {
-
-
-                var existLabels = _context.FormLabelSettings
-                                   .Where(v => labelDto.Select(dto => dto.Id).Contains(v.Id))
-                                   .ToList();
-                if (existLabels.Count != labelDto.Count)
-                {
-                    return CommonResponse.NotFound("Id Not Found");
-                }
-                else
-                {
-                    var passwordCheckResponse = _passwordService.IsPasswordOk(password);
-
-                    if ((bool)passwordCheckResponse.Data != true)
-                    {
-                        return CommonResponse.Ok("Invalid password");
-                    }
-
-                    foreach (var label in labelDto)
-                    {
-                        var labelToUpdate = existLabels.FirstOrDefault(v => v.Id == label.Id);
-
-                        if (labelToUpdate != null)
-                        {
-                            string criteria = "UpdateFormLabelSettings";
-                            _context.Database.ExecuteSqlRaw("Exec LabelSettingsSP @Criteria ={0},@FormName={1},@LabelName={2},@OriginalCaption={3},@NewCaption={4},@Visible={5},@PageID={6},@Enable={7},@ArabicCaption={8},@ID={9}",
-                                criteria, label.FormName.Name, label.LabelName, label.OriginalCaption, label.NewCaption, label.Visible, label.PageId, label.Enable, label.ArabicCaption, label.Id);
-                        }
-                    }
-                    _logger.LogInformation("Label updated Successfully");
-                    return CommonResponse.Ok("Updated Successfully");
-                }
+                
+                var formNames = _context.MaPageMenus
+            .Where(m => m.FormName != null)
+            .AsEnumerable() 
+            .Select(m =>
+            {
+                var index = m.FormName.IndexOf('.');
+                return index >= 0
+                    ? m.FormName.Substring(index + 1)
+                    : m.FormName; 
+            })
+            .Distinct()
+            .ToList();
+                return CommonResponse.Ok(formNames);
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Error(ex);
+            }
+        }
+
+        //page popup in formgridsettings
+        public CommonResponse PagePopUp()
+        {
+            try
+            {
+                var pages = _context.MaPageMenus
+            .Where(p => p.IsPage == true) 
+            .Select(p => new  
+            {
+                ID = p.Id,
+                MenuText = p.MenuText,
+                MenuValue = p.MenuValue,
+                FormName = p.FormName,
+                AssemblyName = p.AssemblyName,
+                PageTitle = p.PageTitle,
+                VoucherID = p.VoucherId
+            })
+            .ToList(); 
+                
+            return CommonResponse.Ok(pages);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Error(ex);
+            }
+        }
+
+        public CommonResponse SaveAndUpdateLabel(List<LabelDto> labelDto, string password)
+        {
+            try
+            {
+                var criteria = "";
+                var passwordCheckResponse = _passwordService.IsPasswordOk(password);
+
+                if ((bool)passwordCheckResponse.Data != true)
+                {
+                    return CommonResponse.Ok("Invalid password");
+                }
+                foreach (var label in labelDto)
+                {
+                    if (label.Id == 0 || label == null)
+                    {
+
+                        criteria = "InsertFormLabelSettings";
+                        SqlParameter newIdItem = new SqlParameter("@NewID", SqlDbType.Int)
+                        {
+                            Direction = ParameterDirection.Output
+                        };
+                        var result = _context.Database.ExecuteSqlRaw("EXEC LabelSettingsSP @Criteria={0},@FormName={1},@LabelName={2},@OriginalCaption={3},@NewCaption={4},@Visible={5},@ArabicCaption={6},@PageID={7},@NewID={8} OUTPUT",
+                            criteria, label.FormName.Name, label.LabelName, label.OriginalCaption, label.NewCaption, label.Visible, label.ArabicCaption, null, newIdItem);
+                        var NewItemId = (int)newIdItem.Value;
+                        _logger.LogInformation("Label.Inserted with ID: {Id}", NewItemId);
+                    }
+                    else
+                    {
+                        var check = _context.FormLabelSettings.Any(x => x.Id == label.Id);
+                        if (!check) { return CommonResponse.NotFound("Id not found"); }
+                        criteria = "UpdateFormLabelSettings";
+                        var res = _context.Database.ExecuteSqlRaw("Exec LabelSettingsSP @Criteria ={0},@FormName={1},@LabelName={2},@OriginalCaption={3},@NewCaption={4},@Visible={5},@PageID={6},@ArabicCaption={7},@ID={8}",
+                            criteria, label.FormName.Name, label.LabelName, label.OriginalCaption, label.NewCaption, label.Visible, null,label.ArabicCaption, label.Id);
+                        _logger.LogInformation("Label.Updated with ID: {Id}", label.Id);
+                    }
+                }
+                return CommonResponse.Ok("Processed successfully!");
+            }
+
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
@@ -102,39 +163,43 @@ namespace Dfinance.Application.LabelAndGridSettings
             }
         }
 
-        public CommonResponse UpdateGrid(List<GridDto> gridDto, string password)
+
+        public CommonResponse SaveAndUpdateGrid(List<GridDto> gridDto, string password)
         {
             try
             {
-                var existGrids = _context.FormGridSettings
-                                   .Where(v => gridDto.Select(dto => dto.Id).Contains(v.Id))
-                                   .ToList();
-                if (existGrids.Count != gridDto.Count)
+                var criteria = "";
+                var passwordCheckResponse = _passwordService.IsPasswordOk(password);
+
+                if ((bool)passwordCheckResponse.Data != true)
                 {
-                    return CommonResponse.NotFound("Id Not Found");
+                    return CommonResponse.Ok("Invalid password");
                 }
-                else
+                foreach (var grid in gridDto)
                 {
-                    var passwordCheckResponse = _passwordService.IsPasswordOk(password);
-
-                    if ((bool)passwordCheckResponse.Data != true)
+                    if (grid.Id == 0 || grid == null)
                     {
-                        return CommonResponse.Ok("Invalid password");
-                    }
-                    foreach (var grid in gridDto)
-                    {
-                        var gridToUpdate = existGrids.FirstOrDefault(v => v.Id == grid.Id);
-
-                        if (gridToUpdate != null)
+                        criteria = "InsertFormGridSettings";
+                        SqlParameter newIdItem = new SqlParameter("@NewID", SqlDbType.Int)
                         {
-                            string criteria = "UpdateFormGridSettings";
-                            _context.Database.ExecuteSqlRaw("Exec LabelSettingsSP @Criteria ={0},@FormName={1},@PageID={2},@GridName={3},@ColumnName={4},@OriginalCaption={5},@NewCaption={6},@Visible={7},@ArabicCaption={8},@ID={9}",
-                               criteria, grid.FormName.Name, grid.PageId, grid.GridName, grid.ColumnName, grid.OriginalCaption, grid.NewCaption, grid.Visible, grid.ArabicCaption, grid.Id);
-                        }
+                            Direction = ParameterDirection.Output
+                        };
+                        var result = _context.Database.ExecuteSqlRaw("EXEC LabelSettingsSP @Criteria={0},@FormName={1},@PageId={2},@GridName={3},@ColumnName={4},@OriginalCaption={5},@NewCaption={6},@Visible={7},@ArabicCaption={8},@NewID={9} OUTPUT",
+                            criteria, grid.FormName.Name, grid.PageId, grid.GridName, grid.ColumnName, grid.OriginalCaption, grid.NewCaption, grid.Visible, grid.ArabicCaption, newIdItem);
+                        var NewItemId = (int)newIdItem.Value;
+                        _logger.LogInformation("grid.Inserted with ID: {Id}", NewItemId);
                     }
-                    _logger.LogInformation("Grid updated Successfully");
-                    return CommonResponse.Ok("Updated Successfully");
+                    else
+                    {
+                        var check = _context.FormGridSettings.Any(x => x.Id == grid.Id);
+                        if (!check) { return CommonResponse.NotFound("Id not found"); }
+                        var res = criteria = "UpdateFormGridSettings";
+                        _context.Database.ExecuteSqlRaw("Exec LabelSettingsSP @Criteria ={0},@FormName={1},@PageID={2},@GridName={3},@ColumnName={4},@OriginalCaption={5},@NewCaption={6},@Visible={7},@ArabicCaption={8},@ID={9}",
+                           criteria, grid.FormName.Name, grid.PageId, grid.GridName, grid.ColumnName, grid.OriginalCaption, grid.NewCaption, grid.Visible, grid.ArabicCaption, grid.Id);
+                        _logger.LogInformation("grid.Updated with ID: {Id}", grid.Id);
+                    }
                 }
+                return CommonResponse.Ok("Processed successfully!");
             }
             catch (Exception ex)
             {
@@ -165,6 +230,28 @@ namespace Dfinance.Application.LabelAndGridSettings
 
             return CommonResponse.Ok(labelgrid);
         }
+
+        public CommonResponse GetGridByPageId(int pageId)
+        {
+            var check = _context.FormGridSettings.Any(x => x.PageId == pageId);
+            if (!check) { return CommonResponse.NotFound("Id not found"); }
+            var grid = _context.FormGridSettings.Where(i=>i.PageId == pageId && i.Visible==true).ToList();
+            return CommonResponse.Ok(grid);
+        }
+
+        public CommonResponse GetLabelByPageId(int pageId)
+        {
+            var check = _context.FormLabelSettings.Any(x => x.PageId == pageId);
+            if (!check) { return CommonResponse.NotFound("Id not found"); }
+            var label = _context.FormLabelSettings.Where(i => i.PageId == pageId && i.Visible == true).ToList();
+            return CommonResponse.Ok(label);
+        }
+
+
+
     }
 }
+
+
+
 

@@ -1,11 +1,13 @@
 ﻿using Dfinance.Application.Services.General.Interface;
 using Dfinance.AuthAppllication.Services.Interface;
 using Dfinance.Core.Infrastructure;
+using Dfinance.DataModels.Dto.Inventory.Purchase;
 using Dfinance.Inventory.Service.Interface;
 using Dfinance.Inventory;
 using Dfinance.Item.Services.Inventory.Interface;
 using Dfinance.Sales.Service.Interface;
 using Dfinance.Shared.Deserialize;
+using Dfinance.Shared.Domain;
 using Dfinance.Stakeholder.Services.Interface;
 using Dfinance.Warehouse.Services.Interface;
 using Microsoft.Extensions.Hosting;
@@ -15,18 +17,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Dfinance.Shared.Domain;
-using Dfinance.DataModels.Dto.Inventory.Purchase;
 using System.Transactions;
 
 namespace Dfinance.Sales.Service
 {
-    public class SalesOrderService : ISalesOrder
+    public class DeliveryOutService : IDeliveryOutService
     {
         private readonly DFCoreContext _context;
         private readonly IAuthService _authService;
         private readonly IHostEnvironment _environment;
-        private readonly ILogger<SalesOrderService> _logger;
+        private readonly ILogger<DeliveryOutService> _logger;
         private readonly IInventoryTransactionService _transactionService;
         private readonly IInventoryAdditional _additionalService;
         private readonly IInventoryItemService _itemService;
@@ -34,12 +34,12 @@ namespace Dfinance.Sales.Service
         private readonly DataRederToObj _rederToObj;
         private readonly IItemMasterService _item;
         private readonly IWarehouseService _warehouse;
+        private readonly ICustomerSupplierService _party;
         private readonly ICostCentreService _costCentre;
         private readonly CommonService _com;
         private readonly ISettingsService _settings;
-        private readonly ICustomerSupplierService _party;
-        public SalesOrderService(DFCoreContext context, IAuthService authService, IHostEnvironment hostEnvironment,
-            ILogger<SalesOrderService> logger, IInventoryTransactionService transactionService, IInventoryAdditional inventoryAdditional,
+        public DeliveryOutService(DFCoreContext context, IAuthService authService, IHostEnvironment hostEnvironment,
+            ILogger<DeliveryOutService> logger, IInventoryTransactionService transactionService, IInventoryAdditional inventoryAdditional,
             IInventoryItemService inventoryItemService, IInventoryPaymentService inventoryPaymentService, DataRederToObj rederToObj, IItemMasterService item,
             IWarehouseService warehouse, ICostCentreService costCentre, ICustomerSupplierService party, CommonService com, ISettingsService settings)
         {
@@ -51,7 +51,6 @@ namespace Dfinance.Sales.Service
             _additionalService = inventoryAdditional;
             _itemService = inventoryItemService;
             _paymentService = inventoryPaymentService;
-
             _rederToObj = rederToObj;
             _item = item;
             _warehouse = warehouse;
@@ -70,7 +69,7 @@ namespace Dfinance.Sales.Service
             _logger.LogInformation("Page not Exists :" + pageId);
             return CommonResponse.Error("Page not Exists");
         }
-        public CommonResponse SaveSalesOrder(InventoryTransactionDto salesDto, int PageId, int voucherId)
+        public CommonResponse SaveDeliveryOut(InventoryTransactionDto salesDto, int PageId, int voucherId)
         {
             using (var transactionScope = new TransactionScope())
 
@@ -83,7 +82,7 @@ namespace Dfinance.Sales.Service
                     }
                     if (!_authService.UserPermCheck(PageId, 2))
                     {
-                        return PermissionDenied("Save Sales");
+                        return PermissionDenied("Save Delivery Out");
                     }
                     //int VoucherId=_com.GetVoucherId(PageId);
                     string Status = "Approved";
@@ -144,7 +143,8 @@ namespace Dfinance.Sales.Service
                 }
             }
         }
-        public CommonResponse UpdateSalesOrder(InventoryTransactionDto salesDto, int PageId, int voucherId)
+
+        public CommonResponse UpdateDeliveryOut(InventoryTransactionDto salesDto, int PageId, int voucherId)
         {
             if (!_authService.IsPageValid(PageId))
             {
@@ -211,4 +211,3 @@ namespace Dfinance.Sales.Service
         }
     }
 }
-
