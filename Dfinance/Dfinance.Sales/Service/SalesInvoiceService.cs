@@ -21,7 +21,12 @@ using System.Text;
 using Microsoft.Identity.Client;
 using System.Data;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+
 using Dfinance.DataModels.Dto.Finance;
+
+using static Dfinance.Shared.Routes.v1.ApiRoutes;
+using Dfinance.AuthCore.Domain;
+
 
 namespace Dfinance.Sales
 {
@@ -65,7 +70,7 @@ namespace Dfinance.Sales
             _settings = settings;
         }
 
-        public CommonResponse DeleteSales(int TransId,int pageId)
+        public CommonResponse DeleteSales(int TransId, int pageId)
         {
             try
             {
@@ -92,7 +97,7 @@ namespace Dfinance.Sales
                 return CommonResponse.Error(ex);
             }
         }
-        public CommonResponse CancelSales(int TransId,int pageId,string reason)
+        public CommonResponse CancelSales(int TransId, int pageId, string reason)
         {
             try
             {
@@ -109,7 +114,7 @@ namespace Dfinance.Sales
                 {
                     return CommonResponse.NotFound("Transaction Not Found");
                 }
-               _transactionService.CancelTransaction(TransId, reason);
+                _transactionService.CancelTransaction(TransId, reason);
                 _logger.LogInformation("Cancel successfully");
                 return CommonResponse.Ok("Cancel successfully");
             }
@@ -724,6 +729,7 @@ namespace Dfinance.Sales
 
         }
 
+
         //Userwise profit report
         public CommonResponse UserwiseProfit(DateTime startDate,DateTime endDate,int pageId,int? User,bool? detailed)
         {
@@ -766,6 +772,130 @@ namespace Dfinance.Sales
 
                 }
                 return CommonResponse.NoContent("No Data");
+
+        /// <summary>
+        /// SalesCommission
+        /// </summary>
+        /// <param name="DateFrom"></param>
+        /// <param name="DateUpto"></param>
+        /// <param name="BranchID"></param>
+        /// <param name="@AccountID"></param>
+        /// <param name="@UserID"></param>
+        /// <returns></returns>
+        public CommonResponse SalesCommission(DateTime startdate, DateTime enddate, int? salesmanId, int? userId)
+        {
+            try
+            {
+                int? BranchId = _authService.GetBranchId();
+
+                var cmd = _context.Database.GetDbConnection().CreateCommand();
+                cmd.CommandType = CommandType.Text;
+
+                string formattedStartDate = startdate.ToString("yyyy-MM-dd");
+                string formattedEndDate = enddate.ToString("yyyy-MM-dd");
+
+                var salesman = salesmanId?.ToString() ?? "NULL";
+                var user = userId?.ToString() ?? "NULL";
+
+                string commandText = $"Exec SalesCommissionSP @BranchID={BranchId}, @DateFrom='{formattedStartDate}', @DateUpto='{formattedEndDate}', @AccountID={salesman},@UserID={user}";
+
+                cmd.CommandText = commandText;
+
+                // Open the connection
+                _context.Database.GetDbConnection().Open();
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        var tb = new DataTable();
+                        tb.Load(reader);
+
+                        List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+                        foreach (DataRow dr in tb.Rows)
+                        {
+                            var row = new Dictionary<string, object>();
+                            foreach (DataColumn col in tb.Columns)
+                            {
+                                row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
+                            }
+                            rows.Add(row);
+                        }
+                        return CommonResponse.Ok(rows);
+                    }
+                    return CommonResponse.NoContent();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return CommonResponse.Error(ex.Message);
+            }
+            finally
+            {
+
+                if (_context.Database.GetDbConnection().State == ConnectionState.Open)
+                {
+                    _context.Database.GetDbConnection().Close();
+                }
+            }
+        }
+
+        //TopCustomers & Suppliers Report
+        public CommonResponse TopCustomerSupplier(DateTime startdate, DateTime enddate, int? pageId)
+        {
+            try
+            {
+                int? BranchId = _authService.GetBranchId();
+
+                var cmd = _context.Database.GetDbConnection().CreateCommand();
+                cmd.CommandType = CommandType.Text;
+
+                string formattedStartDate = startdate.ToString("yyyy-MM-dd");
+                string formattedEndDate = enddate.ToString("yyyy-MM-dd");
+                var page = pageId?.ToString() ?? "NULL";
+                string commandText = $"Exec TopCustomerSupplierSP @BranchID={BranchId}, @DateFrom='{formattedStartDate}', @DateUpto='{formattedEndDate}',@PageID={page}";
+
+                cmd.CommandText = commandText;
+
+                // Open the connection
+                _context.Database.GetDbConnection().Open();
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        var tb = new DataTable();
+                        tb.Load(reader);
+
+                        List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+                        foreach (DataRow dr in tb.Rows)
+                        {
+                            var row = new Dictionary<string, object>();
+                            foreach (DataColumn col in tb.Columns)
+                            {
+                                row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
+                            }
+                            rows.Add(row);
+                        }
+                        return CommonResponse.Ok(rows);
+                    }
+                    return CommonResponse.NoContent();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return CommonResponse.Error(ex.Message);
+            }
+            finally
+            {
+
+                if (_context.Database.GetDbConnection().State == ConnectionState.Open)
+                {
+                    _context.Database.GetDbConnection().Close();
+                }
+
             }
         }
     }

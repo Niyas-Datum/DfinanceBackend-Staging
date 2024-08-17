@@ -392,12 +392,20 @@ namespace Dfinance.Shared.Routes
             public const string update = $"{Main}/update";
             public const string delete = $"{Main}/delete";
         }
+
 		public class PurchaseWithoutTax
         {
             public const string Main = $"{Base}/PurchWithoutTax";
             public const string getData = $"{Main}/getData";
             public const string save = $"{Main}/save";
             public const string update = $"{Main}/update";
+
+        public class SalesPos
+        {
+            public const string Main = $"{Base}/salesPos";
+            public const string SaveSalesPos = $"{Main}/saveSalesPos";
+            public const string UpdateSalesPos = $"{Main}/updateSalesPos";
+
         }
     }
 }

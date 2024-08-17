@@ -272,5 +272,12 @@ namespace Dfinance.Shared.Routes.v1
             public const string PopupPar = $"{Main}/Parentpop";
 
         }
+        public static class CloseVoucher
+        {
+            public const string Main = $"{Base}/closeVouch";
+            public const string LoadData = $"{Main}/LD";
+            public const string Fill = $"{Main}/fill";
+            public const string Apply = $"{Main}/update";
+        }
     }
 }

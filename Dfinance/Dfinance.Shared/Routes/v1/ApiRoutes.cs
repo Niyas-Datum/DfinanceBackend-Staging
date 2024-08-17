@@ -342,6 +342,7 @@ namespace Dfinance.Shared.Routes.v1
             public const string FormName = $"{Main}/formNamepopup";
             public const string PagePopUp = $"{Main}/pagepopup";
             public const string getgridbyId = $"{Main}/getgridbyId";
+            public const string getlabelbyId = $"{Main}/getlabelbyId";
             
 
 
