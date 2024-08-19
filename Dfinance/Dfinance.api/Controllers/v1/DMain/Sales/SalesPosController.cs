@@ -36,5 +36,23 @@ namespace Dfinance.api.Controllers.v1.DMain.Sales
                 return BadRequest(ex.Message);
             }
         }
+        [HttpPatch(InvRoute.SalesPos.UpdateSalesPos)]
+
+        public IActionResult Update([FromBody] InventoryTransactionDto salesDto, int PageId, int voucherId)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+                object result = _salesPosService.UpdateSalesPos(salesDto, PageId, voucherId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
