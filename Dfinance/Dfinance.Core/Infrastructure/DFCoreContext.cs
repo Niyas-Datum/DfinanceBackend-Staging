@@ -396,8 +396,8 @@ public partial class DFCoreContext : DbContext
     //DocumentType
     public DbSet<FillDocTypeMasterView> FillDocTypeMasterView { get; set; }
     public DbSet<FillDocTypeByIdView> FillDocTypeByIdView { get; set; }
-    
-
+    //QualityType
+    public  DbSet<InvQualityPrice> InvQualityPrices { get; set; }
 
 
     //IntnBarCode
@@ -494,6 +494,10 @@ public partial class DFCoreContext : DbContext
 
         mb.ApplyConfiguration(new InvRelatedItemsConfiguration());
         mb.ApplyConfiguration(new DocTypeConfiguration());
+
+        //QualityType
+        mb.ApplyConfiguration(new QualityTypeConfiguration());
+
 
 
         //View

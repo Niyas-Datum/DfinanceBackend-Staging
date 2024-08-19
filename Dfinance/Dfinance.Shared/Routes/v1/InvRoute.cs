@@ -407,6 +407,15 @@ namespace Dfinance.Shared.Routes
             public const string UpdateSalesPos = $"{Main}/updateSalesPos";
 
         }
+        public class QualityTypes
+        {
+            public const string Main = $"{Base}/qualityTypes";
+            public const string Popup = $"{Main}/popup";
+            public const string Fill = $"{Main}/fill";
+            public const string SaveAndUpdate = $"{Main}/saveAndupdate";
+            
+
+        }
     }
 }
 
