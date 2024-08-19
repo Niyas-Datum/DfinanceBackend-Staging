@@ -73,8 +73,10 @@ namespace Dfinance.Inventory.Service
                                    select new
                                    {
                                        VoucherId = voucher.Id,
-                                       VoucherName = voucher.Name
+                                       VoucherName = voucher.Name,
+                                       PVId =voucher.PrimaryVoucherId
                                    }).FirstOrDefault();
+                var vouchername = _context.FiMaVouchers.Where(v=>v.PrimaryVoucherId==voucherName.PVId).Select(v=>v.Name).FirstOrDefault();  
 
                 int? discountId = null;
                 netAmtAcId = null;
@@ -83,7 +85,7 @@ namespace Dfinance.Inventory.Service
 
                 using (var dbCommand = _context.Database.GetDbConnection().CreateCommand())
                 {
-                    dbCommand.CommandText = $"EXEC FillPartyDetailsSP @BranchID={BranchID},@VoucherName='{voucherName.VoucherName}'";
+                    dbCommand.CommandText = $"EXEC FillPartyDetailsSP @BranchID={BranchID},@VoucherName='{vouchername}'";
                     SqlDataAdapter da = new SqlDataAdapter((SqlCommand)dbCommand);
                     DataSet dataSet = new DataSet();
                     da.Fill(dataSet);
@@ -448,7 +450,7 @@ namespace Dfinance.Inventory.Service
 
         }
 
-        public CommonResponse FillAdvance(int AccountId, int voucherId, DateTime? date)
+        public CommonResponse FillAdvance(int AccountId, int voucherId, DateTime? date = null)
         {
             try
             {
@@ -456,9 +458,20 @@ namespace Dfinance.Inventory.Service
                 var drcr = DrCr == DB_DEBIT_ENTRY ? DB_CREDIT_ENTRY : DB_DEBIT_ENTRY;
                 int branchId = _authService.GetBranchId().Value;
                 string Criteria = "GetBillsAndRefs";
-                var data = _context.FillAdvanceView
-                    .FromSqlRaw($"Exec VoucherSP @Criteria='{Criteria}', @AccountID='{AccountId}',@BranchID='{branchId}',@DrCr='{drcr}',@Date='{date}'")
-                    .ToList();
+                object data;
+                if (date != null)
+                {
+
+                    data = _context.FillAdvanceView
+                       .FromSqlRaw($"Exec VoucherSP @Criteria='{Criteria}', @AccountID={AccountId},@BranchID={branchId},@DrCr='{drcr}',@Date='{date}'")
+                       .ToList();
+                }
+                else
+                {
+                    data = _context.FillAdvanceView
+                      .FromSqlRaw($"Exec VoucherSP @Criteria='{Criteria}', @AccountID={AccountId},@BranchID={branchId},@DrCr='{drcr}'")
+                      .ToList();
+                }
                 return CommonResponse.Ok(data);
             }
             catch (Exception ex)

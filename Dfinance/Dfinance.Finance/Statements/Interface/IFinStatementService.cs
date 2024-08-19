@@ -13,6 +13,6 @@ namespace Dfinance.Finance.Statements.Interface
         CommonResponse FillProfitAndLoss(BalanceSheetDto balSheetDto, int pageId);
         CommonResponse FillCashFlowStmt(CommonDto commonDto, int pageId);       
         CommonResponse FillCostCentreRep(CostCentreReportDto dto, int pageId);
-       
+        CommonResponse VatComputation(DateTime dateFrom, DateTime dateUpto, int pageId);
     }
 }

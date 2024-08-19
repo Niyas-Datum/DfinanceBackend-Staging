@@ -178,8 +178,17 @@ namespace Dfinance.Shared.Routes
             public const string TopCustomerSupplier = $"{Main}/topcustSupp";
             public const string SaveSalesOrder = $"{Main}/saveSalesorder";
             public const string UpdateSalesOrder = $"{Main}/updateSalesorder";
-            
-            
+
+            //sales B2B
+            public const string saveSalesB2B = $"{Main}/saveSalesB2B";
+            public const string updateSalesB2B = $"{Main}/updateSalesB2B";
+
+            //sales B2C
+            public const string saveSalesB2C = $"{Main}/saveSalesB2C";
+            public const string updateSalesB2C = $"{Main}/updateSalesB2C";
+
+            //Userwise - report
+             public const string userwiseProfit = $"{Main}/userwiseProfit";
         }
         public class PurchaseEnquiry
         {
@@ -377,10 +386,7 @@ namespace Dfinance.Shared.Routes
             public const string itemDetails = $"{Main}/itemDetails";
             public const string save = $"{Main}/save";
         }
-        public class PurchaseWithoutTax
-        {
-            public const string Main = $"{Base}/PurchWithoutTax";     
-        }
+       
         public class PriceCatgory
         {
             public const string Main = $"{Base}/priceCat";
@@ -390,11 +396,20 @@ namespace Dfinance.Shared.Routes
             public const string update = $"{Main}/update";
             public const string delete = $"{Main}/delete";
         }
+
+		public class PurchaseWithoutTax
+        {
+            public const string Main = $"{Base}/PurchWithoutTax";
+            public const string getData = $"{Main}/getData";
+            public const string save = $"{Main}/save";
+            public const string update = $"{Main}/update";
+
         public class SalesPos
         {
             public const string Main = $"{Base}/salesPos";
             public const string SaveSalesPos = $"{Main}/saveSalesPos";
             public const string UpdateSalesPos = $"{Main}/updateSalesPos";
+
         }
     }
 }

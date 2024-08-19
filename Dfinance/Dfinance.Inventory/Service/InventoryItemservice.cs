@@ -133,6 +133,7 @@ namespace Dfinance.Inventory.Service
                     case VoucherType.Purchase_Order:
                     case VoucherType.Opening_Stock:
                     case VoucherType.Stock_Adjustment:
+                    case VoucherType.Sales_Return:
                     case VoucherType.Stock_Return:
                         inLocId = warehouse;
                         break;
@@ -192,10 +193,14 @@ namespace Dfinance.Inventory.Service
                             tempQty = null;                            
                         }
                         item.IsReturn = null;
-                        if ((VoucherType)primeryVoucherId == VoucherType.Purchase_Return || (VoucherType)primeryVoucherId == VoucherType.Sales_Return)
+                        if ((VoucherType)primeryVoucherId == VoucherType.Purchase_Return )
+                        { 
                             item.IsReturn = true;
+                            rowType = -1;
+                        }
                         
-
+                        if ((VoucherType) primeryVoucherId == VoucherType.Sales_Return)
+                                {  item.IsReturn = true; rowType = 1; }
                         SqlParameter newId = new SqlParameter("@NewID", SqlDbType.Int)
                         {
                             Direction = ParameterDirection.Output

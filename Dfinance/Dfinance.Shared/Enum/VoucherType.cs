@@ -24,7 +24,7 @@ namespace Dfinance.Shared.Enum
     Container_Delivery = 152, Container_Storage_IN = 153, Container_Storage_OUT = 154, Container_Return = 155, Material_Request=156, Material_Issue=157, Material_Receive=158,
     Provisional_Purchase=162,Stock_Request=134,Import_PurchaseOrder=135, Import_Purchase=136, ProjectInvoice=109, Purchase_Request = 143,Purchase_Quotation=161,
     Opening_Balance = 26, Item_Reservation=116, // openingvoucher primaryvoucherId
-    PDC_Clearing = 67
+    PDC_Clearing = 67, SalesB2B=23, SalesB2C=23, Purchase_Without_Tax=17
 
     }
     public enum Page

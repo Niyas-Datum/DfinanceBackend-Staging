@@ -230,7 +230,7 @@ public class DiInstaller : IInstaller
         service.AddScoped<ISizeMasterService, SizeMasterService>();
 
 
-        service.AddScoped<ISizeMasterService,SizeMasterService>();
+        service.AddScoped<ISizeMasterService, SizeMasterService>();
 
         service.AddScoped<IItemMappingService, ItemMappingService>();
 
@@ -248,8 +248,10 @@ public class DiInstaller : IInstaller
         service.AddScoped<ISalesQuotationService, SalesQuotationService>();
         service.AddScoped<IDeliveryOutService, DeliveryOutService>();
 
-
-
+        service.AddScoped<IPurchaseWithoutTaxService, PurchaseWithoutTaxService>();
+        service.AddScoped<ISalesB2BService, SalesB2BService>();
+        service.AddScoped<ISalesB2CService, SalesB2CService>();
+        service.AddScoped<IDocumentTypeService, DocumentTypeService>();
 
     }
 }
