@@ -82,7 +82,7 @@ namespace Dfinance.Shared.Routes
             public const string partyBal = $"{Main}/partyBal";
 
             public const string FillTranById = $"{Main}/FillTranbyId";
-            
+
 
 
             public const string impItems = $"{Main}/impItems";
@@ -165,7 +165,7 @@ namespace Dfinance.Shared.Routes
             public const string GetData = $"{Main}/getdata";
             public const string GetCustomer = $"{Main}/getCustomer";
             public const string getsalessummary = $"{Main}/getsalessummary";
-            public const string DaySummary = $"{Main}/daysummary"; 
+            public const string DaySummary = $"{Main}/daysummary";
             public const string CanlSales = $"{Main}/Cancel";
             public const string SalesPurchaseSummary = $"{Main}/salespurchasesummary";
             public const string AreaWiseSales = $"{Main}/areawisesales";
@@ -184,7 +184,7 @@ namespace Dfinance.Shared.Routes
             public const string updateSalesB2C = $"{Main}/updateSalesB2C";
 
             //Userwise - report
-             public const string userwiseProfit = $"{Main}/userwiseProfit";
+            public const string userwiseProfit = $"{Main}/userwiseProfit";
         }
         public class PurchaseEnquiry
         {
@@ -239,7 +239,7 @@ namespace Dfinance.Shared.Routes
             public const string DelSalesReturn = $"{Main}/delsalesRtn";
             public const string CancelsalesRtn = $"{Main}/Cancel";
         }
-        
+
         public class SalesEnquiry
         {
             public const string Main = $"{Base}/salesenquiry";
@@ -324,8 +324,8 @@ namespace Dfinance.Shared.Routes
             public const string Main = $"{Base}/phyOpenstock";
             public const string Save = $"{Main}/save";
             public const string Update = $"{Main}/update";
-            
-        }   
+
+        }
 
         public class StockReturnAndAdjustment
         {
@@ -348,7 +348,7 @@ namespace Dfinance.Shared.Routes
             public const string Main = $"{Base}/InternbarCode";
             public const string FillIntnBarcode = $"{Main}/fill";
             public const string SaveandUpdate = $"{Main}/SaveandUpdate";
-            
+
         }
 
         public class BatchEdit
@@ -382,7 +382,7 @@ namespace Dfinance.Shared.Routes
             public const string itemDetails = $"{Main}/itemDetails";
             public const string save = $"{Main}/save";
         }
-       
+
         public class PriceCatgory
         {
             public const string Main = $"{Base}/priceCat";
@@ -393,13 +393,13 @@ namespace Dfinance.Shared.Routes
             public const string delete = $"{Main}/delete";
         }
 
-		public class PurchaseWithoutTax
+        public class PurchaseWithoutTax
         {
             public const string Main = $"{Base}/PurchWithoutTax";
             public const string getData = $"{Main}/getData";
             public const string save = $"{Main}/save";
             public const string update = $"{Main}/update";
-
+        }
         public class SalesPos
         {
             public const string Main = $"{Base}/salesPos";
@@ -409,3 +409,4 @@ namespace Dfinance.Shared.Routes
         }
     }
 }
+
