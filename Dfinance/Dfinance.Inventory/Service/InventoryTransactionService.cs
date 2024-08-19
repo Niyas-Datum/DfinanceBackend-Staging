@@ -842,7 +842,9 @@ namespace Dfinance.Inventory.Service
         {
             try
             {
-                var Transref = _context.TransReference.FirstOrDefault(x => x.TransactionId == transId);
+                 var Transref = _context.TransReference.FirstOrDefault(x => x.TransactionId == transId);
+                //var Transref = _context.TransReference.Where(tr => tr.TransactionId == transId)
+                //            .FirstOrDefault();
 
                 if (Transref == null)
                 {

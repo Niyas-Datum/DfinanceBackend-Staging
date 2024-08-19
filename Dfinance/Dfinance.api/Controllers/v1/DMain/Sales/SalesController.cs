@@ -7,6 +7,7 @@ using Dfinance.Shared.Domain;
 using Dfinance.Shared.Routes;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Swashbuckle.AspNetCore.Annotations;
 using static Dfinance.Shared.Routes.v1.ApiRoutes;
 
 namespace Dfinance.api.Controllers.v1.DMain.Sales
@@ -276,6 +277,21 @@ namespace Dfinance.api.Controllers.v1.DMain.Sales
                     return BadRequest(ModelState);
                 }
                 object result = _salesOrder.UpdateSalesOrder(purchaseDto, PageId, voucherId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet(InvRoute.Sales.userwiseProfit)]
+        [SwaggerOperation(Summary = "PageID=529")]
+        public IActionResult UserwiseProfit(DateTime startDate, DateTime endDate, int pageId, int? User, bool? detailed)
+        {
+            try
+            {                                                 
+                var result = _salesService.UserwiseProfit(startDate, endDate, pageId, User, detailed);
                 return Ok(result);
             }
             catch (Exception ex)

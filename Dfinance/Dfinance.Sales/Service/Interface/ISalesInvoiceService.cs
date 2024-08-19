@@ -20,8 +20,13 @@ namespace Dfinance.Sales
         CommonResponse GetSalesPurchaseSummary(DateTime startDate, DateTime endDate, int? branch, int? user);
         CommonResponse AreaWiseSales(string? viewby, DateTime startdate, DateTime enddate, int? item, int? Area);
         CommonResponse SalesReport(string Criteria, DateTime DateFrom, DateTime DateUpto, int? VoucherID, bool? Detailed, int? AccountID, string? VoucherNo, int? SalesManID);
+
+
+        CommonResponse UserwiseProfit(DateTime startDate, DateTime endDate, int pageId, int? User, bool? detailed);
+
         CommonResponse SalesCommission(DateTime startdate, DateTime enddate, int? salesmanId, int? userId);
         CommonResponse TopCustomerSupplier(DateTime startdate, DateTime enddate, int? pageId);
+
         //CommonResponse GetMonthlySalesSummary(DateTime? startDate, DateTime? endDate);  
         //CommonResponse GetFillSalesDaySummary(string? criteria,DateTime startDate, DateTime endDate,int? branch,int? user);
 
