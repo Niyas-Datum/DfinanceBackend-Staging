@@ -7,8 +7,12 @@ namespace Dfinance.Application.LabelAndGridSettings.Interface
     {
         CommonResponse FillFormLabelSettings();
         CommonResponse FillGridSettings();
-        CommonResponse UpdateLabel(List<LabelDto> labelDto, string password);
-        CommonResponse UpdateGrid(List<GridDto> gridDto, string password);
+        CommonResponse FormNamePopup();
+        CommonResponse PagePopUp();
+        CommonResponse SaveAndUpdateLabel(List<LabelDto> labelDto, string password);
+        CommonResponse SaveAndUpdateGrid(List<GridDto> gridDto, string password);
         CommonResponse labelGridpopup();
+        CommonResponse GetGridByPageId(int pageId);
+        CommonResponse GetLabelByPageId(int pageId);
     }
 }

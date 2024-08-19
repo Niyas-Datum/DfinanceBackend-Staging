@@ -626,15 +626,20 @@ namespace Dfinance.Inventory.Service
                 Autoentry = true;
                 RefTransId = TransId;
                 string ReferenceId = null;
+                int? PayId = null;
                 string environmentname = _environment.EnvironmentName;
                 var payType = _context.MaMisc.Where(p => p.Id == transactionDto.FiTransactionAdditional.PayType.Id).Select(p => p.Value).FirstOrDefault();
                 transactionDto.Party.Name = _context.FiMaAccounts.Where(a => a.Id == transactionDto.Party.Id).Select(a => a.Name).FirstOrDefault();
-                if (transactionDto.Party.Name != Constants.CASHCUSTOMER && transactionDto.Party.Name != Constants.CASHSUPPLIER || payType == Constants.CREDIT)
-                {
+                //if (transactionDto.Party.Name != Constants.CASHCUSTOMER && transactionDto.Party.Name != Constants.CASHSUPPLIER || payType == Constants.CREDIT)
+                //{
                     VoucherNo voucherNo = (VoucherNo)GetAutoVoucherNo(VoucherId).Data;
                     // var transaction = _mapper.Map<InventoryTransactionDto, FiTransaction>(transactionDto);
 
-                    if (transactionDto.Id == 0 || transactionDto.Id == null)
+                     PayId = _context.FiTransaction
+                     .Where(x => x.RefTransId == transactionDto.Id)
+                     .Select(x => x.Id)
+                     .FirstOrDefault();
+                    if (PayId == 0 || PayId == null)
                     {
                         string criteria = "InsertTransactions";
                         //transaction.RefTransId = RefTransId;
@@ -668,10 +673,7 @@ namespace Dfinance.Inventory.Service
                     }
                     else
                     {
-                        int PayId = _context.FiTransaction
-                     .Where(x => x.RefTransId == transactionDto.Id)
-                     .Select(x => x.Id)
-                     .FirstOrDefault();
+                        
                         string criteria = "UpdateTransactions";
 
                         RefTransId = transactionDto.Id;
@@ -691,14 +693,14 @@ namespace Dfinance.Inventory.Service
                             ApprovalStatus, null, null, Status, Autoentry, true, true, false, transactionDto.Party.Id,
                             null, RefTransId, transactionDto.Project?.Id ?? null, PageId, PayId);
 
-                        transactionDto.Id = PayId;
+                        
                     }
-                }
-                else
-                {
-                    transactionDto.Id = TransId;
-                }
-                return CommonResponse.Ok(transactionDto.Id);
+               // }
+                //else
+                //{
+                //    transactionDto.Id = TransId;
+                //}
+                return CommonResponse.Ok(PayId);
             }
             catch (Exception ex)
             {
@@ -840,7 +842,9 @@ namespace Dfinance.Inventory.Service
         {
             try
             {
-                var Transref = _context.TransReference.FirstOrDefault(x => x.TransactionId == transId);
+                 var Transref = _context.TransReference.FirstOrDefault(x => x.TransactionId == transId);
+                //var Transref = _context.TransReference.Where(tr => tr.TransactionId == transId)
+                //            .FirstOrDefault();
 
                 if (Transref == null)
                 {

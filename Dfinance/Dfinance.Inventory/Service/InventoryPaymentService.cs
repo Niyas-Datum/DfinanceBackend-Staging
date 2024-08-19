@@ -62,24 +62,9 @@ namespace Dfinance.Inventory.Service
         public CommonResponse SaveTransactionEntries(InventoryTransactionDto transactionDto, int pageId, int transactionId, int transPayId)
         {
             try
-            {
-                //SetSettings();
+            {               
                 string? Reference = null;
-                var financeUpdate = SetVoucherDebitCreditDetails(pageId);
-                //if (financeUpdate)
-                //{
-                //    //if (transactionDto.Items.Count > 0 && transactionDto.Items != null)
-                //    //{
-                //    //    if (taxBasedInvoiceAccount)
-                //    //    {
-                //    //        var invTransItem=_context.InvTransItems.Where(i=>i.TransactionId==transactionId).ToList();
-                //    //        foreach (var item in invTransItem)
-                //    //        {
-
-                //    //        }
-                //    //    }
-                //    //}
-                //}
+                var financeUpdate = SetVoucherDebitCreditDetails(pageId);               
                 int BranchID = _authService.GetBranchId().Value;
                 int? netAmtAcId = null;
                 var voucherName = (from pageMenu in _context.MaPageMenus
@@ -88,8 +73,10 @@ namespace Dfinance.Inventory.Service
                                    select new
                                    {
                                        VoucherId = voucher.Id,
-                                       VoucherName = voucher.Name
+                                       VoucherName = voucher.Name,
+                                       PVId =voucher.PrimaryVoucherId
                                    }).FirstOrDefault();
+                var vouchername = _context.FiMaVouchers.Where(v=>v.PrimaryVoucherId==voucherName.PVId).Select(v=>v.Name).FirstOrDefault();  
 
                 int? discountId = null;
                 netAmtAcId = null;
@@ -98,25 +85,25 @@ namespace Dfinance.Inventory.Service
 
                 using (var dbCommand = _context.Database.GetDbConnection().CreateCommand())
                 {
-                    dbCommand.CommandText = $"EXEC FillPartyDetailsSP @BranchID={BranchID},@VoucherName='{voucherName.VoucherName}'";
+                    dbCommand.CommandText = $"EXEC FillPartyDetailsSP @BranchID={BranchID},@VoucherName='{vouchername}'";
                     SqlDataAdapter da = new SqlDataAdapter((SqlCommand)dbCommand);
                     DataSet dataSet = new DataSet();
                     da.Fill(dataSet);
                     var disc = dataSet.Tables[0].Rows[0];
                     discountId = Convert.ToInt32(disc["ID"]);
                     var net = dataSet.Tables[2].Rows[0];
-                    netAmtAcId = Convert.ToInt32(net["ID"]);//_rederToObj.Deserialize<TransAccount>((DbDataReader)reader[2]).Select(d => d.ID).FirstOrDefault();
-                    var round = dataSet.Tables[4].Rows[0];                                  //var table4 = _rederToObj.Deserialize<TransAccount>(reader).Select(d => d.ID).FirstOrDefault();
+                    netAmtAcId = Convert.ToInt32(net["ID"]);
+                    var round = dataSet.Tables[4].Rows[0];                                
                     roundOffId = Convert.ToInt32(round["ID"]);
                 }
                 int insertedId = 0;
-                var transEntry = _context.FiTransactionEntries.Any(t => t.Id == transactionId || t.Id == transPayId);
+                var transEntry = _context.FiTransactionEntries.Any(t => t.TransactionId == transactionId || t.TransactionId == transPayId);
                 if (transEntry)//Delete Transaction Entries
                 {
                     DeleteTransEntries(transactionId, transPayId);
                 }
 
-                
+
                 //RoundOff
                 if (transactionDto.TransactionEntries.Roundoff != 0)
                 {
@@ -202,7 +189,7 @@ namespace Dfinance.Inventory.Service
                 if (transactionDto.TransactionEntries.Cash.Count > 0)
                 {
                     tranType = "Cash";
-                    nature = "M";
+                    nature = "M";                   
                     foreach (var cash in transactionDto.TransactionEntries.Cash.Where(a => a.AccountCode.ID != 0 && a?.AccountCode.ID != null).ToList())
                     {
                         SaveTransactionEntries(transPayId, purchaseVoucherCredit, nature, cash.AccountCode.ID,
@@ -235,9 +222,7 @@ namespace Dfinance.Inventory.Service
                         card.Amount, bankDate ?? null, refPageTypeId, transactionDto.Currency.Id, transactionDto.ExchangeRate,
                         refPageTableId, Reference, card.Description, tranType, transactionDto.TransactionEntries.DueDate, null, null);
                     }
-                }
-                //var veId=_context.TransactionEntries.Where(e=>e.TransactionId == transactionId && e.TranType=="Party").Select(e=>e.Id).FirstOrDefault();
-                //return veId;
+                }               
                 return CommonResponse.Ok(insertedId);
             }
             catch (Exception ex)
@@ -248,112 +233,84 @@ namespace Dfinance.Inventory.Service
 
         private void DeleteTransEntries(int transactionId, int transPayId)
         {
-            var transexp = _context.TransExpense.Where(t => t.TransactionId == transactionId);
+            var transexp = _context.TransExpense.Where(t => t.TransactionId == transactionId).ToList();
             if (transexp.Any())
             {
                 _context.TransExpense.RemoveRange(transexp);
                 _context.SaveChanges();
             }
 
-            var transItemexp = _context.TransItemExpenses.Where(t => t.TransactionId == transactionId);
+            var transItemexp = _context.TransItemExpenses.Where(t => t.TransactionId == transactionId).ToList();
             if (transItemexp.Any())
             {
                 _context.TransItemExpenses.RemoveRange(transItemexp);
                 _context.SaveChanges();
             }
-
-            var transEntry = _context.FiTransactionEntries.Where(e => e.TransactionId == transactionId);
+            
+            var teidVoucher = _context.FiTransactionEntries.Where(t => t.TransactionId == transactionId && t.TranType == "Party").Select(c => c.Id).FirstOrDefault();           
+             var    voucherAlloc = _context.FiVoucherAllocation.Where(c => c.Vid==transactionId||c.Vid==transPayId).ToList();
+            if (voucherAlloc.Any())
+            {
+                _context.FiVoucherAllocation.RemoveRange(voucherAlloc);
+                _context.SaveChanges();
+            }
+            var transEntry = _context.FiTransactionEntries.Where(e => e.TransactionId == transactionId).ToList();
             _context.FiTransactionEntries.RemoveRange(transEntry);
             _context.SaveChanges();
+
             if (transPayId != transactionId)
             {
-                var transPayEntry = _context.FiTransactionEntries.Where(e => e.TransactionId == transPayId);
+                var teid = _context.FiTransactionEntries.Where(t => t.TransactionId == transPayId && t.TranType == "Cheque").Select(c => c.Id).ToList();
+                var cheques = _context.fiCheques.Where(c => teid.Contains(c.Veid)).ToList();
+                if (cheques.Any())
+                {
+                    _context.fiCheques.RemoveRange(cheques);
+                    _context.SaveChanges();
+                }
+
+                var transPayEntry = _context.FiTransactionEntries.Where(e => e.TransactionId == transPayId).ToList();
                 _context.FiTransactionEntries.RemoveRange(transPayEntry);
                 _context.SaveChanges();
             }
+
         }
 
         private int SaveTransactionEntries(int transactionId, string drCr, string? nature, int? accountId, decimal? grandTotal, DateTime? bankDate,
             int? refPageTypeId, int? currencyId, decimal? exchangeRate, int? refPageTableID, string? referenceCode, string? description,
             string? tranType, DateTime? dueDate, int? refTransID, decimal? taxPerc)
-        {
-            var teId = _context.FiTransactionEntries.Where(te => te.TransactionId == transactionId && te.TranType == tranType && te.Id != discId).Select(t => t.Id).FirstOrDefault();
-            if (teId == null || teId == 0)
+        {          
+            criteria = "InsertTransactionEntries";
+            SqlParameter newIdParameter = new SqlParameter("@NewID", SqlDbType.Int)
             {
-                criteria = "InsertTransactionEntries";
-                SqlParameter newIdParameter = new SqlParameter("@NewID", SqlDbType.Int)
-                {
-                    Direction = ParameterDirection.Output
-                };
-                _context.Database.ExecuteSqlRaw("EXEC VoucherSP @Criteria={0},@TransactionId={1},@DrCr={2},@Nature={3}," +
-               "@AccountID={4},@Amount={5},@FCAmount={6},@BankDate={7},@RefPageTypeID={8},@CurrencyID={9},@ExchangeRate={10}," +
-               "@RefPageTableID={11}, @ReferenceNo={12}, @Description={13}, @TranType={14}, @DueDate={15}, @RefTransID={16}, @TaxPerc={17},@NewID={18} OUTPUT",
-               criteria,
-               transactionId,
-               drCr,
-               nature,
-               accountId,
-               grandTotal,
-               grandTotal,
-               bankDate,
-               this.refPageTypeId,
-               currencyId,
-               exchangeRate,
-               refPageTableID,
-               referenceCode,
-               description,
-               tranType,
-               dueDate,
-               refTransID,
-               taxPerc,
-               newIdParameter);
-                var newId = newIdParameter.Value;
-                return (int)newId;
-            }
-            else
-            {
-                // _context.FiTransactionEntries.Where(e => e.Id == teId).ExecuteDelete();
-                criteria = "DeleteTransactionEntries";
-                _context.Database.ExecuteSqlRaw("EXEC VoucherSP @Criteria={0},@ID={1}", criteria, teId);
-                var cheq = _context.fiCheques.Where(c => c.Veid == teId);
-                if (cheq.Any())
-                {
-                    _context.fiCheques.RemoveRange(cheq);
-                    _context.SaveChanges();
-                }
-                return SaveTransactionEntries(transactionId, drCr, nature, accountId, grandTotal, bankDate,
-            refPageTypeId, currencyId, exchangeRate, refPageTableID, referenceCode, description,
-            tranType, dueDate, refTransID, taxPerc);
-                // criteria = "UpdateTransactionEntries";
-                // _context.Database.ExecuteSqlRaw("EXEC VoucherSP @Criteria={0},@TransactionId={1},@DrCr={2},@Nature={3}," +
-                //"@AccountID={4},@Amount={5},@FCAmount={6},@BankDate={7},@RefPageTypeID={8},@CurrencyID={9},@ExchangeRate={10}," +
-                //"@RefPageTableID={11}, @ReferenceNo={12}, @Description={13}, @TranType={14}, @DueDate={15}, @RefTransID={16}, @TaxPerc={17},@ID={18}",
-                //criteria,
-                //transactionId,
-                //drCr,
-                //nature,
-                //accountId,
-                //grandTotal,
-                //grandTotal,
-                //bankDate,
-                //this.refPageTypeId,
-                //currencyId,
-                //exchangeRate,
-                //refPageTableID,
-                //referenceCode,
-                //description,
-                //tranType,
-                //dueDate,
-                //refTransID,
-                //taxPerc,
-                //teId);                
-                // return (int)teId;
-            }
-
-
+                Direction = ParameterDirection.Output
+            };
+            _context.Database.ExecuteSqlRaw("EXEC VoucherSP @Criteria={0},@TransactionId={1},@DrCr={2},@Nature={3}," +
+           "@AccountID={4},@Amount={5},@FCAmount={6},@BankDate={7},@RefPageTypeID={8},@CurrencyID={9},@ExchangeRate={10}," +
+           "@RefPageTableID={11}, @ReferenceNo={12}, @Description={13}, @TranType={14}, @DueDate={15}, @RefTransID={16}, @TaxPerc={17},@NewID={18} OUTPUT",
+           criteria,
+           transactionId,
+           drCr,
+           nature,
+           accountId,
+           grandTotal,
+           grandTotal,
+           bankDate,
+           this.refPageTypeId,
+           currencyId,
+           exchangeRate,
+           refPageTableID,
+           referenceCode,
+           description,
+           tranType,
+           dueDate,
+           refTransID,
+           taxPerc,
+           newIdParameter);
+            var newId = newIdParameter.Value;
+            return (int)newId;
+           
         }
-        //private string purchaseVoucherCreditAmount = string.Empty;
-        //private string purchaseVoucherDebitAmount = string.Empty;
+       
         private bool SetVoucherDebitCreditDetails(int pageId)
         {
             int? primaryVoucherID = (from v in _context.FiMaVouchers
@@ -367,8 +324,7 @@ namespace Dfinance.Inventory.Service
                 case VoucherType.Service:
                     purchaseVoucherCredit = "C";
                     purchaseVoucherDebit = "D";
-                    //purchaseVoucherCreditAmount = "Credit";
-                    //purchaseVoucherDebitAmount = "Debit";
+                    
                     break;
                 case VoucherType.Sales_Invoice:
                 case VoucherType.Purchase_Return:
@@ -377,8 +333,7 @@ namespace Dfinance.Inventory.Service
                 case VoucherType.Service_Delivery_Out:
                     purchaseVoucherCredit = "D";
                     purchaseVoucherDebit = "C";
-                    //purchaseVoucherCreditAmount = "Debit";
-                    //purchaseVoucherDebitAmount = "Credit";
+                   
                     break;
                 case VoucherType.Opening_Stock:
                     break;
@@ -495,7 +450,7 @@ namespace Dfinance.Inventory.Service
 
         }
 
-        public CommonResponse FillAdvance(int AccountId, int voucherId, DateTime? date)
+        public CommonResponse FillAdvance(int AccountId, int voucherId, DateTime? date = null)
         {
             try
             {
@@ -503,9 +458,20 @@ namespace Dfinance.Inventory.Service
                 var drcr = DrCr == DB_DEBIT_ENTRY ? DB_CREDIT_ENTRY : DB_DEBIT_ENTRY;
                 int branchId = _authService.GetBranchId().Value;
                 string Criteria = "GetBillsAndRefs";
-                var data = _context.FillAdvanceView
-                    .FromSqlRaw($"Exec VoucherSP @Criteria='{Criteria}', @AccountID='{AccountId}',@BranchID='{branchId}',@DrCr='{drcr}',@Date='{date}'")
-                    .ToList();
+                object data;
+                if (date != null)
+                {
+
+                    data = _context.FillAdvanceView
+                       .FromSqlRaw($"Exec VoucherSP @Criteria='{Criteria}', @AccountID={AccountId},@BranchID={branchId},@DrCr='{drcr}',@Date='{date}'")
+                       .ToList();
+                }
+                else
+                {
+                    data = _context.FillAdvanceView
+                      .FromSqlRaw($"Exec VoucherSP @Criteria='{Criteria}', @AccountID={AccountId},@BranchID={branchId},@DrCr='{drcr}'")
+                      .ToList();
+                }
                 return CommonResponse.Ok(data);
             }
             catch (Exception ex)
@@ -750,12 +716,12 @@ namespace Dfinance.Inventory.Service
             taxBasedInvoiceAccount = Convert.ToBoolean(settings.Where(s => s.Key == "TaxBasedInvoiceAccount").Select(s => s.Value).FirstOrDefault());
             SizeSales = Convert.ToBoolean(settings.Where(s => s.Key == "Size Sales").Select(s => s.Value).FirstOrDefault());
         }
-     //fills the default cash/card/online account
-     public CommonResponse SetDefaultAccount(string TranType)
-     {
+        //fills the default cash/card/online account
+        public CommonResponse SetDefaultAccount(string TranType)
+        {
             var result = from ua in _context.FimaUniqueAccount
                          join a in _context.FiMaAccounts on ua.AccId equals a.Id
-                         where ua.Keyword == TranType+" ACCOUNT"
+                         where ua.Keyword == TranType + " ACCOUNT"
                          select new
                          {
                              AccountCode = a.Alias,
@@ -765,6 +731,6 @@ namespace Dfinance.Inventory.Service
 
             var list = result.FirstOrDefault();
             return CommonResponse.Ok(result);
-     }
+        }
     }
 }

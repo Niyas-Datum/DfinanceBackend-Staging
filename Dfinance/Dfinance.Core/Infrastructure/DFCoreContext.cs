@@ -120,6 +120,7 @@ public partial class DFCoreContext : DbContext
     public DbSet<FiChequesTran> FiChequesTrans { get; set; }
 
     public DbSet<InvRelatedItems> InvRelatedItems { get; set; }
+    public DbSet<DocType> DocType { get; set; }
 
 
 
@@ -389,9 +390,21 @@ public partial class DFCoreContext : DbContext
     public DbSet<ItemMappingView> ItemMappingView { get; set; }
     public DbSet<ItemDetailsView> ItemDetailsView { get; set; }
     public DbSet<FillVoucherSettingsView> FillVoucherSettingsView { get; set; }
+
+    //DocumentType
+    public DbSet<FillDocTypeMasterView> FillDocTypeMasterView { get; set; }
+    public DbSet<FillDocTypeByIdView> FillDocTypeByIdView { get; set; }
     
+
     public DbSet<FiPrimaryVoucher> FiPrimaryVouchers { get; set; }
     
+
+
+
+
+    //IntnBarCode
+    public  DbSet<InvBarcodeMaster> InvBarcodeMasters { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     //  => optionsBuilder.UseSqlServer(@"Data Source=ip.datuminnovation.com,9600;TrustServerCertificate=true;Initial Catalog=DatumSystemMain;User ID=sa;pwd=Datum123!");
     // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -478,9 +491,16 @@ public partial class DFCoreContext : DbContext
         mb.ApplyConfiguration(new InvMaCounterConfiguration());
         //ChequeRegister
         mb.ApplyConfiguration(new FiChequesTranConfiguration());
+
+        //InternBarCode
+        mb.ApplyConfiguration(new InvBarcodeMasterConfiguuration());
+
         mb.ApplyConfiguration(new InvRelatedItemsConfiguration());
+        mb.ApplyConfiguration(new DocTypeConfiguration());
+
 
         mb.ApplyConfiguration(new FiMaVouchersConfiguration());
+
 
         //View
 
@@ -707,6 +727,13 @@ public partial class DFCoreContext : DbContext
        mb.Entity<ItemMappingView>().HasNoKey().ToView(null);
         mb.Entity<ItemDetailsView>().HasNoKey().ToView(null);
         mb.Entity<FillVoucherSettingsView>().HasNoKey().ToView(null);
+
+
+        //DocumentType
+        mb.Entity<FillDocTypeMasterView>().HasNoKey().ToView(null);
+        mb.Entity<FillDocTypeByIdView>().HasNoKey().ToView(null);
+        
+
     }
 
 

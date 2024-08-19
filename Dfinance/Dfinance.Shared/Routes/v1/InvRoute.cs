@@ -168,18 +168,27 @@ namespace Dfinance.Shared.Routes
             public const string fillitems = $"{Main}/fillitems";
             public const string GetData = $"{Main}/getdata";
             public const string GetCustomer = $"{Main}/getCustomer";
-
             public const string getsalessummary = $"{Main}/getsalessummary";
             public const string DaySummary = $"{Main}/daysummary"; 
-
             public const string CanlSales = $"{Main}/Cancel";
-
-          
             public const string SalesPurchaseSummary = $"{Main}/salespurchasesummary";
             public const string AreaWiseSales = $"{Main}/areawisesales";
             public const string SalesReport = $"{Main}/salesreport";
+            public const string SalesCommission = $"{Main}/salescommission";
+            public const string TopCustomerSupplier = $"{Main}/topcustSupp";
             public const string SaveSalesOrder = $"{Main}/saveSalesorder";
             public const string UpdateSalesOrder = $"{Main}/updateSalesorder";
+
+            //sales B2B
+            public const string saveSalesB2B = $"{Main}/saveSalesB2B";
+            public const string updateSalesB2B = $"{Main}/updateSalesB2B";
+
+            //sales B2C
+            public const string saveSalesB2C = $"{Main}/saveSalesB2C";
+            public const string updateSalesB2C = $"{Main}/updateSalesB2C";
+
+            //Userwise - report
+             public const string userwiseProfit = $"{Main}/userwiseProfit";
         }
         public class PurchaseEnquiry
         {
@@ -234,6 +243,32 @@ namespace Dfinance.Shared.Routes
             public const string DelSalesReturn = $"{Main}/delsalesRtn";
             public const string CancelsalesRtn = $"{Main}/Cancel";
         }
+        
+        public class SalesEnquiry
+        {
+            public const string Main = $"{Base}/salesenquiry";
+            public const string SaveSalesEnquiry = $"{Main}/saveSalesenq";
+            public const string UpdateSalesEnquiry = $"{Main}/updateSalesenq";
+        }
+        public class SalesEstimate
+        {
+            public const string Main = $"{Base}/salesestimate";
+            public const string SaveSalesEstimate = $"{Main}/saveSalesestmt";
+            public const string UpdateSalesEstimate = $"{Main}/updateSalesestmt";
+        }
+        public class SalesQuotation
+        {
+            public const string Main = $"{Base}/salesquotation";
+            public const string SaveSalesQuotation = $"{Main}/saveSalesquotion";
+            public const string UpdateSalesQuotation = $"{Main}/updateSalesquotion";
+        }
+        public class DeliveryOut
+        {
+            public const string Main = $"{Base}/deliveryout";
+            public const string SaveDeliveryOut = $"{Main}/savedeliveryout";
+            public const string UpdateDeliveryOut = $"{Main}/updatedeliveryout";
+        }
+
         public class PurchaseReturn
         {
             public const string Main = $"{Base}/PurchaseReturn";
@@ -312,6 +347,14 @@ namespace Dfinance.Shared.Routes
             public const string fillDamageWh = $"{Main}/fillDamageWh";
         }
 
+        public class InternBarCode
+        {
+            public const string Main = $"{Base}/InternbarCode";
+            public const string FillIntnBarcode = $"{Main}/fill";
+            public const string SaveandUpdate = $"{Main}/SaveandUpdate";
+            
+        }
+
         public class BatchEdit
         {
             public const string Main = $"{Base}/batchEdit";
@@ -343,10 +386,7 @@ namespace Dfinance.Shared.Routes
             public const string itemDetails = $"{Main}/itemDetails";
             public const string save = $"{Main}/save";
         }
-        public class PurchaseWithoutTax
-        {
-            public const string Main = $"{Base}/PurchWithoutTax";     
-        }
+       
         public class PriceCatgory
         {
             public const string Main = $"{Base}/priceCat";
@@ -356,11 +396,20 @@ namespace Dfinance.Shared.Routes
             public const string update = $"{Main}/update";
             public const string delete = $"{Main}/delete";
         }
+
+		public class PurchaseWithoutTax
+        {
+            public const string Main = $"{Base}/PurchWithoutTax";
+            public const string getData = $"{Main}/getData";
+            public const string save = $"{Main}/save";
+            public const string update = $"{Main}/update";
+
         public class SalesPos
         {
             public const string Main = $"{Base}/salesPos";
             public const string SaveSalesPos = $"{Main}/saveSalesPos";
             public const string UpdateSalesPos = $"{Main}/updateSalesPos";
+
         }
     }
 }

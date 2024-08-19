@@ -18,7 +18,7 @@ namespace Dfinance.api.Controllers.v1.DMain.General
         }
         [HttpGet(ApiRoutes.LabelGrid.Getlabel)]
 
-        public async Task<IActionResult> GetLabel()
+        public IActionResult GetLabel()
         {
             try
             {
@@ -31,7 +31,7 @@ namespace Dfinance.api.Controllers.v1.DMain.General
             }
         }
         [HttpGet(ApiRoutes.LabelGrid.Getgrid)]
-        public async Task<IActionResult> GetGrid()
+        public IActionResult GetGrid()
         {
             try
             {
@@ -44,12 +44,42 @@ namespace Dfinance.api.Controllers.v1.DMain.General
             }
         }
 
-        [HttpPatch(ApiRoutes.LabelGrid.UpdateLabel)]
-        public IActionResult UpdateLabel(List<LabelDto> labelDto, string password)
+        [HttpGet(ApiRoutes.LabelGrid.FormName)]
+        public IActionResult GetFormNamer()
         {
             try
             {
-                var result = _labelgrid.UpdateLabel(labelDto, password);
+
+                return Ok(_labelgrid.FormNamePopup());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex });
+            }
+        }
+
+        [HttpGet(ApiRoutes.LabelGrid.PagePopUp)]
+        public IActionResult GetPage()
+        {
+            try
+            {
+
+                return Ok(_labelgrid.PagePopUp());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex });
+            }
+        }
+
+
+
+        [HttpPost(ApiRoutes.LabelGrid.SaveUpdateLabel)]
+        public IActionResult SaveAndUpdateLabel(List<LabelDto> labelDto, string password)
+        {
+            try
+            {
+                var result = _labelgrid.SaveAndUpdateLabel(labelDto, password);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -58,12 +88,12 @@ namespace Dfinance.api.Controllers.v1.DMain.General
             }
         }
 
-        [HttpPatch(ApiRoutes.LabelGrid.Updategrid)]
-        public IActionResult UpdateGrid(List<GridDto> gridDto, string password)
+        [HttpPost(ApiRoutes.LabelGrid.SaveUpdategrid)]
+        public IActionResult  SaveAndUpdateGrid(List<GridDto> gridDto, string password)
         {
             try
             {
-                var result = _labelgrid.UpdateGrid(gridDto, password);
+                var result = _labelgrid.SaveAndUpdateGrid(gridDto, password);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -78,21 +108,39 @@ namespace Dfinance.api.Controllers.v1.DMain.General
         {
             try
             {
-
                 var result = _labelgrid.labelGridpopup();
-
                 return Ok(result);
-
             }
-
             catch (Exception ex)
-
             {
-
                 return BadRequest(ex.Message);
-
             }
-
+        }
+        [HttpGet(ApiRoutes.LabelGrid.getgridbyId)]
+        public IActionResult GetGridByPageId(int pageId)
+        {
+            try
+            {
+                var result = _labelgrid.GetGridByPageId(pageId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet(ApiRoutes.LabelGrid.getlabelbyId)]
+        public IActionResult GetLabelByPageId(int pageId)
+        {
+            try
+            {
+                var result = _labelgrid.GetLabelByPageId(pageId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

@@ -4,6 +4,7 @@ using Dfinance.DataModels.Dto.Finance;
 using Dfinance.Finance.Statements.Interface;
 using Dfinance.Shared.Routes.v1;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Dfinance.api.Controllers.v1.DMain.Finance
 {
@@ -123,6 +124,20 @@ namespace Dfinance.api.Controllers.v1.DMain.Finance
             {
                 return BadRequest(ex.Message);
             }
-        }       
+        }
+        [HttpGet(FinRoute.FinStmt.vatComput)]
+        [SwaggerOperation(Summary = "PageID=273")]
+        public IActionResult VatComputation(DateTime dateFrom, DateTime dateUpto, int pageId)
+        {
+            try
+            {
+                var result = _finStmt.VatComputation(dateFrom,dateUpto, pageId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

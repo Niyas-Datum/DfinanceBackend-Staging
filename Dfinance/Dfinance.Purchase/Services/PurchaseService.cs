@@ -428,13 +428,13 @@ namespace Dfinance.Purchase.Services
                         _additionalService.SaveTransactionAdditional(purchaseDto.FiTransactionAdditional, TransId, voucherId);
                     }
 
-                    if (purchaseDto.References.Count > 0 && purchaseDto.References.Select(x => x.Id).FirstOrDefault() != 0)
+                    if (purchaseDto.References.Count > 0 && purchaseDto.References.Any(r=>r.Sel==true))
                     {
                         List<int?> referIds = purchaseDto.References.Select(x => x.Id).ToList();
 
                         _transactionService.SaveTransReference(TransId, referIds);
                     }
-                    if (purchaseDto.Items != null && voucherId == 17)
+                    if (purchaseDto.Items != null && purchaseDto.Items.Count>0)
                     {
                         _itemService.SaveInvTransItems(purchaseDto.Items, voucherId, TransId, purchaseDto.ExchangeRate, purchaseDto.FiTransactionAdditional.Warehouse.Id);
                     }
@@ -442,7 +442,7 @@ namespace Dfinance.Purchase.Services
                     {
                         int TransEntId = (int)_paymentService.SaveTransactionEntries(purchaseDto, PageId, TransId, transpayId??0).Data;
 
-                        if (purchaseDto.TransactionEntries.Advance != null && purchaseDto.TransactionEntries.Advance.Any(a => a.VID != null || a.VID != 0)&& transpayId!=0)
+                        if (purchaseDto.TransactionEntries.Advance != null && purchaseDto.TransactionEntries.Advance.Any(a => a.VID != null || a.VID != 0) || transpayId!=TransId )
                         {
                             _transactionService.SaveVoucherAllocation(TransId, transpayId ?? 0, purchaseDto.TransactionEntries);
                         }
@@ -488,9 +488,10 @@ namespace Dfinance.Purchase.Services
                 {
                     //int VoucherId = _com.GetVoucherId(PageId);
                     string Status = "Approved";
+                    int? transpayId = null;
                     int TransId = (int)_transactionService.SaveTransaction(invTranseDto, PageId, voucherId, Status).Data;
-
-                    int transpayId = (int)_transactionService.SaveTransactionPayment(invTranseDto, TransId, Status, 2).Data;
+                    if(invTranseDto.TransactionEntries!=null && invTranseDto.TransactionEntries.Cash.Count>0 || invTranseDto.TransactionEntries.Card.Count>0|| invTranseDto.TransactionEntries.Cheque.Count>0|| invTranseDto.TransactionEntries.Advance.Count>0)
+                      transpayId = (int)_transactionService.SaveTransactionPayment(invTranseDto, TransId, Status, 2).Data;
 
                     if (invTranseDto.FiTransactionAdditional != null)
                     {
@@ -505,13 +506,13 @@ namespace Dfinance.Purchase.Services
                     {
                         _itemService.UpdateInvTransItems(invTranseDto.Items, voucherId, TransId, invTranseDto.ExchangeRate, invTranseDto.FiTransactionAdditional.Warehouse.Id);
                     }
-                    if (invTranseDto.TransactionEntries != null)
+                    if (invTranseDto.TransactionEntries != null )
                     {
-                        int TransEntId = (int)_paymentService.SaveTransactionEntries(invTranseDto, PageId, TransId, transpayId).Data;
+                        int TransEntId = (int)_paymentService.SaveTransactionEntries(invTranseDto, PageId, TransId, transpayId ?? 0).Data;
 
-                        if (invTranseDto.TransactionEntries.Advance != null && invTranseDto.TransactionEntries.Advance.Any(a => a.AccountID != null || a.AccountID != 0))
+                        if (invTranseDto.TransactionEntries.Advance != null && invTranseDto.TransactionEntries.Advance.Any(a => a.AccountID != null || a.AccountID != 0)|| transpayId !=TransId)
                         {
-                            _transactionService.UpdateVoucherAllocation(TransId, transpayId, invTranseDto.TransactionEntries);
+                            _transactionService.SaveVoucherAllocation(TransId, transpayId??0, invTranseDto.TransactionEntries);
                         }
                     }
                     if (invTranseDto != null)
@@ -519,8 +520,8 @@ namespace Dfinance.Purchase.Services
                         _transactionService.EntriesAmountValidation(TransId);
                     }
                     transactionScope.Complete();
-                    _logger.LogInformation("Purchase Update Successfully");
-                    return CommonResponse.Created("Prchase Update Successfully");
+                    _logger.LogInformation("Purchase Updated Successfully");
+                    return CommonResponse.Created("Purchase Updated Successfully");
                 }
 
                 catch (Exception ex)
@@ -583,6 +584,8 @@ namespace Dfinance.Purchase.Services
                 return CommonResponse.Error(ex.Message);
             }
         }
+
+        
         /// <summary>
         /// Inv=>Report=>PurchaseRegister
         /// </summary>
