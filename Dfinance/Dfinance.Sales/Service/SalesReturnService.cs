@@ -122,10 +122,6 @@ namespace Dfinance.Sales
                     {
 
                         int TransEntId = (int)_paymentService.SaveTransactionEntries(salesRetunDto, PageId, TransId, transpayId).Data;
-
-
-                        if (salesRetunDto.TransactionEntries.Advance != null && salesRetunDto.TransactionEntries.Advance.Any(a=>a.VID!=null || a.VID!=0) || TransId != transpayId)
-
                         if (salesRetunDto.TransactionEntries.Advance != null && salesRetunDto.TransactionEntries.Advance.Any(a=>a.VID!=null || a.VID!=0)|| transpayId!=TransId)
 
                         {
@@ -200,30 +196,21 @@ namespace Dfinance.Sales
                     {
 
                         int TransEntId = (int)_paymentService.SaveTransactionEntries(salesReturnDto, PageId, TransId, transpayId).Data;
-
-
                         if (salesReturnDto.TransactionEntries.Advance != null && salesReturnDto.TransactionEntries.Advance.Any(a => a.VID != null || a.VID != 0) || TransId != transpayId)
                         {
-                            
-                                _transactionService.SaveVoucherAllocation(TransId, transpayId, salesReturnDto.TransactionEntries);
-                            
 
-                        if (salesReturnDto.TransactionEntries.Advance != null && salesReturnDto.TransactionEntries.Advance.Any(a=>a.AccountID!=null || a.AccountID!=0) && transpayId != TransId)
-                        {
                             _transactionService.SaveVoucherAllocation(TransId, transpayId, salesReturnDto.TransactionEntries);
 
                         }
-                       
                     }
                     if (salesReturnDto != null)
                     {
-                        _transactionService.EntriesAmountValidation(TransId);
+                         _transactionService.EntriesAmountValidation(TransId);
                     }
-                    transactionScope.Complete();
-                    _logger.LogInformation("Successfully Updated");
-                    return CommonResponse.Created("Update Successfully");
+                        transactionScope.Complete();
+                        _logger.LogInformation("Successfully Updated");
+                        return CommonResponse.Created("Update Successfully");
                 }
-
                 catch (Exception ex)
                 {
                     _logger.LogError(ex.Message);
