@@ -18,6 +18,8 @@ using Dfinance.AuthAppllication.Services;
 using Dfinance.AuthAppllication.Services.Interface;
 using Dfinance.ChartOfAccount.Services.Finance;
 using Dfinance.ChartOfAccount.Services.Finance.Interface;
+using Dfinance.Finance.Masters;
+using Dfinance.Finance.Masters.Interface;
 using Dfinance.Finance.Services;
 using Dfinance.Finance.Services.Interface;
 using Dfinance.Finance.Statements;
@@ -26,6 +28,8 @@ using Dfinance.Finance.Vouchers;
 using Dfinance.Finance.Vouchers.Interface;
 using Dfinance.Inventory;
 using Dfinance.Inventory.Interface;
+using Dfinance.Inventory.Reports;
+using Dfinance.Inventory.Reports.Interface;
 using Dfinance.Inventory.Service;
 using Dfinance.Inventory.Service.Interface;
 using Dfinance.Item.Services.Inventory;
@@ -224,6 +228,12 @@ public class DiInstaller : IInstaller
         service.AddScoped<IStockRtnAdjustService, StockRtnAdjustService>();
 
         service.AddScoped<IStockTransactionService, StockTransactionService>();
+        //AccountSortOrder
+        service.AddScoped<IAccountSortOrder, AccountSortOrderService>();
+        //InventoryRegister
+        service.AddScoped<IInventoryRegister,InventoryRegisterService>();
+        //InventoryApproval
+        service.AddScoped<IInventoryApproval, InventoryApprovalService>();
 
 
     }

@@ -78,7 +78,7 @@ namespace Dfinance.Shared.Routes.v1
 
             public const string DeleteVoucherNumbering = $"{Main}/delnumbering"; 
             public const string GetVoucherHistory = $"{Main}/getvochhisy";
-
+            public const string VoucherPopupEreturn = $"{Main}/vouchpopereturn";
         }
         public static class FinanceYear
         {
@@ -271,6 +271,12 @@ namespace Dfinance.Shared.Routes.v1
             public const string PopupSubgr = $"{Main}/Subgrpop";
             public const string PopupPar = $"{Main}/Parentpop";
 
+        }
+        public static class AccountSortOrder
+        {
+           public const string Main = $"{Base}/accountsortorder";
+           public const string FillAccsort = $"{Main}/Accsort";
+           public const string UpdateAccsort = $"{Main}/UpdAccsort";
         }
     }
 }
