@@ -305,5 +305,16 @@ namespace Dfinance.Shared.Routes
             public const string Update = $"{Main}/update";
             public const string fillDamageWh = $"{Main}/fillDamageWh";
         }
+        public class InventoryRegister
+        {
+            public const string Main = $"{Base}/InventoryRegister";
+            public const string FillInventoryRegister = $"{Main}/inventregister";
+            public const string PopManufacturer = $"{Main}/popmanufact";
+        }
+        public class InventoryApproval
+        {
+            public const string Main = $"{Base}/InventoryApproval";
+            public const string FillInventoryApproval = $"{Main}/inventoryapproval";
+        }
     }
 }
