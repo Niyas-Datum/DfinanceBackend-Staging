@@ -393,13 +393,23 @@ namespace Dfinance.Shared.Routes
             public const string delete = $"{Main}/delete";
         }
 
+        public class DosageMaster
+        {
+            public const string Main = $"{Base}/dosagemaster";
+            public const string FillMasterAndId = $"{Main}/fillMasterAndById";
+            public const string SaveUpdateDosage = $"{Main}/saveAndupdate";
+            public const string Delete = $"{Main}/delete";
+        }
+	
         public class PurchaseWithoutTax
         {
             public const string Main = $"{Base}/PurchWithoutTax";
             public const string getData = $"{Main}/getData";
             public const string save = $"{Main}/save";
             public const string update = $"{Main}/update";
+
         }
+
         public class SalesPos
         {
             public const string Main = $"{Base}/salesPos";
