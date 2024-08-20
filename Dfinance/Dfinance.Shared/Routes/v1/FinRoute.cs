@@ -76,7 +76,7 @@ namespace Dfinance.Shared.Routes.v1
 
             public const string UpdateVoucherNumbering = $"{Main}/updatenumbering";
 
-            public const string DeleteVoucherNumbering = $"{Main}/delnumbering"; 
+            public const string DeleteVoucherNumbering = $"{Main}/delnumbering";
             public const string GetVoucherHistory = $"{Main}/getvochhisy";
             public const string VoucherPopupEreturn = $"{Main}/vouchpopereturn";
         }
@@ -198,53 +198,53 @@ namespace Dfinance.Shared.Routes.v1
         }
 
 
-            public static class FinStmt
-            {
-                public const string Main = $"{Base}/FinStmt";
-                public const string finStmt = $"{Main}/finStmt";
-                public const string accStmt = $"{Main}/accStmt";
-                public const string billWiseStmt = $"{Main}/billWiseStmt";
-                public const string balSheetStmt = $"{Main}/balSheetStmt";
-                public const string consolMonth = $"{Main}/consolMonth";
-                public const string partyOutstd = $"{Main}/partyOutstd";
-                public const string salesManCol = $"{Main}/salesManCol";
-                public const string CrDrBal = $"{Main}/CrDrBal";
-                public const string profitLoss = $"{Main}/profitLoss";
-                public const string cashFlow = $"{Main}/cashFlow";
-
-                public const string costCentrRep = $"{Main}/costCentrRep";
-                public const string accBrkup = $"{Main}/accBrkup";
-            }
-            public static class AccConfig
-            {
-                public const string Main = $"{Base}/AccConfig";
-                public const string fill = $"{Main}/fill";
-                public const string update = $"{Main}/update";
-            }
-
-
-
-            public static class PdcClearing
-            {
-                public const string Main = $"{Base}/pdcclearing";
-                public const string Fill = $"{Main}/fillCheqdet";
-                public const string Save = $"{Main}/save";
-                public const string Update = $"{Main}/update";
-                public const string Delete = $"{Main}/delete";
-
-            }
-            public static class CreditNote
-            {
-                public const string Main = $"{Base}/creditnote";
-                public const string Fill = $"{Main}/fill";
-                public const string SaveDebitCredit = $"{Main}/save";
-                public const string UpdateDebitCredit = $"{Main}/update";
-                public const string DeleteDebitCredit = $"{Main}/delete";
-                public const string Cancel = $"{Main}/cancel";
+        public static class FinStmt
+        {
+            public const string Main = $"{Base}/FinStmt";
+            public const string finStmt = $"{Main}/finStmt";
+            public const string accStmt = $"{Main}/accStmt";
+            public const string billWiseStmt = $"{Main}/billWiseStmt";
+            public const string balSheetStmt = $"{Main}/balSheetStmt";
+            public const string consolMonth = $"{Main}/consolMonth";
+            public const string partyOutstd = $"{Main}/partyOutstd";
+            public const string salesManCol = $"{Main}/salesManCol";
+            public const string CrDrBal = $"{Main}/CrDrBal";
+            public const string profitLoss = $"{Main}/profitLoss";
+            public const string cashFlow = $"{Main}/cashFlow";
+            public const string costCentrRep = $"{Main}/costCentrRep";
+            public const string accBrkup = $"{Main}/accBrkup";
+            public const string vatComput = $"{Main}/vatComput";
+        }
+        public static class AccConfig
+        {
+            public const string Main = $"{Base}/AccConfig";
+            public const string fill = $"{Main}/fill";
+            public const string update = $"{Main}/update";
+        }
 
 
 
-            }
+        public static class PdcClearing
+        {
+            public const string Main = $"{Base}/pdcclearing";
+            public const string Fill = $"{Main}/fillCheqdet";
+            public const string Save = $"{Main}/save";
+            public const string Update = $"{Main}/update";
+            public const string Delete = $"{Main}/delete";
+
+        }
+        public static class CreditNote
+        {
+            public const string Main = $"{Base}/creditnote";
+            public const string Fill = $"{Main}/fill";
+            public const string SaveDebitCredit = $"{Main}/save";
+            public const string UpdateDebitCredit = $"{Main}/update";
+            public const string DeleteDebitCredit = $"{Main}/delete";
+            public const string Cancel = $"{Main}/cancel";
+
+
+
+        }
 
         public static class JournalVoucher
         {
@@ -272,11 +272,20 @@ namespace Dfinance.Shared.Routes.v1
             public const string PopupPar = $"{Main}/Parentpop";
 
         }
+
         public static class AccountSortOrder
         {
            public const string Main = $"{Base}/accountsortorder";
            public const string FillAccsort = $"{Main}/Accsort";
            public const string UpdateAccsort = $"{Main}/UpdAccsort";
+        }
+        public static class CloseVoucher
+        {
+            public const string Main = $"{Base}/closeVouch";
+            public const string LoadData = $"{Main}/LD";
+            public const string Fill = $"{Main}/fill";
+            public const string Apply = $"{Main}/update";
+
         }
     }
 }

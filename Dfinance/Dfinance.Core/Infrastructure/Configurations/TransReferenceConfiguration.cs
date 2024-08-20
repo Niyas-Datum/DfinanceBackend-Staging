@@ -13,6 +13,7 @@ namespace Dfinance.Core.Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder<TransReference> builder)
         {
+            builder.ToTable("TransReferences");
             builder.HasIndex(e => new { e.TransactionId, e.RefTransId }, "IX_InvTransReferences")
                    .IsUnique();
 

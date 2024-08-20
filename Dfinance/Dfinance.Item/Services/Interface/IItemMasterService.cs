@@ -35,5 +35,8 @@ namespace Dfinance.Item.Services.Inventory.Interface
           Object PrimaryVoucherID = null, Boolean? IsSizeItem = null, Boolean IsMargin = false, Object ItemID = null, Boolean ISTransitLoc = false,
          Boolean IsFinishedGood = false, Boolean IsRawMaterial = false, Object ModeID = null, DateTime? VoucherDate = null,
           Object TransactionID = null, string Criteria = null);
+
+        CommonResponse PriceCategoryReport(int? ItemId);
+        CommonResponse ItemPopUp();
     }
 }

@@ -1,4 +1,5 @@
-﻿using Dfinance.AuthAppllication.Services.Interface;
+﻿using Dfinance.Application.Services.General.Interface;
+using Dfinance.AuthAppllication.Services.Interface;
 using Dfinance.Core.Infrastructure;
 using Dfinance.DataModels.Dto.Inventory.Purchase;
 using Dfinance.Inventory.Service.Interface;
@@ -13,7 +14,6 @@ using System.Data;
 
 namespace Dfinance.Inventory.Service
 {
-
     public class InventoryItemservice : IInventoryItemService
     {
         private readonly DFCoreContext _context;
@@ -21,28 +21,38 @@ namespace Dfinance.Inventory.Service
         private readonly IHostEnvironment _environment;
         private readonly IInventoryTransactionService _inventoryTransactionService;
         private readonly IItemMasterService _itemMaster;
-        public InventoryItemservice(DFCoreContext context, IAuthService authService, IHostEnvironment hostEnvironment, IItemMasterService itemMaster, IInventoryTransactionService inventoryTransaction)
+        private readonly ISettingsService _settings;
+        public InventoryItemservice(DFCoreContext context, IAuthService authService, IHostEnvironment hostEnvironment, IItemMasterService itemMaster, IInventoryTransactionService inventoryTransaction,
+            ISettingsService settings)
         {
             _context = context;
             _authService = authService;
             _environment = hostEnvironment;
             _itemMaster = itemMaster;
             _inventoryTransactionService = inventoryTransaction;
+            _settings = settings;
         }
 
-        //Get the IsUnique, IsExpiry values of item from InvItemMaster
-        //get the units of item
+        //stock item popup in item grid
+        //calls only when the settings 'SuperImposeItem' is true
+        public CommonResponse StockItemPopup()
+        {
+            var SuperImposeItem = (bool)_settings.GetSettings("SuperImposeItem").Data;
+            if (SuperImposeItem)
+            {
+                var stockItems = _context.ItemMaster.Where(i => i.StockItem == true && i.IsGroup == false && i.Active == true).Select(i => new { i.Id, i.ItemCode, i.ItemName }).ToList();
+                return CommonResponse.Ok(stockItems);
+            }
+            return CommonResponse.Ok(null);
+        }
+      
         //get next batch number
-        //get the price category pop up of the item grid
-        //get the item transaction details for tool tip in item grid
+        //get the price category pop up of the item grid       
         public CommonResponse GetItemData(int itemId, int partyId, int voucherId)
         {
             try
-            {
-                //var unitData = _itemUnits.GetItemUnits(itemId);
-                // var result = _itemMaster.GetUniqueExpiryItem(itemId);
-                var batch = NextBatchNo();
-                //string criteria = "GetLastItemRate";
+            {               
+                var batch = NextBatchNo();              
                 int branch = _authService.GetBranchId().Value;
                 var PriceCat = PriceCategoryPopup(itemId);
                 // var itemData = _context.ItemTransaction.FromSqlRaw($"Exec VoucherAdditionalsSP @Criteria='{criteria}',@BranchID='{branch}',@ItemID='{itemId}',@AccountID='{partyId}',@VoucherID='{voucherId}'").ToList();
@@ -123,11 +133,13 @@ namespace Dfinance.Inventory.Service
                     case VoucherType.Purchase_Order:
                     case VoucherType.Opening_Stock:
                     case VoucherType.Stock_Adjustment:
+                    case VoucherType.Sales_Return:
                     case VoucherType.Stock_Return:
                         inLocId = warehouse;
                         break;
                     case VoucherType.Sales_Invoice:
                     case VoucherType.Purchase_Return:
+                    case VoucherType.Item_Reservation:
                         outLocId = warehouse;
                         break;
                 }
@@ -150,10 +162,15 @@ namespace Dfinance.Inventory.Service
                             rowType = 1;
                             tempQty= SetTempQty(temQtySameAsQty, item);
                         }
-                        else if ((VoucherType)primeryVoucherId == VoucherType.Sales_Invoice)
+                        else if ((VoucherType)primeryVoucherId == VoucherType.Sales_Invoice )
                         {
                             rowType = -1;
                             tempQty = SetTempQty(temQtySameAsQty, item);
+                        }
+                        if ((VoucherType)primeryVoucherId == VoucherType.Item_Reservation)
+                        {
+                            rowType = -1;
+                            tempQty = null;                           
                         }
                         if ((VoucherType)primeryVoucherId == VoucherType.Opening_Stock)
                         {
@@ -176,10 +193,14 @@ namespace Dfinance.Inventory.Service
                             tempQty = null;                            
                         }
                         item.IsReturn = null;
-                        if ((VoucherType)primeryVoucherId == VoucherType.Purchase_Return || (VoucherType)primeryVoucherId == VoucherType.Sales_Return)
+                        if ((VoucherType)primeryVoucherId == VoucherType.Purchase_Return )
+                        { 
                             item.IsReturn = true;
+                            rowType = -1;
+                        }
                         
-
+                        if ((VoucherType) primeryVoucherId == VoucherType.Sales_Return)
+                                {  item.IsReturn = true; rowType = 1; }
                         SqlParameter newId = new SqlParameter("@NewID", SqlDbType.Int)
                         {
                             Direction = ParameterDirection.Output

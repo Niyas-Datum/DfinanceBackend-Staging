@@ -4,21 +4,14 @@ using Dfinance.Core.Infrastructure;
 using Dfinance.Inventory.Service.Interface;
 using Dfinance.Inventory;
 using Dfinance.Item.Services.Inventory.Interface;
-using Dfinance.Purchase.Services;
 using Dfinance.Shared.Deserialize;
 using Dfinance.Shared.Domain;
 using Dfinance.Stakeholder.Services.Interface;
 using Dfinance.Warehouse.Services.Interface;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Dfinance.DataModels.Dto.Inventory.Purchase;
 using System.Transactions;
-using Microsoft.EntityFrameworkCore;
 
 namespace Dfinance.Sales
 {
@@ -69,6 +62,13 @@ namespace Dfinance.Sales
             _logger.LogInformation("Page not Exists :" + pageId);
             return CommonResponse.Error("Page not Exists");
         }
+        /// <summary>
+        /// SalesReturn And SalesReturnForm9(save)
+        /// </summary>
+        /// <param name="salesRetunDto"></param>
+        /// <param name="PageId"></param>
+        /// <param name="voucherId"></param>
+        /// <returns></returns>
         public CommonResponse SaveSalesReturn(InventoryTransactionDto salesRetunDto, int PageId, int voucherId)
         {
             using (var transactionScope = new TransactionScope())
@@ -101,13 +101,14 @@ namespace Dfinance.Sales
                     int transpayId = TransId;
                     if (salesRetunDto.TransactionEntries.Cash.Count > 0 || salesRetunDto.TransactionEntries.Card.Count > 0 || salesRetunDto.TransactionEntries.Cheque.Count > 0)
                     {
+                        salesRetunDto.Description = null;
                         transpayId = (int)_transactionService.SaveTransactionPayment(salesRetunDto, TransId, Status, 2).Data;
                     }
                     if (salesRetunDto.FiTransactionAdditional != null)
                     {
                         _additionalService.SaveTransactionAdditional(salesRetunDto.FiTransactionAdditional, TransId, voucherId);
                     }
-                    if (salesRetunDto.References.Count > 0 && salesRetunDto.References.Select(x => x.Id).FirstOrDefault() != 0)
+                    if (salesRetunDto.References.Count > 0 && salesRetunDto.References.Any(x => x.Sel == true))
                     {
                         List<int?> referIds = salesRetunDto.References.Select(x => x.Id).ToList();
 
@@ -121,8 +122,8 @@ namespace Dfinance.Sales
                     {
 
                         int TransEntId = (int)_paymentService.SaveTransactionEntries(salesRetunDto, PageId, TransId, transpayId).Data;
+                        if (salesRetunDto.TransactionEntries.Advance != null && salesRetunDto.TransactionEntries.Advance.Any(a=>a.VID!=null || a.VID!=0)|| transpayId!=TransId)
 
-                        if (salesRetunDto.TransactionEntries.Advance != null && salesRetunDto.TransactionEntries.Advance.Any(a=>a.VID!=null || a.VID!=0))
                         {
                             _transactionService.SaveVoucherAllocation(TransId, transpayId, salesRetunDto.TransactionEntries);
                         }
@@ -143,6 +144,13 @@ namespace Dfinance.Sales
                 }
             }
         }
+        /// <summary>
+        /// SalesReturn And SalesReturnForm9(update)
+        /// </summary>
+        /// <param name="salesRetunDto"></param>
+        /// <param name="PageId"></param>
+        /// <param name="voucherId"></param>
+        /// <returns></returns>
         public CommonResponse UpdateSalesReturn(InventoryTransactionDto salesReturnDto, int PageId, int voucherId)
         {
             if (!_authService.IsPageValid(PageId))
@@ -165,6 +173,7 @@ namespace Dfinance.Sales
                     int transpayId = TransId;
                     if (salesReturnDto.TransactionEntries.Cash.Count > 0 || salesReturnDto.TransactionEntries.Card.Count > 0 || salesReturnDto.TransactionEntries.Cheque.Count > 0)
                     {
+                        salesReturnDto.Description = null;
                         transpayId = (int)_transactionService.SaveTransactionPayment(salesReturnDto, TransId, Status, 2).Data;
                     }
 
@@ -187,22 +196,21 @@ namespace Dfinance.Sales
                     {
 
                         int TransEntId = (int)_paymentService.SaveTransactionEntries(salesReturnDto, PageId, TransId, transpayId).Data;
-
-                        if (salesReturnDto.TransactionEntries.Advance != null && salesReturnDto.TransactionEntries.Advance.Any(a=>a.AccountID!=null || a.AccountID!=0))
+                        if (salesReturnDto.TransactionEntries.Advance != null && salesReturnDto.TransactionEntries.Advance.Any(a => a.VID != null || a.VID != 0) || TransId != transpayId)
                         {
-                            _transactionService.UpdateVoucherAllocation(TransId, transpayId, salesReturnDto.TransactionEntries);
+
+                            _transactionService.SaveVoucherAllocation(TransId, transpayId, salesReturnDto.TransactionEntries);
+
                         }
-                       
                     }
                     if (salesReturnDto != null)
                     {
-                        _transactionService.EntriesAmountValidation(TransId);
+                         _transactionService.EntriesAmountValidation(TransId);
                     }
-                    transactionScope.Complete();
-                    _logger.LogInformation("Successfully Updated");
-                    return CommonResponse.Created("Update Successfully");
+                        transactionScope.Complete();
+                        _logger.LogInformation("Successfully Updated");
+                        return CommonResponse.Created("Update Successfully");
                 }
-
                 catch (Exception ex)
                 {
                     _logger.LogError(ex.Message);
