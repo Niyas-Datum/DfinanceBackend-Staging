@@ -239,6 +239,19 @@ namespace Dfinance.api.Controllers.v1.DMain.Finance
             }
 
         }
+        [HttpGet(FinRoute.Voucher.VoucherPopupEreturn)]
+        public IActionResult VoucherPopupEreturn()
+        {
+            try
+            {
+                var view = _VoucherService.VoucherPopupEreturn();
+                return Ok(view);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
 
