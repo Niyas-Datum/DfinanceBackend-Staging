@@ -347,6 +347,18 @@ namespace Dfinance.Shared.Routes
             public const string fillDamageWh = $"{Main}/fillDamageWh";
         }
 
+        public class InventoryRegister
+        {
+            public const string Main = $"{Base}/InventoryRegister";
+            public const string FillInventoryRegister = $"{Main}/inventregister";
+            public const string PopManufacturer = $"{Main}/popmanufact";
+        }
+        public class InventoryApproval
+        {
+            public const string Main = $"{Base}/InventoryApproval";
+            public const string FillInventoryApproval = $"{Main}/inventoryapproval";
+        }
+
         public class InternBarCode
         {
             public const string Main = $"{Base}/InternbarCode";
@@ -419,6 +431,7 @@ namespace Dfinance.Shared.Routes
             public const string Main = $"{Base}/salesPos";
             public const string SaveSalesPos = $"{Main}/saveSalesPos";
             public const string UpdateSalesPos = $"{Main}/updateSalesPos";
+
 
         }
     }
