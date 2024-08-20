@@ -12,7 +12,7 @@ using static Dfinance.Shared.Routes.v1.ApiRoutes;
 
 namespace Dfinance.api.Controllers.v1.DMain.Sales
 {
-    [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class SalesController : BaseController
     {

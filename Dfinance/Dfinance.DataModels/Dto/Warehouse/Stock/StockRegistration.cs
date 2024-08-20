@@ -9,21 +9,21 @@ namespace Dfinance.DataModels.Dto
 {
     public class StockRegistration
     {
-        public Object? LocationID { get; set; }
-        public Object? ItemID { get; set; }
-        public Object? BranchID { get; set; }
+        public DropdownDto? LocationID { get; set; }
+        public PopUpDto? ItemID { get; set; }
+        public DropdownDto? BranchID { get; set; }
         public DateTime ToDate { get; set; }
         public int? IsItemwise { get; set; }
-        public Object? Barcode { get; set; }
-        public Object? CommodityID { get; set; } = null;
-        public Object? OriginID { get; set; } = null;
-        public Object? BrandID { get; set; } = null;
-        public Object? ColorID { get; set; } 
-        public Object? AccountID { get; set; } 
+        public PopUpDto? Barcode { get; set; }
+        public PopUpDto? CommodityID { get; set; } = null;
+        public PopUpDto? OriginID { get; set; } = null;
+        public PopUpDto? BrandID { get; set; } = null;
+        public PopUpDto? ColorID { get; set; } 
+        public PopUpDto? AccountID { get; set; } 
         public String? BatchNo { get; set; } 
-        public Object? SupplierID { get; set; }
-        public Object? CustomerID { get; set; } 
-        public Object? CategoryTypeID { get; set; }
+        public PopUpDto? SupplierID { get; set; }
+        public PopUpDto? CustomerID { get; set; } 
+        public PopUpDto? CategoryTypeID { get; set; }
     }
     public class ItemDetailsRpt
     {
@@ -132,5 +132,26 @@ namespace Dfinance.DataModels.Dto
         public PopUpDto? CommodityID { get; set; }
         public DropdownDto? LocationID { get; set; }
         public decimal? Percentage { get; set; }
+    }
+    public class WarehouseWiseInventoryRpt
+    {
+        public DropdownDto? WarehouseId { get; set; }
+        public PopUpDto? ItemID { get; set; }
+        public DropdownDto? BranchID { get; set; }        
+        public DateTime ToDate { get; set; }
+        public DateTime FromDate { get; set; }
+        public PopUpDto? CommodityID { get; set; } = null;
+        public PopUpDto? OriginID { get; set; } = null;
+        public PopUpDto? BrandID { get; set; } = null;
+        public PopUpDto? ColorID { get; set; }
+        public PopUpDto? SalesManId { get; set; }
+        public PopUpDto? Area { get; set; }
+        public PopUpDto? PartyId { get; set; }
+        public PopUpDto? Manufacture { get; set; }
+        public PopUpDto? CategoryTypeID { get; set; }
+        public PopUpDto? BasicType  { get; set; }
+        public string? VoucherNo { get; set; }
+        public DropdownDto? GroupBy { get; set; }
+        public PopUpDto? VType { get;set; }
     }
 }

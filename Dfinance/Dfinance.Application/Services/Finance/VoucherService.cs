@@ -34,8 +34,8 @@ namespace Dfinance.Application.Services.Finance
         public CommonResponse VoucherPopup()
         {
             var result = _context.FiMaVouchers
-                .Where(v => (v.ModuleType == 2 || v.ModuleType == 3) && v.Active==true)
-                .Join(_context.MaPageMenus.Where(pm => pm.Active==true),
+                .Where(v => (v.ModuleType == 2 || v.ModuleType == 3) && v.Active == true)
+                .Join(_context.MaPageMenus.Where(pm => pm.Active == true),
                       v => v.Id,
                       pm => pm.VoucherId,
                       (v, pm) => new { v.Id, v.Name })
@@ -166,7 +166,7 @@ namespace Dfinance.Application.Services.Finance
             try
             {
                 string msg = null;
-                var desig = _context.FiMaVouchers.Where(i => i.Id == ID). SingleOrDefault();
+                var desig = _context.FiMaVouchers.Where(i => i.Id == ID).SingleOrDefault();
                 if (desig == null)
                 {
                     msg = "Vouchers Not Found";
@@ -192,7 +192,7 @@ namespace Dfinance.Application.Services.Finance
             {
                 string msg = null;
                 var desig = _context.FiMaVouchers.Any(i => i.PrimaryVoucherId == PrimaryVoucherId);
-                   
+
                 if (!desig)
                 {
                     msg = "Voucher Not Found";
@@ -216,13 +216,13 @@ namespace Dfinance.Application.Services.Finance
         {
             try
             {
-                var numbering = new MaNumbering 
+                var numbering = new MaNumbering
                 {
                     StartingNumber = numberingDto.StartingNumber,
                     MaximumDegits = numberingDto.MaximumDegits,
                     Prefillwithzero = true,
                     Renewedby = 0,
-                    Prefix  = 0,
+                    Prefix = 0,
                     PrefixValue = null,
                     Suffix = 0,
                     SuffixValue = null,
@@ -248,8 +248,8 @@ namespace Dfinance.Application.Services.Finance
         {
             try
             {
-                var nData = _context.MaNumbering.Where(x=>x.Id == Id).FirstOrDefault();
-                if (nData == null) 
+                var nData = _context.MaNumbering.Where(x => x.Id == Id).FirstOrDefault();
+                if (nData == null)
                     return CommonResponse.NotFound("Id not found!");
                 else
                 {
@@ -259,7 +259,7 @@ namespace Dfinance.Application.Services.Finance
                     _context.SaveChanges();
                     return CommonResponse.Ok(nData);
                 }
-                     
+
             }
             catch (Exception ex)
             {
@@ -355,13 +355,31 @@ namespace Dfinance.Application.Services.Finance
             }
             catch (Exception ex)
             {
-               // _logger.LogError(ex.Message);
+                // _logger.LogError(ex.Message);
                 return CommonResponse.Error(ex.Message);
             }
         }
-
+        public CommonResponse VoucherPopupEreturn()
+        {
+            try
+            {
+                var result = (from V in _context.FiMaVouchers
+                              join F in _context.FiTransaction on V.Id equals F.VoucherId
+                              where (V.FinanceUpdate.HasValue && V.FinanceUpdate.Value == true) && V.Active == true
+                              select new
+                              {
+                                  V.Id,
+                                  V.Name
+                              })
+                       .Distinct()
+                       .ToList();
+                return CommonResponse.Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return CommonResponse.Error();
+            }
+        }
     }
 }
-
-
 

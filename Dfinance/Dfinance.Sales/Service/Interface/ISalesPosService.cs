@@ -6,6 +6,6 @@ namespace Dfinance.Sales.Service.Interface
     public interface ISalesPosService
     {
         CommonResponse SaveSalesPos(InventoryTransactionDto salesDto, int PageId, int voucherId);
-
+        CommonResponse UpdateSalesPos(InventoryTransactionDto salesPosDto, int PageId, int voucherId);
     }
 }

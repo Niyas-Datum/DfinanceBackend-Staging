@@ -1,20 +1,18 @@
-using Microsoft.EntityFrameworkCore;
 using Dfinance.Core.Domain;
-using Dfinance.Core.Infrastructure.Configurations;
-using Dfinance.Core.Views;
-using Dfinance.Core.Views.General;
 using Dfinance.Core.Domain.Roles;
+using Dfinance.Core.Infrastructure.Configurations;
 using Dfinance.Core.Infrastructure.Configurations.Employee;
 using Dfinance.Core.Infrastructure.Configurations.Roles;
-using Dfinance.Core.Views.Inventory;
-using Dfinance.Core.Views.PagePermission;
+using Dfinance.Core.Views;
 using Dfinance.Core.Views.Common;
-using Dfinance.Shared.Configuration.Service;
 using Dfinance.Core.Views.Finance;
+using Dfinance.Core.Views.General;
+using Dfinance.Core.Views.Inventory;
 using Dfinance.Core.Views.Inventory.Purchase;
 using Dfinance.Core.Views.Item;
-using System.Reflection.Emit;
-using System;
+using Dfinance.Core.Views.PagePermission;
+using Dfinance.Shared.Configuration.Service;
+using Microsoft.EntityFrameworkCore;
 
 namespace Dfinance.Core.Infrastructure;
 
@@ -393,15 +391,29 @@ public partial class DFCoreContext : DbContext
     public DbSet<ItemDetailsView> ItemDetailsView { get; set; }
     public DbSet<FillVoucherSettingsView> FillVoucherSettingsView { get; set; }
 
+
     //DocumentType
     public DbSet<FillDocTypeMasterView> FillDocTypeMasterView { get; set; }
     public DbSet<FillDocTypeByIdView> FillDocTypeByIdView { get; set; }
+
     //QualityType
     public  DbSet<InvQualityPrice> InvQualityPrices { get; set; }
+
+    
+
+    public DbSet<FiPrimaryVoucher> FiPrimaryVouchers { get; set; }
+    
+
+
+
+    //DosageMaster
+    public  DbSet<InvDrugDosage> InvDrugDosages { get; set; } 
+
 
 
     //IntnBarCode
     public  DbSet<InvBarcodeMaster> InvBarcodeMasters { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     //  => optionsBuilder.UseSqlServer(@"Data Source=ip.datuminnovation.com,9600;TrustServerCertificate=true;Initial Catalog=DatumSystemMain;User ID=sa;pwd=Datum123!");
     // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -495,8 +507,19 @@ public partial class DFCoreContext : DbContext
         mb.ApplyConfiguration(new InvRelatedItemsConfiguration());
         mb.ApplyConfiguration(new DocTypeConfiguration());
 
+
         //QualityType
         mb.ApplyConfiguration(new QualityTypeConfiguration());
+
+
+
+        //DosageMaster
+        mb.ApplyConfiguration(new InvDrugDosageConfiguration());
+
+
+
+
+        mb.ApplyConfiguration(new FiMaVouchersConfiguration());
 
 
 
@@ -726,10 +749,12 @@ public partial class DFCoreContext : DbContext
         mb.Entity<ItemDetailsView>().HasNoKey().ToView(null);
         mb.Entity<FillVoucherSettingsView>().HasNoKey().ToView(null);
 
+
         //DocumentType
         mb.Entity<FillDocTypeMasterView>().HasNoKey().ToView(null);
         mb.Entity<FillDocTypeByIdView>().HasNoKey().ToView(null);
         
+
     }
 
 

@@ -21,6 +21,7 @@ namespace Dfinance.Application.Services.Finance.Interface
 
 
         CommonResponse VoucherDropDown();
+        CommonResponse VoucherPopupEreturn();
 
 
     }
