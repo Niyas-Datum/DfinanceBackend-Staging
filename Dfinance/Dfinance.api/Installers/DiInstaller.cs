@@ -268,6 +268,6 @@ public class DiInstaller : IInstaller
         service.AddScoped<ISalesB2CService, SalesB2CService>();
         service.AddScoped<IDocumentTypeService, DocumentTypeService>();
 
-
+        service.AddScoped<ITaxTypeService, TaxTypeService>();
     }
 }
