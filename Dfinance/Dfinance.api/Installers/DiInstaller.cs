@@ -269,5 +269,10 @@ public class DiInstaller : IInstaller
         service.AddScoped<IDocumentTypeService, DocumentTypeService>();
 
 
+        //QualityType
+        service.AddScoped<IQualityTypeService, QualityTypeService>();
+
+
+
     }
 }

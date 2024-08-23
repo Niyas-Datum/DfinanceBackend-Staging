@@ -395,6 +395,10 @@ public partial class DFCoreContext : DbContext
     //DocumentType
     public DbSet<FillDocTypeMasterView> FillDocTypeMasterView { get; set; }
     public DbSet<FillDocTypeByIdView> FillDocTypeByIdView { get; set; }
+
+    //QualityType
+    public  DbSet<InvQualityPrice> InvQualityPrices { get; set; }
+
     
 
     public DbSet<FiPrimaryVoucher> FiPrimaryVouchers { get; set; }
@@ -404,6 +408,7 @@ public partial class DFCoreContext : DbContext
 
     //DosageMaster
     public  DbSet<InvDrugDosage> InvDrugDosages { get; set; } 
+
 
 
     //IntnBarCode
@@ -502,6 +507,12 @@ public partial class DFCoreContext : DbContext
         mb.ApplyConfiguration(new InvRelatedItemsConfiguration());
         mb.ApplyConfiguration(new DocTypeConfiguration());
 
+
+        //QualityType
+        mb.ApplyConfiguration(new QualityTypeConfiguration());
+
+
+
         //DosageMaster
         mb.ApplyConfiguration(new InvDrugDosageConfiguration());
 
@@ -509,6 +520,7 @@ public partial class DFCoreContext : DbContext
 
 
         mb.ApplyConfiguration(new FiMaVouchersConfiguration());
+
 
 
         //View

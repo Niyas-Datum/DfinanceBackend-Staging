@@ -80,10 +80,6 @@ namespace Dfinance.DataModels.Dto.Common
 
         public DateTime? PartyInvDate { get; set; } //EntryDate(trans.addi) 
 
-
-
-
-
     }
     public class Formpopup
     {
@@ -93,6 +89,13 @@ namespace Dfinance.DataModels.Dto.Common
     {
         public int? Id { get; set; }
         public string? Name { get; set; }
+    }
+
+    public class Popupdto
+    {
+        public int? Id { get; set; }
+        public int? Value { get; set; }
+        public string? Description { get; set; }
     }
 
 }
