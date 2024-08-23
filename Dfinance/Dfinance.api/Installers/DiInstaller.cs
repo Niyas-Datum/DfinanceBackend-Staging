@@ -267,6 +267,8 @@ public class DiInstaller : IInstaller
         service.AddScoped<ISalesB2BService, SalesB2BService>();
         service.AddScoped<ISalesB2CService, SalesB2CService>();
         service.AddScoped<IDocumentTypeService, DocumentTypeService>();
+        //FinanceRegister
+        service.AddScoped<IFinanceRegister,FinanceRegisterService>();
 
 
     }
