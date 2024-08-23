@@ -287,5 +287,15 @@ namespace Dfinance.Shared.Routes.v1
             public const string Apply = $"{Main}/update";
 
         }
+        public static class FinanceRegister
+        {
+            public const string Main = $"{Base}/financeregister";
+            public const string Fillfinanceregisgter = $"{Main}/Finreg";
+            public const string FillAccountPopup = $"{Main}/FillAccpop";
+            public const string FillVoucherType = $"{Main}/Fillvtype";
+            public const string FillBasicType = $"{Main}/Fillbtype";
+
+
+        }
     }
 }
