@@ -31,9 +31,9 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
                 return BadRequest(ex.Message);
             }
         }
-        [HttpGet(InvRoute.PurchaseWithoutTax.save)]
+        [HttpPost(InvRoute.PurchaseWithoutTax.save)]
         [SwaggerOperation(Summary = "PageId=295,VoucherId=17")]
-        public IActionResult SavePurchaseWithoutTax(PurchaseWithoutTaxDto dto, int pageId, int voucherId)
+        public IActionResult SavePurchaseWithoutTax(InventoryTransactionDto dto, int pageId, int voucherId)
         {
             try
             {
@@ -45,9 +45,9 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
                 return BadRequest(ex.Message);
             }
         }
-        [HttpGet(InvRoute.PurchaseWithoutTax.update)]
+        [HttpPatch(InvRoute.PurchaseWithoutTax.update)]
         [SwaggerOperation(Summary = "PageId=295,VoucherId=17")]
-        public IActionResult UpdatePurchaseWithoutTax(PurchaseWithoutTaxDto dto, int pageId, int voucherId)
+        public IActionResult UpdatePurchaseWithoutTax(InventoryTransactionDto dto, int pageId, int voucherId)
         {
             try
             {
