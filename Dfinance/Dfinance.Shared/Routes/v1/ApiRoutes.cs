@@ -319,6 +319,9 @@ namespace Dfinance.Shared.Routes.v1
             public const string Main = $"{Base}/TaxType";
 
             public const string TaxTypeDropDown = $"{Main}/FillTaxType";
+            public const string SaveTaxType = $"{Main}/savetaxtype";
+            public const string DeleteTaxType = $"{Main}/deletetaxtype";
+
         }
 
         public static class Role
