@@ -189,6 +189,9 @@ namespace Dfinance.Shared.Routes
 
             //Userwise - report
             public const string userwiseProfit = $"{Main}/userwiseProfit";
+            //BuyerList
+            public const string BuyerLoadData = $"{Main}/buyerLD";
+            public const string BuyerListRpt = $"{Main}/buyerListRpt";
         }
         public class PurchaseEnquiry
         {

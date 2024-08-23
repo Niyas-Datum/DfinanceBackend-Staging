@@ -26,6 +26,7 @@ using Dfinance.DataModels.Dto.Finance;
 
 using static Dfinance.Shared.Routes.v1.ApiRoutes;
 using Dfinance.AuthCore.Domain;
+using Dfinance.Core.Domain;
 
 
 namespace Dfinance.Sales
@@ -306,7 +307,7 @@ namespace Dfinance.Sales
 
                         int TransEntId = (int)_paymentService.SaveTransactionEntries(salesDto, PageId, TransId, transpayId).Data;
 
-                        if (salesDto.TransactionEntries.Advance != null && salesDto.TransactionEntries.Advance.Any())
+                        if (salesDto.TransactionEntries.Advance != null && salesDto.TransactionEntries.Advance.Any() || transpayId!=TransId)
                         {
                             _transactionService.SaveVoucherAllocation(TransId, transpayId, salesDto.TransactionEntries);
                         }
@@ -370,7 +371,7 @@ namespace Dfinance.Sales
 
                         int TransEntId = (int)_paymentService.SaveTransactionEntries(salesDto, PageId, TransId, transpayId).Data;
 
-                        if (salesDto.TransactionEntries.Advance != null && salesDto.TransactionEntries.Advance.Any(a => a.VID != null || a.VID != 0))
+                        if (salesDto.TransactionEntries.Advance != null && salesDto.TransactionEntries.Advance.Any(a => a.VID != null || a.VID != 0) || transpayId!=TransId)
                         {
                             _transactionService.SaveVoucherAllocation(TransId, transpayId, salesDto.TransactionEntries);
                         }
@@ -775,134 +776,210 @@ namespace Dfinance.Sales
             }
         }
 
-                /// <summary>
-                /// SalesCommission
-                /// </summary>
-                /// <param name="DateFrom"></param>
-                /// <param name="DateUpto"></param>
-                /// <param name="BranchID"></param>
-                /// <param name="@AccountID"></param>
-                /// <param name="@UserID"></param>
-                /// <returns></returns>
-                public CommonResponse SalesCommission(DateTime startdate, DateTime enddate, int? salesmanId, int? userId)
+        /// <summary>
+        /// SalesCommission
+        /// </summary>
+        /// <param name="DateFrom"></param>
+        /// <param name="DateUpto"></param>
+        /// <param name="BranchID"></param>
+        /// <param name="@AccountID"></param>
+        /// <param name="@UserID"></param>
+        /// <returns></returns>
+        public CommonResponse SalesCommission(DateTime startdate, DateTime enddate, int? salesmanId, int? userId)
+        {
+            try
+            {
+                int? BranchId = _authService.GetBranchId();
+
+                var cmd = _context.Database.GetDbConnection().CreateCommand();
+                cmd.CommandType = CommandType.Text;
+
+                string formattedStartDate = startdate.ToString("yyyy-MM-dd");
+                string formattedEndDate = enddate.ToString("yyyy-MM-dd");
+
+                var salesman = salesmanId?.ToString() ?? "NULL";
+                var user = userId?.ToString() ?? "NULL";
+
+                string commandText = $"Exec SalesCommissionSP @BranchID={BranchId}, @DateFrom='{formattedStartDate}', @DateUpto='{formattedEndDate}', @AccountID={salesman},@UserID={user}";
+
+                cmd.CommandText = commandText;
+
+                // Open the connection
+                _context.Database.GetDbConnection().Open();
+
+                using (var reader = cmd.ExecuteReader())
                 {
-                    try
+                    if (reader.HasRows)
                     {
-                        int? BranchId = _authService.GetBranchId();
+                        var tb = new DataTable();
+                        tb.Load(reader);
 
-                        var cmd = _context.Database.GetDbConnection().CreateCommand();
-                        cmd.CommandType = CommandType.Text;
-
-                        string formattedStartDate = startdate.ToString("yyyy-MM-dd");
-                        string formattedEndDate = enddate.ToString("yyyy-MM-dd");
-
-                        var salesman = salesmanId?.ToString() ?? "NULL";
-                        var user = userId?.ToString() ?? "NULL";
-
-                        string commandText = $"Exec SalesCommissionSP @BranchID={BranchId}, @DateFrom='{formattedStartDate}', @DateUpto='{formattedEndDate}', @AccountID={salesman},@UserID={user}";
-
-                        cmd.CommandText = commandText;
-
-                        // Open the connection
-                        _context.Database.GetDbConnection().Open();
-
-                        using (var reader = cmd.ExecuteReader())
+                        List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+                        foreach (DataRow dr in tb.Rows)
                         {
-                            if (reader.HasRows)
+                            var row = new Dictionary<string, object>();
+                            foreach (DataColumn col in tb.Columns)
                             {
-                                var tb = new DataTable();
-                                tb.Load(reader);
-
-                                List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
-                                foreach (DataRow dr in tb.Rows)
-                                {
-                                    var row = new Dictionary<string, object>();
-                                    foreach (DataColumn col in tb.Columns)
-                                    {
-                                        row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
-                                    }
-                                    rows.Add(row);
-                                }
-                                return CommonResponse.Ok(rows);
+                                row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
                             }
-                            return CommonResponse.NoContent();
+                            rows.Add(row);
                         }
+                        return CommonResponse.Ok(rows);
                     }
-                    catch (Exception ex)
-                    {
-
-                        return CommonResponse.Error(ex.Message);
-                    }
-                    finally
-                    {
-
-                        if (_context.Database.GetDbConnection().State == ConnectionState.Open)
-                        {
-                            _context.Database.GetDbConnection().Close();
-                        }
-                    }
+                    return CommonResponse.NoContent();
                 }
+            }
+            catch (Exception ex)
+            {
 
-                //TopCustomers & Suppliers Report
-                public CommonResponse TopCustomerSupplier(DateTime startdate, DateTime enddate, int? pageId)
+                return CommonResponse.Error(ex.Message);
+            }
+            finally
+            {
+
+                if (_context.Database.GetDbConnection().State == ConnectionState.Open)
                 {
-                    try
-                    {
-                        int? BranchId = _authService.GetBranchId();
-
-                        var cmd = _context.Database.GetDbConnection().CreateCommand();
-                        cmd.CommandType = CommandType.Text;
-
-                        string formattedStartDate = startdate.ToString("yyyy-MM-dd");
-                        string formattedEndDate = enddate.ToString("yyyy-MM-dd");
-                        var page = pageId?.ToString() ?? "NULL";
-                        string commandText = $"Exec TopCustomerSupplierSP @BranchID={BranchId}, @DateFrom='{formattedStartDate}', @DateUpto='{formattedEndDate}',@PageID={page}";
-
-                        cmd.CommandText = commandText;
-
-                        // Open the connection
-                        _context.Database.GetDbConnection().Open();
-
-                        using (var reader = cmd.ExecuteReader())
-                        {
-                            if (reader.HasRows)
-                            {
-                                var tb = new DataTable();
-                                tb.Load(reader);
-
-                                List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
-                                foreach (DataRow dr in tb.Rows)
-                                {
-                                    var row = new Dictionary<string, object>();
-                                    foreach (DataColumn col in tb.Columns)
-                                    {
-                                        row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
-                                    }
-                                    rows.Add(row);
-                                }
-                                return CommonResponse.Ok(rows);
-                            }
-                            return CommonResponse.NoContent();
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-
-                        return CommonResponse.Error(ex.Message);
-                    }
-                    finally
-                    {
-
-                        if (_context.Database.GetDbConnection().State == ConnectionState.Open)
-                        {
-                            _context.Database.GetDbConnection().Close();
-                        }
-
-                    }
+                    _context.Database.GetDbConnection().Close();
                 }
             }
         }
-    
-    
+
+        //TopCustomers & Suppliers Report
+        public CommonResponse TopCustomerSupplier(DateTime startdate, DateTime enddate, int? pageId)
+        {
+            try
+            {
+                int? BranchId = _authService.GetBranchId();
+
+                var cmd = _context.Database.GetDbConnection().CreateCommand();
+                cmd.CommandType = CommandType.Text;
+
+                string formattedStartDate = startdate.ToString("yyyy-MM-dd");
+                string formattedEndDate = enddate.ToString("yyyy-MM-dd");
+                var page = pageId?.ToString() ?? "NULL";
+                string commandText = $"Exec TopCustomerSupplierSP @BranchID={BranchId}, @DateFrom='{formattedStartDate}', @DateUpto='{formattedEndDate}',@PageID={page}";
+
+                cmd.CommandText = commandText;
+
+                // Open the connection
+                _context.Database.GetDbConnection().Open();
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        var tb = new DataTable();
+                        tb.Load(reader);
+
+                        List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+                        foreach (DataRow dr in tb.Rows)
+                        {
+                            var row = new Dictionary<string, object>();
+                            foreach (DataColumn col in tb.Columns)
+                            {
+                                row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
+                            }
+                            rows.Add(row);
+                        }
+                        return CommonResponse.Ok(rows);
+                    }
+                    return CommonResponse.NoContent();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return CommonResponse.Error(ex.Message);
+            }
+            finally
+            {
+
+                if (_context.Database.GetDbConnection().State == ConnectionState.Open)
+                {
+                    _context.Database.GetDbConnection().Close();
+                }
+
+            }
+        }
+        //**************************BuyerList*************************************
+        private CommonResponse GetItems()
+        {
+            var items = _context.ItemMaster.Where(i => i.Active == true && i.IsGroup == false && i.StockItem == true).Select(i => new { i.ItemCode, i.ItemName, i.Id }).ToList();
+            return CommonResponse.Ok(items);
+        }
+        private CommonResponse GetParties()
+        {
+            var parties = (from a in _context.FiMaAccounts
+                           join b in _context.FiMaBranchAccounts on a.Id equals b.AccountId
+                           join P in _context.Parties on a.Id equals P.AccountId
+                           where a.IsGroup == false && b.BranchId == 1 && P.Nature == "S"
+                           select new
+                           {
+                               AccountCode = a.Alias,
+                               AccountName = a.Name,
+                               a.Id,
+                           });
+            return CommonResponse.Ok(parties);
+        }
+        public CommonResponse BuyerLoadData()
+        {
+            try
+            {
+                var items = GetItems().Data;
+                var parties = GetParties().Data;
+                return CommonResponse.Ok(new { Items = items, Parties = parties });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Error(ex.Message);
+            }
+        }
+        public CommonResponse BuyerListReport(DateTime DateFrom,DateTime DateUpto,string Mode,int? PartyId,int? ItemId)
+        {
+            try
+            {
+                var cmd = _context.Database.GetDbConnection().CreateCommand();
+                cmd.CommandType = CommandType.Text;
+                string dateFrom = $"'{DateFrom.ToString("yyyy-MM-dd")}'";
+                string dateUpto = $"'{DateUpto.ToString("yyyy-MM-dd")}'";
+                string mode = Mode !=null? $"'{Mode.ToString()}'": "Preferred";
+                var itemId =ItemId != null ? ItemId.ToString() : "NULL";
+                var partyId =PartyId != null ? PartyId.ToString() : "NULL";
+                var branchID = _authService.GetBranchId().Value;
+                cmd.CommandText = $"Exec BuyerListSP @DateFrom={dateFrom},@DateUpto={dateUpto},@Mode={mode},@BranchID={branchID},@AccountID={partyId},@ItemID={itemId}";
+                _context.Database.GetDbConnection().Open();
+                using (var reader = cmd.ExecuteReader())
+                {
+                    var tb = new DataTable();
+                    tb.Load(reader);
+                    if (tb.Rows.Count > 0)
+                    {
+                        List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+                        Dictionary<string, object> row;
+                        foreach (DataRow dr in tb.Rows)
+                        {
+                            row = new Dictionary<string, object>();
+                            foreach (DataColumn col in tb.Columns)
+                            {
+                                row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
+                            }
+                            rows.Add(row);
+                        }
+                        return CommonResponse.Ok(rows);
+                    }
+                    return CommonResponse.NoContent();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Error(ex.Message);
+            }
+        }
+    }
+}
+
+
 
 
