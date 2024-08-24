@@ -116,127 +116,261 @@ namespace Dfinance.Purchase.Services
         }
 
 
-        public CommonResponse SavePurchaseWithoutTax(PurchaseWithoutTaxDto dto, int pageId, int voucherId)
+        //public CommonResponse SavePurchaseWithoutTax(PurchaseWithoutTaxDto dto, int pageId, int voucherId)
+        //{
+        //    if (!_authService.IsPageValid(pageId))
+        //    {
+        //        return PageNotValid(pageId);
+        //    }
+        //    if (!_authService.UserPermCheck(pageId, 2))
+        //    {
+        //        return PermissionDenied("Save Purchase Without Tax");
+        //    }
+        //    using (var transactionScope = new TransactionScope())
+        //    {
+        //        try
+        //        {
+        //            int TransId = (int)SaveTransactions(dto, pageId, voucherId).Data;
+        //            //int TransId = 0;
+        //            int? transpayId = 0;
+        //            if (dto.TransactionEntries.Cash.Count > 0 || dto.TransactionEntries.Cheque.Count > 0 || dto.TransactionEntries.Card.Count > 0)
+        //            {
+        //                transpayId = (int)SaveTransactionPayment(dto, TransId, 2).Data;
+        //            }
+        //            if (dto.TransactionAdditional != null)
+        //            {
+        //                SaveTransactionAdditional(dto.TransactionAdditional , TransId, voucherId);
+        //            }
+        //            if (dto.References.Count > 0 && dto.References.Select(x => x.Id).FirstOrDefault() != 0)
+        //            {
+        //                List<int?> referIds = dto.References.Select(x => x.Id).ToList();
+
+        //                _transactionService.SaveTransReference(TransId, referIds);
+        //            }
+        //            if (dto.Items != null)
+        //            {
+        //                _itemService.SaveInvTransItems(dto.Items, voucherId, TransId, dto.ExchangeRate, dto.TransactionAdditional.Warehouse.Id);
+        //            }
+        //            if (dto.TransactionEntries != null)
+        //            {
+        //                int TransEntId = (int)SaveTransactionEntries(dto, pageId, TransId, transpayId ?? 0).Data;
+
+        //                if (dto.TransactionEntries.Advance != null && dto.TransactionEntries.Advance.Any(a => a.VID != null || a.VID != 0) || transpayId != TransId)
+        //                {
+        //                    _transactionService.SaveVoucherAllocation(TransId, transpayId ?? 0, dto.TransactionEntries);
+        //                }
+        //            }
+        //            if (dto != null)
+        //            {
+        //                _transactionService.EntriesAmountValidation(TransId);
+        //            }
+        //            transactionScope.Complete();
+        //            _logger.LogInformation("Purchase Without Tax Saved Successfully");
+        //            return CommonResponse.Created("Purchase Without Tax Saved Successfully");
+        //        }
+        //        catch
+        //        {
+        //            transactionScope.Dispose();
+        //            _logger.LogError("Failed to Save Purchase Without Tax");
+        //            transactionScope.Dispose();
+        //            return CommonResponse.Error("Failed to Save Purchase Without Tax");
+        //        }
+        //    }           
+        //}
+        public CommonResponse SavePurchaseWithoutTax(InventoryTransactionDto purchaseDto, int PageId, int voucherId)
         {
-            if (!_authService.IsPageValid(pageId))
+            if (!_authService.IsPageValid(PageId))
             {
-                return PageNotValid(pageId);
+                return PageNotValid(PageId);
             }
-            if (!_authService.UserPermCheck(pageId, 2))
+            if (!_authService.UserPermCheck(PageId, 2))
             {
-                return PermissionDenied("Save Purchase Without Tax");
+                return PermissionDenied("Save Purchase");
             }
             using (var transactionScope = new TransactionScope())
             {
                 try
                 {
-                    int TransId = (int)SaveTransactions(dto, pageId, voucherId).Data;
-                    //int TransId = 0;
+                    //int VoucherId=_com.GetVoucherId(PageId);
+                    string Status = "Approved";
+                    var transaction = _transactionService.SaveTransaction(purchaseDto, PageId, voucherId, Status).Data;
+                    int TransId = 0;
                     int? transpayId = 0;
-                    if (dto.TransactionEntries.Cash.Count > 0 || dto.TransactionEntries.Cheque.Count > 0 || dto.TransactionEntries.Card.Count > 0)
+                    var transType = transaction.GetType();
+                    if (transType.Name == "String")
                     {
-                        transpayId = (int)SaveTransactionPayment(dto, TransId, 2).Data;
+                        return CommonResponse.Ok(transaction);
                     }
-                    if (dto.TransactionAdditional != null)
+                    else
                     {
-                        SaveTransactionAdditional(dto.TransactionAdditional , TransId, voucherId);
+                        TransId = (int)transaction;
                     }
-                    if (dto.References.Count > 0 && dto.References.Select(x => x.Id).FirstOrDefault() != 0)
+                    if (purchaseDto.TransactionEntries.Cash.Count > 0 || purchaseDto.TransactionEntries.Cheque.Count > 0 || purchaseDto.TransactionEntries.Card.Count > 0)
                     {
-                        List<int?> referIds = dto.References.Select(x => x.Id).ToList();
+                        transpayId = (int)_transactionService.SaveTransactionPayment(purchaseDto, TransId, Status, 2).Data;
+                    }
+                    if (purchaseDto.FiTransactionAdditional != null)
+                    {
+                        _additionalService.SaveTransactionAdditional(purchaseDto.FiTransactionAdditional, TransId, voucherId);
+                    }
+
+                    if (purchaseDto.References.Count > 0 && purchaseDto.References.Any(r => r.Sel == true))
+                    {
+                        List<int?> referIds = purchaseDto.References.Select(x => x.Id).ToList();
 
                         _transactionService.SaveTransReference(TransId, referIds);
                     }
-                    if (dto.Items != null)
+                    if (purchaseDto.Items != null && purchaseDto.Items.Count > 0)
                     {
-                        _itemService.SaveInvTransItems(dto.Items, voucherId, TransId, dto.ExchangeRate, dto.TransactionAdditional.Warehouse.Id);
+                        _itemService.SaveInvTransItems(purchaseDto.Items, voucherId, TransId, purchaseDto.ExchangeRate, purchaseDto.FiTransactionAdditional.Warehouse.Id);
                     }
-                    if (dto.TransactionEntries != null)
+                    if (purchaseDto.TransactionEntries != null)
                     {
-                        int TransEntId = (int)SaveTransactionEntries(dto, pageId, TransId, transpayId ?? 0).Data;
+                        int TransEntId = (int)_paymentService.SaveTransactionEntries(purchaseDto, PageId, TransId, transpayId ?? 0).Data;
 
-                        if (dto.TransactionEntries.Advance != null && dto.TransactionEntries.Advance.Any(a => a.VID != null || a.VID != 0) || transpayId != TransId)
+                        if (purchaseDto.TransactionEntries.Advance != null && purchaseDto.TransactionEntries.Advance.Any(a => a.VID != null || a.VID != 0) || transpayId != TransId)
                         {
-                            _transactionService.SaveVoucherAllocation(TransId, transpayId ?? 0, dto.TransactionEntries);
+                            _transactionService.SaveVoucherAllocation(TransId, transpayId ?? 0, purchaseDto.TransactionEntries);
                         }
                     }
-                    if (dto != null)
+                    if (purchaseDto != null)
                     {
                         _transactionService.EntriesAmountValidation(TransId);
                     }
+
                     transactionScope.Complete();
-                    _logger.LogInformation("Purchase Without Tax Saved Successfully");
-                    return CommonResponse.Created("Purchase Without Tax Saved Successfully");
+                    _logger.LogInformation("Purchase Saved Successfully");
+                    return CommonResponse.Created("Purchase Saved Successfully");
                 }
-                catch
+                catch (Exception ex)
                 {
                     transactionScope.Dispose();
-                    _logger.LogError("Failed to Save Purchase Without Tax");
+                    _logger.LogError("Failed to Save Purchase");
                     transactionScope.Dispose();
-                    return CommonResponse.Error("Failed to Save Purchase Without Tax");
+                    return CommonResponse.Error(ex.Message);
                 }
-            }           
-        }
-        public CommonResponse UpdatePurchaseWithoutTax(PurchaseWithoutTaxDto dto, int pageId, int voucherId)
-        {
-            if (!_authService.IsPageValid(pageId))
-            {
-                return PageNotValid(pageId);
             }
-            if (!_authService.UserPermCheck(pageId, 3))
+        }
+        //public CommonResponse UpdatePurchaseWithoutTax(PurchaseWithoutTaxDto dto, int pageId, int voucherId)
+        //{
+        //    if (!_authService.IsPageValid(pageId))
+        //    {
+        //        return PageNotValid(pageId);
+        //    }
+        //    if (!_authService.UserPermCheck(pageId, 3))
+        //    {
+        //        return PermissionDenied("Save Purchase Without Tax");
+        //    }
+        //    using (var transactionScope = new TransactionScope())
+        //    {
+        //        try
+        //        {
+        //            int TransId = (int)SaveTransactions(dto, pageId, voucherId).Data;
+        //            //int TransId = 0;
+        //            int? transpayId = 0;
+        //            if (dto.TransactionEntries.Cash.Count > 0 || dto.TransactionEntries.Cheque.Count > 0 || dto.TransactionEntries.Card.Count > 0)
+        //            {
+        //                transpayId = (int)SaveTransactionPayment(dto, TransId, 2).Data;
+        //            }
+        //            if (dto.TransactionAdditional != null)
+        //            {
+        //                SaveTransactionAdditional(dto.TransactionAdditional, TransId, voucherId);
+        //            }
+        //            if (dto.References.Count > 0 && dto.References.Select(x => x.Id).FirstOrDefault() != 0)
+        //            {
+        //                List<int?> referIds = dto.References.Select(x => x.Id).ToList();
+
+        //                _transactionService.UpdateTransReference(TransId, referIds);
+        //            }
+        //            if (dto.Items != null)
+        //            {
+        //                _itemService.UpdateInvTransItems(dto.Items, voucherId, TransId, dto.ExchangeRate, dto.TransactionAdditional.Warehouse.Id);
+        //            }
+        //            if (dto.TransactionEntries != null)
+        //            {
+        //                int TransEntId = (int)SaveTransactionEntries(dto, pageId, TransId, transpayId ?? 0).Data;
+
+        //                if (dto.TransactionEntries.Advance != null && dto.TransactionEntries.Advance.Any(a => a.VID != null || a.VID != 0) || transpayId != TransId)
+        //                {
+        //                    _transactionService.UpdateVoucherAllocation(TransId, transpayId ?? 0, dto.TransactionEntries);
+        //                }
+        //            }
+        //            if (dto != null)
+        //            {
+        //                _transactionService.EntriesAmountValidation(TransId);
+        //            }
+        //            transactionScope.Complete();
+        //            _logger.LogInformation("Purchase Without Tax Updated Successfully");
+        //            return CommonResponse.Created("Purchase Without Tax Updated Successfully");
+        //        }
+        //        catch
+        //        {
+        //            transactionScope.Dispose();
+        //            _logger.LogError("Failed to Update Purchase Without Tax");
+        //            transactionScope.Dispose();
+        //            return CommonResponse.Error("Failed to Update Purchase Without Tax");
+        //        }
+        //    }            
+        //}
+        public CommonResponse UpdatePurchaseWithoutTax(InventoryTransactionDto invTranseDto, int PageId, int voucherId)
+        {
+            if (!_authService.IsPageValid(PageId))
             {
-                return PermissionDenied("Save Purchase Without Tax");
+                return PageNotValid(PageId);
+            }
+            if (!_authService.UserPermCheck(PageId, 3))
+            {
+                return PermissionDenied("Update Purchase");
             }
             using (var transactionScope = new TransactionScope())
             {
                 try
                 {
-                    int TransId = (int)SaveTransactions(dto, pageId, voucherId).Data;
-                    //int TransId = 0;
-                    int? transpayId = 0;
-                    if (dto.TransactionEntries.Cash.Count > 0 || dto.TransactionEntries.Cheque.Count > 0 || dto.TransactionEntries.Card.Count > 0)
-                    {
-                        transpayId = (int)SaveTransactionPayment(dto, TransId, 2).Data;
-                    }
-                    if (dto.TransactionAdditional != null)
-                    {
-                        SaveTransactionAdditional(dto.TransactionAdditional, TransId, voucherId);
-                    }
-                    if (dto.References.Count > 0 && dto.References.Select(x => x.Id).FirstOrDefault() != 0)
-                    {
-                        List<int?> referIds = dto.References.Select(x => x.Id).ToList();
+                    //int VoucherId = _com.GetVoucherId(PageId);
+                    string Status = "Approved";
+                    int? transpayId = null;
+                    int TransId = (int)_transactionService.SaveTransaction(invTranseDto, PageId, voucherId, Status).Data;
+                    if (invTranseDto.TransactionEntries != null && invTranseDto.TransactionEntries.Cash.Count > 0 || invTranseDto.TransactionEntries.Card.Count > 0 || invTranseDto.TransactionEntries.Cheque.Count > 0 || invTranseDto.TransactionEntries.Advance.Count > 0)
+                        transpayId = (int)_transactionService.SaveTransactionPayment(invTranseDto, TransId, Status, 2).Data;
 
+                    if (invTranseDto.FiTransactionAdditional != null)
+                    {
+                        _additionalService.SaveTransactionAdditional(invTranseDto.FiTransactionAdditional, TransId, voucherId);
+                    }
+                    if (invTranseDto.References.Count > 0 && invTranseDto.References.Select(x => x.Id).FirstOrDefault() != 0)
+                    {
+                        List<int?> referIds = invTranseDto.References.Select(x => x.Id).ToList();
                         _transactionService.UpdateTransReference(TransId, referIds);
                     }
-                    if (dto.Items != null)
+                    if (invTranseDto.Items != null)
                     {
-                        _itemService.UpdateInvTransItems(dto.Items, voucherId, TransId, dto.ExchangeRate, dto.TransactionAdditional.Warehouse.Id);
+                        _itemService.UpdateInvTransItems(invTranseDto.Items, voucherId, TransId, invTranseDto.ExchangeRate, invTranseDto.FiTransactionAdditional.Warehouse.Id);
                     }
-                    if (dto.TransactionEntries != null)
+                    if (invTranseDto.TransactionEntries != null)
                     {
-                        int TransEntId = (int)SaveTransactionEntries(dto, pageId, TransId, transpayId ?? 0).Data;
+                        int TransEntId = (int)_paymentService.SaveTransactionEntries(invTranseDto, PageId, TransId, transpayId ?? 0).Data;
 
-                        if (dto.TransactionEntries.Advance != null && dto.TransactionEntries.Advance.Any(a => a.VID != null || a.VID != 0) || transpayId != TransId)
+                        if (invTranseDto.TransactionEntries.Advance != null && invTranseDto.TransactionEntries.Advance.Any(a => a.AccountID != null || a.AccountID != 0) || transpayId != TransId)
                         {
-                            _transactionService.UpdateVoucherAllocation(TransId, transpayId ?? 0, dto.TransactionEntries);
+                            _transactionService.SaveVoucherAllocation(TransId, transpayId ?? 0, invTranseDto.TransactionEntries);
                         }
                     }
-                    if (dto != null)
+                    if (invTranseDto != null)
                     {
                         _transactionService.EntriesAmountValidation(TransId);
                     }
                     transactionScope.Complete();
-                    _logger.LogInformation("Purchase Without Tax Updated Successfully");
-                    return CommonResponse.Created("Purchase Without Tax Updated Successfully");
+                    _logger.LogInformation("Purchase Updated Successfully");
+                    return CommonResponse.Created("Purchase Updated Successfully");
                 }
-                catch
+
+                catch (Exception ex)
                 {
+                    _logger.LogError("Updation of Purchase Failed");
                     transactionScope.Dispose();
-                    _logger.LogError("Failed to Update Purchase Without Tax");
-                    transactionScope.Dispose();
-                    return CommonResponse.Error("Failed to Update Purchase Without Tax");
+                    return CommonResponse.Error(ex.Message);
                 }
-            }            
+            }
         }
         public CommonResponse SaveTransactions(PurchaseWithoutTaxDto dto, int pageId, int voucherId)
         {
