@@ -126,5 +126,6 @@ namespace Dfinance.Core.Domain
         public virtual ICollection<MaChargeType> MaChargeTypes { get; set; }
         public virtual ICollection<FiMaBranchAccounts> BranchAccounts { get; set; }
         public virtual ICollection<DocType> DocTypes { get; set; }
+        public virtual ICollection<MaTax> MaTaxes { get; set; }
     }
 }

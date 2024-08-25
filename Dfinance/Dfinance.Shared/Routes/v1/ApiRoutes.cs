@@ -324,6 +324,16 @@ namespace Dfinance.Shared.Routes.v1
 
         }
 
+        public static class TaxCat
+        {
+            public const string Main = $"{Base}/Taxcat";
+
+           // public const string TaxTypeDropDown = $"{Main}/FillTaxcat";
+            public const string SaveTaxCat = $"{Main}/savetaxcat";
+            public const string DeleteTaxCat = $"{Main}/deletetaxcat";
+
+        }
+
         public static class Role
         {
             public const string Main = $"{Base}/Role";
