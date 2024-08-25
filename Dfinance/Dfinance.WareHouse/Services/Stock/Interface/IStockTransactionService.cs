@@ -13,5 +13,6 @@ namespace Dfinance.WareHouse.Services
         CommonResponse FillDamageWH();
         CommonResponse SaveStockTrans(StockTransactionDto stockTransDto, int voucherId, int pageId);
         CommonResponse UpdateStockTrans(StockTransactionDto stockTransDto, int voucherId, int pageId);
+        CommonResponse SizeWiseStockReport(DateTime date);
     }
 }

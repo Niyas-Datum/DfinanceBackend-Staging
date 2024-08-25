@@ -153,5 +153,19 @@ namespace Dfinance.api.Controllers.v1.DMain.Stock
                 return BadRequest(ex.Message);
             }
         }
+        [HttpGet(InvRoute.StockTransfer.SizeWiseStockReport)]
+        [AllowAnonymous]
+        public IActionResult SizeWiseStockReport(DateTime date)
+        {
+            try
+            {
+                var data = _stockTrans.SizeWiseStockReport(date);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

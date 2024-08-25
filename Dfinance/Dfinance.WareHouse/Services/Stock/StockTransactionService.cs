@@ -467,5 +467,67 @@ namespace Dfinance.Stock.Services
             }
         }
 
+        /// <summary>
+        /// SizeWiseStockReport
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public CommonResponse SizeWiseStockReport(DateTime  date)
+        {
+            try
+            {
+                int? BranchId = _authService.GetBranchId();
+
+                var cmd = _context.Database.GetDbConnection().CreateCommand();
+                cmd.CommandType = CommandType.Text;
+
+                string formattedStartDate = date.ToString("yyyy-MM-dd");
+               
+
+               
+
+                string commandText = $"Exec SizeWiseStockSP  @BranchID={BranchId}, @Date='{formattedStartDate}'";
+
+                cmd.CommandText = commandText;
+
+                // Open the connection
+                _context.Database.GetDbConnection().Open();
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        var tb = new DataTable();
+                        tb.Load(reader);
+
+                        List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+                        foreach (DataRow dr in tb.Rows)
+                        {
+                            var row = new Dictionary<string, object>();
+                            foreach (DataColumn col in tb.Columns)
+                            {
+                                row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
+                            }
+                            rows.Add(row);
+                        }
+                        return CommonResponse.Ok(rows);
+                    }
+                    return CommonResponse.NoContent();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return CommonResponse.Error(ex.Message);
+            }
+            finally
+            {
+
+                if (_context.Database.GetDbConnection().State == ConnectionState.Open)
+                {
+                    _context.Database.GetDbConnection().Close();
+                }
+            }
+        }
     }
 }
