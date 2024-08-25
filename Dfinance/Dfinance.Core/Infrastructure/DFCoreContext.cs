@@ -121,8 +121,15 @@ public partial class DFCoreContext : DbContext
 
     public DbSet<InvRelatedItems> InvRelatedItems { get; set; }
     public DbSet<DocType> DocType { get; set; }
+
     public DbSet<MaTaxDetail> MaTaxDetail { get; set; }
     public DbSet<MaTax>MaTaxes { get; set; }
+
+
+    //FinanceRegister
+    public DbSet<CRMHouseReg> CRMHouseReg { get; set; }
+    public DbSet<CRMMemberRegister> CRMMemberRegister { get; set; }
+
 
 
     //view init
@@ -396,6 +403,10 @@ public partial class DFCoreContext : DbContext
     public DbSet<FillDocTypeMasterView> FillDocTypeMasterView { get; set; }
     public DbSet<FillDocTypeByIdView> FillDocTypeByIdView { get; set; }
 
+    //QualityType
+    public  DbSet<InvQualityPrice> InvQualityPrices { get; set; }
+
+
 
     public DbSet<FiPrimaryVoucher> FiPrimaryVouchers { get; set; }
 
@@ -406,8 +417,14 @@ public partial class DFCoreContext : DbContext
     public DbSet<InvDrugDosage> InvDrugDosages { get; set; }
 
 
+
     //IntnBarCode
+
     public DbSet<InvBarcodeMaster> InvBarcodeMasters { get; set; }
+
+
+    public  DbSet<InvBarcodeMaster> InvBarcodeMasters { get; set; }
+   
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     //  => optionsBuilder.UseSqlServer(@"Data Source=ip.datuminnovation.com,9600;TrustServerCertificate=true;Initial Catalog=DatumSystemMain;User ID=sa;pwd=Datum123!");
@@ -502,13 +519,21 @@ public partial class DFCoreContext : DbContext
         mb.ApplyConfiguration(new InvRelatedItemsConfiguration());
         mb.ApplyConfiguration(new DocTypeConfiguration());
 
+
+        //QualityType
+        mb.ApplyConfiguration(new QualityTypeConfiguration());
+
+
+
         //DosageMaster
         mb.ApplyConfiguration(new InvDrugDosageConfiguration());
 
-        mb.ApplyConfiguration(new MaTaxDetilsConfiguration());
+
 
 
         mb.ApplyConfiguration(new FiMaVouchersConfiguration());
+
+
 
 
         //View

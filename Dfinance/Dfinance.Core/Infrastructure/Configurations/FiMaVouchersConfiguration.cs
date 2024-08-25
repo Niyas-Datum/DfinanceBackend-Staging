@@ -51,9 +51,13 @@ namespace Dfinance.Core.Infrastructure.Configurations
 
             builder.HasOne(d => d.Form).WithMany(p => p.FiMaVouchers)
                 .HasForeignKey(d => d.Id)
-                .HasConstraintName("FK_FiMaVouchers_TaxFormMaster"); 
+                .HasConstraintName("FK_FiMaVouchers_TaxFormMaster");
 
-
+            builder.HasOne(d => d.PrimaryVoucher)
+                     .WithMany(p => p.FiMaVouchers)
+                     .HasForeignKey(d => d.PrimaryVoucherId)
+                     .OnDelete(DeleteBehavior.ClientSetNull)
+                     .HasConstraintName("FK_FiMaVouchers_FiPrimaryVouchers");
 
 
 
