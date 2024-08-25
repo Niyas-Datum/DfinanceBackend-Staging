@@ -11,8 +11,8 @@ namespace Dfinance.Purchase.Services.Interface
     public interface IPurchaseWithoutTaxService
     {
         CommonResponse GetData(int voucherId);
-        CommonResponse SavePurchaseWithoutTax(PurchaseWithoutTaxDto dto, int pageId, int voucherId);
-        CommonResponse UpdatePurchaseWithoutTax(PurchaseWithoutTaxDto dto, int pageId, int voucherId);
+        CommonResponse SavePurchaseWithoutTax(InventoryTransactionDto purchaseDto, int PageId, int voucherId);
+        CommonResponse UpdatePurchaseWithoutTax(InventoryTransactionDto invTranseDto, int PageId, int voucherId);
         CommonResponse SaveTransactions(PurchaseWithoutTaxDto dto, int pageId, int voucherId);
         CommonResponse SaveTransactionPayment(PurchaseWithoutTaxDto dto, int TransId, int voucherId);
         CommonResponse SaveTransactionEntries(PurchaseWithoutTaxDto dto, int pageId, int transactionId, int transPayId);

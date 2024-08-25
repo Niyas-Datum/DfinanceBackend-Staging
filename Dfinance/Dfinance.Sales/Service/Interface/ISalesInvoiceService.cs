@@ -26,6 +26,8 @@ namespace Dfinance.Sales
 
         CommonResponse SalesCommission(DateTime startdate, DateTime enddate, int? salesmanId, int? userId);
         CommonResponse TopCustomerSupplier(DateTime startdate, DateTime enddate, int? pageId);
+        CommonResponse BuyerLoadData();
+        CommonResponse BuyerListReport(DateTime DateFrom, DateTime DateUpto, string? Mode, int? PartyId, int? ItemId);
 
         //CommonResponse GetMonthlySalesSummary(DateTime? startDate, DateTime? endDate);  
         //CommonResponse GetFillSalesDaySummary(string? criteria,DateTime startDate, DateTime endDate,int? branch,int? user);

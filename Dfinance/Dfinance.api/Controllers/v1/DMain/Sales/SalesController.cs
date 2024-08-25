@@ -300,6 +300,36 @@ namespace Dfinance.api.Controllers.v1.DMain.Sales
                 return BadRequest(ex.Message);
             }
         }
+        [HttpGet(InvRoute.Sales.BuyerLoadData)]
+        [SwaggerOperation(Summary = "BuyerList LoadData")]
+        public IActionResult UserwiseProfit()
+        {
+            try
+            {
+                var result = _salesService.BuyerLoadData();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet(InvRoute.Sales.BuyerListRpt)]
+        [SwaggerOperation(Summary = "BuyerList Report")]
+        public IActionResult BuyerListReport(DateTime DateFrom, DateTime DateUpto, string? Mode, int? PartyId, int? ItemId)
+        {
+            try
+            {
+                var result = _salesService.BuyerListReport(DateFrom, DateUpto, Mode, PartyId, ItemId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
 

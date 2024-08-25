@@ -772,11 +772,12 @@ namespace Dfinance.Item.Services.Inventory
             string ModIDStr = ModeID != null ? ModeID.ToString() : "NULL";
             string PageIDStr = PageID != null ? PageID.ToString() : "NULL";
             string TransIDStr = TransactionID != null ? TransactionID.ToString() : "NULL";
-            if (VoucherDate == null)
-                VoucherDate = DateTime.Now;
+            string voucherDate = VoucherDate !=null? $"'{VoucherDate.ToString()}'":"NULL";
+            //if (VoucherDate == null)
+            //    VoucherDate = DateTime.Now;
 
             var result = _context.CommandTextView
-                 .FromSqlRaw($"select dbo.GetCommandText('{Criteria}',{primaryVoucherIDStr},'{branchId}',{partyIDStr},{LocIDStr},'{IsSizeItem}','{IsMargin}',{VoucherIDStr},{ItemIDStr},'{ISTransitLoc}','{finishedGood}','{rawMaterial}',{ModIDStr},{PageIDStr},'{VoucherDate}',{TransIDStr},{userId})")
+                 .FromSqlRaw($"select dbo.GetCommandText('{Criteria}',{primaryVoucherIDStr},'{branchId}',{partyIDStr},{LocIDStr},'{IsSizeItem}','{IsMargin}',{VoucherIDStr},{ItemIDStr},'{ISTransitLoc}','{finishedGood}','{rawMaterial}',{ModIDStr},{PageIDStr},{voucherDate},{TransIDStr},{userId})")
                  .ToList();
 
             var res = result.FirstOrDefault();
