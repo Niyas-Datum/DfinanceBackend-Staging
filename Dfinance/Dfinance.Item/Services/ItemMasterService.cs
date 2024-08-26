@@ -765,6 +765,7 @@ namespace Dfinance.Item.Services.Inventory
             object units = 0;
             var finishedGood = IsFinishedGood ? "1" : null;
             var rawMaterial = IsRawMaterial ? "1" : null;
+
             var primaryVoucherIDStr = PrimaryVoucherID != null ? PrimaryVoucherID.ToString() : "NULL";
             var partyIDStr = PartyId != null ? PartyId.ToString() : "NULL";
             var LocIDStr = LocationID != null ? LocationID.ToString() : "NULL";
@@ -779,6 +780,7 @@ namespace Dfinance.Item.Services.Inventory
             string voucherDate=VoucherDate.Value.ToString("yyyy-MM-dd");
             var result = _context.CommandTextView
                  .FromSqlRaw($"select dbo.GetCommandText('{Criteria}',{primaryVoucherIDStr},'{branchId}',{partyIDStr},{LocIDStr},'{IsSizeItem}','{IsMargin}',{VoucherIDStr},{ItemIDStr},'{ISTransitLoc}','{finishedGood}','{rawMaterial}',{ModIDStr},{PageIDStr},'{voucherDate}',{TransIDStr},{userId})")
+
                  .ToList();
 
             var res = result.FirstOrDefault();
