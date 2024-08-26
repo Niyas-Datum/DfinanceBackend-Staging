@@ -406,7 +406,8 @@ namespace Dfinance.Sales
         {
             try
             {
-                object result = null;
+                var cmd = _context.Database.GetDbConnection().CreateCommand();
+                cmd.CommandType = CommandType.Text;               
                 int? branchid = _authService.GetBranchId().Value;
                 var query = new StringBuilder();
                 query.Append("Exec MonthlyInventorySummarySP ");
@@ -420,8 +421,29 @@ namespace Dfinance.Sales
         };
                 query.Append(string.Join(", ", parameters));
 
-                result = _context.MonthlyInvSummaryView.FromSqlRaw(query.ToString()).ToList();
-                return CommonResponse.Ok(result);
+                cmd.CommandText=query.ToString();
+                _context.Database.GetDbConnection().Open();
+                using (var reader = cmd.ExecuteReader())
+                {
+                    var tb = new DataTable();
+                    tb.Load(reader);
+                    if (tb.Rows.Count > 0)
+                    {
+                        List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+                        Dictionary<string, object> row;
+                        foreach (DataRow dr in tb.Rows)
+                        {
+                            row = new Dictionary<string, object>();
+                            foreach (DataColumn col in tb.Columns)
+                            {
+                                row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
+                            }
+                            rows.Add(row);
+                        }
+                        return CommonResponse.Ok(rows);
+                    }
+                    return CommonResponse.NoContent();
+                }
 
 
             }
@@ -442,7 +464,7 @@ namespace Dfinance.Sales
         /// <param name="branch"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        public CommonResponse GetFillSalesDaySummary(string? criteria, DateTime startDate, DateTime endDate, int? branch, int? user)
+        public CommonResponse GetFillSalesDaySummary(string? criteria, DateTime? startDate, DateTime? endDate, int? branch, int? user)
         {
             //if (!_authService.IsPageValid(pageId))
             //{
@@ -457,12 +479,15 @@ namespace Dfinance.Sales
 
                 var cmd = _context.Database.GetDbConnection().CreateCommand();
                 cmd.CommandType = CommandType.Text;
-
-                string formattedStartDate = startDate.ToString("yyyy-MM-dd");
-                string formattedEndDate = endDate.ToString("yyyy-MM-dd");
-
-
-                string commandText = $"Exec SalesDaySummarySP @StartDate='{formattedStartDate}', @EndDate='{formattedEndDate}', @BranchID={branch}, @UserID={user}";
+                if(startDate==null)
+                    startDate = DateTime.Now;
+                if(endDate==null)
+                    endDate = DateTime.Now;
+                string formattedStartDate = startDate?.ToString("yyyy-MM-dd");
+                string formattedEndDate = endDate?.ToString("yyyy-MM-dd");
+                var branchId = branch != null ? branch.ToString() : "NULL";
+                var userId = user != null ? user.ToString() : "NULL";
+                string commandText = $"Exec SalesDaySummarySP @StartDate='{formattedStartDate}', @EndDate='{formattedEndDate}', @BranchID={branchId}, @UserID={userId}";
 
                 if (criteria != null)
                 {
@@ -539,9 +564,10 @@ namespace Dfinance.Sales
 
                 string formattedStartDate = startDate.ToString("yyyy-MM-dd");
                 string formattedEndDate = endDate.ToString("yyyy-MM-dd");
+                var branchId = branch != null ? branch.ToString() : "NULL";
+                var userId = user != null ? user.ToString() : "NULL";
 
-
-                string commandText = $"Exec SalesPurchaseSummary @DateFrom='{formattedStartDate}', @DateUpto='{formattedEndDate}', @BranchID={branch}, @UserID={user}";
+                string commandText = $"Exec SalesPurchaseSummary @DateFrom='{formattedStartDate}', @DateUpto='{formattedEndDate}', @BranchID={branchId}, @UserID={userId}";
 
                 cmd.CommandText = commandText;
 
@@ -676,16 +702,19 @@ namespace Dfinance.Sales
         {
             try
             {
-                int branch = 1;
-                int userid = 118;
+                int branch = _authService.GetBranchId().Value;
+               // int userid = 118;
                 var cmd = _context.Database.GetDbConnection().CreateCommand();
                 cmd.CommandType = CommandType.Text;
 
                 string formattedStartDate = DateFrom.ToString("yyyy-MM-dd");
                 string formattedEndDate = DateUpto.ToString("yyyy-MM-dd");
-
-
-                string commandText = $"Exec SalesReportSP @Criteria='{Criteria}', @DateFrom='{formattedStartDate}', @DateUpto='{formattedEndDate}', @BranchID='{branch}',@VoucherID = '{VoucherID}',@AccountID= '{AccountID}',@Detailed = '{Detailed}',@UserID='{userid}',@SalesManID='{SalesManID}'";
+                var salesmanId =SalesManID != null ? SalesManID.ToString() : "NULL";
+                var criteria =Criteria != null ? $"'{Criteria.ToString()}'" : "NULL";
+                var accountid = AccountID != null ? AccountID.ToString() : "NULL";
+                var voucherid = VoucherID != null ? VoucherID.ToString() : "NULL";
+                var details = Detailed != null ? $"'{Detailed.ToString()}'"  : "NULL";
+                string commandText = $"Exec SalesReportSP @Criteria={criteria}, @DateFrom='{formattedStartDate}', @DateUpto='{formattedEndDate}', @BranchID={branch},@VoucherID = {voucherid},@AccountID= {accountid},@Detailed = {details},@SalesManID={salesmanId}";
 
                 cmd.CommandText = commandText;
 
