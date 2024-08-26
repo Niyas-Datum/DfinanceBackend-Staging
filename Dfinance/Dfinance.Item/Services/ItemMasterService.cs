@@ -16,6 +16,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Tokens;
 using System.Data;
+using System.Globalization;
 using System.Text;
 using System.Text.Json;
 using static Dfinance.Shared.Routes.InvRoute;
@@ -764,20 +765,22 @@ namespace Dfinance.Item.Services.Inventory
             object units = 0;
             var finishedGood = IsFinishedGood ? "1" : null;
             var rawMaterial = IsRawMaterial ? "1" : null;
-            string primaryVoucherIDStr = PrimaryVoucherID != null ? PrimaryVoucherID.ToString() : "NULL";
-            string partyIDStr = PartyId != null ? PartyId.ToString() : "NULL";
-            string LocIDStr = LocationID != null ? LocationID.ToString() : "NULL";
-            string VoucherIDStr = VoucherID != null ? VoucherID.ToString() : "NULL";
-            string ItemIDStr = ItemID != null ? ItemID.ToString() : "NULL";
-            string ModIDStr = ModeID != null ? ModeID.ToString() : "NULL";
-            string PageIDStr = PageID != null ? PageID.ToString() : "NULL";
-            string TransIDStr = TransactionID != null ? TransactionID.ToString() : "NULL";
-            string voucherDate = VoucherDate !=null? $"'{VoucherDate.ToString()}'":"NULL";
-            //if (VoucherDate == null)
-            //    VoucherDate = DateTime.Now;
 
+            var primaryVoucherIDStr = PrimaryVoucherID != null ? PrimaryVoucherID.ToString() : "NULL";
+            var partyIDStr = PartyId != null ? PartyId.ToString() : "NULL";
+            var LocIDStr = LocationID != null ? LocationID.ToString() : "NULL";
+            var VoucherIDStr = VoucherID != null ? VoucherID.ToString() : "NULL";
+            var ItemIDStr = ItemID != null ? ItemID.ToString() : "NULL";
+            var ModIDStr = ModeID != null ? ModeID.ToString() : "NULL";
+            var PageIDStr = PageID != null ? PageID.ToString() : "NULL";
+            var TransIDStr = TransactionID != null ? TransactionID.ToString() : "NULL";
+
+            if (VoucherDate == null)
+                VoucherDate = DateTime.Now;
+            string voucherDate=VoucherDate.Value.ToString("yyyy-MM-dd");
             var result = _context.CommandTextView
-                 .FromSqlRaw($"select dbo.GetCommandText('{Criteria}',{primaryVoucherIDStr},'{branchId}',{partyIDStr},{LocIDStr},'{IsSizeItem}','{IsMargin}',{VoucherIDStr},{ItemIDStr},'{ISTransitLoc}','{finishedGood}','{rawMaterial}',{ModIDStr},{PageIDStr},{voucherDate},{TransIDStr},{userId})")
+                 .FromSqlRaw($"select dbo.GetCommandText('{Criteria}',{primaryVoucherIDStr},'{branchId}',{partyIDStr},{LocIDStr},'{IsSizeItem}','{IsMargin}',{VoucherIDStr},{ItemIDStr},'{ISTransitLoc}','{finishedGood}','{rawMaterial}',{ModIDStr},{PageIDStr},'{voucherDate}',{TransIDStr},{userId})")
+
                  .ToList();
 
             var res = result.FirstOrDefault();
