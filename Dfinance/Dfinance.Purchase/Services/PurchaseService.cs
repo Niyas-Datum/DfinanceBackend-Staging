@@ -266,7 +266,7 @@ namespace Dfinance.Purchase.Services
                 {
                     TransPayment = FillEntriesbyId(transPayId, msg,PageId);
                     chequ = FillEntriesbyId(transPayId,cheq, PageId);
-                    allocc = FillEntriesbyId(transPayId, alloc, PageId);
+                    allocc = FillEntriesbyId(TransId, alloc, PageId);
                 }                
                     return CommonResponse.Ok(new { Transaction = purchaseFillByIdDto, Payment = TransPayment,Cheque =chequ ,VoucherAllocation= allocc });
                 //return CommonResponse.NotFound("Purchase not found");
