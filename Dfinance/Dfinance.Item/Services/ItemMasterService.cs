@@ -763,8 +763,8 @@ namespace Dfinance.Item.Services.Inventory
             int branchId = _authService.GetBranchId().Value;
             object uniqueExpiry = 0;
             object units = 0;
-            var finishedGood = IsFinishedGood ? "1" : null;
-            var rawMaterial = IsRawMaterial ? "1" : null;
+            var finishedGood = IsFinishedGood ? "1" : "null";
+            var rawMaterial = IsRawMaterial ? "1" : "null";
 
             var primaryVoucherIDStr = PrimaryVoucherID != null ? PrimaryVoucherID.ToString() : "NULL";
             var partyIDStr = PartyId != null ? PartyId.ToString() : "NULL";
@@ -774,13 +774,13 @@ namespace Dfinance.Item.Services.Inventory
             var ModIDStr = ModeID != null ? ModeID.ToString() : "NULL";
             var PageIDStr = PageID != null ? PageID.ToString() : "NULL";
             var TransIDStr = TransactionID != null ? TransactionID.ToString() : "NULL";
+            var branchID=branchId!=null? branchId.ToString() : "NULL";
 
             if (VoucherDate == null)
                 VoucherDate = DateTime.Now;
             string voucherDate=VoucherDate.Value.ToString("yyyy-MM-dd");
             var result = _context.CommandTextView
-                 .FromSqlRaw($"select dbo.GetCommandText('{Criteria}',{primaryVoucherIDStr},'{branchId}',{partyIDStr},{LocIDStr},'{IsSizeItem}','{IsMargin}',{VoucherIDStr},{ItemIDStr},'{ISTransitLoc}','{finishedGood}','{rawMaterial}',{ModIDStr},{PageIDStr},'{voucherDate}',{TransIDStr},{userId})")
-
+                 .FromSqlRaw($"select dbo.GetCommandText('{Criteria}',{primaryVoucherIDStr},{branchID},{partyIDStr},{LocIDStr},'{IsSizeItem}','{IsMargin}',{VoucherIDStr},{ItemIDStr},'{ISTransitLoc}',{finishedGood},{rawMaterial},{ModIDStr},{PageIDStr},'{voucherDate}',{TransIDStr},{userId})")
                  .ToList();
 
             var res = result.FirstOrDefault();
