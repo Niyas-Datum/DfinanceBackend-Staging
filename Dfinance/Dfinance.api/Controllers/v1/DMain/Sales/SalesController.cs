@@ -166,7 +166,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Sales
         }
         [HttpGet(InvRoute.Sales.DaySummary)]
         [AllowAnonymous]
-        public IActionResult GetFillSalesDaySummary(string? criteria, DateTime startDate, DateTime endDate, int? branch, int? user)
+        public IActionResult GetFillSalesDaySummary(string? criteria, DateTime? startDate, DateTime? endDate, int? branch, int? user)
         {
             try
             {
