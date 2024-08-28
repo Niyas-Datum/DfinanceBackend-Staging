@@ -138,8 +138,8 @@ namespace Dfinance.Application.LabelAndGridSettings
                         {
                             Direction = ParameterDirection.Output
                         };
-                        var result = _context.Database.ExecuteSqlRaw("EXEC LabelSettingsSP @Criteria={0},@FormName={1},@LabelName={2},@OriginalCaption={3},@NewCaption={4},@Visible={5},@ArabicCaption={6},@PageID={7},@NewID={8} OUTPUT",
-                            criteria, label.FormName.Name, label.LabelName, label.OriginalCaption, label.NewCaption, label.Visible, label.ArabicCaption, null, newIdItem);
+                        var result = _context.Database.ExecuteSqlRaw("EXEC LabelSettingsSP @Criteria={0},@FormName={1},@LabelName={2},@OriginalCaption={3},@NewCaption={4},@Visible={5},@ArabicCaption={6},@PageID={7},@Enable={8},@NewID={9} OUTPUT",
+                            criteria, label.FormName.Name, label.LabelName, label.OriginalCaption, label.NewCaption, label.Visible, label.ArabicCaption, label.PageId, label.Enable,newIdItem);
                         var NewItemId = (int)newIdItem.Value;
                         _logger.LogInformation("Label.Inserted with ID: {Id}", NewItemId);
                     }
@@ -148,8 +148,8 @@ namespace Dfinance.Application.LabelAndGridSettings
                         var check = _context.FormLabelSettings.Any(x => x.Id == label.Id);
                         if (!check) { return CommonResponse.NotFound("Id not found"); }
                         criteria = "UpdateFormLabelSettings";
-                        var res = _context.Database.ExecuteSqlRaw("Exec LabelSettingsSP @Criteria ={0},@FormName={1},@LabelName={2},@OriginalCaption={3},@NewCaption={4},@Visible={5},@PageID={6},@ArabicCaption={7},@ID={8}",
-                            criteria, label.FormName.Name, label.LabelName, label.OriginalCaption, label.NewCaption, label.Visible, null,label.ArabicCaption, label.Id);
+                        var res = _context.Database.ExecuteSqlRaw("Exec LabelSettingsSP @Criteria ={0},@FormName={1},@LabelName={2},@OriginalCaption={3},@NewCaption={4},@Visible={5},@PageID={6},@Enable={7},@ArabicCaption={8},@ID={9}",
+                            criteria, label.FormName.Name, label.LabelName, label.OriginalCaption, label.NewCaption, label.Visible, label.PageId,label.Enable,label.ArabicCaption, label.Id);
                         _logger.LogInformation("Label.Updated with ID: {Id}", label.Id);
                     }
                 }
