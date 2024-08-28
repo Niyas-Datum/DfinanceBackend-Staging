@@ -9,10 +9,10 @@ namespace Dfinance.DataModels.Dto.General
         public string LabelName { get; set; }
         public string? OriginalCaption { get; set; }
         public string? NewCaption { get; set; }
-        //public int? PageId { get; set; }
+        public int? PageId { get; set; }
         public string? ArabicCaption { get; set; }
         public bool? Visible { get; set; }
-        //public bool? Enable { get; set; }
+        public bool? Enable { get; set; }
     }
     public class GridDto
     {
