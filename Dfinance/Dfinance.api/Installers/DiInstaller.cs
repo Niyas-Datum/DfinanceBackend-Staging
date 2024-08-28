@@ -276,5 +276,6 @@ public class DiInstaller : IInstaller
 
 
         service.AddScoped<ITaxTypeService, TaxTypeService>();
+        service.AddScoped<ITaxCategoryService, TaxCategoryService>();
     }
 }

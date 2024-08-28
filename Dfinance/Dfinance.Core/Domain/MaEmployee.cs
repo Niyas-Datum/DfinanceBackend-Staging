@@ -1,3 +1,5 @@
+
+
 namespace Dfinance.Core.Domain;
 
 
@@ -84,4 +86,5 @@ public partial class MaEmployee
     public virtual ICollection<LocationTypes> LocationTypes { get; set; }
     public virtual ICollection<MaChargeType> MaChargeTypes { get; set; }
     public virtual ICollection<DocType> DocTypes { get; set; }
+    public virtual ICollection<MaTax> MaTaxes { get; set; }
 }

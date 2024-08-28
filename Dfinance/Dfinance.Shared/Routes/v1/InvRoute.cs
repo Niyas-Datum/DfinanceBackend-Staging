@@ -348,6 +348,7 @@ namespace Dfinance.Shared.Routes
             public const string Save = $"{Main}/save";
             public const string Update = $"{Main}/update";
             public const string fillDamageWh = $"{Main}/fillDamageWh";
+            public const string SizeWiseStockReport = $"{Main}/SizeWiseStockReport"; 
         }
 
         public class InventoryRegister

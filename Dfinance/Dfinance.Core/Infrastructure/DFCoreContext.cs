@@ -105,7 +105,7 @@ public partial class DFCoreContext : DbContext
     public DbSet<InvTransItems> InvTransItems { get; set; }
     public DbSet<InvAvgCost> InvAvgCost { get; set; }
     public DbSet<InvUniqueItems> InvUniqueItems { get; set; }
-   // public DbSet<InvBatchWiseItem> InvBatchWiseItem { get; set; }
+    // public DbSet<InvBatchWiseItem> InvBatchWiseItem { get; set; }
 
     //MaVehicle
     public DbSet<MaVehicles> MaVehicles { get; set; }
@@ -121,6 +121,10 @@ public partial class DFCoreContext : DbContext
 
     public DbSet<InvRelatedItems> InvRelatedItems { get; set; }
     public DbSet<DocType> DocType { get; set; }
+
+    public DbSet<MaTaxDetail> MaTaxDetail { get; set; }
+    public DbSet<MaTax>MaTaxes { get; set; }
+
 
     //FinanceRegister
     public DbSet<CRMHouseReg> CRMHouseReg { get; set; }
@@ -180,7 +184,7 @@ public partial class DFCoreContext : DbContext
     public DbSet<FillCurrency> FillCurrency { get; set; }
     public DbSet<FillCurrencyById> FillCurrencyById { get; set; }
     public DbSet<CurrencyDDView> CurrencyDDView { get; set; }
-    
+
     public DbSet<FillCardMaster> FillCardMaster { get; set; }
     public DbSet<FillMaster> FillMaster { get; set; }
     //-------------ItemMaster  ------------------------------------------ 
@@ -402,21 +406,26 @@ public partial class DFCoreContext : DbContext
     //QualityType
     public  DbSet<InvQualityPrice> InvQualityPrices { get; set; }
 
-    
+
 
     public DbSet<FiPrimaryVoucher> FiPrimaryVouchers { get; set; }
-    
+
 
 
 
     //DosageMaster
-    public  DbSet<InvDrugDosage> InvDrugDosages { get; set; } 
+    public DbSet<InvDrugDosage> InvDrugDosages { get; set; }
 
 
 
     //IntnBarCode
+
+    public DbSet<InvBarcodeMaster> InvBarcodeMasters { get; set; }
+
+
     public  DbSet<InvBarcodeMaster> InvBarcodeMasters { get; set; }
    
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     //  => optionsBuilder.UseSqlServer(@"Data Source=ip.datuminnovation.com,9600;TrustServerCertificate=true;Initial Catalog=DatumSystemMain;User ID=sa;pwd=Datum123!");
     // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -440,7 +449,7 @@ public partial class DFCoreContext : DbContext
         mb.ApplyConfiguration(new MaEmployeeDetailConfiguration());
         mb.ApplyConfiguration(new MaRolesConfiguration());
         mb.ApplyConfiguration(new CurrencyCodeConfigurations());
-        //  mb.ApplyConfiguration(new MaRoleRightConfiguration());
+         mb.ApplyConfiguration(new MaTaxConfigration());
         mb.ApplyConfiguration(new MaUserRightConfiguration());
         mb.ApplyConfiguration(new MaPageMenuConfiguration());
         mb.ApplyConfiguration(new LogInfoConfiguration());
@@ -520,8 +529,9 @@ public partial class DFCoreContext : DbContext
         mb.ApplyConfiguration(new InvDrugDosageConfiguration());
 
 
+
+
         mb.ApplyConfiguration(new FiMaVouchersConfiguration());
-        
 
 
 
@@ -748,7 +758,7 @@ public partial class DFCoreContext : DbContext
         mb.Entity<ChequeregView>().HasNoKey().ToView(null);
 
         mb.Entity<UniqueItemView>().HasNoKey().ToView(null);
-       mb.Entity<ItemMappingView>().HasNoKey().ToView(null);
+        mb.Entity<ItemMappingView>().HasNoKey().ToView(null);
         mb.Entity<ItemDetailsView>().HasNoKey().ToView(null);
         mb.Entity<FillVoucherSettingsView>().HasNoKey().ToView(null);
 
@@ -756,7 +766,7 @@ public partial class DFCoreContext : DbContext
         //DocumentType
         mb.Entity<FillDocTypeMasterView>().HasNoKey().ToView(null);
         mb.Entity<FillDocTypeByIdView>().HasNoKey().ToView(null);
-        
+
 
     }
 
