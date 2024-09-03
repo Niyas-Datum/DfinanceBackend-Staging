@@ -12,5 +12,8 @@ namespace Dfinance.Application.Services.Inventory.Interface
     {
         CommonResponse SaveTaxType(TaxTypeDto taxTypeDto);
         CommonResponse DeleteTaxType(int Id);
+        CommonResponse FillTaxTypeMaster();
+        CommonResponse GetLoadData();
+        CommonResponse FillTaxTypeById(int Id);
     }
 }

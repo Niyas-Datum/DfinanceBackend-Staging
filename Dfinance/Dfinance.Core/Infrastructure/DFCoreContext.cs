@@ -423,7 +423,6 @@ public partial class DFCoreContext : DbContext
     public DbSet<InvBarcodeMaster> InvBarcodeMasters { get; set; }
 
 
-    public  DbSet<InvBarcodeMaster> InvBarcodeMasters { get; set; }
    
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

@@ -5,6 +5,7 @@ using Dfinance.DataModels.Dto.Inventory;
 using Dfinance.Shared.Domain;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Data;
 
@@ -14,11 +15,13 @@ namespace Dfinance.Application.Services.Inventory
     {
         private readonly DFCoreContext _context;
         private readonly IAuthService _authService;
+        private readonly ILogger<ITaxTypeService> _logger;
 
-        public TaxTypeService(DFCoreContext context, IAuthService authService)
+        public TaxTypeService(DFCoreContext context, IAuthService authService, ILogger<ITaxTypeService> logger)
         {
             _context = context;
             _authService = authService;
+            _logger = logger;
         }
 
         /// <summary>
@@ -166,6 +169,147 @@ namespace Dfinance.Application.Services.Inventory
             catch (Exception ex)
             {
                 return CommonResponse.Error(ex.Message);
+            }
+        }
+        private CommonResponse FillDropDownValues(string StrParam)
+        {
+            var cmd = _context.Database.GetDbConnection().CreateCommand();
+            cmd.CommandType = CommandType.Text;
+            cmd.CommandText = $"Exec DropDownListSP @Criteria='FillMaMisc',@StrParam='{StrParam}',@IntParam=null";
+            if (_context.Database.GetDbConnection().State != ConnectionState.Open)
+                _context.Database.GetDbConnection().Open();
+            using (var reader = cmd.ExecuteReader())
+            {
+                var tb = new DataTable();
+                tb.Load(reader);
+                if (tb.Rows.Count > 0)
+                {
+                    List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+                    Dictionary<string, object> row;
+                    foreach (DataRow dr in tb.Rows)
+                    {
+                        row = new Dictionary<string, object>();
+                        foreach (DataColumn col in tb.Columns)
+                        {
+                            row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
+                        }
+                        rows.Add(row);
+                    }
+                    return CommonResponse.Ok(rows);
+                }
+                return CommonResponse.NoContent();
+            }
+        }        
+        private CommonResponse AccountsByList(string Category)
+        {
+            var cmd = _context.Database.GetDbConnection().CreateCommand();
+            cmd.CommandType = CommandType.Text;
+            var category = Category != null ? Category.ToString() : "NULL";
+            var branchId=_authService.GetBranchId().Value;
+            cmd.CommandText = $"Exec AccountsListSP @Criteria='AccountsByList',@Category='{category}',@BranchID={branchId}";
+            if (_context.Database.GetDbConnection().State != ConnectionState.Open)
+                _context.Database.GetDbConnection().Open();
+            using (var reader = cmd.ExecuteReader())
+            {
+                var tb = new DataTable();
+                tb.Load(reader);
+                if (tb.Rows.Count > 0)
+                {
+                    List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+                    Dictionary<string, object> row;
+                    foreach (DataRow dr in tb.Rows)
+                    {
+                        row = new Dictionary<string, object>();
+                        foreach (DataColumn col in tb.Columns)
+                        {
+                            row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
+                        }
+                        rows.Add(row);
+                    }
+                    return CommonResponse.Ok(rows);
+                }
+                return CommonResponse.NoContent();
+            }
+        }
+        public CommonResponse GetLoadData()
+        {
+            try
+            {
+                var salePurchaseMode = FillDropDownValues("SalePurchaseMode").Data;
+                var taxType = FillDropDownValues("TaxTypes").Data;
+                var receivableAccount = AccountsByList("VAT RECEIVABLE ACCOUNTS").Data;
+                var payableAccount = AccountsByList("VAT PAYABLE ACCOUNTS").Data;
+                var cGSTPayable = AccountsByList("GST Payable Accounts").Data;
+                var cGSTReceivable = AccountsByList("GST Receivable Accounts").Data;
+                var cessPayables = AccountsByList("CessPayable").Data;
+                var cessReceivable = AccountsByList("CessReceivable").Data;
+                return CommonResponse.Ok(new { SalePurchaseMode= salePurchaseMode, TaxTypes=taxType, ReceivableAccount= receivableAccount, PayableAccount = payableAccount,
+                    CGSTPayable = cGSTPayable,SGSTPayable = cGSTPayable,CGSTReceivable= cGSTReceivable,SGSTReceivable = cGSTReceivable,
+                    CessPayables= cessPayables,CessReceivable= cessReceivable
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return CommonResponse.Ok(ex.Message);
+            }
+        }
+        public CommonResponse FillTaxTypeMaster()
+        {
+            var cmd = _context.Database.GetDbConnection().CreateCommand();
+            cmd.CommandType = CommandType.Text;
+            cmd.CommandText = $"Exec MaTaxSP @Criteria='FillTaxTypeMaster'";
+            if (_context.Database.GetDbConnection().State != ConnectionState.Open)
+                _context.Database.GetDbConnection().Open();
+            using (var reader = cmd.ExecuteReader())
+            {
+                var tb = new DataTable();
+                tb.Load(reader);
+                if (tb.Rows.Count > 0)
+                {
+                    List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+                    Dictionary<string, object> row;
+                    foreach (DataRow dr in tb.Rows)
+                    {
+                        row = new Dictionary<string, object>();
+                        foreach (DataColumn col in tb.Columns)
+                        {
+                            row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
+                        }
+                        rows.Add(row);
+                    }
+                    return CommonResponse.Ok(rows);
+                }
+                return CommonResponse.NoContent();
+            }
+        }
+        public CommonResponse FillTaxTypeById(int Id)
+        {
+            var cmd = _context.Database.GetDbConnection().CreateCommand();
+            cmd.CommandType = CommandType.Text;
+            cmd.CommandText = $"Exec MaTaxSP @Criteria='FillMaTaxType',@ID={Id}";
+            if (_context.Database.GetDbConnection().State != ConnectionState.Open)
+                _context.Database.GetDbConnection().Open();
+            using (var reader = cmd.ExecuteReader())
+            {
+                var tb = new DataTable();
+                tb.Load(reader);
+                if (tb.Rows.Count > 0)
+                {
+                    List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+                    Dictionary<string, object> row;
+                    foreach (DataRow dr in tb.Rows)
+                    {
+                        row = new Dictionary<string, object>();
+                        foreach (DataColumn col in tb.Columns)
+                        {
+                            row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
+                        }
+                        rows.Add(row);
+                    }
+                    return CommonResponse.Ok(rows);
+                }
+                return CommonResponse.NoContent();
             }
         }
     }

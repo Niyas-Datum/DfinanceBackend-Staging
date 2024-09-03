@@ -13,7 +13,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Inventory
     public class TaxTypeController : BaseController
     {
         private readonly ITaxTypeService _taxTypeService;
-        public TaxTypeController(TaxTypeService taxTypeService)
+        public TaxTypeController(ITaxTypeService taxTypeService)
         {
             _taxTypeService = taxTypeService;
         }
@@ -39,6 +39,46 @@ namespace Dfinance.api.Controllers.v1.DMain.Inventory
             try
             {
                 var result = _taxTypeService.DeleteTaxType(Id);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet(ApiRoutes.TaxType.LoadData)]
+        public IActionResult GetLoadData()
+        {
+            try
+            {
+                var result = _taxTypeService.GetLoadData();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet(ApiRoutes.TaxType.FillMaster)]
+        public IActionResult FillTaxTypeMaster()
+        {
+            try
+            {
+                var result = _taxTypeService.FillTaxTypeMaster();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet(ApiRoutes.TaxType.FillById)]
+        public IActionResult FillTaxTypeById(int Id)
+        {
+            try
+            {
+                var result = _taxTypeService.FillTaxTypeById(Id);
                 return Ok(result);
             }
             catch (Exception ex)
