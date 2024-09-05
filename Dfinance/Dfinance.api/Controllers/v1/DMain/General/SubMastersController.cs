@@ -62,11 +62,11 @@ namespace Dfinance.api.Controllers.v1.DMain.General
         }
         [HttpPost(ApiRoutes.SubMasters.Save)]
         [SwaggerOperation(Summary = "Save SubMasters")]
-        public IActionResult SaveSubMasters(SubMasterDto submasterDto)
+        public IActionResult SaveSubMasters(SubMasterDto submasterDto, int PageId)
         {
             try
             {
-                var result = _subMastersService.SaveSubMasters(submasterDto);
+                var result = _subMastersService.SaveSubMasters(submasterDto,PageId);
                 return Ok(result);
             }
             catch (Exception ex)

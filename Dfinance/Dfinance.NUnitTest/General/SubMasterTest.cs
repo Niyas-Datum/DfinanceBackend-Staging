@@ -16,6 +16,7 @@ namespace Dfinance.NUnitTest.General
         [Test]
         public void SaveSubmaster()
         {
+            int pageid = 112;
             SubMasterDto subMasterDto = new SubMasterDto
             {
                 Id = 0,
@@ -26,8 +27,8 @@ namespace Dfinance.NUnitTest.General
                 Value ="infopark",
                 Description ="infocherthala"
             };
-            _submaster.Setup(x => x.SaveSubMasters(subMasterDto)).Returns(new CommonResponse { Exception = null, Data = new SubMasterDto() });
-            var result = _submaster.Object.SaveSubMasters(subMasterDto);
+            _submaster.Setup(x => x.SaveSubMasters(subMasterDto,pageid)).Returns(new CommonResponse { Exception = null, Data = new SubMasterDto() });
+            var result = _submaster.Object.SaveSubMasters(subMasterDto, pageid);
             Assert.That(result, Is.Not.Null);
             Assert.That(result.IsValid, Is.True);
             Assert.That(result.Data, Is.Not.Null);
