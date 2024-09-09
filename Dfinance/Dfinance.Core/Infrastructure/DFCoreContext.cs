@@ -422,8 +422,11 @@ public partial class DFCoreContext : DbContext
 
     public DbSet<InvBarcodeMaster> InvBarcodeMasters { get; set; }
 
+    //PriceCategoryview
+    public DbSet<PriceCategoryView> PriceCategoryView {get; set; } 
 
-   
+
+
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     //  => optionsBuilder.UseSqlServer(@"Data Source=ip.datuminnovation.com,9600;TrustServerCertificate=true;Initial Catalog=DatumSystemMain;User ID=sa;pwd=Datum123!");
@@ -766,6 +769,8 @@ public partial class DFCoreContext : DbContext
         mb.Entity<FillDocTypeMasterView>().HasNoKey().ToView(null);
         mb.Entity<FillDocTypeByIdView>().HasNoKey().ToView(null);
 
+        //pricecategory
+        mb.Entity<PriceCategoryView>().HasNoKey().ToView(null);     
 
     }
 
