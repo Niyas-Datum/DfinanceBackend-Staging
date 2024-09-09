@@ -285,32 +285,13 @@ namespace Dfinance.Application.Services.Inventory
         }
         public CommonResponse FillTaxTypeById(int Id)
         {
-            var cmd = _context.Database.GetDbConnection().CreateCommand();
-            cmd.CommandType = CommandType.Text;
-            cmd.CommandText = $"Exec MaTaxSP @Criteria='FillMaTaxType',@ID={Id}";
-            if (_context.Database.GetDbConnection().State != ConnectionState.Open)
-                _context.Database.GetDbConnection().Open();
-            using (var reader = cmd.ExecuteReader())
-            {
-                var tb = new DataTable();
-                tb.Load(reader);
-                if (tb.Rows.Count > 0)
-                {
-                    List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
-                    Dictionary<string, object> row;
-                    foreach (DataRow dr in tb.Rows)
-                    {
-                        row = new Dictionary<string, object>();
-                        foreach (DataColumn col in tb.Columns)
-                        {
-                            row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
-                        }
-                        rows.Add(row);
-                    }
-                    return CommonResponse.Ok(rows);
-                }
-                return CommonResponse.NoContent();
-            }
+            var exist=_context.TaxType.Any(x=>x.Id == Id);
+            if (!exist)
+                return CommonResponse.NoContent("No data");
+            string criteria = "FillMaTaxType";
+            var data = _context.FillTaxTypeByIdView.FromSqlRaw($"Exec MaTaxSP @Criteria='{criteria}',@ID={Id}").ToList();
+            return CommonResponse.Ok(data);
+            
         }
     }
 }
