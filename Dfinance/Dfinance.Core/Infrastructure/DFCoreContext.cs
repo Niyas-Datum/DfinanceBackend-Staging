@@ -422,9 +422,16 @@ public partial class DFCoreContext : DbContext
 
     public DbSet<InvBarcodeMaster> InvBarcodeMasters { get; set; }
 
+
+    //PriceCategoryview
+    public DbSet<PriceCategoryView> PriceCategoryView {get; set; } 
+
+
+
     //TaxType
     public DbSet<FillTaxTypeByIdView> FillTaxTypeByIdView { get; set; }
     
+
 
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -768,9 +775,14 @@ public partial class DFCoreContext : DbContext
         mb.Entity<FillDocTypeMasterView>().HasNoKey().ToView(null);
         mb.Entity<FillDocTypeByIdView>().HasNoKey().ToView(null);
 
+
+        //pricecategory
+        mb.Entity<PriceCategoryView>().HasNoKey().ToView(null);     
+
         //taxtype
         mb.Entity<FillTaxTypeByIdView>().HasNoKey().ToView(null);
         
+
 
 
     }
