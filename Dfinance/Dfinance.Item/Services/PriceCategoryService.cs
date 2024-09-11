@@ -57,35 +57,75 @@ namespace Dfinance.Item.Services
                 return CommonResponse.NoContent();
             }
         }
+        //public CommonResponse FillPriceCategoryById(int Id)
+        //{
+        //    var cmd = _context.Database.GetDbConnection().CreateCommand();
+        //    cmd.CommandType = CommandType.Text;
+        //    var branchId = _authService.GetBranchId().Value;
+        //    cmd.CommandText = $"Exec MaPriceCategorySP @Criteria='FillPriceCategory',@ID={Id}";
+        //    _context.Database.GetDbConnection().Open();
+        //    using (var reader = cmd.ExecuteReader())
+        //    {
+        //        var tb = new DataTable();
+        //        tb.Load(reader);
+        //        if (tb.Rows.Count > 0)
+        //        {
+        //            List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+        //            Dictionary<string, object> row;
+        //            foreach (DataRow dr in tb.Rows)
+        //            {
+        //                row = new Dictionary<string, object>();
+        //                foreach (DataColumn col in tb.Columns)
+        //                {
+        //                    row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
+        //                }
+        //                rows.Add(row);
+        //            }
+        //            return CommonResponse.Ok(rows);
+        //        }
+        //        return CommonResponse.NoContent();
+        //    }
+        //}
+
         public CommonResponse FillPriceCategoryById(int Id)
         {
-            var cmd = _context.Database.GetDbConnection().CreateCommand();
-            cmd.CommandType = CommandType.Text;
-            var branchId = _authService.GetBranchId().Value;
-            cmd.CommandText = $"Exec MaPriceCategorySP @Criteria='FillPriceCategory',@ID={Id}";
-            _context.Database.GetDbConnection().Open();
-            using (var reader = cmd.ExecuteReader())
+            try
             {
-                var tb = new DataTable();
-                tb.Load(reader);
-                if (tb.Rows.Count > 0)
-                {
-                    List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
-                    Dictionary<string, object> row;
-                    foreach (DataRow dr in tb.Rows)
-                    {
-                        row = new Dictionary<string, object>();
-                        foreach (DataColumn col in tb.Columns)
-                        {
-                            row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
-                        }
-                        rows.Add(row);
-                    }
-                    return CommonResponse.Ok(rows);
-                }
-                return CommonResponse.NoContent();
+                var price = _context.MaPriceCategory.Any(x => x.Id == Id);
+                if (!price)
+                    return CommonResponse.NotFound("Not Found");
+                string criteria = "FillPriceCategory";
+                var result = _context.PriceCategoryView.FromSqlRaw($"Exec MaPriceCategorySP @Criteria='{criteria}',@ID='{Id}'").ToList();
+                return CommonResponse.Ok(result);
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Fail to fill Price Category");
+                return CommonResponse.Error(ex.Message);
             }
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         private CommonResponse PermissionDenied(string msg)
         {
             _logger.LogInformation("No Permission for " + msg);

@@ -13,7 +13,7 @@ namespace Dfinance.Application.Services.General.Interface
         CommonResponse KeyDropDown();
         CommonResponse FillMaster(string Key);
         CommonResponse FillSubMasterById(int? Id);
-        CommonResponse SaveSubMasters(SubMasterDto submasterDto);
+        CommonResponse SaveSubMasters(SubMasterDto submasterDto, int PageId);
         CommonResponse UpdateSubMasters(SubMasterDto submasterDto, int PageId);
         CommonResponse DeleteCounter(int Id, int PageId);
 

@@ -131,10 +131,18 @@ namespace Dfinance.Application.Services.General
                 return CommonResponse.Error(ex.Message);
             }
         }
-        public CommonResponse SaveSubMasters(SubMasterDto submasterDto)
+        public CommonResponse SaveSubMasters(SubMasterDto submasterDto,int PageId)
         {
             try
             {
+                if (!_authService.IsPageValid(PageId))
+                {
+                    return PageNotValid(PageId);
+                }
+                if (!_authService.UserPermCheck(PageId, 2))
+                {
+                    return PermissionDenied("Save SubMasters");
+                }
                 string criteria = "Insert";
                 bool active = true;
                 SqlParameter newIdparam = new SqlParameter("@NewID", SqlDbType.Int)
