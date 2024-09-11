@@ -22,53 +22,85 @@ namespace Dfinance.Application.Services.Inventory
             _context = context;
         }
 
+
         //FillMaster and FillByID
+        //public CommonResponse FillMasterAndById(int? Id)
+        //{
+        //    try
+        //    {
+        //        string criteria = "";
+        //        if (Id == null)
+        //        {
+        //            //masterfill
+        //            criteria = "FillMaster";
+        //        }
+        //        else
+        //        {
+        //            //FillById
+        //            var check = _context.InvDrugDosages.Any(x => x.Id == Id);
+        //            if (!check) { return CommonResponse.NotFound("Id not found"); }
+        //            criteria = "FillDosageByID";
+        //        }
+        //        var cmd = _context.Database.GetDbConnection().CreateCommand();
+        //        cmd.CommandType = CommandType.Text;
+        //        var ID = Id?.ToString() ?? "NULL";
+        //        string commandText = $"Exec DosageMasterSP @Criteria='{criteria}',@ID={ID}";
+        //        cmd.CommandText = commandText;
+
+        //        // Open the connection
+        //        _context.Database.GetDbConnection().Open();
+
+        //        using (var reader = cmd.ExecuteReader())
+        //        {
+        //            if (reader.HasRows)
+        //            {
+        //                var tb = new DataTable();
+        //                tb.Load(reader);
+
+        //                List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+        //                foreach (DataRow dr in tb.Rows)
+        //                {
+        //                    var row = new Dictionary<string, object>();
+        //                    foreach (DataColumn col in tb.Columns)
+        //                    {
+        //                        row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
+        //                    }
+        //                    rows.Add(row);
+        //                }
+        //                return CommonResponse.Ok(rows);
+        //            }
+        //            return CommonResponse.NoContent();
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex.Message);
+        //        return CommonResponse.Error(ex.Message);
+        //    }
+        //    finally
+        //    {
+        //        if (_context.Database.GetDbConnection().State == ConnectionState.Open)
+        //        {
+        //            _context.Database.GetDbConnection().Close();
+        //        }
+        //    }
+        //}
+
         public CommonResponse FillMasterAndById(int? Id)
         {
             try
             {
-                string criteria = "";
                 if (Id == null)
                 {
-                    //masterfill
-                    criteria = "FillMaster";
+                   var dosage = _context.InvDrugDosages.Select(d=> new {d.Id,d.Dosage,d.Remarks}).ToList();
+                    return CommonResponse.Ok(dosage);
                 }
                 else
                 {
-                    //FillById
                     var check = _context.InvDrugDosages.Any(x => x.Id == Id);
                     if (!check) { return CommonResponse.NotFound("Id not found"); }
-                    criteria = "FillDosageByID";
-                }
-                var cmd = _context.Database.GetDbConnection().CreateCommand();
-                cmd.CommandType = CommandType.Text;
-                var ID = Id?.ToString() ?? "NULL";
-                string commandText = $"Exec DosageMasterSP @Criteria='{criteria}',@ID={ID}";
-                cmd.CommandText = commandText;
-
-                // Open the connection
-                _context.Database.GetDbConnection().Open();
-
-                using (var reader = cmd.ExecuteReader())
-                {
-                    if (reader.HasRows)
-                    {
-                        var tb = new DataTable();
-                        tb.Load(reader);
-
-                        List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
-                        foreach (DataRow dr in tb.Rows)
-                        {
-                            var row = new Dictionary<string, object>();
-                            foreach (DataColumn col in tb.Columns)
-                            {
-                                row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
-                            }
-                            rows.Add(row);
-                        }
-                        return CommonResponse.Ok(rows);
-                    }
-                    return CommonResponse.NoContent();
+                    var dosages = _context.InvDrugDosages.Where(d=>d.Id == Id).Select(d => new { d.Id, d.Dosage, d.Remarks,d.Active }).FirstOrDefault();
+                    return CommonResponse.Ok(dosages);
                 }
             }
             catch (Exception ex)
@@ -76,14 +108,10 @@ namespace Dfinance.Application.Services.Inventory
                 _logger.LogError(ex.Message);
                 return CommonResponse.Error(ex.Message);
             }
-            finally
-            {
-                if (_context.Database.GetDbConnection().State == ConnectionState.Open)
-                {
-                    _context.Database.GetDbConnection().Close();
-                }
-            }
         }
+
+
+
         private CommonResponse PermissionDenied(string msg)
         {
             _logger.LogInformation("No Permission for " + msg);
