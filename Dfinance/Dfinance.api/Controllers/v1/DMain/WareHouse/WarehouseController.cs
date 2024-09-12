@@ -2,6 +2,7 @@
 using Dfinance.api.Framework;
 using Dfinance.DataModels.Dto;
 using Dfinance.DataModels.Dto.Inventory;
+using Dfinance.DataModels.Dto.Warehouse;
 using Dfinance.Shared.Routes;
 using Dfinance.Warehouse.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
@@ -519,6 +520,58 @@ namespace Dfinance.api.Controllers.v1.DMain.WareHouse
             try
             {
                 var data = _stockReportService.FillUnitwiseStk(itemId);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost(InvRoute.WareHouse.SaveLocation)]
+        public IActionResult SaveLocation(LocationTypeDto LocationTypeDto, int PageId)
+        {
+            try
+            {
+                var data = _warehouseService.SaveLocation(LocationTypeDto,PageId);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet(InvRoute.WareHouse.FillLocationMaster)]
+        public IActionResult FillLocationMaster()
+        {
+            try
+            {
+                var data = _warehouseService.FillLocationMaster();
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet(InvRoute.WareHouse.FillLocationById)]
+        public IActionResult FillLocationById(int Id)
+        {
+            try
+            {
+                var data = _warehouseService.FillLocationById(Id);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpDelete(InvRoute.WareHouse.DeleteLocation)]
+        public IActionResult DeleteLocationType(int Id, int PageId)
+        {
+            try
+            {
+                var data = _warehouseService.DeleteLocationType(Id, PageId);
                 return Ok(data);
             }
             catch (Exception ex)
