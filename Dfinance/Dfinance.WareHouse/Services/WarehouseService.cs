@@ -1,26 +1,38 @@
-﻿using Dfinance.AuthAppllication.Services.Interface;
+﻿using Dfinance.Application.Services.General.Interface;
+using Dfinance.Application.Services.Inventory.Interface;
+using Dfinance.AuthAppllication.Services.Interface;
+using Dfinance.Core.Domain;
 using Dfinance.Core.Infrastructure;
 using Dfinance.Core.Views.General;
 using Dfinance.Core.Views.Inventory;
 using Dfinance.DataModels.Dto;
+using Dfinance.DataModels.Dto.Inventory;
+using Dfinance.DataModels.Dto.Warehouse;
 using Dfinance.Shared.Deserialize;
 using Dfinance.Shared.Domain;
 using Dfinance.Warehouse.Services.Interface;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System.Data;
+using System.Text.Json;
 namespace Dfinance.Warehouse.Services
+
 {
     public class WarehouseService : IWarehouseService
     {
         private readonly DFCoreContext _context;
         private readonly IAuthService _authService;
         private  readonly DataRederToObj _rederToObj;
-        public WarehouseService(DFCoreContext context, IAuthService authService,DataRederToObj dataRederToObj)
+        private readonly ILogger<IWarehouseService> _logger;
+        private readonly IUserTrackService _userTrackService;
+        public WarehouseService(DFCoreContext context, IAuthService authService,DataRederToObj dataRederToObj, ILogger<IWarehouseService> logger, IUserTrackService userTrackService)
         {
             _context = context;
             _authService = authService;
             _rederToObj = dataRederToObj;
+            _logger = logger;
+            _userTrackService = userTrackService;
         }
         /// <summary> 
         /// DropDown Location type 
@@ -114,6 +126,7 @@ namespace Dfinance.Warehouse.Services
         {
             try
             {
+                var jsonData = JsonSerializer.Serialize(warehouseDto);
                 if (warehouseDto.Id == null || warehouseDto.Id == 0)
                 {
                     int createdBy = _authService.GetId().Value;
@@ -133,6 +146,8 @@ namespace Dfinance.Warehouse.Services
                     //int newlocId = (int)newId.Value;
                     warehouseDto.Id= (int)newId.Value;  
                     var branchdetails = SaveLocationBranchList(warehouseDto);
+                    _userTrackService.AddUserActivity(warehouseDto.Name, warehouseDto?.Id??0, 0, "Add", "Location", "WareHouse", 0, jsonData);
+
                     return CommonResponse.Created(new { msg = "WareHouse " + warehouseDto.Name + " Created Successfully", data = 0 });
                 }
                 else
@@ -160,9 +175,12 @@ namespace Dfinance.Warehouse.Services
                                  warehouseDto.GroundRentPerCFT, warehouseDto.LottingPerPiece, warehouseDto.LorryHirePerCFT, warehouseDto.Active, createdBranchId, createdBy, DateTime.Now, warehouseDto.Id);
 
                         var branchdetails = SaveLocationBranchList(warehouseDto);
+                        _userTrackService.AddUserActivity(warehouseDto.Name, warehouseDto.Id??0, 1, "Update", "Location", "WareHouse", 0, jsonData);
+
                         return CommonResponse.Created(new { msg = "WareHouse " + warehouseDto.Name + " Updated Successfully", data = 0 });
                         }
                     }
+                
             }
             catch (Exception ex)           
             {
@@ -180,8 +198,9 @@ namespace Dfinance.Warehouse.Services
             try
             {
                 var locBranchId = _context.LocationBranchList.Any(i => i.LocationId == warehouseDto.Id);
+                var jsonData = JsonSerializer.Serialize(warehouseDto);
                 //if (warehouseDto.Id == null || warehouseDto.Id == 0)
-                if(!locBranchId)
+                if (!locBranchId)
                 {
                     int createdBy = _authService.GetId().Value;
                     int createdBranchId = _authService.GetBranchId().Value;
@@ -193,6 +212,8 @@ namespace Dfinance.Warehouse.Services
                     _context.Database.ExecuteSqlRaw("EXEC SpLocations @Criteria={0},@LocationID={1},@BranchID={2},@IsDefault={3},@Active={4},@NewID={5} OUTPUT",
                                                     criteria, warehouseDto.Id, createdBranchId, warehouseDto.IsDefault, warehouseDto.Active, newId);
                     int newlocationId = (int)newId.Value;
+                    _userTrackService.AddUserActivity(criteria, newlocationId, 0, "Add", "LocationBranchList", "WareHouse", 0, jsonData);
+
                     return 1;
                 }
                 else
@@ -211,6 +232,7 @@ namespace Dfinance.Warehouse.Services
                         string criteria = "UpdateLocationBranchList";
                         var result = _context.Database.ExecuteSqlRaw("EXEC SpLocations @Criteria={0},@LocationID={1},@BranchID={2},@IsDefault={3},@Active={4},@ID={5} ",
                                                           criteria, warehouseDto.Id, createdBranchId, warehouseDto.IsDefault, warehouseDto.Active, wareid);
+                        _userTrackService.AddUserActivity(criteria, warehouseDto?.Id??0, 1, "Update", "LocationBranchList", "WareHouse", 0, jsonData);
                         return 1;
                     }
                 }
@@ -268,6 +290,170 @@ namespace Dfinance.Warehouse.Services
             }
             catch (Exception ex)
             { 
+                return CommonResponse.Error(ex.Message);
+            }
+        }
+        public CommonResponse FillLocationMaster()
+        {
+            var cmd = _context.Database.GetDbConnection().CreateCommand();
+            cmd.CommandType = CommandType.Text;
+            cmd.CommandText = $"Exec spLocationTypes @Criteria='FillMaster'";
+            if (_context.Database.GetDbConnection().State != ConnectionState.Open)
+                _context.Database.GetDbConnection().Open();
+            using (var reader = cmd.ExecuteReader())
+            {
+                var tb = new DataTable();
+                tb.Load(reader);
+                if (tb.Rows.Count > 0)
+                {
+                    List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+                    Dictionary<string, object> row;
+                    foreach (DataRow dr in tb.Rows)
+                    {
+                        row = new Dictionary<string, object>();
+                        foreach (DataColumn col in tb.Columns)
+                        {
+                            row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
+                        }
+                        rows.Add(row);
+                    }
+                    return CommonResponse.Ok(rows);
+                }
+                return CommonResponse.NoContent();
+            }
+        }
+        public CommonResponse FillLocationById(int Id)
+        {
+            var exist = _context.LocationTypes.Any(x => x.Id == Id);
+            if (!exist)
+                return CommonResponse.NoContent("No data");
+            string criteria = "FillByID";
+            var data = _context.LocationTypeViews.FromSqlRaw($"Exec spLocationTypes @Criteria='{criteria}',@ID={Id}").ToList();
+            return CommonResponse.Ok(data);
+
+        }
+        private CommonResponse SaveLocationTypes(LocationTypeDto locationTypeDto)
+        {
+            string criteria = "InsertLocationTypes";
+            var branchId=_authService.GetBranchId().Value;
+            var userId=_authService.GetId().Value;
+            var date=DateTime.Now;
+            //SqlParameter newIdParameter = new SqlParameter("@NewID", SqlDbType.Int)
+            //{
+            //    Direction = ParameterDirection.Output
+            //};
+            var newIdParameter = _context.LocationTypes.Max(x => x.Id)+1;
+            _context.Database.ExecuteSqlRaw(
+                "EXEC spLocationTypes @Criteria={0}, @LocationType={1}, @CreatedBy={2}, @CreatedOn={3}, " +
+                "@ActiveFlag={4},@CompanyID={5}, @ID={6}",
+                criteria,
+                locationTypeDto.LocationType,
+                userId,
+                date,
+                1,
+                branchId,
+            newIdParameter);
+
+            return CommonResponse.Created($"LocationType {locationTypeDto.LocationType} created successfully with ID {newIdParameter}");
+        }
+        private CommonResponse UpdateLocationTypes(LocationTypeDto locationTypeDto)
+        {
+            string criteria = "UpdateLocationTypes";
+            var branchId = _authService.GetBranchId().Value;
+            var userId = _authService.GetId().Value;
+            var date = DateTime.Now;
+           
+            _context.Database.ExecuteSqlRaw(
+                "EXEC spLocationTypes @Criteria={0}, @LocationType={1}, @CreatedBy={2}, @CreatedOn={3}, " +
+                "@ActiveFlag={4},@CompanyID={5}, @ID={6}",
+                criteria,
+                locationTypeDto.LocationType,
+                userId,
+                date,
+                1,
+                branchId,
+            locationTypeDto.ID);
+
+            return CommonResponse.Created($"LocationType {locationTypeDto.LocationType} Updated successfully with ID {locationTypeDto.ID}");
+        }
+        private CommonResponse PermissionDenied(string msg)
+        {
+            _logger.LogInformation("No Permission for " + msg);
+            return CommonResponse.Error("No Permission ");
+        }
+        private CommonResponse PageNotValid(int pageId)
+        {
+            _logger.LogInformation("Page not Exists :" + pageId);
+            return CommonResponse.Error("Page not Exists");
+        }
+        public CommonResponse SaveLocation(LocationTypeDto LocationTypeDto, int PageId)
+        {
+            try
+            {
+                var moduleName = _context.MaPageMenus.Where(p => p.Id == PageId).Select(p => p.MenuText).FirstOrDefault();
+                if (!_authService.IsPageValid(PageId))
+                {
+                    return PageNotValid(PageId);
+                }
+                if (!_authService.UserPermCheck(PageId, 2))
+                {
+                    return PermissionDenied("Save LocationType");
+                }
+                
+                var jsonData = JsonSerializer.Serialize(LocationTypeDto);
+                if (LocationTypeDto.ID == null || LocationTypeDto.ID == 0)
+                {
+                    var msg = SaveLocationTypes(LocationTypeDto).Data;
+                    _userTrackService.AddUserActivity(LocationTypeDto.LocationType, LocationTypeDto.ID, 0, "Add", "LocationType", moduleName, 0, jsonData);
+                    return CommonResponse.Ok(msg);
+
+                }
+                else
+                {
+                    var msg = UpdateLocationTypes(LocationTypeDto).Data;
+                    _userTrackService.AddUserActivity(LocationTypeDto.LocationType, LocationTypeDto.ID, 1, "Update", "LocationType", moduleName, 0, jsonData);
+                    return CommonResponse.Ok(msg);
+                }
+               
+               
+            }
+            catch (Exception ex)
+            {
+                return CommonResponse.Error(ex.Message);
+            }
+        }
+        public CommonResponse DeleteLocationType(int Id,int PageId)
+        {
+            try
+            {
+                var moduleName = _context.MaPageMenus.Where(p => p.Id == PageId).Select(p => p.MenuText).FirstOrDefault();
+                if (!_authService.IsPageValid(PageId))
+                {
+                    return PageNotValid(PageId);
+                }
+                if (!_authService.UserPermCheck(PageId, 2))
+                {
+                    return PermissionDenied("Save LocationType");
+                }
+                string msg = null;
+                var name = _context.LocationTypes.Where(i => i.Id == Id).
+                   Select(i => i.LocationType).
+                   SingleOrDefault();
+                if (name == null)
+                {
+                    msg = "This LocationType is Not Found";
+                }
+                else
+                {                    
+                    var result = _context.Database.ExecuteSqlRaw($"EXEC spLocationTypes @Mode=3,@ID='{Id}'");
+                    msg = name + " Deleted Successfully";
+                    _userTrackService.AddUserActivity(Id.ToString(),Id, 2, "Deleted", "LocationType", moduleName, 0, null);
+
+                }
+                return CommonResponse.Ok(msg);
+            }
+            catch (Exception ex)
+            {
                 return CommonResponse.Error(ex.Message);
             }
         }

@@ -11,6 +11,7 @@ using Dfinance.Core.Views.Inventory;
 using Dfinance.Core.Views.Inventory.Purchase;
 using Dfinance.Core.Views.Item;
 using Dfinance.Core.Views.PagePermission;
+using Dfinance.Core.Views.WareHouse;
 using Dfinance.Shared.Configuration.Service;
 using Microsoft.EntityFrameworkCore;
 
@@ -430,6 +431,9 @@ public partial class DFCoreContext : DbContext
 
     //TaxType
     public DbSet<FillTaxTypeByIdView> FillTaxTypeByIdView { get; set; }
+
+    //LocationType
+    public DbSet<LocationTypeView> LocationTypeViews { get; set; }
     
 
 
