@@ -18,6 +18,11 @@ namespace Dfinance.Shared.Routes
             public const string Save = $"{Main}/Save";
             public const string Update = $"{Main}/Update";
             public const string Delete = $"{Main}/delete";
+            public const string SaveLocation = $"{Main}/SaveLc";
+            public const string FillLocationMaster = $"{Main}/fillLc";
+            public const string FillLocationById = $"{Main}/fillLcById";
+            public const string DeleteLocation = $"{Main}/deleteLc";
+
             public const string Main1 = $"{Base}/stockRpt";
             public const string StockLoadData = $"{Main1}/stkRegLD";
             public const string StockRegistration = $"{Main1}/stkRegt";
@@ -52,6 +57,7 @@ namespace Dfinance.Shared.Routes
             public const string FillWHWiseInv = $"{Main1}/fillWHInv";
             public const string GetUnitStkLD = $"{Main1}/getUnitstkLd";
             public const string FillUnitWiseStk = $"{Main1}/fillUnitstk";
+
         }
 
 
