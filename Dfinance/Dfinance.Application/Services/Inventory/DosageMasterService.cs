@@ -92,7 +92,7 @@ namespace Dfinance.Application.Services.Inventory
             {
                 if (Id == null)
                 {
-                   var dosage = _context.InvDrugDosages.Select(d=> new {d.Id,d.Dosage,d.Remarks}).ToList();
+                   var dosage = _context.InvDrugDosages.Select(d=> new {d.Id,d.Dosage,d.Remarks,d.Active}).ToList();
                     return CommonResponse.Ok(dosage);
                 }
                 else
