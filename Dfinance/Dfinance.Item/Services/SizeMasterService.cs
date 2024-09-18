@@ -43,7 +43,7 @@ namespace Dfinance.Item.Services
         //take Id,Code,Name from table InvSizeMaster
         public CommonResponse FillMaster()
         {
-            var sizeMasters = _context.InvSizeMaster.Select(s => new { s.Id, s.Code, s.Name }).ToList();
+            var sizeMasters = _context.InvSizeMaster.Select(s => new {s.Id, s.Code, s.Name,s.Active }).ToList();
             return CommonResponse.Ok(sizeMasters);
         }
         //fill by Id
