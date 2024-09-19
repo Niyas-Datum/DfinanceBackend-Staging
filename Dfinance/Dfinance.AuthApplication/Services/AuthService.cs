@@ -124,7 +124,8 @@ public class AuthService : IAuthService
             IsHigherApprove = x.IsHigherApprove,
             IsPrint = x.IsPrint,
             IsEMail = x.IsEMail,
-
+            IsEdit= x.IsEdit,
+            IsDelete = x.IsDelete,
             Submenu = GetTree(list, x.ID)
         }).ToList();
     }
