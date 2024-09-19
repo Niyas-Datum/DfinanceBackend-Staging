@@ -20,6 +20,8 @@
         public int? IsHigherApprove { get; set; }
         public int? IsPrint { get; set; }
         public int? IsEMail { get; set; }
+        public int? IsEdit { get; set; }
+        public int? IsDelete { get; set; }
         public List<treeview> Submenu { get; set; }
     }
     public class UserPageListView
@@ -43,11 +45,8 @@
         public int? IsHigherApprove { get; set; }
         public int? IsPrint { get; set; }
         public int? IsEMail { get; set; }
-       
+        public int? IsEdit { get; set; }
+        public int? IsDelete { get; set; }
     }
-
-
-
-
-    
+        
 }
