@@ -6,6 +6,7 @@ namespace Dfinance.Sales
 {
     public interface ISalesInvoiceService
     {
+        CommonResponse GetDefaultCustomer();
         CommonResponse GetData(int pageId, int voucherId);
         CommonResponse FillTransItems(int partyId, int PageID, int locId, int voucherId);
         CommonResponse FillSales(int PageId, bool? post);

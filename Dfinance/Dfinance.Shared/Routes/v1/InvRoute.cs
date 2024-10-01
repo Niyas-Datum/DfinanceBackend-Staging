@@ -184,6 +184,7 @@ namespace Dfinance.Shared.Routes
             public const string TopCustomerSupplier = $"{Main}/topcustSupp";
             public const string SaveSalesOrder = $"{Main}/saveSalesorder";
             public const string UpdateSalesOrder = $"{Main}/updateSalesorder";
+            public const string defaultCust = $"{Main}/defaultCust";
 
             //sales B2B
             public const string saveSalesB2B = $"{Main}/saveSalesB2B";

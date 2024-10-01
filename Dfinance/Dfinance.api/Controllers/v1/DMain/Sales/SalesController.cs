@@ -23,6 +23,24 @@ namespace Dfinance.api.Controllers.v1.DMain.Sales
             _salesService = sales;
             _salesOrder=salesOrder;
         }
+        [HttpGet(InvRoute.Sales.defaultCust)]
+        public IActionResult DefaultCustomer()
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+                object result = _salesService.GetDefaultCustomer();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPost(InvRoute.Sales.SaveSales)]
 
         public IActionResult Save([FromBody] InventoryTransactionDto salesDto, int PageId, int voucherId)

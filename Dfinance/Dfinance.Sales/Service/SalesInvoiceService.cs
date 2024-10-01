@@ -71,6 +71,19 @@ namespace Dfinance.Sales
             _settings = settings;
         }
 
+        public CommonResponse GetDefaultCustomer()
+        {
+            var result = from ua in _context.FimaUniqueAccount
+                         join a in _context.FiMaAccounts on ua.AccId equals a.Id
+                         where ua.Keyword == "CASH CUSTOMER"
+                         select new
+                         {
+                             AccountID = ua.AccId,
+                             AccountName = a.Name
+                         };
+            var resultList = result.ToList();
+            return CommonResponse.Ok(resultList);
+        }
         public CommonResponse DeleteSales(int TransId, int pageId)
         {
             try
@@ -286,7 +299,7 @@ namespace Dfinance.Sales
                     int transpayId = TransId;
                     if (salesDto.TransactionEntries.Cash.Count > 0 || salesDto.TransactionEntries.Card.Count > 0 || salesDto.TransactionEntries.Cheque.Count > 0)
                     {
-                        transpayId = (int)_transactionService.SaveTransactionPayment(salesDto, TransId, Status, 2).Data;
+                        transpayId = (int)_transactionService.SaveTransactionPayment(salesDto, TransId, Status, 7).Data;
                     }
                     if (salesDto.FiTransactionAdditional != null)
                     {
