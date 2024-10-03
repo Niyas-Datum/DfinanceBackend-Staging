@@ -23,15 +23,25 @@ namespace Dfinance.api.Controllers.v1.DMain.Sales
             _salesService = sales;
             _salesOrder=salesOrder;
         }
+        [HttpGet(InvRoute.Sales.Batchno)]
+        public IActionResult BatchNoPopup(int WarehouseID, int ItemID)
+        {
+            try
+            {               
+                object result = _salesService.BatchNoPopup(WarehouseID,ItemID);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpGet(InvRoute.Sales.defaultCust)]
         public IActionResult DefaultCustomer()
         {
             try
-            {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
+            {               
                 object result = _salesService.GetDefaultCustomer();
                 return Ok(result);
             }

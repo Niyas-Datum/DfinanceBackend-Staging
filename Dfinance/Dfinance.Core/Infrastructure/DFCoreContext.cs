@@ -9,6 +9,7 @@ using Dfinance.Core.Views.Finance;
 using Dfinance.Core.Views.General;
 using Dfinance.Core.Views.Inventory;
 using Dfinance.Core.Views.Inventory.Purchase;
+using Dfinance.Core.Views.Inventory.SalesInvoice;
 using Dfinance.Core.Views.Item;
 using Dfinance.Core.Views.PagePermission;
 using Dfinance.Core.Views.WareHouse;
@@ -266,6 +267,8 @@ public partial class DFCoreContext : DbContext
     public DbSet<CommandTextView> CommandTextView { get; set; }
     public DbSet<ItemTransaction> ItemTransaction { get; set; }
     public DbSet<DropDownViewIsdeft> DropDownViewIsdeft { get; set; }
+    public DbSet<BatchNoPopupView> BatchNoPopupView { get; set; }
+    
 
     //purchase
     public DbSet<FillAdvanceView> FillAdvanceView { get; set; }
@@ -302,6 +305,8 @@ public partial class DFCoreContext : DbContext
     public DbSet<PurchaseReportView> PurchaseReportView { get; set; }
     public DbSet<PurchaseReportViews> PurchaseReportViews { get; set; }
     public DbSet<ItemSearchView> ItemSearchView { get; set; }
+    public DbSet<RelatedItemSearchView> RelatedItemSearchView { get; set; }
+    
     public DbSet<QtyView> QtyView { get; set; }
 
     //Receiptvoucher
@@ -684,6 +689,7 @@ public partial class DFCoreContext : DbContext
         mb.Entity<PurchaseReportView>().HasNoKey().ToView(null);
         mb.Entity<PurchaseReportViews>().HasNoKey().ToView(null);
         mb.Entity<ItemSearchView>().HasNoKey().ToView(null);
+        mb.Entity<RelatedItemSearchView>().HasNoKey().ToView(null);        
         mb.Entity<ItemCatalogueView>().HasNoKey().ToView(null);
         mb.Entity<ItemCatalogueViews>().HasNoKey().ToView(null);
         mb.Entity<InventoryAgeingView>().HasNoKey().ToView(null);
@@ -785,6 +791,7 @@ public partial class DFCoreContext : DbContext
 
         //taxtype
         mb.Entity<FillTaxTypeByIdView>().HasNoKey().ToView(null);
+        mb.Entity<BatchNoPopupView>().HasNoKey().ToView(null);
         
 
 
