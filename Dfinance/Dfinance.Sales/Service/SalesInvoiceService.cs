@@ -27,6 +27,8 @@ using Dfinance.DataModels.Dto.Finance;
 using static Dfinance.Shared.Routes.v1.ApiRoutes;
 using Dfinance.AuthCore.Domain;
 using Dfinance.Core.Domain;
+using Microsoft.CodeAnalysis.Semantics;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 
 namespace Dfinance.Sales
@@ -71,6 +73,34 @@ namespace Dfinance.Sales
             _settings = settings;
         }
 
+        //fills the batchno popup in item grid
+        public CommonResponse BatchNoPopup(int locId,int itemId)
+        {
+            string criteria = "BatchwiseStock";
+            int branchId = _authService.GetBranchId().Value;
+            int transId = 1;
+            var primaryVoucherID =  "NULL";
+            var partyId = "null";
+            var voucherId = "null";
+            var ItemID = itemId != null ? itemId.ToString() : "NULL";
+            var modeId = "null";
+            var pageId = "null";
+            DateTime? voucherDate =null;
+            int userId=_authService.GetId().Value;
+            var branchID = branchId != null ? branchId.ToString() : "NULL";
+            var TransID = transId != null ? transId.ToString() : "NULL";
+
+            var result = _context.CommandTextView
+                .FromSqlRaw($"select dbo.GetCommandText('{criteria}',{primaryVoucherID},{branchID},{partyId},{locId},'True','False',{voucherId},{ItemID},'False',null,null,{modeId},{pageId},'{voucherDate}',{TransID},{userId})")
+                .ToList();
+
+            var res = result.FirstOrDefault();
+            var data = _context.BatchNoPopupView.FromSqlRaw(res.commandText).ToList();
+            return CommonResponse.Ok(data);
+
+        }
+
+        //for getting the default customer
         public CommonResponse GetDefaultCustomer()
         {
             var result = from ua in _context.FimaUniqueAccount
