@@ -7,7 +7,18 @@ using System.Threading.Tasks;
 
 namespace Dfinance.Core.Views.Item
 {
-    public class ItemSearchView
+    public class ItemSearchView:ItemSerachCommonView
+    {       
+        
+        public decimal? MRP { get; set; }
+        public string? Tax { get; set; }
+    }
+
+    public class RelatedItemSearchView:ItemSerachCommonView
+    {
+
+    }
+    public class ItemSerachCommonView
     {
         public int ID { get; set; }
         public string ItemCode { get; set; }
@@ -32,8 +43,5 @@ namespace Dfinance.Core.Views.Item
         public decimal? CreditPrice { get; set; }
         public int? RefPageID { get; set; }
         public decimal? AvgCost { get; set; }
-        public decimal? MRP { get; set; }
-        public string? Tax { get; set; }
     }
-
 }

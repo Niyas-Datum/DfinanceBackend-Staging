@@ -483,8 +483,20 @@ namespace Dfinance.api.Controllers.v1.DMain.Item
             }
 
         }
+        [HttpGet(ApiRoutes.ItemMaster.SearchPopup)]
+        public IActionResult ItemSearchPopUp()
+        {
+            try
+            {
+                var result = _itemService.ItemSearchPopup();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
 
-
+        }     
 
 
 
