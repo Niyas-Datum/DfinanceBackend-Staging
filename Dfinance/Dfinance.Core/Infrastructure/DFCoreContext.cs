@@ -268,7 +268,9 @@ public partial class DFCoreContext : DbContext
     public DbSet<ItemTransaction> ItemTransaction { get; set; }
     public DbSet<DropDownViewIsdeft> DropDownViewIsdeft { get; set; }
     public DbSet<BatchNoPopupView> BatchNoPopupView { get; set; }
+    public DbSet<PriceCatAndRateView> PriceCatAndRateView { get; set; }
     
+
 
     //purchase
     public DbSet<FillAdvanceView> FillAdvanceView { get; set; }
@@ -792,6 +794,7 @@ public partial class DFCoreContext : DbContext
         //taxtype
         mb.Entity<FillTaxTypeByIdView>().HasNoKey().ToView(null);
         mb.Entity<BatchNoPopupView>().HasNoKey().ToView(null);
+        mb.Entity<PriceCatAndRateView>().HasNoKey().ToView(null);
         
 
 

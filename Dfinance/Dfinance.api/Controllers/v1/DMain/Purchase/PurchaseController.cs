@@ -36,11 +36,11 @@ namespace Dfinance.api.Controllers.v1.DMain.Purchase
 
 
         [HttpGet(InvRoute.Purchase.fillitems)]
-        public IActionResult FillTransItems(int partyId, int PageID, int locId,int voucherId)
+        public IActionResult FillTransItems(int PageID, int locId, int voucherId, int? partyId = null)
         {
             try
             {
-                var data = _purchaseservice.FillTransItems(partyId, PageID, locId, voucherId).Data;
+                var data = _purchaseservice.FillTransItems(PageID, locId, voucherId, partyId).Data;
                 return Ok(data);
             }
             catch (Exception ex)

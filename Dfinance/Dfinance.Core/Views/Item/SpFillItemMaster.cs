@@ -122,4 +122,9 @@
         public string? Name { get; set; }
         public decimal? SalesPerc { get; set; }
     }
+    public class PriceCatAndRateView
+    {
+        public string? PriceCategory { get; set; }
+        public decimal? Price {  get; set; }
+    }
 }

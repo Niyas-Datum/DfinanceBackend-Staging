@@ -483,6 +483,20 @@ namespace Dfinance.api.Controllers.v1.DMain.Item
             }
 
         }
+
+        [HttpGet(ApiRoutes.ItemMaster.priceCatandRate)]
+        public IActionResult GetPriceCatAndRate(int ItemId, string Unit)
+        {
+            try
+            {
+                var result = _itemService.GetPriceCatAndRate(ItemId,Unit);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         //[HttpGet(ApiRoutes.ItemMaster.SearchPopup)]
         //public IActionResult ItemSearchPopUp()
         //{
