@@ -105,7 +105,7 @@ namespace Dfinance.Purchase.Services
         /// <param name="locId"></param>
         /// <param name="voucherId"></param>
         /// <returns></returns>
-        public CommonResponse FillTransItems(int partyId, int PageID, int locId, int voucherId)
+        public CommonResponse FillTransItems(int PageID, int locId, int voucherId,int? partyId=null )
         {
             var res = _item.FillTransItems(partyId, PageID, locId, voucherId);
             return CommonResponse.Ok(res);
