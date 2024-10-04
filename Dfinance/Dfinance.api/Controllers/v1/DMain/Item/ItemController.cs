@@ -1,5 +1,6 @@
 ﻿using Dfinance.api.Authorization;
 using Dfinance.api.Framework;
+using Dfinance.Core.Migrations;
 using Dfinance.DataModels.Dto.Common;
 using Dfinance.DataModels.Dto.Item;
 using Dfinance.Item.Services.Inventory;
@@ -490,6 +491,32 @@ namespace Dfinance.api.Controllers.v1.DMain.Item
             try
             {
                 var result = _itemService.GetPriceCatAndRate(ItemId,Unit);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet(ApiRoutes.ItemMaster.fillRemarks)]
+        public IActionResult FillRemarks(int ItemId)
+        {
+            try
+            {
+                var result = _itemService.FillRemarks(ItemId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet(ApiRoutes.ItemMaster.qtySetting)]
+        public IActionResult FillQtSettingse()
+        {
+            try
+            {
+                var result = _itemService.FillQtySettings();
                 return Ok(result);
             }
             catch (Exception ex)
