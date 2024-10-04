@@ -1506,7 +1506,21 @@ namespace Dfinance.Item.Services.Inventory
             var prevTransData = _context.ItemTransaction.FromSqlRaw("Exec VoucherAdditionalsSP @Criteria={0},@BranchID={1},@ItemID={2},@AccountID={3},@VoucherID={4}",criteria,branchId,itemId,accountId,voucherId).ToList();
             return CommonResponse.Ok(prevTransData);
         }
-      
+
+        //shortcut key Alt+Ctrl+U
+        //fills the remarks from itemmaster
+        public CommonResponse FillRemarks(int itemId)
+        {
+            var remarks = _context.ItemMaster.Where(i => i.Id == itemId).Select(i => i.Remarks).FirstOrDefault();
+            return CommonResponse.Ok(remarks);                
+        }
+
+        public CommonResponse FillQtySettings()
+        {
+            var qtySet = _context.MaSettings.Where(s => s.Key == "QuantityDefaultValue").Select(s => s.Value).FirstOrDefault();
+            return CommonResponse.Ok(qtySet);
+        }
+
         //used in purchase,sales invoice
         //while pressing shortcut key F5
         //public CommonResponse ItemSearchPopup()

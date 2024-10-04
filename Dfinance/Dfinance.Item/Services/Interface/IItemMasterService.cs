@@ -40,5 +40,7 @@ namespace Dfinance.Item.Services.Inventory.Interface
         CommonResponse ItemPopUp();
         // CommonResponse ItemSearchPopup();
         CommonResponse GetPriceCatAndRate(int itemId, string unit);
+        CommonResponse FillRemarks(int itemId);
+        CommonResponse FillQtySettings();
     }
 }
