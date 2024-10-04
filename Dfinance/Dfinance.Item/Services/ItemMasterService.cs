@@ -802,7 +802,10 @@ namespace Dfinance.Item.Services.Inventory
                 //returns the Isexpiry , expiry period of item
 
                 units = _itemunitService.GetItemUnits(item.ID).Data;//for unit popup in itemgrid
-                prevTransData = _context.ItemTransaction.FromSqlRaw($"Exec VoucherAdditionalsSP @Criteria='{criteria1}',@BranchID='{branchId}',@ItemID='{item.ID}',@AccountID='{PartyId}',@VoucherID='{VoucherID}'").ToList();
+
+              
+                prevTransData = GetPreviousItemData(item.ID, PartyId, VoucherID).Data;
+               // prevTransData = _context.ItemTransaction.FromSqlRaw($"Exec VoucherAdditionalsSP @Criteria='{criteria1}',@BranchID='{branchId}',@ItemID='{item.ID}',@AccountID='{PartyId}',@VoucherID='{VoucherID}'").ToList();
                 var updatePrice = _itemunitService.FillItemUnits(item.ID, branchId).Data;
                 var PriceCat = PriceCategoryPopup(item.ID);
                 itemsWithExpiry.Add(new
@@ -846,9 +849,17 @@ namespace Dfinance.Item.Services.Inventory
                 {
                     query.AppendFormat(", @Criteria = '{0}'", criteria);
                 }
+                if (value == "")
+                {
+                    var result = _context.ItemSearchView.FromSqlRaw(query.ToString()).ToList();
+                    return CommonResponse.Ok(result);
+                }
+                else
+                {
+                    var result = _context.RelatedItemSearchView.FromSqlRaw(query.ToString()).ToList();
+                    return CommonResponse.Ok(result);
+                }
 
-                var result = _context.ItemSearchView.FromSqlRaw(query.ToString()).ToList();
-                return CommonResponse.Ok(result);
             }
             catch (Exception ex)
             {
@@ -1479,6 +1490,52 @@ namespace Dfinance.Item.Services.Inventory
             }
         }
 
+        //used in sales invoice
+        //while pressing Alt+Ctrl+C
+        public CommonResponse GetPriceCatAndRate(int itemId,string unit)
+        {
+            string criteria = "PriceCategory";
+            var data = _context.PriceCatAndRateView.FromSqlRaw($"Exec ItemMasterSP @Criteria='{criteria}',@ItemID={itemId},@Unit='{unit}'").ToList();
+            return CommonResponse.Ok(data);
+        }
+
+        public CommonResponse GetPreviousItemData(int itemId,Object accountId,object voucherId)
+        {
+            int branchId=_authService.GetBranchId().Value;
+            string criteria = "GetLastItemRate";
+            var prevTransData = _context.ItemTransaction.FromSqlRaw("Exec VoucherAdditionalsSP @Criteria={0},@BranchID={1},@ItemID={2},@AccountID={3},@VoucherID={4}",criteria,branchId,itemId,accountId,voucherId).ToList();
+            return CommonResponse.Ok(prevTransData);
+        }
+      
+        //used in purchase,sales invoice
+        //while pressing shortcut key F5
+        //public CommonResponse ItemSearchPopup()
+        //{
+        //    try
+        //    {
+        //        var items = _context.ItemMaster.Where(im => im.Active == true && im.StockItem == true)
+        //            .Select(im => new
+        //            {
+        //                ItemCode = im.ItemCode,
+        //                ItemName = im.ItemName,
+        //                PartNo = im.PartNo,
+        //                ID = im.Id
+        //            }).ToList();
+        //        return CommonResponse.Ok(items);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex.Message);
+        //        return CommonResponse.Error(ex.Message);
+        //    }
+        //}
+        //used in purchase,sales invoice
+        //while pressing shortcut key F5
+
+        //public CommonResponse ItemSearch()
+        //{
+
+        //}
 
     }
 }

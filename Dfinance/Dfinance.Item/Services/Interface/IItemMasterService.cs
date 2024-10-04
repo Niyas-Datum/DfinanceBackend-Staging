@@ -38,5 +38,7 @@ namespace Dfinance.Item.Services.Inventory.Interface
 
         CommonResponse PriceCategoryReport(int? ItemId);
         CommonResponse ItemPopUp();
+        // CommonResponse ItemSearchPopup();
+        CommonResponse GetPriceCatAndRate(int itemId, string unit);
     }
 }
