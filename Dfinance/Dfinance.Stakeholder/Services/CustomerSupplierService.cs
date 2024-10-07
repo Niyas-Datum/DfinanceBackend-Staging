@@ -129,7 +129,10 @@ namespace Dfinance.Stakeholder.Services
             // var result = _context.CommandTextView.FromSqlRaw($"select dbo.GetCommandText('{criteria}',null,'{branchId}',null,'{locId}',null,'False','{voucherId}',null,'False',null,null,null,null,null,null,'{userId}')").ToList();
             var res = result.FirstOrDefault();
             var data = _context.FillPartyView.FromSqlRaw(res.commandText).ToList();
-            return CommonResponse.Ok(data);
+
+            var transId = _context.FiTransaction.Where(t => t.VoucherId == voucherId).Max(t => t.Id);
+            var payType = _context.FiTransactionAdditionals.Where(a => a.TransactionId == transId).Select(a => a.ModeId).FirstOrDefault();
+            return CommonResponse.Ok(new { CustomerData = data ,PrevPayType=payType});
         }
         /// <summary>
         /// load customer supplier stype 
