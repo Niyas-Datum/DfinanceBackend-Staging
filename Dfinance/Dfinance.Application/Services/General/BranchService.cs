@@ -60,8 +60,7 @@ namespace Dfinance.Application.Services.General
                     return CommonResponse.NotFound("This Branch is Not Found");
                 }
                 string criteria = "FillCompanyWithID";
-                var result = _context.SpFillAllBranchByIdG.FromSqlRaw($"EXEC spCompany @Criteria='{criteria}',@ID='{Id}'").ToList();
-
+                var result = _context.SpFillAllBranchByIdG.FromSqlRaw($"EXEC spCompany @Criteria='{criteria}',@ID='{Id}'").AsEnumerable().FirstOrDefault();
                 return CommonResponse.Ok(result);
             }
             catch (Exception ex)
