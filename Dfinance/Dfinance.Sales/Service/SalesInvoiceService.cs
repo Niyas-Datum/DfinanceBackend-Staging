@@ -330,6 +330,8 @@ namespace Dfinance.Sales
                     if (salesDto.TransactionEntries.Cash.Count > 0 || salesDto.TransactionEntries.Card.Count > 0 || salesDto.TransactionEntries.Cheque.Count > 0)
                     {
                         transpayId = (int)_transactionService.SaveTransactionPayment(salesDto, TransId, Status, 7).Data;
+                        if (transpayId == 0)
+                            transpayId = TransId;
                     }
                     if (salesDto.FiTransactionAdditional != null)
                     {
@@ -588,71 +590,72 @@ namespace Dfinance.Sales
         /// <param name="endDate"></param>
         /// <param name="branch"></param>
         /// <param name="user"></param>
-        /// <returns></returns>
+        /// <returns></returns>     
+       
         public CommonResponse GetSalesPurchaseSummary(DateTime startDate, DateTime endDate, int? branch, int? user)
         {
-            //if (!_authService.IsPageValid(pageId))
-            //{
-            //    return PageNotValid(pageId);
-            //}
-            //if (!_authService.UserPermCheck(pageId, 1))
-            //{
-            //    return PermissionDenied("Fill the data ");
-            //}
             try
-            {
-
-                var cmd = _context.Database.GetDbConnection().CreateCommand();
-                cmd.CommandType = CommandType.Text;
-
-                string formattedStartDate = startDate.ToString("yyyy-MM-dd");
-                string formattedEndDate = endDate.ToString("yyyy-MM-dd");
-                var branchId = branch != null ? branch.ToString() : "NULL";
-                var userId = user != null ? user.ToString() : "NULL";
-
-                string commandText = $"Exec SalesPurchaseSummary @DateFrom='{formattedStartDate}', @DateUpto='{formattedEndDate}', @BranchID={branchId}, @UserID={userId}";
-
-                cmd.CommandText = commandText;
-
-                // Open the connection
-                _context.Database.GetDbConnection().Open();
-
-                using (var reader = cmd.ExecuteReader())
-                {
-                    if (reader.HasRows)
+            {               
+                using (var connection = _context.Database.GetDbConnection())
+                {                    
+                    if (connection.State == ConnectionState.Closed)
                     {
-                        var tb = new DataTable();
-                        tb.Load(reader);
-
-                        List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
-                        foreach (DataRow dr in tb.Rows)
-                        {
-                            var row = new Dictionary<string, object>();
-                            foreach (DataColumn col in tb.Columns)
-                            {
-                                row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
-                            }
-                            rows.Add(row);
-                        }
-                        return CommonResponse.Ok(rows);
+                        connection.Open();
                     }
-                    return CommonResponse.NoContent();
+                    using (var cmd = connection.CreateCommand())
+                    {
+                        cmd.CommandType = CommandType.Text;
+
+                        string formattedStartDate = startDate.ToString("yyyy-MM-dd");
+                        string formattedEndDate = endDate.ToString("yyyy-MM-dd");
+                        var branchId = branch.HasValue ? branch.Value.ToString() : "NULL";
+                        var userId = user.HasValue ? user.Value.ToString() : "NULL";                       
+                        string commandText = $"Exec SalesPurchaseSummary @DateFrom='{formattedStartDate}', @DateUpto='{formattedEndDate}', @BranchID={branchId}, @UserID={userId}";
+                        cmd.CommandText = commandText;
+
+                        using (var reader = cmd.ExecuteReader())
+                        {                           
+                            List<List<Dictionary<string, object>>> allTables = new List<List<Dictionary<string, object>>>();                           
+                            do
+                            {
+                                if (reader.HasRows)
+                                {                                    
+                                    List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();                                  
+                                    while (reader.Read())
+                                    {
+                                        var row = new Dictionary<string, object>();                                       
+                                        for (int i = 0; i < reader.FieldCount; i++)
+                                        {
+                                            row.Add(reader.GetName(i).Replace(" ", ""), reader.GetValue(i)?.ToString().Trim());
+                                        }
+                                        rows.Add(row); 
+                                    }
+                                    allTables.Add(rows); 
+                                }
+                            } while (reader.NextResult()); 
+                          
+                            if (allTables.Count > 0)
+                            {
+                                return CommonResponse.Ok(allTables); 
+                            }
+                            return CommonResponse.NoContent(); 
+                        }
+                    }
                 }
             }
             catch (Exception ex)
             {
-
-                return CommonResponse.Error(ex.Message);
+                return CommonResponse.Error(ex.Message); 
             }
             finally
-            {
-
+            {               
                 if (_context.Database.GetDbConnection().State == ConnectionState.Open)
                 {
                     _context.Database.GetDbConnection().Close();
                 }
             }
         }
+
         /// <summary>
         /// AreaWiseSales
         /// </summary>
@@ -1048,6 +1051,13 @@ namespace Dfinance.Sales
                 _logger.LogError(ex.Message);
                 return CommonResponse.Error(ex.Message);
             }
+        }
+
+        public CommonResponse GetPrevPayType(int voucherId)
+        {
+            var transId = _context.FiTransaction.Where(t => t.VoucherId == voucherId).Max(t => t.Id);
+            var payType=_context.FiTransactionAdditionals.Where(a=>a.TransactionId==transId).Select(a=>a.ModeId).FirstOrDefault();
+            return CommonResponse.Ok(payType);
         }
     }
 }

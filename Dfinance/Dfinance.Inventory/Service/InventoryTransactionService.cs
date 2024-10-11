@@ -626,14 +626,13 @@ namespace Dfinance.Inventory.Service
                 Autoentry = true;
                 RefTransId = TransId;
                 string ReferenceId = null;
-                int? PayId = null;
+                int PayId = 0;
                 string environmentname = _environment.EnvironmentName;
                 var payType = _context.MaMisc.Where(p => p.Id == transactionDto.FiTransactionAdditional.PayType.Id).Select(p => p.Value).FirstOrDefault();
                 transactionDto.Party.Name = _context.FiMaAccounts.Where(a => a.Id == transactionDto.Party.Id).Select(a => a.Name).FirstOrDefault();
-                //if (transactionDto.Party.Name != Constants.CASHCUSTOMER && transactionDto.Party.Name != Constants.CASHSUPPLIER || payType == Constants.CREDIT)
-                //{
-                    VoucherNo voucherNo = (VoucherNo)GetAutoVoucherNo(VoucherId).Data;
-                    // var transaction = _mapper.Map<InventoryTransactionDto, FiTransaction>(transactionDto);
+                if (transactionDto.Party.Name != Constants.CASHCUSTOMER && transactionDto.Party.Name != Constants.CASHSUPPLIER || payType == Constants.CREDIT)
+                {
+                    VoucherNo voucherNo = (VoucherNo)GetAutoVoucherNo(VoucherId).Data;                   
 
                      PayId = _context.FiTransaction
                      .Where(x => x.RefTransId == transactionDto.Id)
@@ -695,7 +694,7 @@ namespace Dfinance.Inventory.Service
 
                         
                     }
-               // }
+                }
                 //else
                 //{
                 //    transactionDto.Id = TransId;
