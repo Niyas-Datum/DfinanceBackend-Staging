@@ -295,9 +295,9 @@ namespace Dfinance.Shared.Routes.v1
             public const string GetMonthlyInventorySummary = $"{Main}/ getmonInvSumary";
             public const string PriceCategoryRep = $"{Main}/ priceCategoryRep";
             public const string ItemPopup = $"{Main}/ itemPopup";
-            public const string priceCatandRate = $"{Main}/ priceCatandRate";
-            public const string fillRemarks = $"{Main}/ fillRemarks";
-            public const string qtySetting = $"{Main}/ qtySetting";
+            public const string priceCatandRate = $"{Main}/priceCatandRate";
+            public const string fillRemarks = $"{Main}/fillRemarks";
+            public const string qtySetting = $"{Main}/qtySetting";
 
         }
         public static class ItemUnits
