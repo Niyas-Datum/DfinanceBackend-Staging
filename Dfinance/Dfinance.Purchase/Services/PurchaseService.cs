@@ -422,6 +422,8 @@ namespace Dfinance.Purchase.Services
                     if (purchaseDto.TransactionEntries.Cash.Count > 0 || purchaseDto.TransactionEntries.Cheque.Count > 0 || purchaseDto.TransactionEntries.Card.Count > 0)
                     {
                        transpayId = (int)_transactionService.SaveTransactionPayment(purchaseDto, TransId, Status, 2).Data;
+                        if (transpayId == 0)
+                            transpayId = TransId;
                     }
                     if (purchaseDto.FiTransactionAdditional != null)
                     {
