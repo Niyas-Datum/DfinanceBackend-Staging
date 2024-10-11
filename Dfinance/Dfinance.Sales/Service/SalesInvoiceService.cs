@@ -1052,15 +1052,7 @@ namespace Dfinance.Sales
                 return CommonResponse.Error(ex.Message);
             }
         }
-
-        public CommonResponse GetPrevPayType(int voucherId)
-        {
-            var transId = _context.FiTransaction.Where(t => t.VoucherId == voucherId).Max(t => t.Id);
-            var payType=_context.FiTransactionAdditionals.Where(a=>a.TransactionId==transId).Select(a=>a.ModeId).FirstOrDefault();
-
-            var rateWithTax = _context.MaSettings.Where(s => s.Key == "RateWithTax").Select(s => s.Value).SingleOrDefault();
-            return CommonResponse.Ok(new { PreviousPayType = payType, RateWithTax = rateWithTax });
-        }
+               
     }
 }
 
