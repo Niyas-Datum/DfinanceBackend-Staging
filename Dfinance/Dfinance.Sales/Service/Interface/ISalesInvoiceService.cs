@@ -30,7 +30,7 @@ namespace Dfinance.Sales
         CommonResponse TopCustomerSupplier(DateTime startdate, DateTime enddate, int? pageId);
         CommonResponse BuyerLoadData();
         CommonResponse BuyerListReport(DateTime DateFrom, DateTime DateUpto, string? Mode, int? PartyId, int? ItemId);
-
+        CommonResponse GetPrevPayType(int voucherId);
         //CommonResponse GetMonthlySalesSummary(DateTime? startDate, DateTime? endDate);  
         //CommonResponse GetFillSalesDaySummary(string? criteria,DateTime startDate, DateTime endDate,int? branch,int? user);
 
