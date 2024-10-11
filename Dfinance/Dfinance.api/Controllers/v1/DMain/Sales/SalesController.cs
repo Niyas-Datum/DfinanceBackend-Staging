@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Swashbuckle.AspNetCore.Annotations;
 using static Dfinance.Shared.Routes.v1.ApiRoutes;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Dfinance.api.Controllers.v1.DMain.Sales
 {
@@ -357,7 +358,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Sales
 
                 return BadRequest(ex.Message);
             }
-        }
+        }       
     }
 }
 

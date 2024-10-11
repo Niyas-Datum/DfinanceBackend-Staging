@@ -1518,38 +1518,9 @@ namespace Dfinance.Item.Services.Inventory
         public CommonResponse FillQtySettings()
         {
             var qtySet = _context.MaSettings.Where(s => s.Key == "QuantityDefaultValue").Select(s => s.Value).FirstOrDefault();
-            return CommonResponse.Ok(qtySet);
-        }
-
-        //used in purchase,sales invoice
-        //while pressing shortcut key F5
-        //public CommonResponse ItemSearchPopup()
-        //{
-        //    try
-        //    {
-        //        var items = _context.ItemMaster.Where(im => im.Active == true && im.StockItem == true)
-        //            .Select(im => new
-        //            {
-        //                ItemCode = im.ItemCode,
-        //                ItemName = im.ItemName,
-        //                PartNo = im.PartNo,
-        //                ID = im.Id
-        //            }).ToList();
-        //        return CommonResponse.Ok(items);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError(ex.Message);
-        //        return CommonResponse.Error(ex.Message);
-        //    }
-        //}
-        //used in purchase,sales invoice
-        //while pressing shortcut key F5
-
-        //public CommonResponse ItemSearch()
-        //{
-
-        //}
+            var rateWithTax = _context.MaSettings.Where(s => s.Key == "RateWithTax").Select(s => s.Value).SingleOrDefault();
+            return CommonResponse.Ok(new { DefaultQuantity = qtySet, RateWithTax = rateWithTax });
+        }      
 
     }
 }
