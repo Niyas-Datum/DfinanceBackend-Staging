@@ -849,7 +849,7 @@ namespace Dfinance.Item.Services.Inventory
                 {
                     query.AppendFormat(", @Criteria = '{0}'", criteria);
                 }
-                if (value == "")
+                if (value == "" || value==null)
                 {
                     var result = _context.ItemSearchView.FromSqlRaw(query.ToString()).ToList();
                     return CommonResponse.Ok(result);
@@ -1518,8 +1518,12 @@ namespace Dfinance.Item.Services.Inventory
         public CommonResponse FillQtySettings()
         {
             var qtySet = _context.MaSettings.Where(s => s.Key == "QuantityDefaultValue").Select(s => s.Value).FirstOrDefault();
+            bool ratewithtax = false;           
             var rateWithTax = _context.MaSettings.Where(s => s.Key == "RateWithTax").Select(s => s.Value).SingleOrDefault();
-            return CommonResponse.Ok(new { DefaultQuantity = qtySet, RateWithTax = rateWithTax });
+            rateWithTax = rateWithTax.Trim().ToLower();
+            if (rateWithTax == "true" || rateWithTax == "yes" || rateWithTax == "1")
+                ratewithtax = true;
+            return CommonResponse.Ok(new { DefaultQuantity = qtySet, RateWithTax = ratewithtax });
         }      
 
     }

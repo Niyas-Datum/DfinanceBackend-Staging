@@ -978,7 +978,7 @@ namespace Dfinance.Inventory.Service
                 query.AppendFormat("@DateUpto = '{0}', ", inventoryTransactionDto.To.ToString("yyyy-MM-dd"));
                 query.AppendFormat("@ModuleID = {0}, ", moduleid ?? 0);
 
-                if (inventoryTransactionDto.Mode.Id != 0)
+                if (inventoryTransactionDto.Mode.Id != 0 && inventoryTransactionDto.Mode.Id!=null)
                 {
                     query.AppendFormat("@ModeID = {0}, ", inventoryTransactionDto.Mode.Id);
                 }
@@ -988,7 +988,7 @@ namespace Dfinance.Inventory.Service
                     query.AppendFormat("@MachineName = '{0}', ", inventoryTransactionDto.Machine.Value);
                 }
 
-                if (inventoryTransactionDto.VoucherType.Id != 0)
+                if (inventoryTransactionDto.VoucherType.Id != 0 && inventoryTransactionDto.VoucherType.Id!=null)
                 {
                     query.AppendFormat("@VTypeID = {0}, ", inventoryTransactionDto.VoucherType.Id);
                 }

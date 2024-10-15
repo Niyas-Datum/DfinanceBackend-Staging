@@ -236,7 +236,7 @@ namespace Dfinance.api.Controllers.v1.DMain.Sales
             }
         }
         [HttpGet(InvRoute.Sales.SalesReport)]
-        [AllowAnonymous]
+        [SwaggerOperation(Summary = "Criteria=SalesReport2")]
         public IActionResult SalesReport(string? Criteria, DateTime DateFrom, DateTime DateUpto, int? VoucherID, bool? Detailed, int? AccountID, string? VoucherNo, int? SalesManID)
         {
             try
