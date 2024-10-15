@@ -596,25 +596,27 @@ namespace Dfinance.Purchase.Services
         public CommonResponse GetPurchaseReport(PurchaseReportDto reportdto)
         {
             object result = null;
+            string dateFrom = reportdto.From.HasValue ? reportdto.From.Value.ToString("MM-dd-yyyy") : string.Empty;
+            string dateUpto = reportdto.To.HasValue ? reportdto.To.Value.ToString("MM-dd-yyyy") : string.Empty;
 
             try
             {
                 string query = $@"
             EXEC InventoryRegisterSP 
-            @DateFrom = '{reportdto.From}',
-            @DateUpto = '{reportdto.To}',
+            @DateFrom = '{dateFrom}',
+            @DateUpto = '{dateUpto}',
             @BranchID = '{reportdto.Branch?.Id ?? 0}'";
 
-                if (reportdto.BaseType?.Id != 0 && reportdto.BaseType.Id != -1)
+                if (reportdto.BaseType?.Id != 0 && reportdto.BaseType.Id != null)
                 {
                     query += $", @BasicVTypeID = '{reportdto.BaseType.Id}'";
                 }
 
-                if (reportdto.VoucherType?.Id != 0 && reportdto.VoucherType.Id != -1)
+                if (reportdto.VoucherType?.Id != 0 && reportdto.VoucherType.Id != null)
                 {
                     query += $", @VTypeID = '{reportdto.VoucherType.Id}'";
                 }
-                if (reportdto.Detailed==true)
+                if (reportdto.Detailed == true)
                 {
                     query += $", @Detailed = '{reportdto.Detailed}'";
                 }
@@ -636,22 +638,22 @@ namespace Dfinance.Purchase.Services
                     query += $", @PartyInvNo = '{reportdto.InvoiceNo}'";
                 }
 
-                if (reportdto.customerSupplier?.Id != 0)
+                if (reportdto.customerSupplier?.Id != 0 && reportdto.customerSupplier?.Id != null)
                 {
                     query += $", @AccountID = '{reportdto.customerSupplier.Id}'";
                 }
 
-                if (reportdto.PaymentType?.Id != 0)
+                if (reportdto.PaymentType?.Id != 0 && reportdto.PaymentType?.Id != null)
                 {
                     query += $", @PaymentTypeID = '{reportdto.PaymentType.Id}'";
                 }
 
-                if (reportdto.Item?.Id != 0)
+                if (reportdto.Item?.Id != 0 && reportdto.Item?.Id != null)
                 {
                     query += $", @ItemID = '{reportdto.Item.Id}'";
                 }
 
-                if (reportdto.Counter?.Id != 0)
+                if (reportdto.Counter?.Id != 0 && reportdto.Counter?.Id != null)
                 {
                     query += $", @CounterID = '{reportdto.Counter.Id}'";
                 }
@@ -661,34 +663,62 @@ namespace Dfinance.Purchase.Services
                     query += $", @BatchNo = '{reportdto.BatchNo}'";
                 }
 
-                if (reportdto.User?.Id != 0)
+                if (reportdto.User?.Id != 0 && reportdto.User?.Id != null)
                 {
                     query += $", @UserID = '{reportdto.User.Id}'";
                 }
 
-                if (reportdto.Staff?.Id != 0)
+                if (reportdto.Staff?.Id != 0 && reportdto.Staff?.Id != null)
                 {
                     query += $", @StaffID = '{reportdto.Staff.Id}'";
                 }
 
-                if (reportdto.Area?.Id != 0)
+                if (reportdto.Area?.Id != 0 && reportdto.Area?.Id != null)
                 {
                     query += $", @AreaID = '{reportdto.Area.Id}'";
                 }
 
                 // Add criteria if provided
-                if (reportdto.ViewBy==false)
+                if (reportdto.ViewBy == false)
                 {
                     query += $", @Criteria = 'Extract'";
                     result = _context.PurchaseReportViews.FromSqlRaw(query).ToList();
                     return CommonResponse.Ok(result);
                 }
-               
 
-                result = _context.PurchaseReportView.FromSqlRaw(query).ToList();
+                // result = _context.PurchaseReportView.FromSqlRaw(query).ToList();
+                var cmd = _context.Database.GetDbConnection().CreateCommand();
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = query;
 
-                return CommonResponse.Ok(result);
+                _context.Database.GetDbConnection().Open();
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    // Remove the reader.Read() call and directly load the data
+                    var tb = new DataTable();
+                    tb.Load(reader);
+
+                    if (tb.Rows.Count > 0)
+                    {
+                        List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+                        foreach (DataRow dr in tb.Rows)
+                        {
+                            Dictionary<string, object> row = new Dictionary<string, object>();
+                            foreach (DataColumn col in tb.Columns)
+                            {
+                                row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
+                            }
+                            rows.Add(row);
+                        }
+
+                        return CommonResponse.Ok(rows);
+                    }
+
+                    return CommonResponse.NoContent("No Data");
+                }
             }
+
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);

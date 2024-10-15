@@ -684,9 +684,10 @@ namespace Dfinance.Sales
 
                 string formattedStartDate = startdate.ToString("yyyy-MM-dd");
                 string formattedEndDate = enddate.ToString("yyyy-MM-dd");
+                var ItemID = item != null ? item.ToString() : "NULL";
+                var AreaID=Area!=null ? Area.ToString() : "NULL";
 
-
-                string commandText = $"Exec AreaWiseSalesSummarySP @Criteria='{viewby}', @DateFrom='{formattedStartDate}', @DateUpto='{formattedEndDate}', @BranchID={branch}";
+                string commandText = $"Exec AreaWiseSalesSummarySP @Criteria='{viewby}', @DateFrom='{formattedStartDate}', @DateUpto='{formattedEndDate}', @BranchID={branch},@ItemID={ItemID},@AreaID={AreaID}";
 
                 cmd.CommandText = commandText;
 
@@ -825,28 +826,29 @@ namespace Dfinance.Sales
             var cmd = _context.Database.GetDbConnection().CreateCommand();
             cmd.CommandType = CommandType.Text;
             _context.Database.GetDbConnection().Open();
-            cmd.CommandText = $"Exec SalesReportSP @Criteria='{criteria}',@DateFrom='{startDate}',@DateUpto='{endDate}',@BranchID={branchId},@VoucherID={voucherId},@AccountID={account},@Detailed='{detailed}',@SalesManID={userId}";
+            cmd.CommandText = $"Exec SalesReportSP @Criteria='{criteria}',@DateFrom='{startDate.ToString("MM-dd-yyyy")}',@DateUpto='{endDate.ToString("MM-dd-yyyy")}',@BranchID={branchId},@VoucherID={voucherId},@AccountID={account},@Detailed='{detailed}',@SalesManID={userId}";
             using (var reader = cmd.ExecuteReader())
             {
-                if (reader.Read())
-                {
-                    var tb = new DataTable();
-                    tb.Load(reader);
+                // Removed reader.Read() and directly load the reader into DataTable
+                var tb = new DataTable();
+                tb.Load(reader);
 
+                if (tb.Rows.Count > 0)
+                {
                     List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
-                    Dictionary<string, object> row;
                     foreach (DataRow dr in tb.Rows)
                     {
-                        row = new Dictionary<string, object>();
+                        Dictionary<string, object> row = new Dictionary<string, object>();
                         foreach (DataColumn col in tb.Columns)
                         {
                             row.Add(col.ColumnName.Replace(" ", ""), dr[col].ToString().Trim());
                         }
                         rows.Add(row);
                     }
-                    return CommonResponse.Ok(rows);
 
+                    return CommonResponse.Ok(rows);
                 }
+
                 return CommonResponse.NoContent("No Data");
             }
         }
