@@ -119,7 +119,7 @@ namespace Dfinance.Inventory.Service
                 int? rowType = null;
                 bool visible = true;
                 //decimal avgCost = 0;
-                int refTransItemId = 0;
+                //int refTransItemId =0;
                 int? outLocId = null;
                 int? inLocId = null;
                 decimal? tempQty = null;
@@ -150,12 +150,12 @@ namespace Dfinance.Inventory.Service
                         decimal? stockQty = (item.Qty + item.FocQty) * factor;
                         factor = _context.ItemUnits.Where(x => x.ItemId == item.ItemId && x.Unit == item.Unit.Unit).Select(x => x.Factor).SingleOrDefault();
                         var importItems = _context.InvTransItems.Where(i => i.TransactionId == item.TransactionId).Select(i => i.ItemId).ToList();
-                        foreach (var i in importItems)
-                        {
-                            if (i == item.ItemId)
-                                refTransItemId = _context.InvTransItems.Where(t => t.TransactionId == item.TransactionId && t.ItemId == item.ItemId)
-                               .Select(t => t.Id).SingleOrDefault();
-                        }
+                        //foreach (var i in importItems)
+                        //{
+                        //    if (i == item.ItemId)
+                        //        refTransItemId = _context.InvTransItems.Where(t => t.TransactionId == item.TransactionId && t.ItemId == item.ItemId)
+                        //       .Select(t => t.Id).SingleOrDefault();
+                        //}
 
                         if ((VoucherType)primeryVoucherId == VoucherType.Purchase ||  (VoucherType)primeryVoucherId == VoucherType.Stock_Adjustment)
                         {
@@ -263,7 +263,8 @@ namespace Dfinance.Inventory.Service
                                     null,//34-status
                                     null,//35-cancel
                                     null,//36-MeasuredByID
-                                    refTransItemId == 0 ? null : refTransItemId,//37
+                                    item.RefTransItemId == 0 ? null : item.RefTransItemId,
+                                   // refTransItemId == 0 ? null : refTransItemId,//37
                                     item.FinishDate,//38
                                     item.UpdateDate,//39
                                     null,//40-IsSameForPcs
