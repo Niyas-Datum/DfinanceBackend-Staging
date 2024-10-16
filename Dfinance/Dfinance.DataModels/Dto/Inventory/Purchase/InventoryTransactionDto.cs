@@ -123,6 +123,7 @@ namespace Dfinance.DataModels.Dto.Inventory.Purchase
         public List<InvUniqueItemDto>? UniqueItems { get; set; }
         public decimal? TempRate { get; set; }
         public decimal? OrderQty { get; set; }
+        public int? RefTransItemId { get; set; }    
     }
 
     public class InvUniqueItemDto

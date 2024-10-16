@@ -378,12 +378,12 @@ namespace Dfinance.Inventory.Service
                     transactionDto.Items.OrderBy(i => i.Location);
                 }               
 
-                if ((VoucherType)primaryVoucherId == VoucherType.Purchase_Return && (VoucherType)primaryVoucherId == VoucherType.Sales_Return)
+                if ((VoucherType)primaryVoucherId == VoucherType.Purchase || (VoucherType)primaryVoucherId == VoucherType.Sales_Invoice || (VoucherType)primaryVoucherId == VoucherType.Purchase_Return && (VoucherType)primaryVoucherId == VoucherType.Sales_Return)
                 {
                     if (transactionDto.References.Count > 0 && transactionDto.References.Any(r => r.Id != null || r.Id != 0))
                     {
                         var refItemView = (List<RefItemsView>)FillReference(transactionDto.References).Data;
-                        if (refItemView != null)
+                        if (refItemView != null && (VoucherType)primaryVoucherId == VoucherType.Purchase_Return && (VoucherType)primaryVoucherId == VoucherType.Sales_Return)
                         {
                             foreach (var item in transactionDto.Items)
                             {
